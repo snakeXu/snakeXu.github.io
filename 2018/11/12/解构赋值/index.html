@@ -5,15 +5,19 @@
   
 
   
-  <title>喵小喵的窝</title>
+  <title>es6解构赋值 | 喵小喵的窝</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="喵小喵的窝">
-<meta property="og:url" content="http://yoursite.com/index.html">
+  <meta name="description" content="解构赋值的模型 patterns在解构中，有下面两部分参与： Destructuring source: 解构的源，将要被解构的数据，比如解构赋值表达式的右边部分。 Destructuring target: 解构的目标，比如解构复制表达式的左边部分。 解构的目标可以是下面三个的任意一个： 赋值对象，Assigment Patterns。例如 x 赋值对象通常来说是一个变量。但是在解构赋值中，你有">
+<meta property="og:type" content="article">
+<meta property="og:title" content="es6解构赋值">
+<meta property="og:url" content="http://yoursite.com/2018/11/12/解构赋值/index.html">
 <meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="解构赋值的模型 patterns在解构中，有下面两部分参与： Destructuring source: 解构的源，将要被解构的数据，比如解构赋值表达式的右边部分。 Destructuring target: 解构的目标，比如解构复制表达式的左边部分。 解构的目标可以是下面三个的任意一个： 赋值对象，Assigment Patterns。例如 x 赋值对象通常来说是一个变量。但是在解构赋值中，你有">
 <meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-11-20T08:19:24.166Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="喵小喵的窝">
+<meta name="twitter:title" content="es6解构赋值">
+<meta name="twitter:description" content="解构赋值的模型 patterns在解构中，有下面两部分参与： Destructuring source: 解构的源，将要被解构的数据，比如解构赋值表达式的右边部分。 Destructuring target: 解构的目标，比如解构复制表达式的左边部分。 解构的目标可以是下面三个的任意一个： 赋值对象，Assigment Patterns。例如 x 赋值对象通常来说是一个变量。但是在解构赋值中，你有">
   
     <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
   
@@ -60,46 +64,7 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-    <article id="post-js参数按值传递" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/11/12/js参数按值传递/" class="article-date">
-  <time datetime="2018-11-12T09:44:31.069Z" itemprop="datePublished">2018-11-12</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/11/12/js参数按值传递/">js传递参数</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>ECMAScript中所有函数的参数都是按值传递的。也就是说，把函数外部的值复制给函数内部的参数，就和把值从一个变量复制到另一个变量一样。基本类型值的传递如果基本类型变量的复制一样，而引用类型值的传递，则如同引用类型变量的复制一样。下面是例子：<br>1.基本类型<br>funciton addTen(num){<br>    num+=10;<br>    return num;<br>}<br>var count = 20;<br>var result = addTen(count);<br>alert(count);//20 没有变化<br>alett(result);//30<br>2.引用类型<br>function setName(obj){<br>    obj.name = “snakeXu”;<br>}<br>var person = new Object();<br>setName(person);<br>alert(person.name);//snakeXu<br>3.如果你还不相信是传值<br>function setName(obj){<br>    obj.name = “snakeXu”;<br>    obj = new Object();<br>    obj.name = “handsomeXu”;<br>}<br>var person = new Object();<br>setName(person);<br>alert(person.name);//snakeXu<br>解释一下:再把person传递给setName()后，其name属性被设置为”snakeXu”。然后又将一个新对象赋给变量obj，同时将其name属性设置为”handsomeXu”。如果person是按引用传递的，那么person就会自动被修改为指向其name属性值为”handsomeXu”的新对象。但是，当接下来再访问person.name时，显示的值仍然是”snakeXu”。这说明即使再在函数内部修改了参数的值，但原始的引用仍然保持未变。实际上，在当函数内部重写obj时，这个变量引用的就是一个局部对象了。而这个局部对象会在函数执行完毕后立即被销毁。<br>注:可以把js函数的参数想象成局部变量</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/11/12/js参数按值传递/" data-id="cjopgyk8h0000ukxqjhp8npba" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-解构赋值" class="article article-type-post" itemscope="" itemprop="blogPost">
+        <section id="main"><article id="post-解构赋值" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
     <a href="/2018/11/12/解构赋值/" class="article-date">
   <time datetime="2018-11-12T09:44:31.069Z" itemprop="datePublished">2018-11-12</time>
@@ -112,8 +77,8 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/11/12/解构赋值/">es6解构赋值</a>
+    <h1 class="article-title" itemprop="name">
+      es6解构赋值
     </h1>
   
 
@@ -192,62 +157,29 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/11/12/解构赋值/" data-id="cjopgyk8k0001ukxq6fuqym7m" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/11/12/解构赋值/" data-id="cjopgyk8m0002ulxq0dnb0dln" class="article-share-link">Share</a>
       
       
     </footer>
   </div>
   
-</article>
-
-
+    
+<nav id="article-nav">
   
-    <article id="post-hello-world" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/11/12/hello-world/" class="article-date">
-  <time datetime="2018-11-12T09:44:31.069Z" itemprop="datePublished">2018-11-12</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
+    <a href="/2018/11/12/hello-world/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
         
+          Hello World
+        
+      </div>
+    </a>
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/11/12/hello-world/">Hello World</a>
-    </h1>
   
+</nav>
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/11/12/hello-world/" data-id="cjopgyk8m0002ukxqgpbivmyp" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
   
 </article>
-
-
-  
-
 
 </section>
         
@@ -282,11 +214,11 @@
           </li>
         
           <li>
-            <a href="/2018/11/12/解构赋值/">es6解构赋值</a>
+            <a href="/2018/11/12/hello-world/">Hello World</a>
           </li>
         
           <li>
-            <a href="/2018/11/12/hello-world/">Hello World</a>
+            <a href="/2018/11/12/解构赋值/">es6解构赋值</a>
           </li>
         
       </ul>

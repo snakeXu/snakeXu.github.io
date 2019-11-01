@@ -96,8 +96,8 @@
 
 <p>·顺便复习一下new操作符调用构造函数会经历的4步：<br>(1)创建一个新对象<br>(2)将构造函数的作用域赋给新对象(因此this就指向了这个新对象)<br>(3)执行构造函数中的代码(为这个新对象添加属性)<br>(4)返回新对象</p>
 <p>·then，我找到了阮一峰ECMAScript6入门里的一段话：<br>ES5 的继承，实质是先创造子类的实例对象this，然后再将父类的方法添加到this上面（Parent.apply(this)）。ES6 的继承机制完全不同，实质是先将父类实例对象的属性和方法，加到this上面（所以必须先调用super方法），然后再用子类的构造函数修改this。</p>
-<p>now，是时候祭出共享原型设计了<br><!-- <img src="https://snakexu.github.io/images/wangyi/jq/gongxiang.png"> --><br><img src="http://localhost:4000/images/wangyi/jq/gongxiang.png"><br>代码来了：</p>
-<p><pre>(function(root) {<br>    var jQuery = function() {<br>      return new jQuery.prototype.init();<br>    };<br>    jQuery.prototype = {<br>        init:function(){<br>            //<br>        }<br>    }<br>    jQuery.prototype.init.prototype = jQuery.prototype//共享原型对象<br>    root.$ = root.jQuery = jQuery;<br>})(this)</pre><br>这样我们打印console.log($())，就可以看到jquery原型对象的init方法了<br><img src="http://localhost:4000/images/wangyi/jq/console_1.png"><br>这时候的$()实际指向的是jQuery原型上的init方法，而init的原型和jQuery本身的原型共享一个原型对象，这样往jQuery上扩展的方法就可以通过$()获取。</p>
+<p>now，是时候祭出共享原型设计了<br><img src="https://snakexu.github.io/images/wangyi/jq/gongxiang.png"><br><!-- <img src="http://localhost:4000/images/wangyi/jq/gongxiang.png"> --><br>代码来了：</p>
+<p><pre>(function(root) {<br>    var jQuery = function() {<br>      return new jQuery.prototype.init();<br>    };<br>    jQuery.prototype = {<br>        init:function(){<br>            //<br>        }<br>    }<br>    jQuery.prototype.init.prototype = jQuery.prototype//共享原型对象<br>    root.$ = root.jQuery = jQuery;<br>})(this)</pre><br>这样我们打印console.log($())，就可以看到jquery原型对象的init方法了<br><img src="https://snakexu.github.io/images/wangyi/jq/console_1.png"><br>这时候的$()实际指向的是jQuery原型上的init方法，而init的原型和jQuery本身的原型共享一个原型对象，这样往jQuery上扩展的方法就可以通过$()获取。</p>
 <p>2.extend</p>
 <p><pre><br>(function(root) {<br>    var jQuery = function() {<br>      return new jQuery.prototype.init();<br>    };<br>    jQuery.fn = jQuery.prototype = {//与上面代码不同之处<br>        init:function(){<br>            //<br>        }<br>    }<br>    jQuery.fn.init.prototype = jQuery.fn //与上面代码不同之处<br>    root.$ = root.jQuery = jQuery;<br>})(this)<br></pre><br>从而可以使$.fn.extend和$.extend达到同样效果，于是我们开始使用<br>//jQuery本身扩展<br><br>$.extend({<br>    work:function(){}<br>})<br><br>或者<br><br>//jQuery实例对象扩展,此时this === jQuery实例对象<br><br>$.fn.extend({<br>  sex: ‘男’<br>})<br><br>或者<br><br>$.extend({}, { name: ‘arbor’});<br><br>对任意对象进行扩展,于是我们可以使用<br>jQuery.work();<br>$().sex;</p>
 <p>那么，源码是怎么实现这个功能的呢？先来实现浅拷贝</p>
@@ -170,7 +170,7 @@ root.$ = root.jQuery = jQuery;
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/10/31/网易微专业-jq源码解析-2-1-1-jq整体架构-核心函数功能/" data-id="ck2fvhumz0003h1xqw5dft4bn" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/10/31/网易微专业-jq源码解析-2-1-1-jq整体架构-核心函数功能/" data-id="ck2fxatj50003ivxqzr9i5rag" class="article-share-link">Share</a>
       
       
     </footer>
@@ -215,7 +215,7 @@ root.$ = root.jQuery = jQuery;
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/11/12/hello-world/" data-id="ck2fvhumr0000h1xq1v1nqszg" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/11/12/hello-world/" data-id="ck2fxatiw0000ivxqdhbx4j0t" class="article-share-link">Share</a>
       
       
     </footer>
@@ -252,7 +252,7 @@ root.$ = root.jQuery = jQuery;
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/11/12/js参数按值传递/" data-id="ck2fvhumv0001h1xqczk9t5wn" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/11/12/js参数按值传递/" data-id="ck2fxatj10001ivxqopjcb598" class="article-share-link">Share</a>
       
       
     </footer>
@@ -280,7 +280,7 @@ root.$ = root.jQuery = jQuery;
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/11/12/一些网址/" data-id="ck2fvhumx0002h1xqlb58y3rc" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/11/12/一些网址/" data-id="ck2fxatj40002ivxqygp2dn6d" class="article-share-link">Share</a>
       
       
     </footer>
@@ -383,7 +383,7 @@ root.$ = root.jQuery = jQuery;
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/11/12/解构赋值/" data-id="ck2fvhun60004h1xqtvkly3s1" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/11/12/解构赋值/" data-id="ck2fxatj90004ivxqvu5k1as6" class="article-share-link">Share</a>
       
       
     </footer>

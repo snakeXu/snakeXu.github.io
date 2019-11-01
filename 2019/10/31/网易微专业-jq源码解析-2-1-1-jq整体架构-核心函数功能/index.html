@@ -14,13 +14,13 @@
 <meta property="og:site_name" content="喵小喵的窝">
 <meta property="og:description" content="一、juqery无new构建实例1.$就是jquery的别称，$()就是在创建jquery的实例对象 (function(root) {     var jQuery = function() {       console.log(&apos;生成一个实例对象&apos;);       return new jQuery(); //想让$()就是创建实例对象?wrong！每次调用$()就执行该function,然">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="http://localhost:4000/images/wangyi/jq/gongxiang.png">
-<meta property="og:image" content="http://localhost:4000/images/wangyi/jq/console_1.png">
-<meta property="og:updated_time" content="2019-11-01T08:17:25.222Z">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/jq/gongxiang.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/jq/console_1.png">
+<meta property="og:updated_time" content="2019-11-01T09:16:04.946Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="网易微专业-jq源码解析-2.1.1:jq整体架构,核心函数功能">
 <meta name="twitter:description" content="一、juqery无new构建实例1.$就是jquery的别称，$()就是在创建jquery的实例对象 (function(root) {     var jQuery = function() {       console.log(&apos;生成一个实例对象&apos;);       return new jQuery(); //想让$()就是创建实例对象?wrong！每次调用$()就执行该function,然">
-<meta name="twitter:image" content="http://localhost:4000/images/wangyi/jq/gongxiang.png">
+<meta name="twitter:image" content="https://snakexu.github.io/images/wangyi/jq/gongxiang.png">
   
     <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
   
@@ -101,8 +101,8 @@
 
 <p>·顺便复习一下new操作符调用构造函数会经历的4步：<br>(1)创建一个新对象<br>(2)将构造函数的作用域赋给新对象(因此this就指向了这个新对象)<br>(3)执行构造函数中的代码(为这个新对象添加属性)<br>(4)返回新对象</p>
 <p>·then，我找到了阮一峰ECMAScript6入门里的一段话：<br>ES5 的继承，实质是先创造子类的实例对象this，然后再将父类的方法添加到this上面（Parent.apply(this)）。ES6 的继承机制完全不同，实质是先将父类实例对象的属性和方法，加到this上面（所以必须先调用super方法），然后再用子类的构造函数修改this。</p>
-<p>now，是时候祭出共享原型设计了<br><!-- <img src="https://snakexu.github.io/images/wangyi/jq/gongxiang.png"> --><br><img src="http://localhost:4000/images/wangyi/jq/gongxiang.png"><br>代码来了：</p>
-<p><pre>(function(root) {<br>    var jQuery = function() {<br>      return new jQuery.prototype.init();<br>    };<br>    jQuery.prototype = {<br>        init:function(){<br>            //<br>        }<br>    }<br>    jQuery.prototype.init.prototype = jQuery.prototype//共享原型对象<br>    root.$ = root.jQuery = jQuery;<br>})(this)</pre><br>这样我们打印console.log($())，就可以看到jquery原型对象的init方法了<br><img src="http://localhost:4000/images/wangyi/jq/console_1.png"><br>这时候的$()实际指向的是jQuery原型上的init方法，而init的原型和jQuery本身的原型共享一个原型对象，这样往jQuery上扩展的方法就可以通过$()获取。</p>
+<p>now，是时候祭出共享原型设计了<br><img src="https://snakexu.github.io/images/wangyi/jq/gongxiang.png"><br><!-- <img src="http://localhost:4000/images/wangyi/jq/gongxiang.png"> --><br>代码来了：</p>
+<p><pre>(function(root) {<br>    var jQuery = function() {<br>      return new jQuery.prototype.init();<br>    };<br>    jQuery.prototype = {<br>        init:function(){<br>            //<br>        }<br>    }<br>    jQuery.prototype.init.prototype = jQuery.prototype//共享原型对象<br>    root.$ = root.jQuery = jQuery;<br>})(this)</pre><br>这样我们打印console.log($())，就可以看到jquery原型对象的init方法了<br><img src="https://snakexu.github.io/images/wangyi/jq/console_1.png"><br>这时候的$()实际指向的是jQuery原型上的init方法，而init的原型和jQuery本身的原型共享一个原型对象，这样往jQuery上扩展的方法就可以通过$()获取。</p>
 <p>2.extend</p>
 <p><pre><br>(function(root) {<br>    var jQuery = function() {<br>      return new jQuery.prototype.init();<br>    };<br>    jQuery.fn = jQuery.prototype = {//与上面代码不同之处<br>        init:function(){<br>            //<br>        }<br>    }<br>    jQuery.fn.init.prototype = jQuery.fn //与上面代码不同之处<br>    root.$ = root.jQuery = jQuery;<br>})(this)<br></pre><br>从而可以使$.fn.extend和$.extend达到同样效果，于是我们开始使用<br>//jQuery本身扩展<br><br>$.extend({<br>    work:function(){}<br>})<br><br>或者<br><br>//jQuery实例对象扩展,此时this === jQuery实例对象<br><br>$.fn.extend({<br>  sex: ‘男’<br>})<br><br>或者<br><br>$.extend({}, { name: ‘arbor’});<br><br>对任意对象进行扩展,于是我们可以使用<br>jQuery.work();<br>$().sex;</p>
 <p>那么，源码是怎么实现这个功能的呢？先来实现浅拷贝</p>
@@ -175,7 +175,7 @@ root.$ = root.jQuery = jQuery;
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/10/31/网易微专业-jq源码解析-2-1-1-jq整体架构-核心函数功能/" data-id="ck2fvhumz0003h1xqw5dft4bn" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/10/31/网易微专业-jq源码解析-2-1-1-jq整体架构-核心函数功能/" data-id="ck2fxatj50003ivxqzr9i5rag" class="article-share-link">Share</a>
       
       
     </footer>

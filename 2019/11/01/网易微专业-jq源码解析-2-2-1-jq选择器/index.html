@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>网易微专业-jq源码解析-2.2.1:jq选择器 | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="一、常用就jQuery选择器接口1.jQuery对象和DOM对象的区别2.常用jQuery选择器接口 二、选择器源码解析问题：(1)如何把创建的DOM节点包装成jQuery对象?(2)jQuery实例对象length属性的作用?(3)merge方法的应用场景有哪些?(4)$(document).ready()与$(function(){})的关系?关于：sizzle与querySelector本课">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网易微专业-jq源码解析-2.2.1:jq选择器">
+<meta property="og:url" content="http://yoursite.com/2019/11/01/网易微专业-jq源码解析-2-2-1-jq选择器/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="一、常用就jQuery选择器接口1.jQuery对象和DOM对象的区别2.常用jQuery选择器接口 二、选择器源码解析问题：(1)如何把创建的DOM节点包装成jQuery对象?(2)jQuery实例对象length属性的作用?(3)merge方法的应用场景有哪些?(4)$(document).ready()与$(function(){})的关系?关于：sizzle与querySelector本课">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/jq/xuanzeqi_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/jq/xuanzeqi_2.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/jq/selector_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/jq/selector_2.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/jq/selector_3.png">
+<meta property="og:updated_time" content="2019-11-08T08:04:02.455Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="网易微专业-jq源码解析-2.2.1:jq选择器">
+<meta name="twitter:description" content="一、常用就jQuery选择器接口1.jQuery对象和DOM对象的区别2.常用jQuery选择器接口 二、选择器源码解析问题：(1)如何把创建的DOM节点包装成jQuery对象?(2)jQuery实例对象length属性的作用?(3)merge方法的应用场景有哪些?(4)$(document).ready()与$(function(){})的关系?关于：sizzle与querySelector本课">
+<meta name="twitter:image" content="https://snakexu.github.io/images/wangyi/jq/xuanzeqi_1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-网易微专业-jq源码解析-2-2-1-jq选择器" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/11/01/网易微专业-jq源码解析-2-2-1-jq选择器/" class="article-date">
+  <time datetime="2019-11-01T09:28:04.000Z" itemprop="datePublished">2019-11-01</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      网易微专业-jq源码解析-2.2.1:jq选择器
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p></p><h4>一、常用就jQuery选择器接口</h4><br>1.jQuery对象和DOM对象的区别<br><img src="https://snakexu.github.io/images/wangyi/jq/xuanzeqi_1.png"><br>2.常用jQuery选择器接口<br><img src="https://snakexu.github.io/images/wangyi/jq/xuanzeqi_2.png"><p></p>
+<p></p><h4>二、选择器源码解析</h4><br>问题：<br>(1)如何把创建的DOM节点包装成jQuery对象?<br>(2)jQuery实例对象length属性的作用?<br>(3)merge方法的应用场景有哪些?<br>(4)$(document).ready()与$(function(){})的关系?<br>关于：sizzle与querySelector<br><img src="https://snakexu.github.io/images/wangyi/jq/selector_1.png"><br>本课程选用querySelector替换jQuery的Sizzle减轻大家对源码理解的难度<p></p>
+<p>$(“&lt; a &gt;”)//创建DOM节点<br>$(“#a”)//查询DOM节点<br>还可以$(对象，函数)</p>
+<p>源码:</p>
+<p><pre><br>(function(root){<br>    var testExp = /^\s<em>(&lt;[\w\W]+&gt;)[^&gt;]</em>$/;<br>    var rejectExp = /^&lt;(\w+)\s*\/?&gt;(?:&lt;\/\1&gt;)|)$/;<br>    var version = “1.0.1”;<br>    var jQuery = function(selector, context){<br>        return new jQuery.prototype.init(selector, context)<br>    }<br>    jQuery.fn = jQuery.prototype = {//原型对象<br>        length: 0,<br>        jquery: version,<br>        selector: “”,<br>        init: function(selector, context){<br>            context = context || document;<br>            var match,elem,index = 0;<br>            //$() $(undefined) $null $false<br>            if(!selector){<br>                return this;<br>            }<br>            if(typeof selector === “string”){<br>                if(selector.charAt(0) === “&lt;” &amp;&amp; selector.charAt(selector.length-1)==”&gt;” &amp;&amp; selector.length &gt;= 3){<br>                    match = [selector]<br>                }<br>                //创建DOM<br>                if(match){<br>                    //合并数组object array2<br>                    //$.parseHTML() 函数用于将HTML字符串解析为对应的DOM节点数组<br>                    //$.parseHTML( htmlString [, context ] [, keepScripts ] )<br>                    //<a href="https://www.runoob.com/jquery/misc-parsehtml.html相关介绍" target="_blank" rel="noopener">https://www.runoob.com/jquery/misc-parsehtml.html相关介绍</a><br>                    jQuery.merge(this, jQuery.parseHTML(selector, context))<br>                }else{<br>                    //querySelector&amp;querySelectorAll的区别:<br>                    //querySelector从上到下筛选出第一个存在于筛选器中的标签<br>                    //querySelectorAll筛选出所有符合条件的标签。生成一个    NodeList (节点列表) , 我们可以懒惰的通过下标进行访问<br>                    elem = document.querySelectorAll(selector)<br>                    var elems = Array.prototype.slice.call(elem);<br>                    this.length = elems.length;<br>                    for(;index &lt; elems.length;index++){<br>                        this[index] = elems[index];<br>                    }<br>                    this.context = context;<br>                    this.selector = selector;<br>                }<br>            }else if(selector.nodeType){<br>                //如果传入的是document/window等<br>                this.context = this[0] = selector;<br>                this.length = 1;<br>                return this;<br>            }else if(isFunction( selector )){<br>                return root.ready !== undefined ? root.ready(selector) : selector( jQuery );<br>            }<br>        }<br>    }<br>    jQuery.fn.init.prototype = jQuery.fn;<br>    jQuery.fn.ready = function( fn ) {<br>        readyList //关于此处，需要了解更多，请查看源码<br>            .then( fn )<br>            // Wrap jQuery.readyException in a function so that the lookup<br>            // happens at the time of error handling instead of callback<br>            // registration.<br>            .catch( function( error ) {<br>                jQuery.readyException( error );<br>            } );</pre></p>
+<pre><code>    return this;
+};
+jQuery.extend = jQuery.prototype.extend = function() {
+    var target = arguments[0] || {}; 
+    var length = arguments.length;
+    var i = 1;
+    var deep = false; //默认为浅拷贝 
+    var option;
+    var name;
+    var copy;
+    var src;
+    var copyIsArray;
+    var clone;
+    if (typeof target === &quot;boolean&quot;) { 
+        deep = target;
+        target = arguments[1]; 
+        i = 2;
+    }
+    if (typeof target !== &quot;object&quot;) {
+        target = {};
+    }
+    if (length == i) {
+        target = this;
+        i--; //0   
+    }
+    for (; i &lt; length; i++) {
+        if ((option = arguments[i]) !== null) {
+            for (name in option) {
+                src = target[name]; 
+                copy = option[name];
+                if (deep &amp;&amp; (jQuery.isPlainObject(copy) || (copyIsArray = jQuery.isArray(copy)))) {
+                    if (copyIsArray) { 
+                        copyIsArray = false;
+                        clone = src &amp;&amp; jQuery.isArray(src) ? src : [];
+                    } else { 
+                        clone = src &amp;&amp; jQuery.isPlainObject(src) ? src : {};
+                    }
+                    target[name] = jQuery.extend(deep, clone, copy);
+                } else if (copy !== undefined) {
+                    target[name] = copy; 
+                }
+            }
+        }
+    }
+    return target;
+}
+jQuery.extend = ({
+    //类型检测     
+    isPlainObject: function(obj) {
+        return typeof obj === &quot;object&quot;;
+    },
+    isArray: function(obj) { 
+        return toString.call(obj) === &quot;[object Array]&quot;;
+    },
+    isFunction: function(fn) {
+       return toString.call(fn) === &quot;[object Function]&quot;;
+    },
+    isFunction: function(obj) {
+        // Support: Chrome &lt;=57, Firefox &lt;=52
+        // In some browsers, typeof returns &quot;function&quot; for HTML &lt; object &gt; elements
+        // (i.e., `typeof document.createElement( &quot;object&quot; ) === &quot;function&quot;`).
+        // We don&apos;t want to classify *any* DOM node as a function.
+        return typeof obj === &quot;function&quot; &amp;&amp; typeof obj.nodeType !== &quot;number&quot;;
+    };
+    //类数组转化成正真的数组  
+    markArray: function(arr, results) {
+        var ret = results || [];
+        if (arr != null) {
+            jQuery.merge(ret, typeof arr === &quot;string&quot; ? [arr] : arr);
+        }
+        return ret;
+    },
+    //合并数组
+    merge:function(first,second){
+        var l = second.length,
+            i = first.length,//jQuery.fn = jQuery.prototype的时候定义length为0;
+            //一般情况下Function.length中的是函数对象的一个属性值，指该函数有多少个必须要传入的参数，即形参的个数。
+            //(接上一行)形参的数量不包括剩余参数个数，仅包括第一个具有默认值之前的参数个数。
+            //(接上一行)与之对比的是，  arguments.length 是函数被调用时实际传参的个数。
+            //Function.prototype  对象的 length 属性值为 0 。
+            j = 0;
+        if(typeof l === &apos;number&apos;){
+            for(;j &lt; l;j++){
+                first[i++] = second[j]
+            }
+        }else{
+            while(second[j] !== undefined){
+                first[i++] = second[j++]
+            }
+            first.length = i;
+            return first;
+        }
+    },
+    parseHTML: function(data, context){
+        if(!data || typeof data !== &quot;string&quot;){
+            return null;
+        }
+        var parse = rejectExp.exec(data);
+        return [context.createElement(parse[1])];
+    },
+})
+root.$ = root.jQuery = jQuery;
+</code></pre><p>})(this)<br><br>插播一条，max老师在知乎的专栏：<a href="https://zhuanlan.zhihu.com/c_1162017153112363008" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/c_1162017153112363008</a><br>jquery3.4.1源码：<a href="https://code.jquery.com/jquery-3.4.1.js" target="_blank" rel="noopener">https://code.jquery.com/jquery-3.4.1.js</a><br>关于正则表达式的总结，我找到了一篇个人认为比较全面的文章：<a href="https://www.jianshu.com/p/488d60349325" target="_blank" rel="noopener">https://www.jianshu.com/p/488d60349325</a></p>
+<p>关于本篇用到的正则var rejectExp = /^&lt;(\w+)\s<em>\/?&gt;(?:&lt;\/\1&gt;|)$/;<br>解释如下:<br>1、^:必须以 “ &lt; “ 开头<br>2、(\w+)：匹配一个单字字符（字母、数字或者下划线）一次或多次<br>3、\s</em>：匹配 0 次或多次空白字符<br>4、\/：’\’转义字符，此处将’/‘转义为’/‘,<br>5、第一个?:匹配前面/斜杠 0 次或者 1 次。<br>6、第一个?后的&gt;:匹配&gt;<br>7、(?:&lt;\/\1&gt;|) 这里不捕获，并用\1去反向引用前面表达式&lt;(\w+)\s*\/?&gt;的结果</p>
+<p><img src="https://snakexu.github.io/images/wangyi/jq/selector_2.png"><br>如何把创建的DOM节点包装成jquery对象，例子：jQuery.merge(this, jQuery.parseHTML(selector, context))<br><img src="https://snakexu.github.io/images/wangyi/jq/selector_3.png"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/11/01/网易微专业-jq源码解析-2-2-1-jq选择器/" data-id="ck2olu1wy000586xqcnicc1z0" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/11/02/网易微专业-jq源码解析-2-3-1-jq的Callbacks入门-原理分析/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          网易微专业-jq源码解析-2.3.1-jq的Callbacks入门&amp;原理分析
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/10/31/网易微专业-jq源码解析-2-1-1-jq整体架构-核心函数功能/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">网易微专业-jq源码解析-2.1.1:jq整体架构,核心函数功能</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/11/07/js正则表达式基础总结/">js正则表达式基础总结</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/02/网易微专业-jq源码解析-2-3-1-jq的Callbacks入门-原理分析/">网易微专业-jq源码解析-2.3.1-jq的Callbacks入门&amp;原理分析</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/01/网易微专业-jq源码解析-2-2-1-jq选择器/">网易微专业-jq源码解析-2.2.1:jq选择器</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/31/网易微专业-jq源码解析-2-1-1-jq整体架构-核心函数功能/">网易微专业-jq源码解析-2.1.1:jq整体架构,核心函数功能</a>
+          </li>
+        
+          <li>
+            <a href="/2018/11/12/hello-world/">Hello World</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

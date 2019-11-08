@@ -62,6 +62,316 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-js正则表达式基础总结" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/11/07/js正则表达式基础总结/" class="article-date">
+  <time datetime="2019-11-07T11:04:59.000Z" itemprop="datePublished">2019-11-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/11/07/js正则表达式基础总结/">js正则表达式基础总结</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>第一部分 基础知识<br>一、正则申明方式<br>1、构造函数方式<br>var reg = new RegExp(‘\d’, ‘gi’);<br>● 通过 new 构造一个正则表达式对象，其中第一个参数 ‘\d’ 是正则内容，第二个参数 ‘gi’ 是修饰符。两个参数皆为字符串类型</p>
+<p>● 修饰符的作用是对匹配过程进行限定</p>
+<p>● 修饰符有三种：i, g, m，可以同时出现，没有顺序（即 gi 与 ig 一样），请参考下方说明</p>
+<p>修饰符    说明<br>i    忽略大小写匹配<br>g    全局匹配，即是匹配一个后继续匹配，直到结束<br>m    多行匹配，即是遇到换行后不停止匹配，直到结束<br>说明：<br>● [a-z] 表示从小写字母a到小写字母z之间的任意字符(含a和z)，下文会有详细说明<br>● + 表示至少出现一次<br>● \n 在js中表示换行<br>● ^[a-z] 表示以任意小写字母开头的行</p>
+<p>‘aBcd efg’.match(/[a-z]+/);<br>// [“a”]</p>
+<p>‘aBcd efg’.match(/[a-z]+/i);<br>// [“aBcd”]</p>
+<p>‘aBcd efg’.match(/[a-z]+/g);<br>// [“a”, “cd”, “efg”]</p>
+<p>‘aBcd efg’.match(/[a-z]+/gi);<br>// [“aBcd”, “efg”]</p>
+<p>‘aB\ncd\n efg’.match(/^[a-z]+/m);<br>// [“a”]</p>
+<p>‘aB\ncd\n efg’.match(/^[a-z]+/g);<br>// [“a”]</p>
+<p>‘aB\ncd\n efg’.match(/^[a-z]+/gm);<br>// [“a”, “cd”]<br>// 注意不是 [“a”, “cd”, “efg”]<br>2、字面量方式<br>相比较上一种方式，这一种更为常见，上面示例也都使用了这种方式</p>
+<p>var reg = /\d/gi;<br>两个斜线内为正则的内容，后面可以跟修饰符，与第一种构造函数方式相比更简洁，缺点是正则内容不能拼接，对于大多数场景俩说足够了</p>
+<p>二、正则相关符号<br>1、方括号 [] 用法<br>用于查找方括号内的任意字符：</p>
+<p>在这里插入图片描述</p>
+<p>注意：<br>1）^ 在 [] 内开始位置及正则双斜线开始位置有特殊含义，其他位置表示 ^ 字符本身<br>● // 正则开头位置表示以某某开头的字符串，如下表示以大写或小写字母开头的且连续为字母的字符串：</p>
+<p>‘adobe 2016’.match(/^[a-zA-Z]+/);<br>// [“adobe”]<br>● 在正则 或 匹配中(即 | 匹配)，表示 或者以某某字符开始的字符串，如下表示匹配 连续数字 或 以小写字母开头且连续为小写字母的字符串，所以返回结果包含2016 和 adobe，注意返回结果不是 [“2016”, “adobe”]</p>
+<p>‘adobe2016ps’.match(/\d+|^[a-z]+/g);<br>// [“adobe”, “2016”]<br>● 在 [] 内开始位置时，表示不匹配 [] 内除 ^ 以外的所有字符：</p>
+<p>‘adobe’.match(/[^abc]/g);<br>// [“d”, “o”, “e”]<br>注： $ 与 ^ 的前两个用法相似，只不过匹配的是以某某字符结尾的字符串，举例：</p>
+<p>‘adobe 2016’.match(/\d+|[a-z]+$/g);<br>// [“2016”]<br>‘adobe’.match(/\d+|[a-z]+$/g);<br>// [“adobe”]<br>2）- (连字符)表示左边字符的 ASCII 值到右边字符 ASCII 编码值之间及左右字符自身的所有字符</p>
+<p>‘adobe PS 2016’.match(/[a-g]/g);<br>// [“a”, “d”, “b”, “e”]<br>3）- 连字符左侧的字符对应的 ASCII 值一定要小于或等于右侧的字符，否则会报语法错误</p>
+<p>‘adobe’.match(/[z-a]/);<br>// Uncaught SyntaxError: Invalid regular expression: /[z-a]/: Range out of order in character class…<br>4）如果希望对连字符 - 本身进行匹配，需要用反斜线转义</p>
+<p>‘adobe-2016’.match(/[a-g-]/g);<br>// [“a”, “d”, “b”, “e”, “-“]<br>5）查看 ASCII 表就会发现，大写字母的 ASCII 值是小于小写字母的，因此下面用法会报语法错误</p>
+<p>‘adobe-2016’.match(/[a-Z]/g);<br>// Uncaught SyntaxError: Invalid regular expression: /[a-Z]/: Range out of order in character …<br>那么问题来了，如果要表示所有字母，不区分大小写怎么办呢？其实有两种方式：<br>A、第一种是使用修饰符 i，前面提到过。举例：</p>
+<p>‘adobe-PS’.match(/[a-z]/gi);<br>// [“a”, “d”, “o”, “b”, “e”, “P”, “S”]<br>B、第二种是在正则中明确指明大小写字母，举例：</p>
+<p>‘adobe-PS’.match(/[a-zA-Z]/g);<br>// [“a”, “d”, “o”, “b”, “e”, “P”, “S”]<br>返回结果跟第一种一样。当然这个例子有些特殊：匹配了所有大小写字母。当只匹配部分大小写字母的时候只能使用第二种方式，在此就不做示例了，读者可以自己测试</p>
+<p>6）匹配大小字母不能写成 [A-z]，虽然不会报语法错误，但隐式的放大了匹配范围，查看 ASCII 会发现，在大写字母 Z 到小写字母 a 之间还有 [、 \、 ]、 ^、 _、 ` 这6个字符，因此不能这么写。</p>
+<p>7）想必有同学会问， \w 不也可以匹配字母么？是的，\w 确实可以匹配字母，但跟上面说的一样,也隐式的放大了匹配范围，\w 除了匹配大小字母外还匹配了数字和下划线，即 \w 与 [A-Za-z0-9_] 等价，当然 A-Z、a-z、0-9(等价于\d)、_这四组没顺序之分</p>
+<p>2、特殊含义字符<br>● . 匹配任意单个字符，除换行和结束符</p>
+<p>‘1+0.2<em>2=1.4’.match(/.{2}/g);<br>// [“1+”, “0.”, “2</em>“, “2=”, “1.”]<br>● \w 匹配任意单词字符（数字、字母、下划线），等价于[A-Za-z0-9_]</p>
+<p>‘ad34~!@$ps’.match(/\w/g);<br>// [“a”, “d”, “3”, “4”, “p”, “s”]<br>● \W 匹配任意单词字符，与\w相反，等价于[^A-Za-z0-9_]</p>
+<p>‘ad34~!@$ps’.match(/\W/g);<br>// [“~”, “!”, “@”, “$”]<br>● \d 匹配数字，等价于 [0-9]</p>
+<p>‘ps6’.match(/\d/g);<br>// [“6”]<br>● \D 匹配非数字，等价于 [0-9]</p>
+<p>‘ps6’.match(/\D/g);<br>// [“p”, “s”]<br>● \s 匹配空白字符，主要有(\n、\f、\r、\t、\v)，注意’a\sb’中的\s依然是字符s，所以’a\sb’.match(/\s/g)返回 null</p>
+<p>‘adobe ps’.match(/\s/g);<br>// [“ “]<br>● \S 匹配非空白字符，与\s相反</p>
+<p>‘adobe ps’.match(/\S/g);<br>// [“a”, “d”, “o”, “b”, “e”, “p”, “s”]<br>● \b 匹配单词边界，注意连续的数字、字母或下划线组成的字符串会认为一个单词</p>
+<p>‘adobe(2016) ps6.4’.match(/\b(\w+)/g);<br>// [“adobe”, “2016”, “ps6”, “4”]<br>● \B 匹配非单词边界，仔细体会下面的示例与\b的结果</p>
+<p>‘adobe(2016) ps6.4’.match(/\B(\w+)/g);<br>// [“dobe”, “016”, “s6”]<br>● \0 匹配NUL字符</p>
+<p>‘\0’.match(/\0/);<br>// [“NUL”]<br>● \n 匹配换行符（编码：10，newline）</p>
+<p>‘adobe\nps’.match(/\n/).index;<br>// 5<br>● \f 匹配换页符</p>
+<p>‘adobe\fps’.match(/\f/).index;<br>// 5<br>● \r 匹配回车符（编码：13，return）</p>
+<p>‘adobe\rps’.match(/\r/).index;<br>// 5<br>● \t 匹配制表符，键盘tab对应的字符</p>
+<p>‘adobe\tps’.match(/\t/).index;<br>// 5<br>● \v 匹配垂直制表符</p>
+<p>‘adobe\vps’.match(/\v/).index;<br>// 5<br>● \xxx 匹配以八进制数xxx规定的字符</p>
+<p>‘a’.charCodeAt(0).toString(8);<br>// “141”<br>‘adobe ps’.match(/\141/g);<br>// [“a”]<br>● \xdd 匹配以十六进制数dd规定的字符</p>
+<p>‘a’.charCodeAt(0).toString(16);<br>// “61”<br>‘adobe ps’.match(/\x61/g);<br>// [“a”]<br>● \uxxxx 匹配以十六进制数xxxx规定的 Unicode字符，注意位数不够需要补0</p>
+<p>‘a’.charCodeAt(0).toString(16);<br>// “61”<br>‘adobe ps’.match(/\u0061/g);<br>// [“a”]<br>注意：<br>window系统回车换行符为\r\n，linux系统下没有\r，linux系统通过vi编辑器打开window系统的文本文件时候，经常在行尾出现^M符号，也就是\r的原因，解析文本的时候需要注意相关判断。</p>
+<p>3、量词说明<br>● n+ 匹配包含至少一个n的字符串</p>
+<p>‘adobe paas’.match(/a+\w+/g);<br>// [“adobe”, “aas”]<br>● n* 匹配包含零个或多个n的字符串</p>
+<p>‘ab3 aa12bb’.match(/a*\d+/g);<br>// [“3”, “aa12”]<br>● n? 匹配包含零个或一个n的字符串</p>
+<p>‘ab3 aa12bb’.match(/a?\d+/g);<br>// [“3”, “a12”]<br>● n{x} 匹配包含连续x个n的字符串</p>
+<p>‘ab3 aa12bb aaa34’.match(/a{2}\d+/g);<br>// [“aa12”, “aa34”]<br>● n{x,y} 匹配包含至少连续x个且最多连续y个n的字符串</p>
+<p>‘a3 aaa12bb aaaaaaa34’.match(/a{2,4}\d+/g);<br>// [“aaa12”, “aaaa34”]<br>● n{x,} 匹配包含至少连续x个n的字符串</p>
+<p>‘a3 aaa12bbaa4’.match(/a{2,}\d+/g);<br>// [“aaa12”, “aa4”]<br>由上可知，以下 表达式1 与 表达式2 等价</p>
+<p>表达式1    表达式2<br>n+    n{1,}<br>n<em>    n{0,}<br>n？    n{0,1}<br>4、符号说明<br>符号 {}、、$、</em>、+、?、[]、[]、- 已经在前面介绍过，接下来看下其他特殊字符<br>● a|b 匹配包含a或b的字符串</p>
+<p>‘adobe ps13’.match(/([a-g]+l\d+)/g);<br>// [“ad”, “be”, “13”]<br>● / 字面量方式申明正则时的界定符</p>
+<p>‘adobe’.match(/\w+/);<br>// [“adobe”]<br>● \ 普通反斜线字符</p>
+<p>‘a\dobe’.match(/\/);<br>// [“\”]<br>5、小括号 () 用法<br>正则在非全局(g)模式下，通过match方式，返回的数组第一个值整体匹配的字符串，其他值为通过括号分组匹配到的<br>1）捕获用法<br>● 表示对匹配的字符串进行分组</p>
+<p>‘adobe cs9cs10, adobe cs11’.match(/([a-z]+\d+)+/);<br>// [“cs9cs10”, “cs10”]<br>// 注意{2,}是对 括弧内的匹配 的描述<br>● 与|一起使用表示选择性</p>
+<p>“he is 12. she is 13. it’s box”.match(/(it|she|he)\s+is/g);<br>// [“he is”, “she is”]<br>● 表示对匹配的字符串捕获</p>
+<p>‘adobe cs9’.match(/[a-z]+\d+/);<br>// [“cs9”]<br>‘adobe cs9’.match(/[a-z]+(\d+)/);<br>// [“cs9”, “9”]<br>● 表示对匹配的字符串反向引用，引用从 \1 开始，从正则左侧第一个左括号（当然要是闭合的括号才行）开始计算，每多一对括号，引用数加一，在非捕获情况下不会加一。但正则比较复杂时，减少引用可以提升匹配性能，关于 非捕获 下方会详细介绍<br>引用的结果可以通过 构造函数 RegExp 获取，即 RegExp.9</p>
+<p>‘Can you can a can as a canner can can a can?’.match(/([cC]an+)\s+\1/g);<br>// [“can can”]<br>// 注意 <code>\1</code> 等价于正则里的 <code>([a-z]+)</code>，即与下面示例相同<br>‘Can you can a can as a canner can can a can?’.match(/[cC]an+\s+[cC]an+/g);<br>// [“can can”]</p>
+<p>// 如果把括弧去掉可以看下结果<br>‘Can you can a can as a canner can can a can?’.match(/[cC]an+\s+\1/g);<br>// null<br>2）非捕获用法，以(?)形式出现<br>● (?:n ) 表示非捕获组</p>
+<p>// 不使用括号时<br>‘adobe12ps15test’.match(/[a-z]+\d+[a-z]+/);<br>// [“adobe12ps”]<br>// 使用括号分组</p>
+<p>‘adobe12ps15test’.match(/[a-z]+(\d+)([a-z]+)/);<br>// [“adobe12ps”, “12”, “ps”]</p>
+<p>‘adobe12ps15test’.match(/[a-z]+(?:\d+)([a-z]+)/);<br>// [“adobe12ps”, “ps”]<br>// 看起来上面语句不用(?:)也可以得到相同结果，即：</p>
+<p>‘adobe12ps15test’.match(/[a-z]+\d+([a-z]+)/);<br>// [“adobe12ps”, “ps”]<br>// 注意，但需求希望匹配字母之间的规则复杂时，如希望匹配字母，且字母之间可以为1或3时，但不需要1和3</p>
+<p>‘adobe11ps15test’.match(/[a-z]+(1|3)+([a-z]+)/);<br>// [“adobe11ps”, “1”, “ps”]<br>// 返回中不希望包含数字怎么办，可以使用非捕获</p>
+<p>‘adobe11ps15test’.match(/[a-z]+(?:1|3)+([a-z]+)/);<br>// [“adobe11ps”, “ps”]<br>● (?=n ) 匹配任何其后紧跟字符n的字符串，但返回中不包含n</p>
+<p>‘adobe12ps15test’.match(/[a-z]+(?=\d)/g);<br>// [“adobe”, “ps”]<br>● (?!n ) 匹配任何其后没有紧跟字符n的字符串，返回中不包含n</p>
+<p>‘adobe12ps15test’.match(/[a-z]+(?!\d)/g);<br>// [“adob”, “p”, “test”]<br>● (?&lt;=n ) 匹配任何其前紧跟字符n的字符串，返回中不包含n</p>
+<p>‘adobe12ps15test’.match(/(?&lt;=\d)[a-z]+/g);<br>// [“ps”, “test”]<br>● (?&lt;!n ) 匹配任何其前紧跟字符n的字符串，返回中不包含n</p>
+<p>‘adobe12ps15test’.match(/(?&lt;!\d)[a-z]+/g);<br>// [“adobe”, “s”, “est”]<br>3）注意<br>● A、如果希望对上面特殊字符本身进行匹配，需要在其前面添加\进行转移</p>
+<p>‘11+2=13’.match(/\d++/g);<br>// [“11+”]<br>‘(11+2)*2=26’.match(/(\d++\d+)/g);<br>// [“(11+2)”]<br>● B、\举例</p>
+<p>// 注意下面两个表达式返回的结果<br>‘path C:\Windows\System32’.match(/([a-zA-Z]:\\w+)/g);<br>// null<br>‘path C:\Windows\System32’.match(/([a-zA-Z]:\\w+)/g);<br>// [“C:\Windows”]<br>说明: 在申明字符串 ‘path C:\Windows\System32’ 时，其中的 ‘’ 就已经被当做转移符，既是 ‘\W’ ===<br>‘W’,所以如果希望申明的字符串中包含反斜线，需要在加一个反斜线转义，即 \</p>
+<p>6、正则相关方法<br>1） RegExp对象相关方法</p>
+<p>在这里插入图片描述<br>2）String对象相关方法</p>
+<p>在这里插入图片描述<br>3）replace 具体用法<br>顾名思义，是字符串替换方法，但用法比较广泛，相信读者已经非常熟悉了。在此就当复习了<br>A、 基本用法<br>直接传入字符串进行替换，找到子串后只替换一次，举例：</p>
+<p>‘adobe abc’.replace(‘b’, ‘_’)<br>// “ado_e abc”<br>// 注意 第二个 b 没有被替换<br>如果希望全部替换，可以使用正则表达式并用全局修饰符 g 方式，举例：</p>
+<p>‘adobe abc’.replace(/b/g, ‘_’)<br>// “ado_e a_c”<br>B、 高级用法<br>第二个参数可以使用 function，其中有三个参数，分别为 匹配的字符串、当前匹配的字符串index值、匹配的源字符串，最终结果根据每次匹配结果进行相应的替换<br>举例：</p>
+<p>‘adobe aacc bbaa’.replace(/a+/g, function(str, index, source){<br>    if(index &gt; 0){<br>        return str.toUpperCase();<br>    } else {<br>        return str;<br>    }<br>});<br>// “adobe AAcc bbAA”<br>第二部分 案例分析<br>一、常见匹配<br>在写正则之前，需要注意以下几点：</p>
+<p>一定要清楚期望的规则是什么，不然无从匹配<br>有些正则不只一种写法，要注意简短干练，复杂的正则表达式不仅难懂，而且容易出BUG，性能也不是很好<br>正则虽好，可要适度奥。有些字符串处理不一定适合用正则<br>1、手机号<br>规则：以1开头第二位为3、5、7、8且长度为11位的数字组合</p>
+<p>/^1[3578]\d{9}$/.test(13600001111);<br>// true<br>2、 字符串提取<br>举例：提取字符串中的数字<br>分析：<br>根据对数字的理解，可能为负数，即-?，如果是负数，其后需要是数字且至少一位，即 -?\d+，小数部分可能有也可能没有，所以需要对小数部分括弧起来用 ? 或 {0, 1}限定，因为.是特殊字符需要转义，于是表达式为：-?\d+(.\d+)?</p>
+<p>‘(12.3 - 32.3)*2 = -40’.match(/-?\d+(.\d+)?/g);<br>// [“12.3”, “32.3”, “2”, “-40”]<br>二、jQuery中的正则片段<br>1、表达式<br>在jQuery 3.1.2-pre中找到一个解析单标签的正则，如下：</p>
+<p>/^&lt;([a-z][^\/\0&gt;:\x20\t\r\n\f]<em>)[\x20\t\r\n\f]</em>\/?&gt;(?:&lt;\/\1&gt;|)$/i<br>2、分解<br>乍一看有点懵，其实拆解之后就容易理解了，注意拆解的步骤，通常来说：<br>1） 第一步可以先看括号 () ，可以将各个小括号及非括号的分成不同部分，如</p>
+<p>/^&lt;  ([a-z][^\/\0&gt;:\x20\t\r\n\f]<em>)  [\x20\t\r\n\f]</em>\/?&gt;  (?:&lt;\/\1&gt;|)  $/i<br>2） 第二步可以将中括号分开</p>
+<p>/^&lt;  (  [a-z]  [^\/\0&gt;:\x20\t\r\n\f]<em>  )  [\x20\t\r\n\f]</em>  \/?&gt;  (?:&lt;\/\1&gt;|)  $/i<br>现在是不是已经很清楚了，接下来分解下，就很容易理解了<br>3、详解<br>● 1）^&lt; 很明显在匹配标签左尖括号括号，且以其开始</p>
+<p>● 2）( [a-z] [^\/\0&gt;:\x20\t\r\n\f]<em> ) 这个括号有两部分，第一个 [a-z] 没什么好解释，即标签&lt;紧跟的必须为字母，因为全局加了 i(忽略大小写) 修饰符，所以大小写字母都可以；[^\/\0&gt;:\x20\t\r\n\f]</em>，及限制标签名必须以字母开始，且第二个字母不能为/ \0 &gt; : \20 t \r \n \f的任意多个字符（思考为什么），() 表示对标签的分组，方便取到标签名</p>
+<p>● 3）[\x20\t\r\n\f]<em> 表示可能含有 [\x20\t\r\n\f] 这些特殊字符，与前面的 [^\/\0&gt;:\x20\t\r\n\f]</em> 相似却不一样，通过这里可以看出&lt;br之后进行回车也能匹配到<br>● 4）/?&gt; 能匹配<br>或</p>
+<p>● 5）(?:&lt;\/\1&gt;|) 这里不捕获，并用\1去反向引用第一个括号的表达式 ([a-z][^\/\0&gt;:\x20\t\r\n\f]*)。这里的|表示 &lt;/\1&gt; 可有可无，即：(?:&lt;\/\1&gt;|) 与 (?:&lt;\/\1&gt;)?匹配结果一样</p>
+<p>作者：_双眸<br>链接：<a href="https://www.jianshu.com/p/488d60349325" target="_blank" rel="noopener">https://www.jianshu.com/p/488d60349325</a><br>来源：简书<br>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/11/07/js正则表达式基础总结/" data-id="ck2olu1wv000286xqjpgbypqu" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-jq源码解析-2-3-1-jq的Callbacks入门-原理分析" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/11/02/网易微专业-jq源码解析-2-3-1-jq的Callbacks入门-原理分析/" class="article-date">
+  <time datetime="2019-11-02T08:54:09.000Z" itemprop="datePublished">2019-11-02</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/11/02/网易微专业-jq源码解析-2-3-1-jq的Callbacks入门-原理分析/">网易微专业-jq源码解析-2.3.1-jq的Callbacks入门&amp;原理分析</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>一、关于$.Callbacks<br>1、callbacks介绍<br>·$.Callbacks用于管理函数队列<br>·通过add添加处理函数到队列当中，通过fire去执行这些处理函数<br>另:$.Callbacks是在jQuery内部使用的，如为 .ajax，$.Deferred等组件提供基础功能的函数。它也可以用在类似功能的一些组件中，如自己开发的插件。<br>API例子：<br>var cb = $.Callbacks();<br>cb.add(function(){console.log(‘add one’)});//add() 添加处理函数<br>cb.fire();//add one //fire()按照添加函数的顺序依次执行处理函数<br>2、参数<br>$.Callbacks通过字符串参数的形式，支持4种特定功能：<br>once:函数队列只执行一次<br><img src="https://snakexu.github.io/images/wangyi/jq/callback_2.png"><br>unique:往内部队列添加的函数保持唯一，不能重复添加<br><img src="https://snakexu.github.io/images/wangyi/jq/callback_3.png"><br>stopOnFalse:内部队列里的函数是依次执行的，当某个函数的返回值是false时，停止继续执行剩下的函数<br><img src="https://snakexu.github.io/images/wangyi/jq/callback_4.png"><br>memory:当函数队列fire一次过后，内部函数会记录当前fire的参数。当下次调用add的时候，会把记录的参数传递给新添加的函数并立即执行这个新添加的函数<br><img src="https://snakexu.github.io/images/wangyi/jq/callback_5.png"><br>3、从事件函数了解callbacks<br>事件通常与函数配合使用，这样就可以通过发生的事件来驱动函数的执行。<br>原则：<br>(1)一个事件对应一个事件函数<br>(2)在一个事件对应多个事件函数的情况下，后者会覆盖前者<br>例：<br>Element.onclick = function() {<br>  console.log(code);<br>}<br>Element.onclick = function() {<br>  console.log(code1);<br>}<br>我们往DOM元素上绑定两次onclick事件，当我们触发该点击事件时，只触发打印code1。<br>如果我们想要改变这种一对一的原则，那可以按照下列栗子对事件驱动方案进行改造。<br>var callbacks = [function(){}, function(){}, function(){}];<br>Element.onclick = function() {<br>  var _this = this;<br>  callbacks.forEach(function(fn) {<br>    fn.call(_this);<br>  })<br>}<br>首先，可以先将函数存储在callbacks数组中，在元素绑定的onclick函数上去遍历并依次执行处理函数。这样就建立起一对多的事件模型。<br>这时候的callbacks是一个数组。但我们其实更想callbacks它不仅是一个数组，更是一个容器，能比数组赋予更多的功能。<br>callbacks作为数组时，虽然可以通过push添加元素，通过循环执行函数。但我们如果想通过参数去在添加元素时控制数组的形成，在执行的之后通过参数去控制哪些执行哪些不执行，这时候callbacks就应运而生。jQuery的callbacks中对外提供add和fire两个方法，该两个方法的功能与数组的push和遍历执行功能类似，但可以根据传入的参数去控制执行函数的执行。<br>二、源码实现</p>
+<p><pre><br>(function(root){<br>    var optionsCache = {};<br>    var _ = {<br>        //options参数,接收once、unique、stopOnFalse、memory这四个参数之一<br>        callbacks:function(options){<br>            options = typeof options === ‘string’ ? (optionsCache[options] || createOptions(options)) : {};<br>            var list = [];//执行队列<br>            //这里定义的变量基本都是用于记录队列执行进度，根据各种不同的参数记录不同的数值<br>            var index, length, testting, memory, starts, start;<br>            //执行方法，执行队列<br>            var fire = function(data){<br>                memory = options.memory &amp;&amp; data;<br>                //如果有参数memory，则需要从上次队列执行到的地方开始执行，否则从list队列里下标为0的地方开始执行<br>                index = starts || 0;<br>                start = 0;<br>                testting = true;<br>                length = list.length;<br>                for(; index &lt; length ; index++){<br>                    //data[0]绑定上下文执行环境对象,options.stopOnFalse调用$.Callbacks是否传递参数stopOnFalse<br>                    if(list[index].apply(data[0], data[1]) === false &amp;&amp; options.stopOnFalse){<br>                        break;<br>                    }<br>                }<br>            }<br>            //这里函数颗粒度的划分的思路add/fire/fireWidth然后再去fire()执行<br>            var self = {<br>                //添加<br>                add:function(){<br>                    var args = Array.prototype.slice.call(arguments);<br>                    start = list.length;<br>                    args.forEach(function(fn){<br>                        if(toString.call(fn) === ‘[object Function]’){<br>                            list.push(fn);<br>                        }<br>                    });<br>                    if(memory){<br>                        starts = start;<br>                        fire(memory)<br>                    }<br>                },<br>                //函数执行过程中上下文的绑定<br>                fireWidth:function(context, arguments){<br>                    var args = [context, arguments];<br>                    if(!options.once || !testting){<br>                        fire(args)<br>                    }<br>                },<br>                //与callbacks的执行方法fire不同<br>                fire:function(){<br>                    //this-&gt;self,传递上下文执行环境<br>                    self.fireWidth(this, arguments);<br>                }<br>            }<br>            //个人认为第一个需要注意的思路<br>            return self;//每次调用callbacks都返回一个队列，队列里对应有add和fire的操作<br>        }<br>    }<br>    function createOptions(options){<br>        var object = optionsCache[options] = {};<br>        //如果参数为一个以上，如$.Callbacks(“once memory”)<br>        options.split(/\s+/).forEach(function(value){<br>            object[value] = true;<br>        })<br>        retrun object;<br>    }<br>    root._ = _;<br>})(this);<br></pre><br><!--线性队列处理提供了很好的思路--><br>add方法的核心，其实就是把参数这种类数组转换为数组，并循环push到定义的list数组中，这个list数组也称之为队列。<br>fire方法的调用比较复杂，之所以要拆开为self.fire、self.fireWith、fire三个函数，是为了后续的参数控制做准备。self.fire是用于调用时进行传参，fire是通过call方法去执行队列list中的执行函数，其上下文是self.fireWith进行绑定的。当然，self.fireWith的作用远不止如此，后续我们会继续说到。<br>注意：最后一行代码，callbacks最后会返回self，这是一个很核心的设计。那我们就要思考，这里为什么不将add、fire方法直接返回呢？原因是，我们想要每次调用self，最终返回出去的是一个队列，这样每次调用所得到的队列都是不同的，彼此之之间不会相互影响。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/11/02/网易微专业-jq源码解析-2-3-1-jq的Callbacks入门-原理分析/" data-id="ck2olu1wz000686xqj00kqgjd" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-jq源码解析-2-2-1-jq选择器" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/11/01/网易微专业-jq源码解析-2-2-1-jq选择器/" class="article-date">
+  <time datetime="2019-11-01T09:28:04.000Z" itemprop="datePublished">2019-11-01</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/11/01/网易微专业-jq源码解析-2-2-1-jq选择器/">网易微专业-jq源码解析-2.2.1:jq选择器</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p></p><h4>一、常用就jQuery选择器接口</h4><br>1.jQuery对象和DOM对象的区别<br><img src="https://snakexu.github.io/images/wangyi/jq/xuanzeqi_1.png"><br>2.常用jQuery选择器接口<br><img src="https://snakexu.github.io/images/wangyi/jq/xuanzeqi_2.png"><p></p>
+<p></p><h4>二、选择器源码解析</h4><br>问题：<br>(1)如何把创建的DOM节点包装成jQuery对象?<br>(2)jQuery实例对象length属性的作用?<br>(3)merge方法的应用场景有哪些?<br>(4)$(document).ready()与$(function(){})的关系?<br>关于：sizzle与querySelector<br><img src="https://snakexu.github.io/images/wangyi/jq/selector_1.png"><br>本课程选用querySelector替换jQuery的Sizzle减轻大家对源码理解的难度<p></p>
+<p>$(“&lt; a &gt;”)//创建DOM节点<br>$(“#a”)//查询DOM节点<br>还可以$(对象，函数)</p>
+<p>源码:</p>
+<p><pre><br>(function(root){<br>    var testExp = /^\s<em>(&lt;[\w\W]+&gt;)[^&gt;]</em>$/;<br>    var rejectExp = /^&lt;(\w+)\s*\/?&gt;(?:&lt;\/\1&gt;)|)$/;<br>    var version = “1.0.1”;<br>    var jQuery = function(selector, context){<br>        return new jQuery.prototype.init(selector, context)<br>    }<br>    jQuery.fn = jQuery.prototype = {//原型对象<br>        length: 0,<br>        jquery: version,<br>        selector: “”,<br>        init: function(selector, context){<br>            context = context || document;<br>            var match,elem,index = 0;<br>            //$() $(undefined) $null $false<br>            if(!selector){<br>                return this;<br>            }<br>            if(typeof selector === “string”){<br>                if(selector.charAt(0) === “&lt;” &amp;&amp; selector.charAt(selector.length-1)==”&gt;” &amp;&amp; selector.length &gt;= 3){<br>                    match = [selector]<br>                }<br>                //创建DOM<br>                if(match){<br>                    //合并数组object array2<br>                    //$.parseHTML() 函数用于将HTML字符串解析为对应的DOM节点数组<br>                    //$.parseHTML( htmlString [, context ] [, keepScripts ] )<br>                    //<a href="https://www.runoob.com/jquery/misc-parsehtml.html相关介绍" target="_blank" rel="noopener">https://www.runoob.com/jquery/misc-parsehtml.html相关介绍</a><br>                    jQuery.merge(this, jQuery.parseHTML(selector, context))<br>                }else{<br>                    //querySelector&amp;querySelectorAll的区别:<br>                    //querySelector从上到下筛选出第一个存在于筛选器中的标签<br>                    //querySelectorAll筛选出所有符合条件的标签。生成一个    NodeList (节点列表) , 我们可以懒惰的通过下标进行访问<br>                    elem = document.querySelectorAll(selector)<br>                    var elems = Array.prototype.slice.call(elem);<br>                    this.length = elems.length;<br>                    for(;index &lt; elems.length;index++){<br>                        this[index] = elems[index];<br>                    }<br>                    this.context = context;<br>                    this.selector = selector;<br>                }<br>            }else if(selector.nodeType){<br>                //如果传入的是document/window等<br>                this.context = this[0] = selector;<br>                this.length = 1;<br>                return this;<br>            }else if(isFunction( selector )){<br>                return root.ready !== undefined ? root.ready(selector) : selector( jQuery );<br>            }<br>        }<br>    }<br>    jQuery.fn.init.prototype = jQuery.fn;<br>    jQuery.fn.ready = function( fn ) {<br>        readyList //关于此处，需要了解更多，请查看源码<br>            .then( fn )<br>            // Wrap jQuery.readyException in a function so that the lookup<br>            // happens at the time of error handling instead of callback<br>            // registration.<br>            .catch( function( error ) {<br>                jQuery.readyException( error );<br>            } );</pre></p>
+<pre><code>    return this;
+};
+jQuery.extend = jQuery.prototype.extend = function() {
+    var target = arguments[0] || {}; 
+    var length = arguments.length;
+    var i = 1;
+    var deep = false; //默认为浅拷贝 
+    var option;
+    var name;
+    var copy;
+    var src;
+    var copyIsArray;
+    var clone;
+    if (typeof target === &quot;boolean&quot;) { 
+        deep = target;
+        target = arguments[1]; 
+        i = 2;
+    }
+    if (typeof target !== &quot;object&quot;) {
+        target = {};
+    }
+    if (length == i) {
+        target = this;
+        i--; //0   
+    }
+    for (; i &lt; length; i++) {
+        if ((option = arguments[i]) !== null) {
+            for (name in option) {
+                src = target[name]; 
+                copy = option[name];
+                if (deep &amp;&amp; (jQuery.isPlainObject(copy) || (copyIsArray = jQuery.isArray(copy)))) {
+                    if (copyIsArray) { 
+                        copyIsArray = false;
+                        clone = src &amp;&amp; jQuery.isArray(src) ? src : [];
+                    } else { 
+                        clone = src &amp;&amp; jQuery.isPlainObject(src) ? src : {};
+                    }
+                    target[name] = jQuery.extend(deep, clone, copy);
+                } else if (copy !== undefined) {
+                    target[name] = copy; 
+                }
+            }
+        }
+    }
+    return target;
+}
+jQuery.extend = ({
+    //类型检测     
+    isPlainObject: function(obj) {
+        return typeof obj === &quot;object&quot;;
+    },
+    isArray: function(obj) { 
+        return toString.call(obj) === &quot;[object Array]&quot;;
+    },
+    isFunction: function(fn) {
+       return toString.call(fn) === &quot;[object Function]&quot;;
+    },
+    isFunction: function(obj) {
+        // Support: Chrome &lt;=57, Firefox &lt;=52
+        // In some browsers, typeof returns &quot;function&quot; for HTML &lt; object &gt; elements
+        // (i.e., `typeof document.createElement( &quot;object&quot; ) === &quot;function&quot;`).
+        // We don&apos;t want to classify *any* DOM node as a function.
+        return typeof obj === &quot;function&quot; &amp;&amp; typeof obj.nodeType !== &quot;number&quot;;
+    };
+    //类数组转化成正真的数组  
+    markArray: function(arr, results) {
+        var ret = results || [];
+        if (arr != null) {
+            jQuery.merge(ret, typeof arr === &quot;string&quot; ? [arr] : arr);
+        }
+        return ret;
+    },
+    //合并数组
+    merge:function(first,second){
+        var l = second.length,
+            i = first.length,//jQuery.fn = jQuery.prototype的时候定义length为0;
+            //一般情况下Function.length中的是函数对象的一个属性值，指该函数有多少个必须要传入的参数，即形参的个数。
+            //(接上一行)形参的数量不包括剩余参数个数，仅包括第一个具有默认值之前的参数个数。
+            //(接上一行)与之对比的是，  arguments.length 是函数被调用时实际传参的个数。
+            //Function.prototype  对象的 length 属性值为 0 。
+            j = 0;
+        if(typeof l === &apos;number&apos;){
+            for(;j &lt; l;j++){
+                first[i++] = second[j]
+            }
+        }else{
+            while(second[j] !== undefined){
+                first[i++] = second[j++]
+            }
+            first.length = i;
+            return first;
+        }
+    },
+    parseHTML: function(data, context){
+        if(!data || typeof data !== &quot;string&quot;){
+            return null;
+        }
+        var parse = rejectExp.exec(data);
+        return [context.createElement(parse[1])];
+    },
+})
+root.$ = root.jQuery = jQuery;
+</code></pre><p>})(this)<br><br>插播一条，max老师在知乎的专栏：<a href="https://zhuanlan.zhihu.com/c_1162017153112363008" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/c_1162017153112363008</a><br>jquery3.4.1源码：<a href="https://code.jquery.com/jquery-3.4.1.js" target="_blank" rel="noopener">https://code.jquery.com/jquery-3.4.1.js</a><br>关于正则表达式的总结，我找到了一篇个人认为比较全面的文章：<a href="https://www.jianshu.com/p/488d60349325" target="_blank" rel="noopener">https://www.jianshu.com/p/488d60349325</a></p>
+<p>关于本篇用到的正则var rejectExp = /^&lt;(\w+)\s<em>\/?&gt;(?:&lt;\/\1&gt;|)$/;<br>解释如下:<br>1、^:必须以 “ &lt; “ 开头<br>2、(\w+)：匹配一个单字字符（字母、数字或者下划线）一次或多次<br>3、\s</em>：匹配 0 次或多次空白字符<br>4、\/：’\’转义字符，此处将’/‘转义为’/‘,<br>5、第一个?:匹配前面/斜杠 0 次或者 1 次。<br>6、第一个?后的&gt;:匹配&gt;<br>7、(?:&lt;\/\1&gt;|) 这里不捕获，并用\1去反向引用前面表达式&lt;(\w+)\s*\/?&gt;的结果</p>
+<p><img src="https://snakexu.github.io/images/wangyi/jq/selector_2.png"><br>如何把创建的DOM节点包装成jquery对象，例子：jQuery.merge(this, jQuery.parseHTML(selector, context))<br><img src="https://snakexu.github.io/images/wangyi/jq/selector_3.png"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/11/01/网易微专业-jq源码解析-2-2-1-jq选择器/" data-id="ck2olu1wy000586xqcnicc1z0" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-网易微专业-jq源码解析-2-1-1-jq整体架构-核心函数功能" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/10/31/网易微专业-jq源码解析-2-1-1-jq整体架构-核心函数功能/" class="article-date">
@@ -84,21 +394,8 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p></p><h4>一、juqery无new构建实例</h4><br>1.$就是jquery的别称，$()就是在创建jquery的实例对象<p></p>
-<pre>(function(root) {
-    var jQuery = function() {
-      console.log('生成一个实例对象');
-      return new jQuery(); //想让$()就是创建实例对象?wrong！每次调用$()就执行该function,然后就死循环了
-    };
+        <h4>一、juqery无new构建实例</h4><br>1.$就是jquery的别称，$()就是在创建jquery的实例对象<br><br><pre>(function(root) {<br>    var jQuery = function() {<br>      console.log(‘生成一个实例对象’);<br>      return new jQuery(); //想让$()就是创建实例对象?wrong！每次调用$()就执行该function,然后就死循环了<br>    };<br><br>    root.$ = root.jQuery = jQuery; //成功使$成为别称^_^<br>})(this)</pre><br><br>·顺便复习一下new操作符调用构造函数会经历的4步：<br>(1)创建一个新对象<br>(2)将构造函数的作用域赋给新对象(因此this就指向了这个新对象)<br>(3)执行构造函数中的代码(为这个新对象添加属性)<br>(4)返回新对象<br><br>·then，我找到了阮一峰ECMAScript6入门里的一段话：<br>ES5 的继承，实质是先创造子类的实例对象this，然后再将父类的方法添加到this上面（Parent.apply(this)）。ES6 的继承机制完全不同，实质是先将父类实例对象的属性和方法，加到this上面（所以必须先调用super方法），然后再用子类的构造函数修改this。<br><br>now，是时候祭出共享原型设计了<br><img src="https://snakexu.github.io/images/wangyi/jq/gongxiang.png"><br><!-- <img src="http://localhost:4000/images/wangyi/jq/gongxiang.png"> --><br>代码来了：<br><pre>(function(root) {<br>    var jQuery = function() {<br>      return new jQuery.prototype.init();<br>    };<br>    jQuery.prototype = {<br>        init:function(){<br>            //<br>        }<br>    }<br>    jQuery.prototype.init.prototype = jQuery.prototype//共享原型对象<br>    root.$ = root.jQuery = jQuery;<br>})(this)</pre><br>这样我们打印console.log($())，就可以看到jquery原型对象的init方法了<br><img src="https://snakexu.github.io/images/wangyi/jq/console_1.png"><br>这时候的$()实际指向的是jQuery原型上的init方法，而init的原型和jQuery本身的原型共享一个原型对象，这样往jQuery上扩展的方法就可以通过$()获取。<br><br><h4>二、extend</h4>
 
-    root.$ = root.jQuery = jQuery; //成功使$成为别称^_^
-})(this)</pre>
-
-<p>·顺便复习一下new操作符调用构造函数会经历的4步：<br>(1)创建一个新对象<br>(2)将构造函数的作用域赋给新对象(因此this就指向了这个新对象)<br>(3)执行构造函数中的代码(为这个新对象添加属性)<br>(4)返回新对象</p>
-<p>·then，我找到了阮一峰ECMAScript6入门里的一段话：<br>ES5 的继承，实质是先创造子类的实例对象this，然后再将父类的方法添加到this上面（Parent.apply(this)）。ES6 的继承机制完全不同，实质是先将父类实例对象的属性和方法，加到this上面（所以必须先调用super方法），然后再用子类的构造函数修改this。</p>
-<p>now，是时候祭出共享原型设计了<br><img src="https://snakexu.github.io/images/wangyi/jq/gongxiang.png"><br><!-- <img src="http://localhost:4000/images/wangyi/jq/gongxiang.png"> --><br>代码来了：</p>
-<p><pre>(function(root) {<br>    var jQuery = function() {<br>      return new jQuery.prototype.init();<br>    };<br>    jQuery.prototype = {<br>        init:function(){<br>            //<br>        }<br>    }<br>    jQuery.prototype.init.prototype = jQuery.prototype//共享原型对象<br>    root.$ = root.jQuery = jQuery;<br>})(this)</pre><br>这样我们打印console.log($())，就可以看到jquery原型对象的init方法了<br><img src="https://snakexu.github.io/images/wangyi/jq/console_1.png"><br>这时候的$()实际指向的是jQuery原型上的init方法，而init的原型和jQuery本身的原型共享一个原型对象，这样往jQuery上扩展的方法就可以通过$()获取。</p>
-<p>2.extend</p>
 <p><pre><br>(function(root) {<br>    var jQuery = function() {<br>      return new jQuery.prototype.init();<br>    };<br>    jQuery.fn = jQuery.prototype = {//与上面代码不同之处<br>        init:function(){<br>            //<br>        }<br>    }<br>    jQuery.fn.init.prototype = jQuery.fn //与上面代码不同之处<br>    root.$ = root.jQuery = jQuery;<br>})(this)<br></pre><br>从而可以使$.fn.extend和$.extend达到同样效果，于是我们开始使用<br>//jQuery本身扩展<br><br>$.extend({<br>    work:function(){}<br>})<br><br>或者<br><br>//jQuery实例对象扩展,此时this === jQuery实例对象<br><br>$.fn.extend({<br>  sex: ‘男’<br>})<br><br>或者<br><br>$.extend({}, { name: ‘arbor’});<br><br>对任意对象进行扩展,于是我们可以使用<br>jQuery.work();<br>$().sex;</p>
 <p>那么，源码是怎么实现这个功能的呢？先来实现浅拷贝</p>
 <p><pre><br>(function(root) {<br>    var jQuery = function() {<br>      return new jQuery.prototype.init();<br>    };<br>    jQuery.fn = jQuery.prototype = {<br>        init:function(){<br>            //<br>        }<br>    }<br>    jQuery.fn.extend = jQuery.extend = function(){<br>        var target = arguments[0]||{};//arguments[0]一定是一个object<br>        var length = arguments.length;<br>        var i=1;<br>        var option, name;<br>        if(typeof arguments[0] !== ‘object’){<br>            target = {}<br>        }<br>        //参数个数<br>        if(length === i){<br>            target = this;<br>        }<br>        //浅拷贝<br>        for (; i &lt; length; i++) {<br>            if((option = arguments[i]) != null){<br>                for(name in option){<br>                    target[name] = option[name]<br>                }<br>            }<br>        }<br>        return target;<br>    }<br>    jQuery.fn.init.prototype = jQuery.fn<br>    root.$ = root.jQuery = jQuery;<br>})(this)<br></pre><br>如果需要同时能实现深拷贝，就要对代码做一些变动了</p>
@@ -170,7 +467,7 @@ root.$ = root.jQuery = jQuery;
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/10/31/网易微专业-jq源码解析-2-1-1-jq整体架构-核心函数功能/" data-id="ck2fxco770002jhxq1p9xw2o3" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/10/31/网易微专业-jq源码解析-2-1-1-jq整体架构-核心函数功能/" data-id="ck2olu1wx000486xql64ssu10" class="article-share-link">Share</a>
       
       
     </footer>
@@ -215,7 +512,7 @@ root.$ = root.jQuery = jQuery;
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/11/12/hello-world/" data-id="ck2fxco700000jhxqyrnnt9vv" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/11/12/hello-world/" data-id="ck2olu1wo000086xqzxrixu5b" class="article-share-link">Share</a>
       
       
     </footer>
@@ -252,7 +549,7 @@ root.$ = root.jQuery = jQuery;
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/11/12/js参数按值传递/" data-id="ck2fxco750001jhxqme67xfyy" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/11/12/js参数按值传递/" data-id="ck2olu1ws000186xq48ffq8ui" class="article-share-link">Share</a>
       
       
     </footer>
@@ -280,7 +577,7 @@ root.$ = root.jQuery = jQuery;
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/11/12/一些网址/" data-id="ck2fxco790003jhxqxe09nnu4" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/11/12/一些网址/" data-id="ck2olu1ww000386xq88mgjy77" class="article-share-link">Share</a>
       
       
     </footer>
@@ -383,7 +680,7 @@ root.$ = root.jQuery = jQuery;
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/11/12/解构赋值/" data-id="ck2fxco7i0004jhxqgdhkxuum" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/11/12/解构赋值/" data-id="ck2olu1x7000786xq3txsub0f" class="article-share-link">Share</a>
       
       
     </footer>
@@ -411,7 +708,7 @@ root.$ = root.jQuery = jQuery;
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
     </div>
   </div>
 
@@ -424,23 +721,23 @@ root.$ = root.jQuery = jQuery;
       <ul>
         
           <li>
+            <a href="/2019/11/07/js正则表达式基础总结/">js正则表达式基础总结</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/02/网易微专业-jq源码解析-2-3-1-jq的Callbacks入门-原理分析/">网易微专业-jq源码解析-2.3.1-jq的Callbacks入门&amp;原理分析</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/01/网易微专业-jq源码解析-2-2-1-jq选择器/">网易微专业-jq源码解析-2.2.1:jq选择器</a>
+          </li>
+        
+          <li>
             <a href="/2019/10/31/网易微专业-jq源码解析-2-1-1-jq整体架构-核心函数功能/">网易微专业-jq源码解析-2.1.1:jq整体架构,核心函数功能</a>
           </li>
         
           <li>
             <a href="/2018/11/12/hello-world/">Hello World</a>
-          </li>
-        
-          <li>
-            <a href="/2018/11/12/js参数按值传递/">js传递参数</a>
-          </li>
-        
-          <li>
-            <a href="/2018/11/12/一些网址/">(no title)</a>
-          </li>
-        
-          <li>
-            <a href="/2018/11/12/解构赋值/">es6解构赋值</a>
           </li>
         
       </ul>

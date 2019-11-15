@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>网易微专业-jq源码解析-2.4.1-延时对象-Deferred概念 &amp; 源码剖析 | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="一、promise/A+规范1、Promise作为一个模型，提供了一个在软件工程中描述延时（或将来）概念的解决方案:(1)、表示一个异步操作的最终结果;(2)、与Promise最主要的交互方法是，通过将函数传入它的then方法，从而获得Promise最终的值或者Promise最终拒绝(reject)的原因(3)、一个Promise必须处于以下三种状态之一：pending，resolved或reje">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网易微专业-jq源码解析-2.4.1-延时对象-Deferred概念 &amp; 源码剖析">
+<meta property="og:url" content="http://yoursite.com/2019/11/08/网易微专业-jq源码解析-2-4-1-延时对象-Deferred概念-源码剖析/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="一、promise/A+规范1、Promise作为一个模型，提供了一个在软件工程中描述延时（或将来）概念的解决方案:(1)、表示一个异步操作的最终结果;(2)、与Promise最主要的交互方法是，通过将函数传入它的then方法，从而获得Promise最终的值或者Promise最终拒绝(reject)的原因(3)、一个Promise必须处于以下三种状态之一：pending，resolved或reje">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/jq/deferred_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/jq/1107_2.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/jq/1107_3.png">
+<meta property="og:updated_time" content="2019-11-10T09:44:17.237Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="网易微专业-jq源码解析-2.4.1-延时对象-Deferred概念 &amp; 源码剖析">
+<meta name="twitter:description" content="一、promise/A+规范1、Promise作为一个模型，提供了一个在软件工程中描述延时（或将来）概念的解决方案:(1)、表示一个异步操作的最终结果;(2)、与Promise最主要的交互方法是，通过将函数传入它的then方法，从而获得Promise最终的值或者Promise最终拒绝(reject)的原因(3)、一个Promise必须处于以下三种状态之一：pending，resolved或reje">
+<meta name="twitter:image" content="https://snakexu.github.io/images/wangyi/jq/deferred_1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-网易微专业-jq源码解析-2-4-1-延时对象-Deferred概念-源码剖析" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/11/08/网易微专业-jq源码解析-2-4-1-延时对象-Deferred概念-源码剖析/" class="article-date">
+  <time datetime="2019-11-08T14:06:59.000Z" itemprop="datePublished">2019-11-08</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      网易微专业-jq源码解析-2.4.1-延时对象-Deferred概念 &amp; 源码剖析
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>一、promise/A+规范<br>1、Promise作为一个模型，提供了一个在软件工程中描述延时（或将来）概念的解决方案:<br>(1)、表示一个异步操作的最终结果;<br>(2)、与Promise最主要的交互方法是，通过将函数传入它的then方法，从而获得Promise最终的值或者Promise最终拒绝(reject)的原因<br>(3)、一个Promise必须处于以下三种状态之一：pending，resolved或rejected；<br>(4)、一个Promise必须提供一个then方法来获取其成功（resolve）的值或者错误（reject）原因。<br>而Deferred是这种规范的具体实现<br><img src="https://snakexu.github.io/images/wangyi/jq/deferred_1.png"><br>2、Deferred API<br>jQuery.Deferred():一个构造函数，返回一个链式实用对象方法来注册多个回调，回调队列，调用回调队列，并转达任何同步或异步函数的成功或失败状态<br>deferred.done():当Deferred(延迟)对象解决时，调用添加处理程序<br>deferred.fail():当Deferred(延迟)对象拒绝时，调用添加处理程序<br>deferred.proress():当Deferred(延迟)对象生成进度通知时，调用(已)添加的处理程序<br>jQuery.when():提供一种方法来执行一个或多个对象的回调函数，Deferred(延迟)对象通常表示异步事件<br>.promise():返回一个Promise对象用来观察当某种类型的所有行动绑定到集合，排队与否还是已经完成<br>二、源码<br>1、DEMO</p>
+<pre>
+var wait = function() {
+    var der = $.Deferred();     //延迟对象    deferred 
+    var test = function() {
+        console.log("老司机开车了");
+        der.resolve("max");     //成功     队列中的处理函数  调用成功这个队列中的处理函数
+    }
+    setTimeout(test, 2000);   
+    return der;    //延迟对象 
+}       
+//延迟对象的状态 决定调用那个队列中的处理函数
+$.when(wait())     //promise对象promise.done()   self.add
+    .done(function(name) {
+        console.log(name)
+        console.log("执行成功");
+    })
+    .fail(function() {
+        console.log("执行失败");
+    });
+</pre>
+表急，我怎么会只给demo不给源码呢<br>
+2、源码
+<pre>
+(function(root) {
+    var testExp = /^\s*(<[\w\w]+>)[^>]*$/;
+    var rejectExp = /^<(\w+)\s*\ ?="">(?:<\ \1="">|)$/;
+    var version = "1.0.1";
+    var optionsCache = {};
+    var jQuery = function(selector, context) {
+        return new jQuery.prototype.init(selector, context);
+    }
+
+    jQuery.fn = jQuery.prototype = { //原型对象
+        length: 0,
+        jquery: version,
+        selector: "",
+        init: function(selector, context) {
+            context = context || document;
+            var match, elem, index = 0;
+            //$()  $(undefined)  $(null) $(false)  
+            if (!selector) {
+                return this;
+            }
+
+            if (typeof selector === "string") {
+                if (selector.charAt(0) === "<" &&="" selector.charat(selector.length="" -="" 1)="==" "="">" && selector.length >= 3) {
+                    match = [selector]
+                }
+                //创建DOM
+                if (match) {
+                    //this  
+                    jQuery.merge(this, jQuery.parseHTML(selector, context));
+                    //查询DOM节点
+                } else {
+                    elem = document.querySelectorAll(selector);
+                    var elems = Array.prototype.slice.call(elem);
+                    this.length = elems.length;
+                    for (; index < elems.length; index++) {
+                        this[index] = elems[index];
+                    }
+                    this.context = context;
+                    this.selector = selector;
+                }
+            } else if (selector.nodeType) {
+                this.context = this[0] = selector;
+                this.length = 1;
+                return this;
+            }
+
+        },
+        css: function() {
+            console.log("di~~didi~~")
+        },
+        //....
+    }
+
+    jQuery.fn.init.prototype = jQuery.fn;
+
+
+    jQuery.extend = jQuery.prototype.extend = function() {
+        var target = arguments[0] || {};
+        var length = arguments.length;
+        var i = 1;
+        var deep = false; //默认为浅拷贝 
+        var option;
+        var name;
+        var copy;
+        var src;
+        var copyIsArray;
+        var clone;
+
+        if (typeof target === "boolean") {
+            deep = target;
+            target = arguments[1];
+            i = 2;
+        }
+
+        if (typeof target !== "object") {
+            target = {};
+        }
+
+        if (length == i) {
+            target = this;
+            i--; //0   
+        }
+
+        for (; i < length; i++) {
+            if ((option = arguments[i]) !== null) {
+                for (name in option) {
+                    src = target[name];
+                    copy = option[name];
+                    if (deep && (jQuery.isPlainObject(copy) || (copyIsArray = jQuery.isArray(copy)))) {
+                        if (copyIsArray) {
+                            copyIsArray = false;
+                            clone = src && jQuery.isArray(src) ? src : [];
+                        } else {
+                            clone = src && jQuery.isPlainObject(src) ? src : {};
+                        }
+                        target[name] = jQuery.extend(deep, clone, copy);
+                    } else if (copy !== undefined) {
+                        target[name] = copy;
+                    }
+                }
+            }
+        }
+        return target;
+    }
+
+
+    jQuery.extend({
+        //类型检测     
+        isPlainObject: function(obj) {
+            return typeof obj === "object";
+        },
+
+        isArray: function(obj) {
+            return toString.call(obj) === "[object Array]";
+        },
+
+        isFunction: function(fn) {
+            return toString.call(fn) === "[object Function]";
+        },
+        //类数组转化成正真的数组  
+        markArray: function(arr, results) {
+            var ret = results || [];
+            if (arr != null) {
+                jQuery.merge(ret, typeof arr === "string" ? [arr] : arr);
+            }
+            return ret;
+        },
+
+        //合并数组
+        merge: function(first, second) {
+            var l = second.length,
+                i = first.length,
+                j = 0;
+
+            if (typeof l === "number") {
+                for (; j < l; j++) {
+                    first[i++] = second[j];
+                }
+            } else {
+                while (second[j] !== undefined) {
+                    first[i++] = second[j++];
+                }
+            }
+
+            first.length = i;
+
+            return first;
+        },
+
+        parseHTML: function(data, context) {
+            if (!data || typeof data !== "string") {
+                return null;
+            }
+            //过滤掉< a >   < a >   => a 
+            var parse = rejectExp.exec(data);
+            console.log(parse)
+            return [context.createElement(parse[1])];
+        },
+
+        //$.Callbacks用于管理函数队列
+        callbacks: function(options) {
+            options = typeof options === "string" ? (optionsCache[options] || createOptions(options)) : {};
+            var list = [];
+            var index, length, testting, memory, start, starts;
+            var fire = function(data) {
+                memory = options.memory && data;
+                index = starts || 0;
+                start = 0;
+                testting = true;
+                length = list.length;
+                for (; index < length; index++) {
+                    if (list[index].apply(data[0], data[1]) === false && options.stopOnfalse) {
+                        break;
+                    }
+                }
+            }
+            var self = {
+                add: function() {
+                    var args = Array.prototype.slice.call(arguments);
+                    start = list.length;
+                    args.forEach(function(fn) {
+                        if (toString.call(fn) === "[object Function]") {
+                            list.push(fn);
+                        }
+                    });
+                    if (memory) {
+                        starts = start;
+                        fire(memory);
+                    }
+                    return this;
+                },
+                //指定上下文对象
+                fireWith: function(context, arguments) {
+                    var args = [context, arguments];
+                    if (!options.once || !testting) {
+                        fire(args);
+                    }
+
+                },
+                //参数传递
+                fire: function() {
+                    self.fireWith(this, arguments);
+                }
+            }
+            return self;
+        },
+
+        // 异步回调解决方案
+        Deferred: function(func) {
+            //延迟对象三种不同状态信息的描述
+            //状态，往队列里添加处理函数 tuples[i][2]创建队列（创建对象副本的引用）
+            //tuples[i][3] 最终状态信息描述
+            var tuples = [
+                    ["resolve", "done", jQuery.callbacks("once memory"), "resolved"],
+                    ["reject", "fail", jQuery.callbacks("once memory"), "rejected"],
+                    ["notify", "progress", jQuery.callbacks("memory")]
+                ],
+                state = "pending",
+                promise = {
+                    state: function() {
+                        return state;
+                    },
+                    then: function( /* fnDone, fnFail, fnProgress */ ) {
+                    },
+                    promise: function(obj) {
+                        return obj != null ? jQuery.extend(obj, promise) : promise;
+                    }
+                },
+                //延迟对象 属性 方法 
+                deferred = {}; //resolve | reject | notify | state | then | promise
+
+            tuples.forEach(function(tuple, i) {
+                //即tuple[i][2]jQuery.callbacks("")
+                //创建一个队列 callbacks里self对象的引用
+                var list = tuple[2],
+                    stateString = tuple[3];//最终状态信息的描述
+
+                // promise[ done | fail | progress ] = list.add 添加处理函数
+                promise[tuple[1]] = list.add;
+
+                // Handle state
+                if (stateString) { //只有在成功或者失败的情况下，添加第一个处理程序
+                    list.add(function() {
+                        // state = [ resolved | rejected ]
+                        state = stateString;
+                    });
+                }
+
+                // deferred[ resolve | reject | notify ] 延迟对象的状态
+                deferred[tuple[0]] = function() {
+                    //promise[tuple[1]] = list.add; 
+                    deferred[tuple[0] + "With"](this === deferred ? promise : this, arguments);
+                    return this;
+                };
+                //list.fireWith 执行队列，调用队列中的处理函数并且传参，绑定执行时上下文对象
+                deferred[tuple[0] + "With"] = list.fireWith;
+            });
+
+            // Make the deferred a promise
+            promise.promise(deferred);
+
+            return deferred;
+        },
+        //执行一个或多个对象的延迟对象的回调函数
+        when: function(subordinate) {
+            return subordinate.promise();
+        },
+
+    });
+
+    function createOptions(options) {
+        var object = optionsCache[options] = {};
+        options.split(/\s+/).forEach(function(value) {
+            object[value] = true;
+        });
+        return object;
+    }
+
+    root.$ = root.jQuery = jQuery;
+})(this);
+</"></\></(\w+)\s*\></[\w\w]+></pre>
+其中有些部分，是之前课程的内容，这里主要从Deferred开始介绍。另外需要注意的是，本章内容基于上节课程$.Callbacks。Deferred实际上就是基于$.Callbacks,对于不同状态(resolve/reject/done)调用$.Callbacks.add()添加不同函数,可以如图理解：
+<img src="https://snakexu.github.io/images/wangyi/jq/1107_2.png">
+<img src="https://snakexu.github.io/images/wangyi/jq/1107_3.png">
+在源码里，个人认为非常值得关注的点：<br>
+1、定义了tuples数组，数组里包含了Deferred相关的状态，添加状态相关的函数的操作，整个编程过程其实是巧妙的运用了这个数组<br>
+2、创建的promise对象<br>
+    (1)扩展done、fail、progress三个方法，分别对应成功、失败、进行中的三个队列，并指向队列中的add方法，用于向队列中添加执行函数；<br>
+    (2)扩展了state、then和promise三个方法<br>
+    (2-1)其中state是用于记录状态<br>
+    (2-2)then是用于往成功或失败的队列添加执行函数，并在成功或失败时调用。<br>
+    (2-3)promise是用于扩展deferred对象或者返回其本身。<br>
+3、创建一个deferred对象：<br>
+    (1)扩展了resolve方法，对应成功队列，当被执行时，会往deferred对象上扩展并resolveWith函数，该resolveWith指向的是队列的fireWith函数，也即是执行函数。同时，还可以在执行过程中传参，将参数传递到最终的执行函数内部。<br>
+    (2)还扩展了reject和notify，其逻辑和resolve一致，只是分别指向了失败和进行中两个队列。<br>
+4、创建一个状态state。在成功或者失败的队列中，我们首先会添加第一条处理函数，改变state的状态为成功或者失败。<br>
+5、创建一个与Deferred函数平级的when函数，接收一个延迟对象，然后去调用该延迟对象的promise方法，也就是第二点。<br>
+
+其实关于这节课程，我还是有疑问的，不是特别理解promise和deferred对象为啥这么定义和应用过程中这两个对象的内在逻辑，还有比如<br>
+deferred[tuple[0] + "With"](this === deferred ? promise : this, arguments);<br>
+这个地方，为什么要在promise的上下文中执行。其实还是缺乏对这段内容的深刻理解。后续还会继续学习这段内容的
+<br>
+最后，我在jQuery3.4.1的源码种找到了相关的一段内容，还没有好好研究，先放在这里，待日后细细琢磨
+<pre>
+jQuery.extend( {
+
+    Deferred: function( func ) {
+        var tuples = [
+
+                // action, add listener, callbacks,
+                // ... .then handlers, argument index, [final state]
+                [ "notify", "progress", jQuery.Callbacks( "memory" ),
+                    jQuery.Callbacks( "memory" ), 2 ],
+                [ "resolve", "done", jQuery.Callbacks( "once memory" ),
+                    jQuery.Callbacks( "once memory" ), 0, "resolved" ],
+                [ "reject", "fail", jQuery.Callbacks( "once memory" ),
+                    jQuery.Callbacks( "once memory" ), 1, "rejected" ]
+            ],
+            state = "pending",
+            promise = {
+                state: function() {
+                    return state;
+                },
+                always: function() {
+                    deferred.done( arguments ).fail( arguments );
+                    return this;
+                },
+                "catch": function( fn ) {
+                    return promise.then( null, fn );
+                },
+
+                // Keep pipe for back-compat
+                pipe: function( /* fnDone, fnFail, fnProgress */ ) {
+                    var fns = arguments;
+
+                    return jQuery.Deferred( function( newDefer ) {
+                        jQuery.each( tuples, function( i, tuple ) {
+
+                            // Map tuples (progress, done, fail) to arguments (done, fail, progress)
+                            var fn = isFunction( fns[ tuple[ 4 ] ] ) && fns[ tuple[ 4 ] ];
+
+                            // deferred.progress(function() { bind to newDefer or newDefer.notify })
+                            // deferred.done(function() { bind to newDefer or newDefer.resolve })
+                            // deferred.fail(function() { bind to newDefer or newDefer.reject })
+                            deferred[ tuple[ 1 ] ]( function() {
+                                var returned = fn && fn.apply( this, arguments );
+                                if ( returned && isFunction( returned.promise ) ) {
+                                    returned.promise()
+                                        .progress( newDefer.notify )
+                                        .done( newDefer.resolve )
+                                        .fail( newDefer.reject );
+                                } else {
+                                    newDefer[ tuple[ 0 ] + "With" ](
+                                        this,
+                                        fn ? [ returned ] : arguments
+                                    );
+                                }
+                            } );
+                        } );
+                        fns = null;
+                    } ).promise();
+                },
+                then: function( onFulfilled, onRejected, onProgress ) {
+                    var maxDepth = 0;
+                    function resolve( depth, deferred, handler, special ) {
+                        return function() {
+                            var that = this,
+                                args = arguments,
+                                mightThrow = function() {
+                                    var returned, then;
+
+                                    // Support: Promises/A+ section 2.3.3.3.3
+                                    // https://promisesaplus.com/#point-59
+                                    // Ignore double-resolution attempts
+                                    if ( depth < maxDepth ) {
+                                        return;
+                                    }
+
+                                    returned = handler.apply( that, args );
+
+                                    // Support: Promises/A+ section 2.3.1
+                                    // https://promisesaplus.com/#point-48
+                                    if ( returned === deferred.promise() ) {
+                                        throw new TypeError( "Thenable self-resolution" );
+                                    }
+
+                                    // Support: Promises/A+ sections 2.3.3.1, 3.5
+                                    // https://promisesaplus.com/#point-54
+                                    // https://promisesaplus.com/#point-75
+                                    // Retrieve `then` only once
+                                    then = returned &&
+
+                                        // Support: Promises/A+ section 2.3.4
+                                        // https://promisesaplus.com/#point-64
+                                        // Only check objects and functions for thenability
+                                        ( typeof returned === "object" ||
+                                            typeof returned === "function" ) &&
+                                        returned.then;
+
+                                    // Handle a returned thenable
+                                    if ( isFunction( then ) ) {
+
+                                        // Special processors (notify) just wait for resolution
+                                        if ( special ) {
+                                            then.call(
+                                                returned,
+                                                resolve( maxDepth, deferred, Identity, special ),
+                                                resolve( maxDepth, deferred, Thrower, special )
+                                            );
+
+                                        // Normal processors (resolve) also hook into progress
+                                        } else {
+
+                                            // ...and disregard older resolution values
+                                            maxDepth++;
+
+                                            then.call(
+                                                returned,
+                                                resolve( maxDepth, deferred, Identity, special ),
+                                                resolve( maxDepth, deferred, Thrower, special ),
+                                                resolve( maxDepth, deferred, Identity,
+                                                    deferred.notifyWith )
+                                            );
+                                        }
+
+                                    // Handle all other returned values
+                                    } else {
+
+                                        // Only substitute handlers pass on context
+                                        // and multiple values (non-spec behavior)
+                                        if ( handler !== Identity ) {
+                                            that = undefined;
+                                            args = [ returned ];
+                                        }
+
+                                        // Process the value(s)
+                                        // Default process is resolve
+                                        ( special || deferred.resolveWith )( that, args );
+                                    }
+                                },
+
+                                // Only normal processors (resolve) catch and reject exceptions
+                                process = special ?
+                                    mightThrow :
+                                    function() {
+                                        try {
+                                            mightThrow();
+                                        } catch ( e ) {
+
+                                            if ( jQuery.Deferred.exceptionHook ) {
+                                                jQuery.Deferred.exceptionHook( e,
+                                                    process.stackTrace );
+                                            }
+
+                                            // Support: Promises/A+ section 2.3.3.3.4.1
+                                            // https://promisesaplus.com/#point-61
+                                            // Ignore post-resolution exceptions
+                                            if ( depth + 1 >= maxDepth ) {
+
+                                                // Only substitute handlers pass on context
+                                                // and multiple values (non-spec behavior)
+                                                if ( handler !== Thrower ) {
+                                                    that = undefined;
+                                                    args = [ e ];
+                                                }
+
+                                                deferred.rejectWith( that, args );
+                                            }
+                                        }
+                                    };
+
+                            // Support: Promises/A+ section 2.3.3.3.1
+                            // https://promisesaplus.com/#point-57
+                            // Re-resolve promises immediately to dodge false rejection from
+                            // subsequent errors
+                            if ( depth ) {
+                                process();
+                            } else {
+
+                                // Call an optional hook to record the stack, in case of exception
+                                // since it's otherwise lost when execution goes async
+                                if ( jQuery.Deferred.getStackHook ) {
+                                    process.stackTrace = jQuery.Deferred.getStackHook();
+                                }
+                                window.setTimeout( process );
+                            }
+                        };
+                    }
+
+                    return jQuery.Deferred( function( newDefer ) {
+
+                        // progress_handlers.add( ... )
+                        tuples[ 0 ][ 3 ].add(
+                            resolve(
+                                0,
+                                newDefer,
+                                isFunction( onProgress ) ?
+                                    onProgress :
+                                    Identity,
+                                newDefer.notifyWith
+                            )
+                        );
+
+                        // fulfilled_handlers.add( ... )
+                        tuples[ 1 ][ 3 ].add(
+                            resolve(
+                                0,
+                                newDefer,
+                                isFunction( onFulfilled ) ?
+                                    onFulfilled :
+                                    Identity
+                            )
+                        );
+
+                        // rejected_handlers.add( ... )
+                        tuples[ 2 ][ 3 ].add(
+                            resolve(
+                                0,
+                                newDefer,
+                                isFunction( onRejected ) ?
+                                    onRejected :
+                                    Thrower
+                            )
+                        );
+                    } ).promise();
+                },
+
+                // Get a promise for this deferred
+                // If obj is provided, the promise aspect is added to the object
+                promise: function( obj ) {
+                    return obj != null ? jQuery.extend( obj, promise ) : promise;
+                }
+            },
+            deferred = {};
+
+        // Add list-specific methods
+        jQuery.each( tuples, function( i, tuple ) {
+            var list = tuple[ 2 ],
+                stateString = tuple[ 5 ];
+
+            // promise.progress = list.add
+            // promise.done = list.add
+            // promise.fail = list.add
+            promise[ tuple[ 1 ] ] = list.add;
+
+            // Handle state
+            if ( stateString ) {
+                list.add(
+                    function() {
+
+                        // state = "resolved" (i.e., fulfilled)
+                        // state = "rejected"
+                        state = stateString;
+                    },
+
+                    // rejected_callbacks.disable
+                    // fulfilled_callbacks.disable
+                    tuples[ 3 - i ][ 2 ].disable,
+
+                    // rejected_handlers.disable
+                    // fulfilled_handlers.disable
+                    tuples[ 3 - i ][ 3 ].disable,
+
+                    // progress_callbacks.lock
+                    tuples[ 0 ][ 2 ].lock,
+
+                    // progress_handlers.lock
+                    tuples[ 0 ][ 3 ].lock
+                );
+            }
+
+            // progress_handlers.fire
+            // fulfilled_handlers.fire
+            // rejected_handlers.fire
+            list.add( tuple[ 3 ].fire );
+
+            // deferred.notify = function() { deferred.notifyWith(...) }
+            // deferred.resolve = function() { deferred.resolveWith(...) }
+            // deferred.reject = function() { deferred.rejectWith(...) }
+            deferred[ tuple[ 0 ] ] = function() {
+                deferred[ tuple[ 0 ] + "With" ]( this === deferred ? undefined : this, arguments );
+                return this;
+            };
+
+            // deferred.notifyWith = list.fireWith
+            // deferred.resolveWith = list.fireWith
+            // deferred.rejectWith = list.fireWith
+            deferred[ tuple[ 0 ] + "With" ] = list.fireWith;
+        } );
+
+        // Make the deferred a promise
+        promise.promise( deferred );
+
+        // Call given func if any
+        if ( func ) {
+            func.call( deferred, deferred );
+        }
+
+        // All done!
+        return deferred;
+    },
+
+    // Deferred helper
+    when: function( singleValue ) {
+        var
+
+            // count of uncompleted subordinates
+            remaining = arguments.length,
+
+            // count of unprocessed arguments
+            i = remaining,
+
+            // subordinate fulfillment data
+            resolveContexts = Array( i ),
+            resolveValues = slice.call( arguments ),
+
+            // the master Deferred
+            master = jQuery.Deferred(),
+
+            // subordinate callback factory
+            updateFunc = function( i ) {
+                return function( value ) {
+                    resolveContexts[ i ] = this;
+                    resolveValues[ i ] = arguments.length > 1 ? slice.call( arguments ) : value;
+                    if ( !( --remaining ) ) {
+                        master.resolveWith( resolveContexts, resolveValues );
+                    }
+                };
+            };
+
+        // Single- and empty arguments are adopted like Promise.resolve
+        if ( remaining <= 1="" )="" {="" adoptvalue(="" singlevalue,="" master.done(="" updatefunc(="" i="" ).resolve,="" master.reject,="" !remaining="" );="" use="" .then()="" to="" unwrap="" secondary="" thenables="" (cf.="" gh-3000)="" if="" (="" master.state()="==" "pending"="" ||="" isfunction(="" resolvevalues[="" ]="" &&="" ].then="" return="" master.then();="" }="" multiple arguments="" are="" aggregated="" like="" promise.all="" array="" elements="" while="" i--="" ],="" ),="" master.reject="" master.promise();="" <="" pre=""></=></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/11/08/网易微专业-jq源码解析-2-4-1-延时对象-Deferred概念-源码剖析/" data-id="ck2zv85tv000cc5xq67im1fu3" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/11/09/网易微专业-jq源码解析-1107直播课deferred相关/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          网易微专业-jq源码解析-1107直播课deferred相关
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/11/07/js正则表达式基础总结/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">js正则表达式基础总结</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/11/15/轮询/">轮询</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/15/网易微专业-jq源码解析-事件绑定-体系结构-完整源码/">网易微专业-jq源码解析-事件绑定-体系结构-完整源码</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/10/网易微专业-jq源码解析-2-5-1-事件绑定-bind-delegate-on/">网易微专业-jq源码解析-2.5.1 事件绑定-bind/delegate/on</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/09/网易微专业-jq源码解析-1107直播课deferred相关/">网易微专业-jq源码解析-1107直播课deferred相关</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/08/网易微专业-jq源码解析-2-4-1-延时对象-Deferred概念-源码剖析/">网易微专业-jq源码解析-2.4.1-延时对象-Deferred概念 &amp; 源码剖析</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

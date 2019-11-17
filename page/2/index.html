@@ -62,6 +62,156 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-网易微专业-jq源码解析-2-1-1-jq整体架构-核心函数功能" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/10/31/网易微专业-jq源码解析-2-1-1-jq整体架构-核心函数功能/" class="article-date">
+  <time datetime="2019-10-31T07:45:47.000Z" itemprop="datePublished">2019-10-31</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/10/31/网易微专业-jq源码解析-2-1-1-jq整体架构-核心函数功能/">网易微专业-jq源码解析-2.1.1:jq整体架构,核心函数功能</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4>一、juqery无new构建实例</h4><br>1.$就是jquery的别称，$()就是在创建jquery的实例对象<br><br><pre>(function(root) {<br>    var jQuery = function() {<br>      console.log(‘生成一个实例对象’);<br>      return new jQuery(); //想让$()就是创建实例对象?wrong！每次调用$()就执行该function,然后就死循环了<br>    };<br><br>    root.$ = root.jQuery = jQuery; //成功使$成为别称^_^<br>})(this)</pre><br><br>·顺便复习一下new操作符调用构造函数会经历的4步：<br>(1)创建一个新对象<br>(2)将构造函数的作用域赋给新对象(因此this就指向了这个新对象)<br>(3)执行构造函数中的代码(为这个新对象添加属性)<br>(4)返回新对象<br><br>·then，我找到了阮一峰ECMAScript6入门里的一段话：<br>ES5 的继承，实质是先创造子类的实例对象this，然后再将父类的方法添加到this上面（Parent.apply(this)）。ES6 的继承机制完全不同，实质是先将父类实例对象的属性和方法，加到this上面（所以必须先调用super方法），然后再用子类的构造函数修改this。<br><br>now，是时候祭出共享原型设计了<br><img src="https://snakexu.github.io/images/wangyi/jq/gongxiang.png"><br><!-- <img src="http://localhost:4000/images/wangyi/jq/gongxiang.png"> --><br>代码来了：<br><pre>(function(root) {<br>    var jQuery = function() {<br>      return new jQuery.prototype.init();<br>    };<br>    jQuery.prototype = {<br>        init:function(){<br>            //<br>        }<br>    }<br>    jQuery.prototype.init.prototype = jQuery.prototype//共享原型对象<br>    root.$ = root.jQuery = jQuery;<br>})(this)</pre><br>这样我们打印console.log($())，就可以看到jquery原型对象的init方法了<br><img src="https://snakexu.github.io/images/wangyi/jq/console_1.png"><br>这时候的$()实际指向的是jQuery原型上的init方法，而init的原型和jQuery本身的原型共享一个原型对象，这样往jQuery上扩展的方法就可以通过$()获取。<br><br><h4>二、extend</h4>
+
+<p><pre><br>(function(root) {<br>    var jQuery = function() {<br>      return new jQuery.prototype.init();<br>    };<br>    jQuery.fn = jQuery.prototype = {//与上面代码不同之处<br>        init:function(){<br>            //<br>        }<br>    }<br>    jQuery.fn.init.prototype = jQuery.fn //与上面代码不同之处<br>    root.$ = root.jQuery = jQuery;<br>})(this)<br></pre><br>从而可以使$.fn.extend和$.extend达到同样效果，于是我们开始使用<br>//jQuery本身扩展<br><br>$.extend({<br>    work:function(){}<br>})<br><br>或者<br><br>//jQuery实例对象扩展,此时this === jQuery实例对象<br><br>$.fn.extend({<br>  sex: ‘男’<br>})<br><br>或者<br><br>$.extend({}, { name: ‘arbor’});<br><br>对任意对象进行扩展,于是我们可以使用<br>jQuery.work();<br>$().sex;</p>
+<p>那么，源码是怎么实现这个功能的呢？先来实现浅拷贝</p>
+<p><pre><br>(function(root) {<br>    var jQuery = function() {<br>      return new jQuery.prototype.init();<br>    };<br>    jQuery.fn = jQuery.prototype = {<br>        init:function(){<br>            //<br>        }<br>    }<br>    jQuery.fn.extend = jQuery.extend = function(){<br>        var target = arguments[0]||{};//arguments[0]一定是一个object<br>        var length = arguments.length;<br>        var i=1;<br>        var option, name;<br>        if(typeof arguments[0] !== ‘object’){<br>            target = {}<br>        }<br>        //参数个数<br>        if(length === i){<br>            target = this;<br>        }<br>        //浅拷贝<br>        for (; i &lt; length; i++) {<br>            if((option = arguments[i]) != null){<br>                for(name in option){<br>                    target[name] = option[name]<br>                }<br>            }<br>        }<br>        return target;<br>    }<br>    jQuery.fn.init.prototype = jQuery.fn<br>    root.$ = root.jQuery = jQuery;<br>})(this)<br></pre><br>如果需要同时能实现深拷贝，就要对代码做一些变动了</p>
+<p><pre><br>(function(root) {<br>    var jQuery = function() {<br>        return new jQuery.prototype.init();<br>    }<br>    jQuery.fn = jQuery.prototype = {<br>        init: function() {</pre></p>
+<pre><code>    },
+    css: function() {
+
+    }
+}
+
+//extend
+jQuery.fn.extend = jQuery.extend = function() {
+    var target = arguments[0] || {};
+    var length = arguments.length;
+    var i = 1;
+    var deep = false;
+    var option, name,copy,src,copyIsArray,clone;
+    if (typeof target === &quot;boolean&quot;) {
+        deep = target;
+        target = arguments[1];
+        i = 2;
+    }
+    if (typeof target !== &quot;object&quot;) {
+        target = {};
+    }
+    //参数的个数 1
+    if (length === i) {
+        target = this;
+        i--;
+    }
+
+    //浅拷贝  深拷贝
+    for (; i &lt; length; i++) {
+        if ((option = arguments[i]) != null) {
+            for (name in option) {
+                copy = option[name];
+                src = target[name];
+                if(deep &amp;&amp; (jQuery.isPlainObject(copy) || (copyIsArray = jQuery.isArray(copy)))){
+                    if(copyIsArray){
+                        copyIsArray = false;
+                        clone = src &amp;&amp; jQuery.isArray(src) ? src : [];
+                    } else {
+                        clone = src &amp;&amp; jQuery.isPlainObject(src) ? src : {};
+                    }
+                    target[name] = jQuery.extend(deep, clone, copy);//灵魂
+                } else if(copy != undefined){
+                    target[name] = copy;
+                }
+            }
+        }
+    }
+    return target;
+}
+
+//共享原型对象
+jQuery.fn.init.prototype = jQuery.fn;
+jQuery.extend({
+    //类型检测
+    isPlainObject: function(obj){
+        return toString.call(obj) === &quot;[object Object]&quot;;
+    },
+    isArray: function(obj){
+        return toString.call(obj) === &quot;[object Array]&quot;;
+    }
+});
+root.$ = root.jQuery = jQuery;
+</code></pre><p>})(this);<br><br>测试：<br><br>var ret = {name:”max”,list:{age:”30”}};<br><br>var res = {list:{sex:”女”}};<br><br>//任意对象扩展<br><br>var obj = $.extend(true,{}, ret, res);       //=&gt;  name  age<br><br>console.log(obj);<br></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/10/31/网易微专业-jq源码解析-2-1-1-jq整体架构-核心函数功能/" data-id="ck32th94m0004p5xq9rezo609" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-hello-world" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/11/12/hello-world/" class="article-date">
+  <time datetime="2018-11-12T09:44:31.069Z" itemprop="datePublished">2018-11-12</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/11/12/hello-world/">Hello World</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/11/12/hello-world/" data-id="ck32th94e0000p5xqewsqtcrl" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-js参数按值传递" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
     <a href="/2018/11/12/js参数按值传递/" class="article-date">
@@ -89,7 +239,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/11/12/js参数按值传递/" data-id="ck2zvakw60001doxq1btrkeub" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/11/12/js参数按值传递/" data-id="ck32th94i0001p5xqxsia7j5u" class="article-share-link">Share</a>
       
       
     </footer>
@@ -117,7 +267,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/11/12/一些网址/" data-id="ck2zvakw80002doxq4n2qiqcm" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/11/12/一些网址/" data-id="ck32th94k0002p5xqmj8s3jt3" class="article-share-link">Share</a>
       
       
     </footer>
@@ -220,7 +370,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/11/12/解构赋值/" data-id="ck2zvakwr000bdoxqopirjnz1" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/11/12/解构赋值/" data-id="ck32th959000cp5xq04us8r7v" class="article-share-link">Share</a>
       
       
     </footer>
@@ -266,6 +416,14 @@
       <ul>
         
           <li>
+            <a href="/2019/11/16/网易微专业-jq源码解析-事件绑定-自定义事件-模拟事件-完整源码/">网易微专业-jq源码解析-事件绑定-自定义事件&amp;模拟事件-完整源码</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/15/网易微专业-jq源码解析-2-5-3-事件绑定-自定义事件-模拟事件/">网易微专业-jq源码解析-2-5-3-事件绑定-自定义事件&amp;模拟事件</a>
+          </li>
+        
+          <li>
             <a href="/2019/11/15/轮询/">轮询</a>
           </li>
         
@@ -275,14 +433,6 @@
         
           <li>
             <a href="/2019/11/10/网易微专业-jq源码解析-2-5-1-事件绑定-bind-delegate-on/">网易微专业-jq源码解析-2.5.1 事件绑定-bind/delegate/on</a>
-          </li>
-        
-          <li>
-            <a href="/2019/11/09/网易微专业-jq源码解析-1107直播课deferred相关/">网易微专业-jq源码解析-1107直播课deferred相关</a>
-          </li>
-        
-          <li>
-            <a href="/2019/11/08/网易微专业-jq源码解析-2-4-1-延时对象-Deferred概念-源码剖析/">网易微专业-jq源码解析-2.4.1-延时对象-Deferred概念 &amp; 源码剖析</a>
           </li>
         
       </ul>

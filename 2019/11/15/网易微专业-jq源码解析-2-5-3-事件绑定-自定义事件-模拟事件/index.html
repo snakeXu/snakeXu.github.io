@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>网易微专业-jq源码解析-2-5-3-事件绑定-自定义事件&amp;模拟事件 | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="一、自定义事件设计&amp;amp;模拟事件1、自定义事件说明:在实际开发中，或许原生的javascript事件或者jQuery事件不能满足开发的需求，这时候就需要我们自己编写相应的事件。添加自定义事件：通过jQuery的bind()或者是on()方法，添加自定义事件如下代码，自定义了一个createEvent()事件$(‘#id’).on(‘createEvent’,function(){    con">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网易微专业-jq源码解析-2-5-3-事件绑定-自定义事件&amp;模拟事件">
+<meta property="og:url" content="http://yoursite.com/2019/11/15/网易微专业-jq源码解析-2-5-3-事件绑定-自定义事件-模拟事件/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="一、自定义事件设计&amp;amp;模拟事件1、自定义事件说明:在实际开发中，或许原生的javascript事件或者jQuery事件不能满足开发的需求，这时候就需要我们自己编写相应的事件。添加自定义事件：通过jQuery的bind()或者是on()方法，添加自定义事件如下代码，自定义了一个createEvent()事件$(‘#id’).on(‘createEvent’,function(){    con">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-11-16T11:01:01.986Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="网易微专业-jq源码解析-2-5-3-事件绑定-自定义事件&amp;模拟事件">
+<meta name="twitter:description" content="一、自定义事件设计&amp;amp;模拟事件1、自定义事件说明:在实际开发中，或许原生的javascript事件或者jQuery事件不能满足开发的需求，这时候就需要我们自己编写相应的事件。添加自定义事件：通过jQuery的bind()或者是on()方法，添加自定义事件如下代码，自定义了一个createEvent()事件$(‘#id’).on(‘createEvent’,function(){    con">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-网易微专业-jq源码解析-2-5-3-事件绑定-自定义事件-模拟事件" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/11/15/网易微专业-jq源码解析-2-5-3-事件绑定-自定义事件-模拟事件/" class="article-date">
+  <time datetime="2019-11-15T08:36:58.000Z" itemprop="datePublished">2019-11-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      网易微专业-jq源码解析-2-5-3-事件绑定-自定义事件&amp;模拟事件
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>一、自定义事件设计&amp;模拟事件<br>1、自定义事件<br>说明:在实际开发中，或许原生的javascript事件或者jQuery事件不能满足开发的需求，这时候就需要我们自己编写相应的事件。<br>添加自定义事件：通过jQuery的bind()或者是on()方法，添加自定义事件如下代码，自定义了一个createEvent()事件<br>$(‘#id’).on(‘createEvent’,function(){<br>    console.log(“createEvent”)<br>});<br>触发自定义事件：通过jQuery的trigger()方法触发自定义事件createEvent。<br>$(‘#id’).trigger(“createEvent”)<br>2、模拟事件<br>trigger()方法触发事件后，会执行浏览器默认行为<br>比如：<br>$(‘input’).trigger(‘focus’)<br>以上代码不仅会触发input元素绑定的focus事件，还会使得input元素本身的到焦点(这是浏览器的默认行为)<br>如果只想触发绑定的focus事件，而不想执行浏览器的默认行为，可以使用另一种类似的方法triggerHandler()方法<br><br><br><br><br>源码分析</p>
+<p><pre><br>jQuery.fn.extend({<br>    each: function(callback, args) {<br>        return jQuery.each(this, callback, args);<br>    },<br>    //增加trigger<br>    //语法: data可选,传递到事件处理程序的额外参数。  注意:事件处理程序第一个参数默认是event<br>    trigger: function(type, data) {<br>        return this.each(function() {<br>            jQuery.event.trigger(type, data, this);<br>        });<br>    },<br>})<br></pre><br>上面的调用和之前讲的jQuery.fn.on()是差不多的，下面是jQuery.event.trigger的源码</p>
+<p><pre><br>//event:  规定指定元素上要触发的事件,可以是自定义事件,或者任何标准事件。<br>//data:  传递到事件处理程序的额外参数。<br>//elem:  Element对象<br>trigger: function(event, data, elem) {<br>    var i, cur, tmp, bubbleType, ontype, handle,<br>        i = 0,<br>        eventPath = [elem || document], //规划冒泡路线<br>        type = event.type || event,<br>        cur = tmp = elem = elem || document,<br>        //证明是ontype绑定事件<br>        ontype = /^\w+$/.test(type) &amp;&amp; “on” + type;<br>    //模拟事件对象    如果有jQuery.expando说明event已经是模拟的事件对象<br>    event = event[jQuery.expando] ?<br>        event :<br>        new jQuery.Event(type, typeof event === “object” &amp;&amp; event);<br>    //定义event.target 属性<br>    if (!event.target) {<br>        event.target = elem;<br>    }<br>    //如果没有传入了参数,就把event存储在数组中 有传递合并数组<br>    //如之前所看到：data可选,传递到事件处理程序的额外参数。注意:事件处理程序第一个参数默认是event(此为出处)<br>    data = data == null ? [event] :<br>        jQuery.markArray(data, [event]);<br>    //事件类型是否需要进行特殊化处理   focus<br>    special = jQuery.event.special[type] || {};<br>    //如果事件类型已经有trigger方法，就调用它<br>    if (special.trigger &amp;&amp; special.trigger.apply(elem, data) === false) {<br>        return;<br>    }<br>    //自己已经在冒泡路线中 不重复添加<br>    cur = cur.parentNode;<br>    //查找当前元素的父元素 添加到eventPath (规划冒泡路线)数组中<br>    for (; cur; cur = cur.parentNode) {<br>        eventPath.push(cur);<br>        tmp = cur;<br>    }<br>    if (tmp === (elem.ownerDocument || document)) { //当tmp为document时,cur为空,就退出循环<br>        eventPath.push(tmp.defaultView || tmp.parentWindow || window); //模拟冒泡到window对象<br>    }<br>    //沿着上面规划好的冒泡路线，把经过的元素节点的指定类型事件的回调逐一触发执行<br>    while ((cur = eventPath[i++])) {<br>        //先判断在缓存系统中是否有此元素绑定的此事件类型的回调方法，如果有，就取出来<br>        handle = (data_priv.get(cur, “events”) || {})[event.type] &amp;&amp; data_priv.get(cur, “handle”);<br>        if (handle) {<br>            console.log(handle)<br>            handle.apply(cur, data);<br>        }<br>    }<br>},<br></pre><br>我们注意到，上面代码调用了new jQuery.Event这个构造函数，那么，我们看一下这个构造函数</p>
+<p><pre><br>//模拟Event对象<br>jQuery.Event = function(src, props) {<br>    //创建一个jQuery.Event实例对象<br>    if (!(this instanceof jQuery.Event)) {<br>        return new jQuery.Event(src, props);<br>    }<br>    //事件类型<br>    this.type = src;<br>    // 如果传入事件没有时间戳，则创建时间戳<br>    this.timeStamp = src &amp;&amp; src.timeStamp || jQuery.now();<br>    // jQuery.Event实例对象标记<br>    this[jQuery.expando] = true;<br>}<br></pre><br>jQuery.event.special的代码,代码里有一个函数是safeActiveElement，代码实际内容<br></p>
+<p>//activeElement 属性返回文档中当前获得焦点的元素。<br>function safeActiveElement() {<br>    try {<br>        return document.activeElement;<br>    } catch (err) {}<br>}</p>
+<p><pre><br>special: {<br>    load: {<br>        // Prevent triggered image.load events from bubbling to window.load<br>        noBubble: true<br>    },<br>    focus: {<br>        // 执行默认focus方法<br>        trigger: function() {<br>            if (this !== safeActiveElement() &amp;&amp; this.focus) {<br>                //console.log( this.focus)<br>                this.focus();<br>                return false;<br>            }<br>        },<br>        delegateType: “focusin”<br>    },<br>    blur: {<br>        trigger: function() {<br>            if (this === safeActiveElement() &amp;&amp; this.blur) {<br>                this.blur();<br>                return false;<br>            }<br>        },<br>        delegateType: “focusout”<br>    },<br>    click: {<br>        // For checkbox, fire native event so checked state will be right<br>        trigger: function() {<br>            if (this.type === “checkbox” &amp;&amp; this.click &amp;&amp; jQuery.nodeName(this, “input”)) {<br>                this.click();<br>                return false;<br>            }<br>        },<br>        // For cross-browser consistency, don’t fire native .click() on links<br>        _default: function(event) {<br>            return jQuery.nodeName(event.target, “a”);<br>        }<br>    },<br>    beforeunload: {<br>        postDispatch: function(event) {<br>            // Support: Firefox 20+<br>            // Firefox doesn’t alert if the returnValue field is not set.<br>            if (event.result !== undefined) {<br>                event.originalEvent.returnValue = event.result;<br>            }<br>        }<br>    }<br>},<br></pre><br>这段源代码，个人有两个值得注意的地方，一是设置了常用事件，例如’click’,’focus’,’blur’等事件设置了默认trigger，每次执行代码的时候检测是不是默认事件，这种把常用事件trigger事件列好，对于代码的执行非常有益；第二点，记录了事件节点的父节点，使每次事件执行都能遵循事件冒泡的思想，而且每次执行的时候没，都会注意到window和document。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/11/15/网易微专业-jq源码解析-2-5-3-事件绑定-自定义事件-模拟事件/" data-id="ck32th94q0008p5xq3zyj2k9w" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/11/16/网易微专业-jq源码解析-事件绑定-自定义事件-模拟事件-完整源码/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          网易微专业-jq源码解析-事件绑定-自定义事件&amp;模拟事件-完整源码
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/11/15/轮询/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">轮询</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/11/16/网易微专业-jq源码解析-事件绑定-自定义事件-模拟事件-完整源码/">网易微专业-jq源码解析-事件绑定-自定义事件&amp;模拟事件-完整源码</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/15/网易微专业-jq源码解析-2-5-3-事件绑定-自定义事件-模拟事件/">网易微专业-jq源码解析-2-5-3-事件绑定-自定义事件&amp;模拟事件</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/15/轮询/">轮询</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/15/网易微专业-jq源码解析-事件绑定-体系结构-完整源码/">网易微专业-jq源码解析-事件绑定-体系结构-完整源码</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/10/网易微专业-jq源码解析-2-5-1-事件绑定-bind-delegate-on/">网易微专业-jq源码解析-2.5.1 事件绑定-bind/delegate/on</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

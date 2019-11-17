@@ -7,12 +7,12 @@
   
   <title>网易微专业-jq源码解析-2.5.1 事件绑定-bind/delegate/on | 喵小喵的窝</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="说明：bind/delegate/on，在最近的jQuery版本中bind/delegate已经被on取代了，所以本节也是重点讲述on一、事件模型1、DOM0 DOM2事件模型2、事件流3、事件委托实例代码：  HTML代码： &amp;lt; ul id=&quot;proxy&quot;&amp;gt;     &amp;lt; li&amp;gt;主页&amp;lt; /li&amp;gt;     &amp;lt; li&amp;gt;文章&amp;lt; /li&amp;gt;     &amp;lt; li&amp;gt;官宣&amp;lt; /li&amp;gt;     &amp;lt; li&amp;gt;简介&amp;lt; /l">
+  <meta name="description" content="说明：bind/delegate/on，在最近的jQuery版本中bind/delegate已经被on取代了，所以本节也是重点讲述on一、事件模型1、DOM0 DOM2事件模型2、事件流3、事件委托实例代码： HTML代码：&amp;lt; ul id=”proxy”&amp;gt;    &amp;lt; li&amp;gt;主页&amp;lt; /li&amp;gt;    &amp;lt; li&amp;gt;文章&amp;lt; /li&amp;gt;    &amp;lt;">
 <meta property="og:type" content="article">
 <meta property="og:title" content="网易微专业-jq源码解析-2.5.1 事件绑定-bind&#x2F;delegate&#x2F;on">
 <meta property="og:url" content="http://yoursite.com/2019/11/10/网易微专业-jq源码解析-2-5-1-事件绑定-bind-delegate-on/index.html">
 <meta property="og:site_name" content="喵小喵的窝">
-<meta property="og:description" content="说明：bind/delegate/on，在最近的jQuery版本中bind/delegate已经被on取代了，所以本节也是重点讲述on一、事件模型1、DOM0 DOM2事件模型2、事件流3、事件委托实例代码：  HTML代码： &amp;lt; ul id=&quot;proxy&quot;&amp;gt;     &amp;lt; li&amp;gt;主页&amp;lt; /li&amp;gt;     &amp;lt; li&amp;gt;文章&amp;lt; /li&amp;gt;     &amp;lt; li&amp;gt;官宣&amp;lt; /li&amp;gt;     &amp;lt; li&amp;gt;简介&amp;lt; /l">
+<meta property="og:description" content="说明：bind/delegate/on，在最近的jQuery版本中bind/delegate已经被on取代了，所以本节也是重点讲述on一、事件模型1、DOM0 DOM2事件模型2、事件流3、事件委托实例代码： HTML代码：&amp;lt; ul id=”proxy”&amp;gt;    &amp;lt; li&amp;gt;主页&amp;lt; /li&amp;gt;    &amp;lt; li&amp;gt;文章&amp;lt; /li&amp;gt;    &amp;lt;">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="https://snakexu.github.io/images/wangyi/jq/on_1.png">
 <meta property="og:image" content="https://snakexu.github.io/images/wangyi/jq/on_2.png">
@@ -20,10 +20,10 @@
 <meta property="og:image" content="https://snakexu.github.io/images/wangyi/jq/on_4.png">
 <meta property="og:image" content="https://snakexu.github.io/images/wangyi/jq/on_5.png">
 <meta property="og:image" content="https://snakexu.github.io/images/wangyi/jq/on_6.png">
-<meta property="og:updated_time" content="2019-11-15T07:25:40.719Z">
+<meta property="og:updated_time" content="2019-11-15T09:30:07.628Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="网易微专业-jq源码解析-2.5.1 事件绑定-bind&#x2F;delegate&#x2F;on">
-<meta name="twitter:description" content="说明：bind/delegate/on，在最近的jQuery版本中bind/delegate已经被on取代了，所以本节也是重点讲述on一、事件模型1、DOM0 DOM2事件模型2、事件流3、事件委托实例代码：  HTML代码： &amp;lt; ul id=&quot;proxy&quot;&amp;gt;     &amp;lt; li&amp;gt;主页&amp;lt; /li&amp;gt;     &amp;lt; li&amp;gt;文章&amp;lt; /li&amp;gt;     &amp;lt; li&amp;gt;官宣&amp;lt; /li&amp;gt;     &amp;lt; li&amp;gt;简介&amp;lt; /l">
+<meta name="twitter:description" content="说明：bind/delegate/on，在最近的jQuery版本中bind/delegate已经被on取代了，所以本节也是重点讲述on一、事件模型1、DOM0 DOM2事件模型2、事件流3、事件委托实例代码： HTML代码：&amp;lt; ul id=”proxy”&amp;gt;    &amp;lt; li&amp;gt;主页&amp;lt; /li&amp;gt;    &amp;lt; li&amp;gt;文章&amp;lt; /li&amp;gt;    &amp;lt;">
 <meta name="twitter:image" content="https://snakexu.github.io/images/wangyi/jq/on_1.png">
   
     <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
@@ -94,261 +94,123 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>说明：bind/delegate/on，在最近的jQuery版本中bind/delegate已经被on取代了，所以本节也是重点讲述on<br>一、事件模型<br>1、DOM0 DOM2事件模型<br><img src="https://snakexu.github.io/images/wangyi/jq/on_1.png"><br>2、事件流<br><img src="https://snakexu.github.io/images/wangyi/jq/on_2.png"><br>3、事件委托<br><img src="https://snakexu.github.io/images/wangyi/jq/on_3.png"><br>实例代码：</p>
-<pre>
-HTML代码：
-< ul id="proxy">
-    < li>主页< /li>
-    < li>文章< /li>
-    < li>官宣< /li>
-    < li>简介< /li>
-< /ul>
-js代码1：
-var ElemUl = document.getElementById("proxy");
-var ElemLi = ElemUl.getElementsByTagName('li');
-for (var i = 0; i < ElemLi.length; i++) {
-    ElemLi[i].onclick = function() {
-        alert("loading...");
-    }
-}
-js代码2：
-var proxy = document.getElementById("proxy");
-proxy.onclick = function(event) {
-    var target = event.target;
-    if (target.nodeName.toLowerCase() == 'li') {
-        alert("loading...");
-    }
-}
-</pre>
-上面js代码1是大家马上能想出来的，代码2是利用了事件委托/事件代理，通过代理的方式，将事件绑定在ul上，这样性能表现会优于代码1
-二、bind/delegate/on事件绑定解析
-1、API
-<img src="https://snakexu.github.io/images/wangyi/jq/on_4.png">
-on相当于bind和delegate的集合
-<img src="https://snakexu.github.io/images/wangyi/jq/on_5.png">
-2、源码分析
-(1)jQuery事件机制解决了哪些问题：<br>
-·不同浏览器下的事件兼容<br>
-·一个事件类型添加多个事件函数，一次添加多个事件类型的处理函数<br>
-·简洁的定义方式<br>
-·允许自定义事件<br>
-实例：
-<pre>
-//多个事件绑定同一个函数
-$("#id").on("mouseover mouseout", function() {
-    console.log("loading...")
-});
-
-//多个事件绑定不同函数
-$("#id").on({
-    mouseover: function() {
-        $("body").css("background-color", "lightgray");
-    },
-    mouseout: function() {
-        $("body").css("background-color", "lightblue");
-    },
-    click: function() {
-        $("body").css("background-color", "yellow");
-    }
-});
-
-//绑定自定义事件
-$("#id").on("myOwnEvent", function(event, showName) {
-    console.log("loading...")
-});
-$("#id").trigger("myOwnEvent", ["max"]);
-</pre>
-3、jQuery事件设计原型
-(1)原型图
-<img src="https://snakexu.github.io/images/wangyi/jq/on_6.png">
-在本课程中，老师对内容做了一些重构，并且没有做代理子元素事件，仅为自己绑定事件，也主要是为了方便大家的理解<br>
-(2)源码
-因为是基于之前代码的功能，所以这里代码显得比较多，其实很多都是之前的内容<br>
-下面，我们把这次课程的代码单独拿出来，这样方便理解分析<br>
-<pre>
-jQuery.fn.extend({
-    //这段代码中this是$('#id')里创建的实例对象
-    //调用jQuery.each依次执行this对象里的内容
-    each: function(callback, args) {
-        return jQuery.each(this, callback, args);
-    },
-    //$("#id").on(事件，事件函数)
-    //types:事件,fn:事件函数
-    //绑定事件首先从这里on开始
-    on: function(types, fn) {
-        var type;
-        //如果传递进来的types事件是对象/数组等
-        if (typeof types === "object") {
-            for (type in types) {
-                this.on(types[type], fn);
-            }
-        }
-        //如果传递进来的types参数不是对象
-        //this.each就是jQuery.fn.each
-        return this.each(function() {
-            //this  element对象
-            //jQuery.event是jQuery内置的一个事件系统
-            jQuery.event.add(this, types, fn);
-        });
-    }
-})
-</pre>
-jQuery.each代码
-<pre>
-/*
- object   目标源
- callback  回调函数
- args     自定义回调函数参数
- */
-each: function(object, callback, args) {
-    //object  数组对象 || object对象 
-    //此处传递过来的object实例对象是jQuery的实例对象，有length的属性
-    var length = object.length;
-    var name, i = 0;
-
-    // 自定义callback 参数
-    if (args) {
-        if (length === undefined) {
-            for (name in object) {
-                callback.apply(object, args);
-            }
-        } else {
-            for (; i < length;) {
-                callback.apply(object[i++], args);
-            }
+<p><pre><br>HTML代码：<br>&lt; ul id=”proxy”&gt;<br>    &lt; li&gt;主页&lt; /li&gt;<br>    &lt; li&gt;文章&lt; /li&gt;<br>    &lt; li&gt;官宣&lt; /li&gt;<br>    &lt; li&gt;简介&lt; /li&gt;<br>&lt; /ul&gt;<br>js代码1：<br>var ElemUl = document.getElementById(“proxy”);<br>var ElemLi = ElemUl.getElementsByTagName(‘li’);<br>for (var i = 0; i &lt; ElemLi.length; i++) {<br>    ElemLi[i].onclick = function() {<br>        alert(“loading…”);<br>    }<br>}<br>js代码2：<br>var proxy = document.getElementById(“proxy”);<br>proxy.onclick = function(event) {<br>    var target = event.target;<br>    if (target.nodeName.toLowerCase() == ‘li’) {<br>        alert(“loading…”);<br>    }<br>}<br></pre><br>上面js代码1是大家马上能想出来的，代码2是利用了事件委托/事件代理，通过代理的方式，将事件绑定在ul上，这样性能表现会优于代码1<br>二、bind/delegate/on事件绑定解析<br>1、API<br><img src="https://snakexu.github.io/images/wangyi/jq/on_4.png"><br>on相当于bind和delegate的集合<br><img src="https://snakexu.github.io/images/wangyi/jq/on_5.png"><br>2、源码分析<br>(1)jQuery事件机制解决了哪些问题：<br><br>·不同浏览器下的事件兼容<br><br>·一个事件类型添加多个事件函数，一次添加多个事件类型的处理函数<br><br>·简洁的定义方式<br><br>·允许自定义事件<br><br>实例：</p>
+<p><pre><br>//多个事件绑定同一个函数<br>$(“#id”).on(“mouseover mouseout”, function() {<br>    console.log(“loading…”)<br>});</pre></p>
+<p>//多个事件绑定不同函数<br>$(“#id”).on({<br>    mouseover: function() {<br>        $(“body”).css(“background-color”, “lightgray”);<br>    },<br>    mouseout: function() {<br>        $(“body”).css(“background-color”, “lightblue”);<br>    },<br>    click: function() {<br>        $(“body”).css(“background-color”, “yellow”);<br>    }<br>});</p>
+<p>//绑定自定义事件<br>$(“#id”).on(“myOwnEvent”, function(event, showName) {<br>    console.log(“loading…”)<br>});<br>$(“#id”).trigger(“myOwnEvent”, [“max”]);<br><br>3、jQuery事件设计原型<br>(1)原型图<br><img src="https://snakexu.github.io/images/wangyi/jq/on_6.png"><br>在本课程中，老师对内容做了一些重构，并且没有做代理子元素事件，仅为自己绑定事件，也主要是为了方便大家的理解<br><br>(2)源码<br>因为是基于之前代码的功能，所以这里代码显得比较多，其实很多都是之前的内容<br><br>下面，我们把这次课程的代码单独拿出来，这样方便理解分析<br></p>
+<p><pre><br>jQuery.fn.extend({<br>    //这段代码中this是$(‘#id’)里创建的实例对象<br>    //调用jQuery.each依次执行this对象里的内容<br>    each: function(callback, args) {<br>        return jQuery.each(this, callback, args);<br>    },<br>    //$(“#id”).on(事件，事件函数)<br>    //types:事件,fn:事件函数<br>    //绑定事件首先从这里on开始<br>    on: function(types, fn) {<br>        var type;<br>        //如果传递进来的types事件是对象/数组等<br>        if (typeof types === “object”) {<br>            for (type in types) {<br>                this.on(types[type], fn);<br>            }<br>        }<br>        //如果传递进来的types参数不是对象<br>        //this.each就是jQuery.fn.each<br>        return this.each(function() {<br>            //this  element对象<br>            //jQuery.event是jQuery内置的一个事件系统<br>            jQuery.event.add(this, types, fn);<br>        });<br>    }<br>})<br></pre><br>jQuery.each代码</p>
+<p><pre><br>/<em><br> object   目标源<br> callback  回调函数<br> args     自定义回调函数参数
+ </em>/<br>each: function(object, callback, args) {<br>    //object  数组对象 || object对象<br>    //此处传递过来的object实例对象是jQuery的实例对象，有length的属性<br>    var length = object.length;<br>    var name, i = 0;</pre></p>
+<pre><code>// 自定义callback 参数
+if (args) {
+    if (length === undefined) {
+        for (name in object) {
+            callback.apply(object, args);
         }
     } else {
-        if (length === undefined) {
-            for (name in object) {
-                callback.call(object, name, object[name]);
-            }
-        } else {
-            //初始传进来的参数没有args，而jq本身有length属性，所以执行下面的循环
-            for (; i < length;) {
-                //callback是jQuery.event.add,依次对传进来的每一个实例化对象执行jQuery.event.add
-                callback.call(object[i], i, object[i++]);
-            }
+        for (; i &lt; length;) {
+            callback.apply(object[i++], args);
         }
     }
-},
-</pre>
-jQuery.event.add代码：
-<pre>
-//1:利用 data_priv 数据缓存,分离事件与数据 2:元素与缓存中建立 guid 的映射关系用于查找 
-add: function(elem, type, handler) {
-    //elem jQuery引擎所找到的DOM元素
-    var eventHandle, events,handlers;
-    //事件缓存 数据对象，data_priv来源在下面一段代码里
-    var elemData = data_priv.get(elem);//一开始，elemData={}
-
-
-    //检测handler是否存在ID(guid)如果没有那么传给他一个ID
-    //添加ID的目的是 用来寻找或者删除相应的事件
-    if (!handler.guid) {
-        handler.guid = jQuery.guid++;   //guid == 1
-    }
-    /*
-    给缓存增加事件处理句柄
-    elemData = {
-      events:
-      handle:    
-    }
-    */
-    //同一个元素,不同事件,不重复绑定    {events:{}}
-    //变量=undefined 的结果为undefined,!undefined = true,
-    //如果elemData.events已经存在，则判断条件为false
-    if (!(events = elemData.events)) { 
-        events = elemData.events = {};
-    }
-    if (!(eventHandle = elemData.handle)) {
-        //Event 对象代表事件的状态 通过apply传递
-        eventHandle = elemData.handle = function(e) {
-            return jQuery.event.dispatch.apply(eventHandle.elem, arguments);
+} else {
+    if (length === undefined) {
+        for (name in object) {
+            callback.call(object, name, object[name]);
+        }
+    } else {
+        //初始传进来的参数没有args，而jq本身有length属性，所以执行下面的循环
+        for (; i &lt; length;) {
+            //callback是jQuery.event.add,依次对传进来的每一个实例化对象执行jQuery.event.add
+            callback.call(object[i], i, object[i++]);
         }
     }
-    eventHandle.elem = elem;
-    //通过events存储同一个元素上的多个事件   {events:{click:[]}}   
-    if (!(handlers = events[type])) {
-        handlers = events[type] = [];
-        handlers.delegateCount = 0;  //有多少事件代理默认0
-    }
-    handlers.push({
-        type: type,
-        handler: handler,
-        guid: handler.guid,
-    });
-    //添加事件
-    if (elem.addEventListener) {
-        elem.addEventListener(type, eventHandle, false);
-    }
-},
-</pre>
-上面的代码中data_priv来源如下
-<pre>
-/**
- * Data 构造函数
- * 是为jQuery缓存所创建的数据仓库
- * 存储当前元素的事件名称、处理函数、子元素、子元素的事件名称、子元素的处理函数
- */
-function Data() {
-    //jQuery.expando是jQuery的静态属性,对于jQuery的每次加载运行期间时唯一的随机数
-    this.expando = jQuery.expando + Math.random();//本质上就是生成了一个随机数
-    this.cache = {};
 }
-
-Data.uid = 1;
-
-Data.prototype = {
-    key: function(elem) {
-        var descriptor = {},
-            unlock = elem[this.expando];
-
-        if (!unlock) {
-            unlock = Data.uid++;
-            descriptor[this.expando] = {   //钥匙
-                value: unlock
-            };
-            //方法直接在一个对象上定义一个或多个新的属性或修改现有属性,并返回该对象。
-            //DOM   =>  jQuery101089554822917892030.7449198463843298 = 1;
-            Object.defineProperties(elem, descriptor);
-        }
-        //确保缓存对象记录信息
-        if (!this.cache[unlock]) {
-            this.cache[unlock] = {};   //  数据
-        }
-
-        return unlock;
-    },
-
-    get: function(elem, key) {
-        //找到或者创建缓存,第一次执行的时候this.key[elem]=1,this.cache[1]={}
-        var cache = this.cache[this.key(elem)];    //1  {events:{},handle:function(){}} 
-        //key 有值直接在缓存中取读
-        return key === undefined ? cache : cache[key];
-    },
+</code></pre><p>},<br><br>jQuery.event.add代码：</p>
+<p><pre><br>//1:利用 data_priv 数据缓存,分离事件与数据 2:元素与缓存中建立 guid 的映射关系用于查找<br>add: function(elem, type, handler) {<br>    //elem jQuery引擎所找到的DOM元素<br>    var eventHandle, events,handlers;<br>    //事件缓存 数据对象，data_priv来源在下面一段代码里<br>    var elemData = data_priv.get(elem);//一开始，elemData={}</pre></p>
+<pre><code>//检测handler是否存在ID(guid)如果没有那么传给他一个ID
+//添加ID的目的是 用来寻找或者删除相应的事件
+if (!handler.guid) {
+    handler.guid = jQuery.guid++;   //guid == 1
 }
+/*
+给缓存增加事件处理句柄
+elemData = {
+  events:
+  handle:    
+}
+*/
+//同一个元素,不同事件,不重复绑定    {events:{}}
+//变量=undefined 的结果为undefined,!undefined = true,
+//如果elemData.events已经存在，则判断条件为false
+if (!(events = elemData.events)) { 
+    events = elemData.events = {};
+}
+if (!(eventHandle = elemData.handle)) {
+    //Event 对象代表事件的状态 通过apply传递
+    eventHandle = elemData.handle = function(e) {
+        return jQuery.event.dispatch.apply(eventHandle.elem, arguments);
+    }
+}
+eventHandle.elem = elem;
+//通过events存储同一个元素上的多个事件   {events:{click:[]}}   
+if (!(handlers = events[type])) {
+    handlers = events[type] = [];
+    handlers.delegateCount = 0;  //有多少事件代理默认0
+}
+handlers.push({
+    type: type,
+    handler: handler,
+    guid: handler.guid,
+});
+//添加事件
+if (elem.addEventListener) {
+    elem.addEventListener(type, eventHandle, false);
+}
+</code></pre><p>},<br><br>上面的代码中data_priv来源如下</p>
+<p><pre><br>/**</pre></p>
+<ul>
+<li>Data 构造函数</li>
+<li>是为jQuery缓存所创建的数据仓库</li>
+<li>存储当前元素的事件名称、处理函数、子元素、子元素的事件名称、子元素的处理函数<br>*/<br>function Data() {<br> //jQuery.expando是jQuery的静态属性,对于jQuery的每次加载运行期间时唯一的随机数<br> this.expando = jQuery.expando + Math.random();//本质上就是生成了一个随机数<br> this.cache = {};<br>}</li>
+</ul>
+<p>Data.uid = 1;</p>
+<p>Data.prototype = {<br>    key: function(elem) {<br>        var descriptor = {},<br>            unlock = elem[this.expando];</p>
+<pre><code>    if (!unlock) {
+        unlock = Data.uid++;
+        descriptor[this.expando] = {   //钥匙
+            value: unlock
+        };
+        //方法直接在一个对象上定义一个或多个新的属性或修改现有属性,并返回该对象。
+        //DOM   =&gt;  jQuery101089554822917892030.7449198463843298 = 1;
+        Object.defineProperties(elem, descriptor);
+    }
+    //确保缓存对象记录信息
+    if (!this.cache[unlock]) {
+        this.cache[unlock] = {};   //  数据
+    }
 
-var data_priv = new Data();
-</pre>
-jQuery.event.dispatch代码
-<pre>
-//修复事件对象event(进行兼容性的处理) 从缓存体中的events对象取得对应队列。
-dispatch: function(event) {
-    //IE兼容性处理如：event.target or event.srcElement
-    //event = jQuery.event.fix(event);
-
-    //提取当前元素在cache中的events属性值。 click
-    var handlers = (data_priv.get(this, "events") || {})[event.type] || [];
-    event.delegateTarget = this;
-    //执行事件处理函数
-   jQuery.event.handlers.call( this, event, handlers );
+    return unlock;
 },
-</pre>
 
+get: function(elem, key) {
+    //找到或者创建缓存,第一次执行的时候this.key[elem]=1,this.cache[1]={}
+    var cache = this.cache[this.key(elem)];    //1  {events:{},handle:function(){}} 
+    //key 有值直接在缓存中取读
+    return key === undefined ? cache : cache[key];
+},
+</code></pre><p>}</p>
+<p>var data_priv = new Data();<br><br>jQuery.event.dispatch代码</p>
+<p><pre><br>//修复事件对象event(进行兼容性的处理) 从缓存体中的events对象取得对应队列。<br>dispatch: function(event) {<br>    //IE兼容性处理如：event.target or event.srcElement<br>    //event = jQuery.event.fix(event);</pre></p>
+<pre><code>//提取当前元素在cache中的events属性值。 click
+var handlers = (data_priv.get(this, &quot;events&quot;) || {})[event.type] || [];
+event.delegateTarget = this;
+//执行事件处理函数
+</code></pre><p>   jQuery.event.handlers.call( this, event, handlers );<br>},<br><br>这里最主要的思想之一是分离事件与数据，为自定义事件打下基础。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/10/网易微专业-jq源码解析-2-5-1-事件绑定-bind-delegate-on/" data-id="ck2zvakwf0007doxqwa6dvgua" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/10/网易微专业-jq源码解析-2-5-1-事件绑定-bind-delegate-on/" data-id="ck32th94p0007p5xqa7s4axiw" class="article-share-link">Share</a>
       
       
     </footer>
@@ -406,6 +268,14 @@ dispatch: function(event) {
       <ul>
         
           <li>
+            <a href="/2019/11/16/网易微专业-jq源码解析-事件绑定-自定义事件-模拟事件-完整源码/">网易微专业-jq源码解析-事件绑定-自定义事件&amp;模拟事件-完整源码</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/15/网易微专业-jq源码解析-2-5-3-事件绑定-自定义事件-模拟事件/">网易微专业-jq源码解析-2-5-3-事件绑定-自定义事件&amp;模拟事件</a>
+          </li>
+        
+          <li>
             <a href="/2019/11/15/轮询/">轮询</a>
           </li>
         
@@ -415,14 +285,6 @@ dispatch: function(event) {
         
           <li>
             <a href="/2019/11/10/网易微专业-jq源码解析-2-5-1-事件绑定-bind-delegate-on/">网易微专业-jq源码解析-2.5.1 事件绑定-bind/delegate/on</a>
-          </li>
-        
-          <li>
-            <a href="/2019/11/09/网易微专业-jq源码解析-1107直播课deferred相关/">网易微专业-jq源码解析-1107直播课deferred相关</a>
-          </li>
-        
-          <li>
-            <a href="/2019/11/08/网易微专业-jq源码解析-2-4-1-延时对象-Deferred概念-源码剖析/">网易微专业-jq源码解析-2.4.1-延时对象-Deferred概念 &amp; 源码剖析</a>
           </li>
         
       </ul>

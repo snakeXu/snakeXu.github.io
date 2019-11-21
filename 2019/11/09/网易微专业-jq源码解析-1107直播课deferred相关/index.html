@@ -18,7 +18,7 @@
 <meta property="og:image" content="https://snakexu.github.io/images/wangyi/jq/1107_2.png">
 <meta property="og:image" content="https://snakexu.github.io/images/wangyi/jq/1107_3.png">
 <meta property="og:image" content="https://snakexu.github.io/images/wangyi/jq/1107_4.png">
-<meta property="og:updated_time" content="2019-11-17T09:36:42.091Z">
+<meta property="og:updated_time" content="2019-11-17T10:05:55.576Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="网易微专业-jq源码解析-1107直播课deferred相关">
 <meta name="twitter:description" content="1、Callbacks设计2、Deferred对象设计究其本质，就是在不同执行状态，调用$.Callbacks.add()添加不同函数，在事件状态改变的时候调用不同的函数3、我在之前笔记里有个问题这里为什么要在promise的上下文中执行这个问题老师讲解了，这个涉及到对象状态的改变与凝固：一个对象在状态改变之后，我们首先会返回一个deferred.promise()去凝固状态(究其本质就是为了在事">
@@ -92,89 +92,54 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>1、Callbacks设计<br><img src="https://snakexu.github.io/images/wangyi/jq/1107_1.png"><br>2、Deferred对象设计<br><img src="https://snakexu.github.io/images/wangyi/jq/1107_2.png"><br><img src="https://snakexu.github.io/images/wangyi/jq/1107_3.png"><br>究其本质，就是在不同执行状态，调用$.Callbacks.add()添加不同函数，在事件状态改变的时候调用不同的函数<br><br>3、我在之前笔记里有个问题<br><br><img src="https://snakexu.github.io/images/wangyi/jq/1107_4.png"><br>这里为什么要在promise的上下文中执行<br><br>这个问题老师讲解了，这个涉及到对象状态的改变与凝固：一个对象在状态改变之后，我们首先会返回一个deferred.promise()去凝固状态(究其本质就是为了在事件状态改变之后，不再有改变其状态的可能)，而这里promise的没有修改状态的权限(deferred有修改状态的权限)<br>4、关于jQuery.extend({},obj1,obj2)<br><br>对这个要有一个认知：这个是为jQuery架构服务的，并非是单独的功能；还有一个特点：以默认配置为优先，以用户配置为覆盖<br>5、关于deferred的章节里，有个when调用的方法，这里进行升级修改<br><br>首先，我们回顾下，deferred.promise()有done()/fail()/proress()/promise()/state()/then()方法<br><br>然后，相信大多数人对es6的promise已经有一个了解，Promise.prototype.then()方法的第一个参数是resolved状态的回调函数，第二个参数(可选)是rejected状态的回调函数,另外就是promise的链式回调的思路</p>
-<pre>
-// 异步回调解决方案
-Deferred: function(func) {
-    var tuples = [
-            ["resolve", "done", jQuery.callbacks("once memory"), "resolved"],
-            ["reject", "fail", jQuery.callbacks("once memory"), "rejected"],
-            ["notify", "progress", jQuery.callbacks("memory")]
-        ],
-        state = "pending",
-        //promise   权限分配  add   添加callback
-        promise = {
-            state: function() {
-                return state;
-            },
-            then: function( /* fnDone, fnFail, fnProgress */ ) {
-                var fns = [].slice.call(arguments); //真正数组对象
-                //创建一个Deferred 延迟对象  返回一个promise对象
-                return jQuery.Deferred(function(newdefer) {
-                    tuples.forEach(function(tuple, i) {
-                        var fn = jQuery.isFunction(fns[i]) && fns[i];
-                        /*
-                        deferred   通过闭包去访问  此处链接式调用时指向的deferred对象
-                        newdefer   通过参数传递    指向新创建的deferred对象
-                        */
-                        //resolve  队列中的 callback
-                        deferred[tuple[1]](function() {
-                            var returndefer = fn && fn.apply(this, arguments);
-                            //这个判断里面的内容就是链式回调的重点了
-                            if (returndefer && jQuery.isFunction(returndefer.promise)) {
-                                 //console.log(newdefer)
-                                 returndefer.done(newdefer.resolve)
-                                            .fail(newdefer.reject)
-                                            .progress(newdefer.notify);
-                            }
-                        });
-
-                    })
-                }).promise();
-            },
-            promise: function(obj) {
-                return obj != null ? jQuery.extend(obj, promise) : promise;
-            }
+<p><pre><br>// 异步回调解决方案<br>Deferred: function(func) {<br>    var tuples = [<br>            [“resolve”, “done”, jQuery.callbacks(“once memory”), “resolved”],<br>            [“reject”, “fail”, jQuery.callbacks(“once memory”), “rejected”],<br>            [“notify”, “progress”, jQuery.callbacks(“memory”)]<br>        ],<br>        state = “pending”,<br>        //promise   权限分配  add   添加callback<br>        promise = {<br>            state: function() {<br>                return state;<br>            },<br>            then: function( /<em> fnDone, fnFail, fnProgress </em>/ ) {<br>                var fns = [].slice.call(arguments); //真正数组对象<br>                //创建一个Deferred 延迟对象  返回一个promise对象<br>                return jQuery.Deferred(function(newdefer) {<br>                    tuples.forEach(function(tuple, i) {<br>                        var fn = jQuery.isFunction(fns[i]) &amp;&amp; fns[i];<br>                        /<em><br>                        deferred   通过闭包去访问  此处链接式调用时指向的deferred对象<br>                        newdefer   通过参数传递    指向新创建的deferred对象
+                        </em>/<br>                        //resolve  队列中的 callback<br>                        deferred<a href="function(">tuple[1]</a> {<br>                            var returndefer = fn &amp;&amp; fn.apply(this, arguments);<br>                            //这个判断里面的内容就是链式回调的重点了<br>                            if (returndefer &amp;&amp; jQuery.isFunction(returndefer.promise)) {<br>                                 //console.log(newdefer)<br>                                 returndefer.done(newdefer.resolve)<br>                                            .fail(newdefer.reject)<br>                                            .progress(newdefer.notify);<br>                            }<br>                        });</pre></p>
+<pre><code>                })
+            }).promise();
         },
-        deferred = {};
-
-    tuples.forEach(function(tuple, i) {
-        var list = tuple[2],
-            stateString = tuple[3];
-
-        // promise[ done | fail | progress ] = list.add
-        promise[tuple[1]] = list.add;
-
-        // Handle state
-        if (stateString) {
-            list.add(function() {
-                // state = [ resolved | rejected ]
-                state = stateString;
-            });
+        promise: function(obj) {
+            return obj != null ? jQuery.extend(obj, promise) : promise;
         }
+    },
+    deferred = {};
 
-        // deferred[ resolve | reject | notify ]  der.resolve("加载成功");    
-        deferred[tuple[0]] = function() {
-            deferred[tuple[0] + "With"](this === deferred ? promise : this, arguments);
-            return this;
-        };
-        deferred[tuple[0] + "With"] = list.fireWith;
-    });
+tuples.forEach(function(tuple, i) {
+    var list = tuple[2],
+        stateString = tuple[3];
 
-    // Make the deferred a promise
-    promise.promise(deferred);
+    // promise[ done | fail | progress ] = list.add
+    promise[tuple[1]] = list.add;
 
-    //新创建的deferred 对象
-    if (func) {
-        func.call(deferred, deferred);
+    // Handle state
+    if (stateString) {
+        list.add(function() {
+            // state = [ resolved | rejected ]
+            state = stateString;
+        });
     }
-    return deferred;
-},
-</pre>
+
+    // deferred[ resolve | reject | notify ]  der.resolve(&quot;加载成功&quot;);    
+    deferred[tuple[0]] = function() {
+        deferred[tuple[0] + &quot;With&quot;](this === deferred ? promise : this, arguments);
+        return this;
+    };
+    deferred[tuple[0] + &quot;With&quot;] = list.fireWith;
+});
+
+// Make the deferred a promise
+promise.promise(deferred);
+
+//新创建的deferred 对象
+if (func) {
+    func.call(deferred, deferred);
+}
+return deferred;
+</code></pre><p>},<br><br>这节内容，我也将源码单独作为一篇文章写出了，其中有部分内容是老师在上课的是对链式回调思路的解释，而链式回调这部分内容的思路个人认为可以说是非常经典了。我们要理解，链式回调，每一个then都是对之前调用这个then而返回的deferred的的反馈，代码中非常巧妙的通过闭包和传参的方式保留了每次deferred和then的callbacks队列</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/09/网易微专业-jq源码解析-1107直播课deferred相关/" data-id="ck32th94l0003p5xqjm8znw66" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/09/网易微专业-jq源码解析-1107直播课deferred相关/" data-id="ck38hkft00009xpxqek0mu4w5" class="article-share-link">Share</a>
       
       
     </footer>
@@ -232,23 +197,23 @@ Deferred: function(func) {
       <ul>
         
           <li>
-            <a href="/2019/11/16/网易微专业-jq源码解析-事件绑定-自定义事件-模拟事件-完整源码/">网易微专业-jq源码解析-事件绑定-自定义事件&amp;模拟事件-完整源码</a>
+            <a href="/2019/11/21/我的typescript学习-变量声明/">我的typescript学习-变量声明</a>
           </li>
         
           <li>
-            <a href="/2019/11/15/网易微专业-jq源码解析-2-5-3-事件绑定-自定义事件-模拟事件/">网易微专业-jq源码解析-2-5-3-事件绑定-自定义事件&amp;模拟事件</a>
+            <a href="/2019/11/19/网易微专业-jq源码解析-1118直播课-动画队列/">网易微专业-jq源码解析-1118直播课-动画队列</a>
           </li>
         
           <li>
-            <a href="/2019/11/15/轮询/">轮询</a>
+            <a href="/2019/11/18/我的typescript起步学习/">我的typescript起步学习</a>
           </li>
         
           <li>
-            <a href="/2019/11/15/网易微专业-jq源码解析-事件绑定-体系结构-完整源码/">网易微专业-jq源码解析-事件绑定-体系结构-完整源码</a>
+            <a href="/2019/11/17/网易微专业-jq源码解析-1112DOM操作方法-html-text-css/">网易微专业-jq源码解析-1112DOM操作方法-html/text/css</a>
           </li>
         
           <li>
-            <a href="/2019/11/10/网易微专业-jq源码解析-2-5-1-事件绑定-bind-delegate-on/">网易微专业-jq源码解析-2.5.1 事件绑定-bind/delegate/on</a>
+            <a href="/2019/11/17/网易微专业-jq源码解析-1107直播课源码/">网易微专业-jq源码解析-1107直播课源码</a>
           </li>
         
       </ul>

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>网易微专业-jq源码解析-1112DOM操作方法-html/text/css | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1、html()/text()/css()的作用(1)html()用来读取和修改元素的HTML标签(2)text()用来读取和修改元素的纯文本内容(3)css()设置或返回被返回元素的一个或多个样式属性·html()&amp;amp;text()&amp;amp;css()都是通过jQuery.access提供底层支持。jQuery.access()是一个多功能方法，作为set()和get()值来使用2、举个栗子">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网易微专业-jq源码解析-1112DOM操作方法-html&#x2F;text&#x2F;css">
+<meta property="og:url" content="http://yoursite.com/2019/11/17/网易微专业-jq源码解析-1112DOM操作方法-html-text-css/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="1、html()/text()/css()的作用(1)html()用来读取和修改元素的HTML标签(2)text()用来读取和修改元素的纯文本内容(3)css()设置或返回被返回元素的一个或多个样式属性·html()&amp;amp;text()&amp;amp;css()都是通过jQuery.access提供底层支持。jQuery.access()是一个多功能方法，作为set()和get()值来使用2、举个栗子">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-11-18T07:15:33.818Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="网易微专业-jq源码解析-1112DOM操作方法-html&#x2F;text&#x2F;css">
+<meta name="twitter:description" content="1、html()/text()/css()的作用(1)html()用来读取和修改元素的HTML标签(2)text()用来读取和修改元素的纯文本内容(3)css()设置或返回被返回元素的一个或多个样式属性·html()&amp;amp;text()&amp;amp;css()都是通过jQuery.access提供底层支持。jQuery.access()是一个多功能方法，作为set()和get()值来使用2、举个栗子">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-网易微专业-jq源码解析-1112DOM操作方法-html-text-css" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/11/17/网易微专业-jq源码解析-1112DOM操作方法-html-text-css/" class="article-date">
+  <time datetime="2019-11-17T12:30:15.000Z" itemprop="datePublished">2019-11-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      网易微专业-jq源码解析-1112DOM操作方法-html/text/css
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1、html()/text()/css()的作用<br>(1)html()用来读取和修改元素的HTML标签<br>(2)text()用来读取和修改元素的纯文本内容<br>(3)css()设置或返回被返回元素的一个或多个样式属性<br>·html()&amp;text()&amp;css()都是通过jQuery.access提供底层支持。jQuery.access()是一个多功能方法，作为set()和get()值来使用<br>2、举个栗子</p>
+<pre>
+< div id="app">< /div>
+< style type="text/css">
+    #app{
+        color:#abcdef;
+    }
+< /style>
+</pre>
+//get    return String
+console.log($("#app").css("color"));
+//set    return  Object
+console.log($("#app").css("color","red"));
+//批量  get    return Object
+console.log($("#app").css(["color"]));
+//批量  set    return Object
+console.log($("#app").css({
+   color:"red",
+   "font-size":"20px"
+}));
+从这个栗子里我们看出来什么呢，这几个API其实有个相同点，就是，根据不同的参数，get/set返回不同的对象,我们要思考的问题就是，对这种灵活的参数，我们应该怎么架构代码
+3、撸代码，然鹅，我们不是为了撸代码而撸代码，是为了理解代码的思想精髓  
+<pre>
+jQuery.fn.extend({
+    text : function(value) {
+        //这里为什么会有null这个参数
+        //因为text区别于css，text参数相对于css少，text只是有或者无参数
+        //css会有0/1/2个参数，而一个参数时，这一个参数可能是数组，也可能是对象
+        //于是，下面四个参数的意义
+        //this-执行对象，function-callback函数，null-key(如css两个参数，一个是key，一个是value)
+        //value-value
+        jQuery.access(this, function(value){
+            return value === undefined ? jQuery.text(this) : jQuery.content(this,value)
+        }, null, value)
+    },
+    css : function(key, value){
+        jQuery.access(this, function(key, value){
+            var CSSStyleDeclaration, len;
+            var map = {}
+            if(jQuery.isArray(key)){
+                CSSStyleDeclaration = window.getComputedStyle(this);
+                len = key.length
+                for(var i = 0;i < len ; i++){
+                    map[key[i]] = CSSStyleDeclaration.getPropertyValue[key[i]]
+                }
+                return map;
+            }
+            return value !== undefined ? jQuery.style(this, key, value) : window.getComputedStyle(this).getPropertyValue(key) || undefined
+        }, key, value)
+    },
+})
+</pre> 
+这节课核心的内容-access,要注意的是，这里是教学代码，虽然和jquery的真实实现有区别，但是精髓总算是一样的
+<pre>
+jQuery.extend({
+    access : funcion(elems, callback, key, value){
+        var len = elems.length;
+        var testing = elems === null;
+        var cache,chain;//chain开启链式调用
+        if(value !== undefined){
+            chain = true;
+            if(testing){
+                cache = callback;
+                callback = function(key, value){
+                    //增强功能的写法，vue也采用了这种写法，比如vue的$mount功能
+                    //具体增强功能写法的意义，课程内容大概讲述了，或者以后学习工程中慢慢了解
+                    callback.call(this, value)
+                }
+            }
+            for(var i=0; i < elems.length;i++){
+                callback.call(elems[i], key, value)
+            }
+            return chain ? elems : callback.call(elems[0],value);
+        }
+    },
+    text : function(elem){
+        var nodeType = elem.nodeType
+        if(nodeType === 1 || nodeType === 9 || nodeType === 11){
+            return elem.textContent
+        }
+    },
+    content : function(elem, value){
+        var nodeType = elem.nodeType
+        if(nodeType === 1 || nodeType === 9 || nodeType === 11){
+            elem.textContent = value;
+        }
+    },
+    style : function(elem, key, value){
+        if (!elem || elem.nodeType === 3 || !elem.style) {
+            return;
+        }
+        elem.style[key] = value;
+    },
+})
+</pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/11/17/网易微专业-jq源码解析-1112DOM操作方法-html-text-css/" data-id="ck38hkfsu0003xpxq698cr3d0" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/11/18/我的typescript起步学习/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          我的typescript起步学习
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/11/17/网易微专业-jq源码解析-1107直播课源码/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">网易微专业-jq源码解析-1107直播课源码</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/11/21/我的typescript学习-变量声明/">我的typescript学习-变量声明</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/19/网易微专业-jq源码解析-1118直播课-动画队列/">网易微专业-jq源码解析-1118直播课-动画队列</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/18/我的typescript起步学习/">我的typescript起步学习</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/17/网易微专业-jq源码解析-1112DOM操作方法-html-text-css/">网易微专业-jq源码解析-1112DOM操作方法-html/text/css</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/17/网易微专业-jq源码解析-1107直播课源码/">网易微专业-jq源码解析-1107直播课源码</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

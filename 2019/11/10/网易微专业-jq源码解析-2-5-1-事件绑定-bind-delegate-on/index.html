@@ -20,7 +20,10 @@
 <meta property="og:image" content="https://snakexu.github.io/images/wangyi/jq/on_4.png">
 <meta property="og:image" content="https://snakexu.github.io/images/wangyi/jq/on_5.png">
 <meta property="og:image" content="https://snakexu.github.io/images/wangyi/jq/on_6.png">
-<meta property="og:updated_time" content="2019-11-15T09:30:07.628Z">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/jq/on_7.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/jq/on_8.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/jq/on_9.png">
+<meta property="og:updated_time" content="2019-11-19T07:06:51.978Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="网易微专业-jq源码解析-2.5.1 事件绑定-bind&#x2F;delegate&#x2F;on">
 <meta name="twitter:description" content="说明：bind/delegate/on，在最近的jQuery版本中bind/delegate已经被on取代了，所以本节也是重点讲述on一、事件模型1、DOM0 DOM2事件模型2、事件流3、事件委托实例代码： HTML代码：&amp;lt; ul id=”proxy”&amp;gt;    &amp;lt; li&amp;gt;主页&amp;lt; /li&amp;gt;    &amp;lt; li&amp;gt;文章&amp;lt; /li&amp;gt;    &amp;lt;">
@@ -129,6 +132,12 @@ if (args) {
 <p><pre><br>//1:利用 data_priv 数据缓存,分离事件与数据 2:元素与缓存中建立 guid 的映射关系用于查找<br>add: function(elem, type, handler) {<br>    //elem jQuery引擎所找到的DOM元素<br>    var eventHandle, events,handlers;<br>    //事件缓存 数据对象，data_priv来源在下面一段代码里<br>    var elemData = data_priv.get(elem);//一开始，elemData={}</pre></p>
 <pre><code>//检测handler是否存在ID(guid)如果没有那么传给他一个ID
 //添加ID的目的是 用来寻找或者删除相应的事件
+//补充：guid是按事件添加的，比如我们有三个div，每个div的class=&quot;box&quot;,
+//那么，$(&apos;.box&apos;).on(&apos;click&apos;,function(){console.log(&apos;loading...&apos;)})
+//$(&apos;box&apos;)在each里是执行三次的，因为我们有三个class=&quot;box&quot;的元素，
+//但是，这三个元素在事件触发时执行相同的函数function(){console.log(&apos;loading...&apos;)}
+//这个被执行的函数只有这一个，也就是说第一个class=&quot;box&quot;的元素执行到这里的时候，handler添加了属性guid
+//那么剩下的两个class=&quot;box&quot;的元素执行到这里的时候，不再执行handler.guid = jQuery.guid++;
 if (!handler.guid) {
     handler.guid = jQuery.guid++;   //guid == 1
 }
@@ -205,12 +214,12 @@ get: function(elem, key) {
 var handlers = (data_priv.get(this, &quot;events&quot;) || {})[event.type] || [];
 event.delegateTarget = this;
 //执行事件处理函数
-</code></pre><p>   jQuery.event.handlers.call( this, event, handlers );<br>},<br><br>这里最主要的思想之一是分离事件与数据，为自定义事件打下基础。</p>
+</code></pre><p>   jQuery.event.handlers.call( this, event, handlers );<br>},<br><br>这里最主要的思想之一是分离事件与数据，为自定义事件打下基础。<br><br>2019/11/19补充<br>关于上面的一段代码<br><br>if (!handler.guid) {<br><br>    handler.guid = jQuery.guid++;   <br><br>}<br><br>我做了一些解释，是我在控制台打印了一些东西后的结论:<br><img src="https://snakexu.github.io/images/wangyi/jq/on_7.png"><br><img src="https://snakexu.github.io/images/wangyi/jq/on_8.png"><br><img src="https://snakexu.github.io/images/wangyi/jq/on_9.png"><br>上面的控制台打印，可以看到，若有若干个class相同的元素$(‘.类明’).on(‘事件名’,事件函数)会取到若干个元素，执行jQuery.fn.on-&gt;jQuery.each-&gt;jQuery.event.add，是对每个元素都执行了jQuery.event.add，但是对于实例化的同类名绑定的相同事件始终只是指向了一个事件执行函数，就是$(‘.类明’).on(‘事件名’,事件函数)中的事件函数。至于说参数是传值引用的，<a href="https://snakexu.github.io/2018/11/12/js%E5%8F%82%E6%95%B0%E6%8C%89%E5%80%BC%E4%BC%A0%E9%80%92/" target="_blank" rel="noopener">https://snakexu.github.io/2018/11/12/js%E5%8F%82%E6%95%B0%E6%8C%89%E5%80%BC%E4%BC%A0%E9%80%92/</a> 我这里对参数是按值传递有一些解释</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/10/网易微专业-jq源码解析-2-5-1-事件绑定-bind-delegate-on/" data-id="ck32th94p0007p5xqa7s4axiw" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/10/网易微专业-jq源码解析-2-5-1-事件绑定-bind-delegate-on/" data-id="ck38hkftl000fxpxq56jb8djz" class="article-share-link">Share</a>
       
       
     </footer>
@@ -268,23 +277,23 @@ event.delegateTarget = this;
       <ul>
         
           <li>
-            <a href="/2019/11/16/网易微专业-jq源码解析-事件绑定-自定义事件-模拟事件-完整源码/">网易微专业-jq源码解析-事件绑定-自定义事件&amp;模拟事件-完整源码</a>
+            <a href="/2019/11/21/我的typescript学习-变量声明/">我的typescript学习-变量声明</a>
           </li>
         
           <li>
-            <a href="/2019/11/15/网易微专业-jq源码解析-2-5-3-事件绑定-自定义事件-模拟事件/">网易微专业-jq源码解析-2-5-3-事件绑定-自定义事件&amp;模拟事件</a>
+            <a href="/2019/11/19/网易微专业-jq源码解析-1118直播课-动画队列/">网易微专业-jq源码解析-1118直播课-动画队列</a>
           </li>
         
           <li>
-            <a href="/2019/11/15/轮询/">轮询</a>
+            <a href="/2019/11/18/我的typescript起步学习/">我的typescript起步学习</a>
           </li>
         
           <li>
-            <a href="/2019/11/15/网易微专业-jq源码解析-事件绑定-体系结构-完整源码/">网易微专业-jq源码解析-事件绑定-体系结构-完整源码</a>
+            <a href="/2019/11/17/网易微专业-jq源码解析-1112DOM操作方法-html-text-css/">网易微专业-jq源码解析-1112DOM操作方法-html/text/css</a>
           </li>
         
           <li>
-            <a href="/2019/11/10/网易微专业-jq源码解析-2-5-1-事件绑定-bind-delegate-on/">网易微专业-jq源码解析-2.5.1 事件绑定-bind/delegate/on</a>
+            <a href="/2019/11/17/网易微专业-jq源码解析-1107直播课源码/">网易微专业-jq源码解析-1107直播课源码</a>
           </li>
         
       </ul>

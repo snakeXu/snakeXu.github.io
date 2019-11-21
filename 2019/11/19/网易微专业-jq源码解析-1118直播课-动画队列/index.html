@@ -5,19 +5,24 @@
   
 
   
-  <title>js传递参数 | 喵小喵的窝</title>
+  <title>网易微专业-jq源码解析-1118直播课-动画队列 | 喵小喵的窝</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="ECMAScript中所有函数的参数都是按值传递的。也就是说，把函数外部的值复制给函数内部的参数，就和把值从一个变量复制到另一个变量一样。基本类型值的传递如果基本类型变量的复制一样，而引用类型值的传递，则如同引用类型变量的复制一样。下面是例子：1.基本类型funciton addTen(num){    num+=10;    return num;}var count = 20;var resu">
+  <meta name="description" content="一、前置记忆(Queue队列)1.Queue队列,如同data数据缓存与Deferred异步模型一样,都是jQuery库的内部实现的基础设施2.Queue队列是animation动画依赖的基础设施，整个jQuery中队列仅供给动画使用3.Queue数据缓存重度依赖了Data函数4.动画会调用队列，队列会调用data数据接口还保存队列里面的动画数据二、场景需要往DOM对象上缓存数据，你会做？解决方案">
 <meta property="og:type" content="article">
-<meta property="og:title" content="js传递参数">
-<meta property="og:url" content="http://yoursite.com/2018/11/12/js参数按值传递/index.html">
+<meta property="og:title" content="网易微专业-jq源码解析-1118直播课-动画队列">
+<meta property="og:url" content="http://yoursite.com/2019/11/19/网易微专业-jq源码解析-1118直播课-动画队列/index.html">
 <meta property="og:site_name" content="喵小喵的窝">
-<meta property="og:description" content="ECMAScript中所有函数的参数都是按值传递的。也就是说，把函数外部的值复制给函数内部的参数，就和把值从一个变量复制到另一个变量一样。基本类型值的传递如果基本类型变量的复制一样，而引用类型值的传递，则如同引用类型变量的复制一样。下面是例子：1.基本类型funciton addTen(num){    num+=10;    return num;}var count = 20;var resu">
+<meta property="og:description" content="一、前置记忆(Queue队列)1.Queue队列,如同data数据缓存与Deferred异步模型一样,都是jQuery库的内部实现的基础设施2.Queue队列是animation动画依赖的基础设施，整个jQuery中队列仅供给动画使用3.Queue数据缓存重度依赖了Data函数4.动画会调用队列，队列会调用data数据接口还保存队列里面的动画数据二、场景需要往DOM对象上缓存数据，你会做？解决方案">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-11-12T10:24:14.706Z">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/jq/1118_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/jq/1118_2.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/jq/1118_3.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/jq/1118_4.png">
+<meta property="og:updated_time" content="2019-11-19T08:11:15.605Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="js传递参数">
-<meta name="twitter:description" content="ECMAScript中所有函数的参数都是按值传递的。也就是说，把函数外部的值复制给函数内部的参数，就和把值从一个变量复制到另一个变量一样。基本类型值的传递如果基本类型变量的复制一样，而引用类型值的传递，则如同引用类型变量的复制一样。下面是例子：1.基本类型funciton addTen(num){    num+=10;    return num;}var count = 20;var resu">
+<meta name="twitter:title" content="网易微专业-jq源码解析-1118直播课-动画队列">
+<meta name="twitter:description" content="一、前置记忆(Queue队列)1.Queue队列,如同data数据缓存与Deferred异步模型一样,都是jQuery库的内部实现的基础设施2.Queue队列是animation动画依赖的基础设施，整个jQuery中队列仅供给动画使用3.Queue数据缓存重度依赖了Data函数4.动画会调用队列，队列会调用data数据接口还保存队列里面的动画数据二、场景需要往DOM对象上缓存数据，你会做？解决方案">
+<meta name="twitter:image" content="https://snakexu.github.io/images/wangyi/jq/1118_1.png">
   
     <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
   
@@ -64,10 +69,10 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-js参数按值传递" class="article article-type-post" itemscope="" itemprop="blogPost">
+        <section id="main"><article id="post-网易微专业-jq源码解析-1118直播课-动画队列" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2018/11/12/js参数按值传递/" class="article-date">
-  <time datetime="2018-11-12T09:44:31.069Z" itemprop="datePublished">2018-11-12</time>
+    <a href="/2019/11/19/网易微专业-jq源码解析-1118直播课-动画队列/" class="article-date">
+  <time datetime="2019-11-19T07:09:22.000Z" itemprop="datePublished">2019-11-19</time>
 </a>
     
   </div>
@@ -78,7 +83,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      js传递参数
+      网易微专业-jq源码解析-1118直播课-动画队列
     </h1>
   
 
@@ -86,12 +91,12 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>ECMAScript中所有函数的参数都是按值传递的。也就是说，把函数外部的值复制给函数内部的参数，就和把值从一个变量复制到另一个变量一样。基本类型值的传递如果基本类型变量的复制一样，而引用类型值的传递，则如同引用类型变量的复制一样。下面是例子：<br>1.基本类型<br>funciton addTen(num){<br>    num+=10;<br>    return num;<br>}<br>var count = 20;<br>var result = addTen(count);<br>alert(count);//20 没有变化<br>alett(result);//30<br>2.引用类型<br>function setName(obj){<br>    obj.name = “snakeXu”;<br>}<br>var person = new Object();<br>setName(person);<br>alert(person.name);//snakeXu<br>3.如果你还不相信是传值<br>function setName(obj){<br>    obj.name = “snakeXu”;<br>    obj = new Object();<br>    obj.name = “handsomeXu”;<br>}<br>var person = new Object();<br>setName(person);<br>alert(person.name);//snakeXu<br>解释一下:再把person传递给setName()后，其name属性被设置为”snakeXu”。然后又将一个新对象赋给变量obj，同时将其name属性设置为”handsomeXu”。如果person是按引用传递的，那么person就会自动被修改为指向其name属性值为”handsomeXu”的新对象。但是，当接下来再访问person.name时，显示的值仍然是”snakeXu”。这说明即使再在函数内部修改了参数的值，但原始的引用仍然保持未变。实际上，在当函数内部重写obj时，这个变量引用的就是一个局部对象了。而这个局部对象会在函数执行完毕后立即被销毁。<br>注:可以把js函数的参数想象成局部变量</p>
+        <p>一、前置记忆(Queue队列)<br>1.Queue队列,如同data数据缓存与Deferred异步模型一样,都是jQuery库的内部实现的基础设施<br>2.Queue队列是animation动画依赖的基础设施，整个jQuery中队列仅供给动画使用<br>3.Queue数据缓存重度依赖了Data函数<br>4.动画会调用队列，队列会调用data数据接口还保存队列里面的动画数据<br>二、场景<br>需要往DOM对象上缓存数据，你会做？<br><br>解决方案<br><img src="https://snakexu.github.io/images/wangyi/jq/1118_1.png"><br>我们看到，上图中说给DOM元素添加自定义属性和过多数据，可能会引起内存泄露，尽量避免这样做。<br><br>内存泄漏的概念：长期持有一块内存的引用，使其不能得到释放。对于js而言，这其实就是不必要的一些内存损耗。<br><br>而在上图中，只要#app这个DOM元素在页面中，那么这个元素就会常驻内存，除非关闭浏览器或者当前页面，否则这个元素上的属性也是常驻内存的，当页面数据越来越多，就会引起内存损耗。<br><br>为了解决这些问题我们就想到了2.5事件相关章节中的思想——缓存<br><img src="https://snakexu.github.io/images/wangyi/jq/1118_2.png"><br>三、数据缓存&amp;队列&amp;动画<br><img src="https://snakexu.github.io/images/wangyi/jq/1118_3.png"><br><img src="https://snakexu.github.io/images/wangyi/jq/1118_4.png"></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/11/12/js参数按值传递/" data-id="ck38hkfsx0005xpxqsegcr31g" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/19/网易微专业-jq源码解析-1118直播课-动画队列/" data-id="ck38hkfsw0004xpxqg7i1ckqz" class="article-share-link">Share</a>
       
       
     </footer>
@@ -100,19 +105,19 @@
     
 <nav id="article-nav">
   
-    <a href="/2018/11/12/hello-world/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2019/11/21/我的typescript学习-变量声明/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
-          Hello World
+          我的typescript学习-变量声明
         
       </div>
     </a>
   
   
-    <a href="/2018/11/12/一些网址/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2019/11/18/我的typescript起步学习/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title"></div>
+      <div class="article-nav-title">我的typescript起步学习</div>
     </a>
   
 </nav>

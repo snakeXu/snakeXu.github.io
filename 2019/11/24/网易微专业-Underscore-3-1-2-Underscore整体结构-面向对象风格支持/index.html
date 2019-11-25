@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>网易微专业-Underscore-3.1.2-Underscore整体结构&amp;面向对象风格支持 | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1.Underscore结构2.面向对象风格支持3.mixin4.链接式调用5.撸代码先上调用代码吧 console.log(_([1,2,3,4,5,4,5,6,”a”,”A”]).chain().unique().map().value());.chain()是告诉underscore我要开始链式调用了，然后underscore就配合了.unique()&amp;amp;.map()都是对数组进行各种">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网易微专业-Underscore-3.1.2-Underscore整体结构&amp;面向对象风格支持">
+<meta property="og:url" content="http://yoursite.com/2019/11/24/网易微专业-Underscore-3-1-2-Underscore整体结构-面向对象风格支持/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="1.Underscore结构2.面向对象风格支持3.mixin4.链接式调用5.撸代码先上调用代码吧 console.log(_([1,2,3,4,5,4,5,6,”a”,”A”]).chain().unique().map().value());.chain()是告诉underscore我要开始链式调用了，然后underscore就配合了.unique()&amp;amp;.map()都是对数组进行各种">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/underscore/3.1.2_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/underscore/3.1.2_2.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/underscore/3.1.2_3.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/underscore/3.1.2_4.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/underscore/3.1.2_5.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/underscore/3.1.2_6.png">
+<meta property="og:updated_time" content="2019-11-25T08:53:40.066Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="网易微专业-Underscore-3.1.2-Underscore整体结构&amp;面向对象风格支持">
+<meta name="twitter:description" content="1.Underscore结构2.面向对象风格支持3.mixin4.链接式调用5.撸代码先上调用代码吧 console.log(_([1,2,3,4,5,4,5,6,”a”,”A”]).chain().unique().map().value());.chain()是告诉underscore我要开始链式调用了，然后underscore就配合了.unique()&amp;amp;.map()都是对数组进行各种">
+<meta name="twitter:image" content="https://snakexu.github.io/images/wangyi/underscore/3.1.2_1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-网易微专业-Underscore-3-1-2-Underscore整体结构-面向对象风格支持" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/11/24/网易微专业-Underscore-3-1-2-Underscore整体结构-面向对象风格支持/" class="article-date">
+  <time datetime="2019-11-24T13:27:06.000Z" itemprop="datePublished">2019-11-24</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      网易微专业-Underscore-3.1.2-Underscore整体结构&amp;面向对象风格支持
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.Underscore结构<br><img src="https://snakexu.github.io/images/wangyi/underscore/3.1.2_1.png"><br><img src="https://snakexu.github.io/images/wangyi/underscore/3.1.2_2.png"><br>2.面向对象风格支持<br><img src="https://snakexu.github.io/images/wangyi/underscore/3.1.2_3.png"><br>3.mixin<br><img src="https://snakexu.github.io/images/wangyi/underscore/3.1.2_4.png"><br>4.链接式调用<br><img src="https://snakexu.github.io/images/wangyi/underscore/3.1.2_5.png"><br><img src="https://snakexu.github.io/images/wangyi/underscore/3.1.2_6.png"><br>5.撸代码<br>先上调用代码吧</p>
+<p><pre><br>console.log(_([1,2,3,4,5,4,5,6,”a”,”A”]).chain().unique().map().value());<br></pre><br>.chain()是告诉underscore我要开始链式调用了，然后underscore就配合了<br><br>.unique()&amp;.map()都是对数组进行各种操作<br><br>.value()告诉underscore，我不需要再链式调用了，返回处理结果就行了<br><br>那代码是怎么实现的呢，上代码</p>
+<p><pre><br>(function(root) {<br>    var push = Array.prototype.push;</pre></p>
+<pre><code>var _ = function(obj) {
+    if (obj instanceof _) {
+        return obj;
+    }
+
+    if (!(this instanceof _)) {
+        return new _(obj);
+    }
+    this._wrapped = obj;
+}
+
+_.unique = function(arr, callback) {
+    var ret = [];
+    var target, i = 0;
+    for (; i &lt; arr.length; i++) {
+        var target = callback ? callback(arr[i]) : arr[i];
+        if (ret.indexOf(target) === -1) {
+            ret.push(target);
+        }
+    }
+
+    return ret;
+}
+
+//开启链接式的调用
+_.chain = function(obj) {
+    var instance = _(obj);
+    instance._chain = true;
+    return instance;
+}
+
+//辅助函数    obj   数据结果
+//这里的参数obj相当于返回每个调用方法的执行结果
+//比如调用unique，则返回_.unique的执行结果
+var result = function(instance, obj) {
+    //花式调用_.chain(),使underscore可以一直链式调用
+    return instance._chain ? _(obj).chain() : obj;
+}
+
+_.prototype.value = function() {
+    return this._wrapped;
+}
+
+_.functions = function(obj) {
+    var result = [];
+    var key;
+    for (key in obj) {
+        result.push(key);
+    }
+    return result;
+}
+
+_.map = function(args) {
+    args.push(&quot;max&quot;);
+  return args;
+}
+
+//类型检测
+_.isArray = function(array) {
+    return toString.call(array) === &quot;[object Array]&quot;;
+}
+
+_.each = function(target, callback) {
+    console.log(target)
+    var key, i = 0;
+    if (_.isArray(target)) {
+        var length = target.length;
+        for (; i &lt; length; i++) {
+            callback.call(target, target[i], i);
+        }
+    } else {
+        for (key in target) {
+            callback.call(target, key, target[key]);
+        }
+    }
+
+}
+
+//mixin  
+_.mixin = function(obj) {
+    _.each(_.functions(obj), function(name) {
+        var func = obj[name];
+
+        _.prototype[name] = function() {
+            var args = [this._wrapped];
+            push.apply(args, arguments);
+            // instance      去重之后的结果
+            return result(this, func.apply(this, args));
+            //这里相当于每个原型方法都返回的是result(this, func.apply(this, args)),
+            //也就是说每个方法最后都要去执行私有匿名函数result
+        }
+    });
+}
+
+_.mixin(_);//首先要注意，mixin函数先执行了一次
+root._ = _;
+</code></pre><p>})(this);<br><br>个人认为_.mixin是上面代码最需要理解的部分，正是因为有这个函数，我们上面讲过的关于函数式编程的精髓得到了应用。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/11/24/网易微专业-Underscore-3-1-2-Underscore整体结构-面向对象风格支持/" data-id="ck3e9vzgz0004maxq758lg2yx" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/11/25/网易微专业-Underscore-3-1-3-undefined的处理iteratee设计/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          网易微专业-Underscore-3.1.3-undefined的处理iteratee设计
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/11/24/网易微专业-Underscore-3-1-1-函数式编程思想概述/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">网易微专业-Underscore-3.1.1-函数式编程思想概述</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/11/25/网易微专业-Underscore-3-1-3-undefined的处理iteratee设计-源代码/">网易微专业-Underscore-3.1.3-undefined的处理iteratee设计-源代码</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/25/网易微专业-Underscore-3-1-3-undefined的处理iteratee设计/">网易微专业-Underscore-3.1.3-undefined的处理iteratee设计</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/24/网易微专业-Underscore-3-1-2-Underscore整体结构-面向对象风格支持/">网易微专业-Underscore-3.1.2-Underscore整体结构&amp;面向对象风格支持</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/24/网易微专业-Underscore-3-1-1-函数式编程思想概述/">网易微专业-Underscore-3.1.1-函数式编程思想概述</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/24/网易微专业-jq源码解析-1118直播课-拆箱装箱/">网易微专业-jq源码解析-1118直播课-拆箱装箱</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

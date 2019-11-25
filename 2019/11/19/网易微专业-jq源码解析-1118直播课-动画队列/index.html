@@ -18,7 +18,7 @@
 <meta property="og:image" content="https://snakexu.github.io/images/wangyi/jq/1118_2.png">
 <meta property="og:image" content="https://snakexu.github.io/images/wangyi/jq/1118_3.png">
 <meta property="og:image" content="https://snakexu.github.io/images/wangyi/jq/1118_4.png">
-<meta property="og:updated_time" content="2019-11-19T08:11:15.605Z">
+<meta property="og:updated_time" content="2019-11-24T02:58:12.970Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="网易微专业-jq源码解析-1118直播课-动画队列">
 <meta name="twitter:description" content="一、前置记忆(Queue队列)1.Queue队列,如同data数据缓存与Deferred异步模型一样,都是jQuery库的内部实现的基础设施2.Queue队列是animation动画依赖的基础设施，整个jQuery中队列仅供给动画使用3.Queue数据缓存重度依赖了Data函数4.动画会调用队列，队列会调用data数据接口还保存队列里面的动画数据二、场景需要往DOM对象上缓存数据，你会做？解决方案">
@@ -91,12 +91,188 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>一、前置记忆(Queue队列)<br>1.Queue队列,如同data数据缓存与Deferred异步模型一样,都是jQuery库的内部实现的基础设施<br>2.Queue队列是animation动画依赖的基础设施，整个jQuery中队列仅供给动画使用<br>3.Queue数据缓存重度依赖了Data函数<br>4.动画会调用队列，队列会调用data数据接口还保存队列里面的动画数据<br>二、场景<br>需要往DOM对象上缓存数据，你会做？<br><br>解决方案<br><img src="https://snakexu.github.io/images/wangyi/jq/1118_1.png"><br>我们看到，上图中说给DOM元素添加自定义属性和过多数据，可能会引起内存泄露，尽量避免这样做。<br><br>内存泄漏的概念：长期持有一块内存的引用，使其不能得到释放。对于js而言，这其实就是不必要的一些内存损耗。<br><br>而在上图中，只要#app这个DOM元素在页面中，那么这个元素就会常驻内存，除非关闭浏览器或者当前页面，否则这个元素上的属性也是常驻内存的，当页面数据越来越多，就会引起内存损耗。<br><br>为了解决这些问题我们就想到了2.5事件相关章节中的思想——缓存<br><img src="https://snakexu.github.io/images/wangyi/jq/1118_2.png"><br>三、数据缓存&amp;队列&amp;动画<br><img src="https://snakexu.github.io/images/wangyi/jq/1118_3.png"><br><img src="https://snakexu.github.io/images/wangyi/jq/1118_4.png"></p>
+        <p>一、前置记忆(Queue队列)<br>1.Queue队列,如同data数据缓存与Deferred异步模型一样,都是jQuery库的内部实现的基础设施<br>2.Queue队列是animation动画依赖的基础设施，整个jQuery中队列仅供给动画使用<br>3.Queue数据缓存重度依赖了Data函数<br>4.动画会调用队列，队列会调用data数据接口还保存队列里面的动画数据<br>二、场景<br>需要往DOM对象上缓存数据，你会做？<br><br>解决方案<br><img src="https://snakexu.github.io/images/wangyi/jq/1118_1.png"><br>我们看到，上图中说给DOM元素添加自定义属性和过多数据，可能会引起内存泄露，尽量避免这样做。<br><br>内存泄漏的概念：长期持有一块内存的引用，使其不能得到释放。对于js而言，这其实就是不必要的一些内存损耗。<br><br>而在上图中，只要#app这个DOM元素在页面中，那么这个元素就会常驻内存，除非关闭浏览器或者当前页面，否则这个元素上的属性也是常驻内存的，当页面数据越来越多，就会引起内存损耗。<br><br>为了解决这些问题我们就想到了2.5事件相关章节中的思想——缓存<br><img src="https://snakexu.github.io/images/wangyi/jq/1118_2.png"><br>三、数据缓存&amp;队列&amp;动画<br><img src="https://snakexu.github.io/images/wangyi/jq/1118_3.png"><br><img src="https://snakexu.github.io/images/wangyi/jq/1118_4.png"><br>四、源码<br>html部分</p>
+<pre>
+< div class="box">< /div>
+< script type="text/javascript">
+    var box = $('.box')
+    function func(next, hooks){
+        console.log('this is a function');
+        next();
+        hooks.empty.fire(); //清除工作
+    }
+    function wait(){
+        console.log('this is a wait function')
+    }
+    $.queue(box, "first", func);
+    $.queue(box, "first", wait);
+    //所有的工作已经完成 1:box 有对应的数据仓库  2:数据仓库注册了firstqueue   3:func 函数push到了firstqueue
+    //wait函数 push到了firstqueue
 
+    $.dequeue(box, "first");  //出列
+< /script>
+</pre>
+js部分代码<br>
+首先，这里涉及到之前章节的一个内容，又稍作修改，先把这部分内容写出来
+<pre>
+function Data(){
+    //jQuery.expando是jQuery的静态属性,对于jQuery的每次加载运行期间时唯一的随机数
+    //jQuery.extend.expando: "jQuery" + (core_version + Math.random()).replace(/\D/g, ""),
+    this.expando = jQuery.expando + Math.random();
+    this.cache = {}
+}
+Data.uid = 1;
+Data.prototype = {
+    key : function(elem){
+        var descriptor = {},
+        unclock = elem[this.expando];
+        if(!unclock){
+            unclock = Data.uid++;
+            descriptor[this.expando] = {
+                value:unclock
+            };
+            Object.defineProperties(elem,descriptor)
+        }
+        if(!this.cache[unclock]){
+            this.cache[unclock] = {};
+        }
+        return unclock
+    },
+    get : function(elem, key){
+        var cache = this.cache[this.key(elem)];
+        return key == undefined ? cache :cache[key];
+    },
+    set :function(owner, key, value){
+        var prop;
+        var unlock = this.key(owner); //1 === unlock
+        var cache = this.cache[unlock]; //数据仓库
+        if (typeof key === "string") { //firstqueue
+            cache[key] = value; //{firstqueue:[function(){}]}
+        }
+        if (jQuery.isPlainObject(key)) {
+            for (prop in key) {
+                cache[prop] = key[prop];
+            }
+        }
+    },
+    access : function(owner, key, value){
+        /*
+        处理  elem =cache 中映射的缓存数据对象 > {"1":{firstqueue?}}
+        未指定key的值           返回整个缓存对象
+        指定了key 未设置value   返回存储在cache中对应的key的数据
+        */
+        this.set(owner, key, value);
+        return value !== undefined ? value : key ;
+    },
+    remove : function(elem, key){
+        var unlock = this.key(elem);
+        var cache = this.cache[unlock];
+        var i = key.length;
+        while (i--) {
+          delete cache[key[i]];
+        }
+    }
+}
+//内部私有缓存对象   
+var data_priv = new Data();
+</pre>
+下面我们先了解入队操作
+<pre>
+jQuery.extend({
+    queue : function(elem, type, data){
+        var queue;
+        if(elem){
+            type = (type || "fx") + "queue"; // "fxqueue" 动画队列默认的名称
+            queue = data_priv.get(elem, type);
+            if(data){
+                if(!queue || jQuery.isArray(data)){
+                    queue = data.priv.access(elem, type, jQuery.makeArray(data))// 包装 [function(){}]
+                }else{
+                    queue.push(data)
+                }
+            }
+        }
+        return queue || []
+    },
+})
+</pre>
+入队涉及到一个类数组转化成数组的操作
+<pre>
+//类数组转化成正真的数组 (改造)  makeArray(data)
+makeArray: function(arr, results) {
+    var ret = results || [];
+    //arr 是否为类数组结构
+    if (isArraylike(arr)) {
+        if (arr != null) {
+            jQuery.merge(ret, typeof arr === "string" ? [arr] : arr);
+        }
+    } else {
+        [].push.call(ret, arr); //[data]
+    }
+
+    return ret; //[function(){}]
+},
+
+//合并数组
+merge: function(first, second) {
+    var l = second.length, //function(){}  undefind
+        i = first.length,
+        j = 0;
+
+    if (typeof l === "number") {
+        for (; j < l; j++) {
+            first[i++] = second[j];
+        }
+    } else {
+        while (second[j] !== undefined) {
+            first[i++] = second[j++];
+        }
+    }
+
+    first.length = i;
+
+    return first;
+},
+</pre>
+入队的东西，在调用的时候就要出队了，接下来写出队的代码
+<pre>
+dequeue : function(elem, type){
+    type = type || "fx";
+    var queue = jQuery.queue(elem, type),
+        startlength = queue.length,
+        fn = queue.shift(),
+        hooks = jQuery._queueHooks(elem, type),
+        next = function(){
+            jQuery.queue(elem, type)
+        }
+        if(fn === "inprogress"){
+            fn = queue.shift();
+            startlength--;
+        }
+        if(fn){
+            if(type === "fx"){
+                //添加进度标记，以防止出现fx队列自动出队
+                queue.unshift("inprogress")
+            }
+            fn.call(elem, next, hooks)
+        }
+        if(!startlength && hooks){
+            hooks.empty.fire();
+        }
+},
+_queueHooks : function(elem, type){
+    var key = type + 'queueHooks';
+    return data_priv.get(elem, key) || data_priv.access(elem, key, {
+    empty: jQuery.callbacks("once memory").add(function() {
+            data_priv.remove(elem, [type + "queue", key]); //["firstqueue","firstqueueHooks"]
+        })
+    })
+}
+</pre>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/19/网易微专业-jq源码解析-1118直播课-动画队列/" data-id="ck38hkfsw0004xpxqg7i1ckqz" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/19/网易微专业-jq源码解析-1118直播课-动画队列/" data-id="ck3e9vzh8000cmaxqghi8qa7c" class="article-share-link">Share</a>
       
       
     </footer>
@@ -154,23 +330,23 @@
       <ul>
         
           <li>
-            <a href="/2019/11/21/我的typescript学习-变量声明/">我的typescript学习-变量声明</a>
+            <a href="/2019/11/25/网易微专业-Underscore-3-1-3-undefined的处理iteratee设计-源代码/">网易微专业-Underscore-3.1.3-undefined的处理iteratee设计-源代码</a>
           </li>
         
           <li>
-            <a href="/2019/11/19/网易微专业-jq源码解析-1118直播课-动画队列/">网易微专业-jq源码解析-1118直播课-动画队列</a>
+            <a href="/2019/11/25/网易微专业-Underscore-3-1-3-undefined的处理iteratee设计/">网易微专业-Underscore-3.1.3-undefined的处理iteratee设计</a>
           </li>
         
           <li>
-            <a href="/2019/11/18/我的typescript起步学习/">我的typescript起步学习</a>
+            <a href="/2019/11/24/网易微专业-Underscore-3-1-2-Underscore整体结构-面向对象风格支持/">网易微专业-Underscore-3.1.2-Underscore整体结构&amp;面向对象风格支持</a>
           </li>
         
           <li>
-            <a href="/2019/11/17/网易微专业-jq源码解析-1112DOM操作方法-html-text-css/">网易微专业-jq源码解析-1112DOM操作方法-html/text/css</a>
+            <a href="/2019/11/24/网易微专业-Underscore-3-1-1-函数式编程思想概述/">网易微专业-Underscore-3.1.1-函数式编程思想概述</a>
           </li>
         
           <li>
-            <a href="/2019/11/17/网易微专业-jq源码解析-1107直播课源码/">网易微专业-jq源码解析-1107直播课源码</a>
+            <a href="/2019/11/24/网易微专业-jq源码解析-1118直播课-拆箱装箱/">网易微专业-jq源码解析-1118直播课-拆箱装箱</a>
           </li>
         
       </ul>

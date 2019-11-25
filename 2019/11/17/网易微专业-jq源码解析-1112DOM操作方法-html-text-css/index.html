@@ -14,7 +14,7 @@
 <meta property="og:site_name" content="喵小喵的窝">
 <meta property="og:description" content="1、html()/text()/css()的作用(1)html()用来读取和修改元素的HTML标签(2)text()用来读取和修改元素的纯文本内容(3)css()设置或返回被返回元素的一个或多个样式属性·html()&amp;amp;text()&amp;amp;css()都是通过jQuery.access提供底层支持。jQuery.access()是一个多功能方法，作为set()和get()值来使用2、举个栗子">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-11-18T07:15:33.818Z">
+<meta property="og:updated_time" content="2019-11-22T04:05:23.152Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="网易微专业-jq源码解析-1112DOM操作方法-html&#x2F;text&#x2F;css">
 <meta name="twitter:description" content="1、html()/text()/css()的作用(1)html()用来读取和修改元素的HTML标签(2)text()用来读取和修改元素的纯文本内容(3)css()设置或返回被返回元素的一个或多个样式属性·html()&amp;amp;text()&amp;amp;css()都是通过jQuery.access提供底层支持。jQuery.access()是一个多功能方法，作为set()和get()值来使用2、举个栗子">
@@ -143,23 +143,30 @@ jQuery.fn.extend({
 jQuery.extend({
     access : funcion(elems, callback, key, value){
         var len = elems.length;
-        var testing = elems === null;
-        var cache,chain;//chain开启链式调用
-        if(value !== undefined){
+        var testing = key === null; //false
+        var cache, chain; //chain 开始链式调用
+        if(jQuery.isPlainObject(key)){
             chain = true;
-            if(testing){
+            for(var name in key){
+                jQuery.access(elems, callback, name, key[name]);  //color => red  font-size =>20px
+            }
+        }
+        if (value !== undefined) {
+            chain = true;
+            if (testing) {
                 cache = callback;
-                callback = function(key, value){
+                callback = function(key, value) {
                     //增强功能的写法，vue也采用了这种写法，比如vue的$mount功能
                     //具体增强功能写法的意义，课程内容大概讲述了，或者以后学习工程中慢慢了解
-                    callback.call(this, value)
+                    cache.call(this, value);
                 }
             }
-            for(var i=0; i < elems.length;i++){
-                callback.call(elems[i], key, value)
+            for (var i = 0; i < len; i++) { //1 || 1+
+                callback.call(elems[i], key, value);
             }
-            return chain ? elems : callback.call(elems[0],value);
         }
+
+        return chain ? elems : testing ? callback.call(elems[0], value) : callback.call(elems[0], key, value);
     },
     text : function(elem){
         var nodeType = elem.nodeType
@@ -184,7 +191,7 @@ jQuery.extend({
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/17/网易微专业-jq源码解析-1112DOM操作方法-html-text-css/" data-id="ck38hkfsu0003xpxq698cr3d0" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/17/网易微专业-jq源码解析-1112DOM操作方法-html-text-css/" data-id="ck3e9vzh4000amaxqopxcgur8" class="article-share-link">Share</a>
       
       
     </footer>
@@ -242,23 +249,23 @@ jQuery.extend({
       <ul>
         
           <li>
-            <a href="/2019/11/21/我的typescript学习-变量声明/">我的typescript学习-变量声明</a>
+            <a href="/2019/11/25/网易微专业-Underscore-3-1-3-undefined的处理iteratee设计-源代码/">网易微专业-Underscore-3.1.3-undefined的处理iteratee设计-源代码</a>
           </li>
         
           <li>
-            <a href="/2019/11/19/网易微专业-jq源码解析-1118直播课-动画队列/">网易微专业-jq源码解析-1118直播课-动画队列</a>
+            <a href="/2019/11/25/网易微专业-Underscore-3-1-3-undefined的处理iteratee设计/">网易微专业-Underscore-3.1.3-undefined的处理iteratee设计</a>
           </li>
         
           <li>
-            <a href="/2019/11/18/我的typescript起步学习/">我的typescript起步学习</a>
+            <a href="/2019/11/24/网易微专业-Underscore-3-1-2-Underscore整体结构-面向对象风格支持/">网易微专业-Underscore-3.1.2-Underscore整体结构&amp;面向对象风格支持</a>
           </li>
         
           <li>
-            <a href="/2019/11/17/网易微专业-jq源码解析-1112DOM操作方法-html-text-css/">网易微专业-jq源码解析-1112DOM操作方法-html/text/css</a>
+            <a href="/2019/11/24/网易微专业-Underscore-3-1-1-函数式编程思想概述/">网易微专业-Underscore-3.1.1-函数式编程思想概述</a>
           </li>
         
           <li>
-            <a href="/2019/11/17/网易微专业-jq源码解析-1107直播课源码/">网易微专业-jq源码解析-1107直播课源码</a>
+            <a href="/2019/11/24/网易微专业-jq源码解析-1118直播课-拆箱装箱/">网易微专业-jq源码解析-1118直播课-拆箱装箱</a>
           </li>
         
       </ul>

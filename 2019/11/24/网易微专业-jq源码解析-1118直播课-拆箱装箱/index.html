@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>网易微专业-jq源码解析-1118直播课-拆箱装箱 | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="首先，划重点，重点就是老师的文章：https://zhuanlan.zhihu.com/p/918613181.起源在控制台输入1.toString()报错: Invalid or unexpected token解释在代码世界里，1.1为1.1，.01为0.01，1.为1,那么1.toString()中的toString()会被解析为一个数值，去进行词法分析，而这个词法不能被正确分析，于是报错。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网易微专业-jq源码解析-1118直播课-拆箱装箱">
+<meta property="og:url" content="http://yoursite.com/2019/11/24/网易微专业-jq源码解析-1118直播课-拆箱装箱/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="首先，划重点，重点就是老师的文章：https://zhuanlan.zhihu.com/p/918613181.起源在控制台输入1.toString()报错: Invalid or unexpected token解释在代码世界里，1.1为1.1，.01为0.01，1.为1,那么1.toString()中的toString()会被解析为一个数值，去进行词法分析，而这个词法不能被正确分析，于是报错。">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-11-24T04:26:55.591Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="网易微专业-jq源码解析-1118直播课-拆箱装箱">
+<meta name="twitter:description" content="首先，划重点，重点就是老师的文章：https://zhuanlan.zhihu.com/p/918613181.起源在控制台输入1.toString()报错: Invalid or unexpected token解释在代码世界里，1.1为1.1，.01为0.01，1.为1,那么1.toString()中的toString()会被解析为一个数值，去进行词法分析，而这个词法不能被正确分析，于是报错。">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-网易微专业-jq源码解析-1118直播课-拆箱装箱" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/11/24/网易微专业-jq源码解析-1118直播课-拆箱装箱/" class="article-date">
+  <time datetime="2019-11-24T03:36:23.000Z" itemprop="datePublished">2019-11-24</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      网易微专业-jq源码解析-1118直播课-拆箱装箱
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>首先，划重点，重点就是老师的文章：<a href="https://zhuanlan.zhihu.com/p/91861318" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/91861318</a><br>1.起源<br><br>在控制台输入1.toString()报错: Invalid or unexpected token<br><br>解释<br><br>在代码世界里，1.1为1.1，.01为0.01，1.为1,那么1.toString()中的toString()会被解析为一个数值，去进行词法分析，而这个词法不能被正确分析，于是报错。<br>解决<br><br>1 .toString()   //1后面加空格<br><br>(1).toString()  //把1用括号包裹起来<br><br>其实就是1.toString()的时候，不能确定点(.)运算符是1.的点还是.toString()的点<br><br>运算符.提供了装箱转化，构造一个临时的对象<br>2.拆箱<br>[]+[]或者{}+[]或[]+{}在运算的时候，首先会判断[].valueOf()是不是基本类型，如果不是基本类型，就进行[].toString()运算，如果是基本类型，则直接参与运算，如果在toString()之后还不是基本类型则报错<br>3.实例讲解<br>[]+[]                                = “” (解释:[].valueOf()=””)<br>[]+{}                                = “[object Object]”(解释:{}.valueOf={},{}.toString()=”[object Object]”)<br>{}+[]                                = 0<br>那么,上面这个怎么解释呢,明明{}.valueOf().toString()=”[object Object]”啊,但是，javascript有个特性，如果{}既可以被认为是代码块，又可以被认为是对象字面量，那么js会把他当做代码块来看待。这就很好解释了，{} 被当做了代码块，只有+[]，根据加法的定义，被转换为0，就得到了结果。<br>后面，老师的解释，阿哈哈哈，讲太快，我记不下来笔记了，毕竟老师的文章写的很全面细致了，看老师文章吧^_&lt;</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/11/24/网易微专业-jq源码解析-1118直播课-拆箱装箱/" data-id="ck3e9vzh6000bmaxqau7ikdw5" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/11/24/网易微专业-Underscore-3-1-1-函数式编程思想概述/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          网易微专业-Underscore-3.1.1-函数式编程思想概述
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/11/24/网易微专业-jq源码解析-1118直播课-动画队列源码/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">网易微专业-jq源码解析-1118直播课-动画队列源码</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/11/25/网易微专业-Underscore-3-1-3-undefined的处理iteratee设计-源代码/">网易微专业-Underscore-3.1.3-undefined的处理iteratee设计-源代码</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/25/网易微专业-Underscore-3-1-3-undefined的处理iteratee设计/">网易微专业-Underscore-3.1.3-undefined的处理iteratee设计</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/24/网易微专业-Underscore-3-1-2-Underscore整体结构-面向对象风格支持/">网易微专业-Underscore-3.1.2-Underscore整体结构&amp;面向对象风格支持</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/24/网易微专业-Underscore-3-1-1-函数式编程思想概述/">网易微专业-Underscore-3.1.1-函数式编程思想概述</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/24/网易微专业-jq源码解析-1118直播课-拆箱装箱/">网易微专业-jq源码解析-1118直播课-拆箱装箱</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

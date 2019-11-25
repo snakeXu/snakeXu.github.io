@@ -14,17 +14,17 @@
 <meta property="og:site_name" content="喵小喵的窝">
 <meta property="og:description" content="1.Underscore结构2.面向对象风格支持3.mixin4.链接式调用5.撸代码先上调用代码吧 console.log(_([1,2,3,4,5,4,5,6,”a”,”A”]).chain().unique().map().value());.chain()是告诉underscore我要开始链式调用了，然后underscore就配合了.unique()&amp;amp;.map()都是对数组进行各种">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="https://snakexu.github.io/images/wangyi/underscore/3.1.2_1.png">
-<meta property="og:image" content="https://snakexu.github.io/images/wangyi/underscore/3.1.2_2.png">
-<meta property="og:image" content="https://snakexu.github.io/images/wangyi/underscore/3.1.2_3.png">
-<meta property="og:image" content="https://snakexu.github.io/images/wangyi/underscore/3.1.2_4.png">
-<meta property="og:image" content="https://snakexu.github.io/images/wangyi/underscore/3.1.2_5.png">
-<meta property="og:image" content="https://snakexu.github.io/images/wangyi/underscore/3.1.2_6.png">
-<meta property="og:updated_time" content="2019-11-25T08:53:40.066Z">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/Underscore/3.1.2_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/Underscore/3.1.2_2.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/Underscore/3.1.2_3.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/Underscore/3.1.2_4.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/Underscore/3.1.2_5.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/Underscore/3.1.2_6.png">
+<meta property="og:updated_time" content="2019-11-25T10:17:37.529Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="网易微专业-Underscore-3.1.2-Underscore整体结构&amp;面向对象风格支持">
 <meta name="twitter:description" content="1.Underscore结构2.面向对象风格支持3.mixin4.链接式调用5.撸代码先上调用代码吧 console.log(_([1,2,3,4,5,4,5,6,”a”,”A”]).chain().unique().map().value());.chain()是告诉underscore我要开始链式调用了，然后underscore就配合了.unique()&amp;amp;.map()都是对数组进行各种">
-<meta name="twitter:image" content="https://snakexu.github.io/images/wangyi/underscore/3.1.2_1.png">
+<meta name="twitter:image" content="https://snakexu.github.io/images/wangyi/Underscore/3.1.2_1.png">
   
     <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
   
@@ -93,7 +93,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>1.Underscore结构<br><img src="https://snakexu.github.io/images/wangyi/underscore/3.1.2_1.png"><br><img src="https://snakexu.github.io/images/wangyi/underscore/3.1.2_2.png"><br>2.面向对象风格支持<br><img src="https://snakexu.github.io/images/wangyi/underscore/3.1.2_3.png"><br>3.mixin<br><img src="https://snakexu.github.io/images/wangyi/underscore/3.1.2_4.png"><br>4.链接式调用<br><img src="https://snakexu.github.io/images/wangyi/underscore/3.1.2_5.png"><br><img src="https://snakexu.github.io/images/wangyi/underscore/3.1.2_6.png"><br>5.撸代码<br>先上调用代码吧</p>
+        <p>1.Underscore结构<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.1.2_1.png"><br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.1.2_2.png"><br>2.面向对象风格支持<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.1.2_3.png"><br>3.mixin<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.1.2_4.png"><br>4.链接式调用<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.1.2_5.png"><br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.1.2_6.png"><br>5.撸代码<br>先上调用代码吧</p>
 <p><pre><br>console.log(_([1,2,3,4,5,4,5,6,”a”,”A”]).chain().unique().map().value());<br></pre><br>.chain()是告诉underscore我要开始链式调用了，然后underscore就配合了<br><br>.unique()&amp;.map()都是对数组进行各种操作<br><br>.value()告诉underscore，我不需要再链式调用了，返回处理结果就行了<br><br>那代码是怎么实现的呢，上代码</p>
 <p><pre><br>(function(root) {<br>    var push = Array.prototype.push;</pre></p>
 <pre><code>var _ = function(obj) {
@@ -197,7 +197,7 @@ root._ = _;
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/24/网易微专业-Underscore-3-1-2-Underscore整体结构-面向对象风格支持/" data-id="ck3e9zco00008ntxqj7929rjp" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/24/网易微专业-Underscore-3-1-2-Underscore整体结构-面向对象风格支持/" data-id="ck3ea2lkn0006obxq8r4l6aay" class="article-share-link">Share</a>
       
       
     </footer>

@@ -243,7 +243,7 @@ console.log(_.map([1, 2, 3], function(value, index, object){
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/25/网易微专业-Underscore-3-1-3-undefined的处理iteratee设计-源代码/" data-id="ck3e9zcnx0006ntxqcb1yrhge" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/25/网易微专业-Underscore-3-1-3-undefined的处理iteratee设计-源代码/" data-id="ck3ea2lko0007obxq5xfy4may" class="article-share-link">Share</a>
       
       
     </footer>
@@ -275,69 +275,39 @@ console.log(_.map([1, 2, 3], function(value, index, object){
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>1.undefined的处理<br><img src="https://snakexu.github.io/images/wangyi/underscore/3.1.3_1.png"><br>2.iteratee<br><img src="https://snakexu.github.io/images/wangyi/underscore/3.1.3_2.png"><br>3.cb<br><img src="https://snakexu.github.io/images/wangyi/underscore/3.1.3_3.png"><br>4.optimizeCb<br><img src="https://snakexu.github.io/images/wangyi/underscore/3.1.3_4.png"><br>5.撸代码<br>这里主要是讲iteratee，上一节内容，_.map()函数内容为空，没有进行处理，这节课我们学习怎么处理</p>
-<pre>
-_.map = function(obj, iteratee, context) {
-    //生成不同功能迭代器
-    var iteratee = cb(iteratee, context);
-    //分辨 obj是数组对象, 还是object对象
-    var keys = !_.isArray(obj) && Object.keys(obj);
-    var length = (keys || obj).length;
-    var result = Array(length);
-
-    for (var index = 0; index < length; index++) {
-        var currentKey = keys ? keys[index] : index;
-        result[index] = iteratee(obj[currentKey], index, obj);
-    }
-
-    return result;
+        <p>1.undefined的处理<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.1.3_1.png"><br>2.iteratee<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.1.3_2.png"><br>3.cb<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.1.3_3.png"><br>4.optimizeCb<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.1.3_4.png"><br>5.撸代码<br>这里主要是讲iteratee，上一节内容，_.map()函数内容为空，没有进行处理，这节课我们学习怎么处理</p>
+<p><pre><br><em>.map = function(obj, iteratee, context) {<br>    //生成不同功能迭代器<br>    var iteratee = cb(iteratee, context);<br>    //分辨 obj是数组对象, 还是object对象<br>    var keys = !</em>.isArray(obj) &amp;&amp; Object.keys(obj);<br>    var length = (keys || obj).length;<br>    var result = Array(length);</pre></p>
+<pre><code>for (var index = 0; index &lt; length; index++) {
+    var currentKey = keys ? keys[index] : index;
+    result[index] = iteratee(obj[currentKey], index, obj);
 }
 
-var cb = function(iteratee, context, count) {
-    if (iteratee == null) {
-        return _.identity;
-    }
-
-    if (_.isFunction(iteratee)) {
-        return optimizeCb(iteratee, context, count);
-    }
+return result;
+</code></pre><p>}</p>
+<p>var cb = function(iteratee, context, count) {<br>    if (iteratee == null) {<br>        return _.identity;<br>    }</p>
+<pre><code>if (_.isFunction(iteratee)) {
+    return optimizeCb(iteratee, context, count);
 }
-
-//optimizeCb优化迭代器
-var optimizeCb = function(func, context, count) {
-    if (context == void 0) {
-        return func;
-    }
-
-    switch (count == null ? 3 : count) {
-        case 1:
-            return function(value) {
-                return func.call(context, value);
-            };
-        case 3:
-            return function(value, index, obj) {
-                return func.call(context, value, index, obj);
-            };
-    }
+</code></pre><p>}</p>
+<p>//optimizeCb优化迭代器<br>var optimizeCb = function(func, context, count) {<br>    if (context == void 0) {<br>        return func;<br>    }</p>
+<pre><code>switch (count == null ? 3 : count) {
+    case 1:
+        return function(value) {
+            return func.call(context, value);
+        };
+    case 3:
+        return function(value, index, obj) {
+            return func.call(context, value, index, obj);
+        };
 }
+</code></pre><p>}</p>
+<p>//默认迭代器<br>_.identity = function(value) {<br>    return value;<br>}<br><br>这节课还有一个知识点，就是类型判定，这次代码给了更优雅的类型判定的写法</p>
+<p><pre><br>_.each([“Function”, “String”, “Object”, “Number”], function(name) {<br>    _[“is” + name] = function(obj) {<br>        return toString.call(obj) === “[object “ + name + “]”;<br>    }<br>});<br></pre><br>这节课完整代码</p>
 
-//默认迭代器
-_.identity = function(value) {
-    return value;
-}
-</pre>
-这节课还有一个知识点，就是类型判定，这次代码给了更优雅的类型判定的写法
-<pre>
-_.each(["Function", "String", "Object", "Number"], function(name) {
-    _["is" + name] = function(obj) {
-        return toString.call(obj) === "[object " + name + "]";
-    }
-});
-</pre>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/25/网易微专业-Underscore-3-1-3-undefined的处理iteratee设计/" data-id="ck3e9zcny0007ntxq7jy3bkqf" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/25/网易微专业-Underscore-3-1-3-undefined的处理iteratee设计/" data-id="ck3ea2lkp0008obxqzam9vrrx" class="article-share-link">Share</a>
       
       
     </footer>
@@ -369,7 +339,7 @@ _.each(["Function", "String", "Object", "Number"], function(name) {
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>1.Underscore结构<br><img src="https://snakexu.github.io/images/wangyi/underscore/3.1.2_1.png"><br><img src="https://snakexu.github.io/images/wangyi/underscore/3.1.2_2.png"><br>2.面向对象风格支持<br><img src="https://snakexu.github.io/images/wangyi/underscore/3.1.2_3.png"><br>3.mixin<br><img src="https://snakexu.github.io/images/wangyi/underscore/3.1.2_4.png"><br>4.链接式调用<br><img src="https://snakexu.github.io/images/wangyi/underscore/3.1.2_5.png"><br><img src="https://snakexu.github.io/images/wangyi/underscore/3.1.2_6.png"><br>5.撸代码<br>先上调用代码吧</p>
+        <p>1.Underscore结构<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.1.2_1.png"><br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.1.2_2.png"><br>2.面向对象风格支持<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.1.2_3.png"><br>3.mixin<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.1.2_4.png"><br>4.链接式调用<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.1.2_5.png"><br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.1.2_6.png"><br>5.撸代码<br>先上调用代码吧</p>
 <p><pre><br>console.log(_([1,2,3,4,5,4,5,6,”a”,”A”]).chain().unique().map().value());<br></pre><br>.chain()是告诉underscore我要开始链式调用了，然后underscore就配合了<br><br>.unique()&amp;.map()都是对数组进行各种操作<br><br>.value()告诉underscore，我不需要再链式调用了，返回处理结果就行了<br><br>那代码是怎么实现的呢，上代码</p>
 <p><pre><br>(function(root) {<br>    var push = Array.prototype.push;</pre></p>
 <pre><code>var _ = function(obj) {
@@ -473,7 +443,7 @@ root._ = _;
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/24/网易微专业-Underscore-3-1-2-Underscore整体结构-面向对象风格支持/" data-id="ck3e9zco00008ntxqj7929rjp" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/24/网易微专业-Underscore-3-1-2-Underscore整体结构-面向对象风格支持/" data-id="ck3ea2lkn0006obxq8r4l6aay" class="article-share-link">Share</a>
       
       
     </footer>
@@ -515,7 +485,7 @@ root._ = _;
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/24/网易微专业-Underscore-3-1-1-函数式编程思想概述/" data-id="ck3e9zcnw0005ntxqaqg7wd4l" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/24/网易微专业-Underscore-3-1-1-函数式编程思想概述/" data-id="ck3ea2lkm0005obxqi43flgnk" class="article-share-link">Share</a>
       
       
     </footer>
@@ -552,7 +522,7 @@ root._ = _;
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/24/网易微专业-jq源码解析-1118直播课-拆箱装箱/" data-id="ck3e9zco5000bntxq8pkax45u" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/24/网易微专业-jq源码解析-1118直播课-拆箱装箱/" data-id="ck3ea2lkv000cobxqqnvkqbfg" class="article-share-link">Share</a>
       
       
     </footer>
@@ -1627,7 +1597,7 @@ root._ = _;
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/24/网易微专业-jq源码解析-1118直播课-动画队列源码/" data-id="ck3e9zcp4000pntxqbkz9wlay" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/24/网易微专业-jq源码解析-1118直播课-动画队列源码/" data-id="ck3ea2llu000pobxq993pcbq6" class="article-share-link">Share</a>
       
       
     </footer>
@@ -1667,7 +1637,7 @@ root._ = _;
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/21/我的typescript学习-变量声明/" data-id="ck3e9zcnt0003ntxq2cuqumj1" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/21/我的typescript学习-变量声明/" data-id="ck3ea2lkj0002obxqwz3jewkz" class="article-share-link">Share</a>
       
       
     </footer>
@@ -1880,7 +1850,7 @@ _queueHooks : function(elem, type){
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/19/网易微专业-jq源码解析-1118直播课-动画队列/" data-id="ck3e9zco7000cntxqen2myeaf" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/19/网易微专业-jq源码解析-1118直播课-动画队列/" data-id="ck3ea2lkt000bobxq11t04j1s" class="article-share-link">Share</a>
       
       
     </footer>
@@ -2037,7 +2007,7 @@ create(undefined); // Error
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/18/我的typescript起步学习/" data-id="ck3e9zcnv0004ntxqulmk0sef" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/18/我的typescript起步学习/" data-id="ck3ea2lkl0004obxq5e4g85go" class="article-share-link">Share</a>
       
       
     </footer>
@@ -2174,7 +2144,7 @@ jQuery.extend({
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/17/网易微专业-jq源码解析-1112DOM操作方法-html-text-css/" data-id="ck3e9zco3000antxqb5jqyxc8" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/17/网易微专业-jq源码解析-1112DOM操作方法-html-text-css/" data-id="ck3ea2lkr000aobxqkyw2s8gh" class="article-share-link">Share</a>
       
       
     </footer>

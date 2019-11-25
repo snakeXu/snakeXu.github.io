@@ -7,22 +7,22 @@
   
   <title>网易微专业-Underscore-3.1.3-undefined的处理iteratee设计 | 喵小喵的窝</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="1.undefined的处理2.iteratee3.cb4.optimizeCb5.撸代码这里主要是讲iteratee，上一节内容，_.map()函数内容为空，没有进行处理，这节课我们学习怎么处理  _.map = function(obj, iteratee, context) {     //生成不同功能迭代器     var iteratee = cb(iteratee, context);">
+  <meta name="description" content="1.undefined的处理2.iteratee3.cb4.optimizeCb5.撸代码这里主要是讲iteratee，上一节内容，_.map()函数内容为空，没有进行处理，这节课我们学习怎么处理 .map = function(obj, iteratee, context) {    //生成不同功能迭代器    var iteratee = cb(iteratee, context);">
 <meta property="og:type" content="article">
 <meta property="og:title" content="网易微专业-Underscore-3.1.3-undefined的处理iteratee设计">
 <meta property="og:url" content="http://yoursite.com/2019/11/25/网易微专业-Underscore-3-1-3-undefined的处理iteratee设计/index.html">
 <meta property="og:site_name" content="喵小喵的窝">
-<meta property="og:description" content="1.undefined的处理2.iteratee3.cb4.optimizeCb5.撸代码这里主要是讲iteratee，上一节内容，_.map()函数内容为空，没有进行处理，这节课我们学习怎么处理  _.map = function(obj, iteratee, context) {     //生成不同功能迭代器     var iteratee = cb(iteratee, context);">
+<meta property="og:description" content="1.undefined的处理2.iteratee3.cb4.optimizeCb5.撸代码这里主要是讲iteratee，上一节内容，_.map()函数内容为空，没有进行处理，这节课我们学习怎么处理 .map = function(obj, iteratee, context) {    //生成不同功能迭代器    var iteratee = cb(iteratee, context);">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="https://snakexu.github.io/images/wangyi/underscore/3.1.3_1.png">
-<meta property="og:image" content="https://snakexu.github.io/images/wangyi/underscore/3.1.3_2.png">
-<meta property="og:image" content="https://snakexu.github.io/images/wangyi/underscore/3.1.3_3.png">
-<meta property="og:image" content="https://snakexu.github.io/images/wangyi/underscore/3.1.3_4.png">
-<meta property="og:updated_time" content="2019-11-25T10:07:30.473Z">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/Underscore/3.1.3_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/Underscore/3.1.3_2.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/Underscore/3.1.3_3.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/Underscore/3.1.3_4.png">
+<meta property="og:updated_time" content="2019-11-25T10:17:13.578Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="网易微专业-Underscore-3.1.3-undefined的处理iteratee设计">
-<meta name="twitter:description" content="1.undefined的处理2.iteratee3.cb4.optimizeCb5.撸代码这里主要是讲iteratee，上一节内容，_.map()函数内容为空，没有进行处理，这节课我们学习怎么处理  _.map = function(obj, iteratee, context) {     //生成不同功能迭代器     var iteratee = cb(iteratee, context);">
-<meta name="twitter:image" content="https://snakexu.github.io/images/wangyi/underscore/3.1.3_1.png">
+<meta name="twitter:description" content="1.undefined的处理2.iteratee3.cb4.optimizeCb5.撸代码这里主要是讲iteratee，上一节内容，_.map()函数内容为空，没有进行处理，这节课我们学习怎么处理 .map = function(obj, iteratee, context) {    //生成不同功能迭代器    var iteratee = cb(iteratee, context);">
+<meta name="twitter:image" content="https://snakexu.github.io/images/wangyi/Underscore/3.1.3_1.png">
   
     <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
   
@@ -91,69 +91,39 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>1.undefined的处理<br><img src="https://snakexu.github.io/images/wangyi/underscore/3.1.3_1.png"><br>2.iteratee<br><img src="https://snakexu.github.io/images/wangyi/underscore/3.1.3_2.png"><br>3.cb<br><img src="https://snakexu.github.io/images/wangyi/underscore/3.1.3_3.png"><br>4.optimizeCb<br><img src="https://snakexu.github.io/images/wangyi/underscore/3.1.3_4.png"><br>5.撸代码<br>这里主要是讲iteratee，上一节内容，_.map()函数内容为空，没有进行处理，这节课我们学习怎么处理</p>
-<pre>
-_.map = function(obj, iteratee, context) {
-    //生成不同功能迭代器
-    var iteratee = cb(iteratee, context);
-    //分辨 obj是数组对象, 还是object对象
-    var keys = !_.isArray(obj) && Object.keys(obj);
-    var length = (keys || obj).length;
-    var result = Array(length);
-
-    for (var index = 0; index < length; index++) {
-        var currentKey = keys ? keys[index] : index;
-        result[index] = iteratee(obj[currentKey], index, obj);
-    }
-
-    return result;
+        <p>1.undefined的处理<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.1.3_1.png"><br>2.iteratee<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.1.3_2.png"><br>3.cb<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.1.3_3.png"><br>4.optimizeCb<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.1.3_4.png"><br>5.撸代码<br>这里主要是讲iteratee，上一节内容，_.map()函数内容为空，没有进行处理，这节课我们学习怎么处理</p>
+<p><pre><br><em>.map = function(obj, iteratee, context) {<br>    //生成不同功能迭代器<br>    var iteratee = cb(iteratee, context);<br>    //分辨 obj是数组对象, 还是object对象<br>    var keys = !</em>.isArray(obj) &amp;&amp; Object.keys(obj);<br>    var length = (keys || obj).length;<br>    var result = Array(length);</pre></p>
+<pre><code>for (var index = 0; index &lt; length; index++) {
+    var currentKey = keys ? keys[index] : index;
+    result[index] = iteratee(obj[currentKey], index, obj);
 }
 
-var cb = function(iteratee, context, count) {
-    if (iteratee == null) {
-        return _.identity;
-    }
-
-    if (_.isFunction(iteratee)) {
-        return optimizeCb(iteratee, context, count);
-    }
+return result;
+</code></pre><p>}</p>
+<p>var cb = function(iteratee, context, count) {<br>    if (iteratee == null) {<br>        return _.identity;<br>    }</p>
+<pre><code>if (_.isFunction(iteratee)) {
+    return optimizeCb(iteratee, context, count);
 }
-
-//optimizeCb优化迭代器
-var optimizeCb = function(func, context, count) {
-    if (context == void 0) {
-        return func;
-    }
-
-    switch (count == null ? 3 : count) {
-        case 1:
-            return function(value) {
-                return func.call(context, value);
-            };
-        case 3:
-            return function(value, index, obj) {
-                return func.call(context, value, index, obj);
-            };
-    }
+</code></pre><p>}</p>
+<p>//optimizeCb优化迭代器<br>var optimizeCb = function(func, context, count) {<br>    if (context == void 0) {<br>        return func;<br>    }</p>
+<pre><code>switch (count == null ? 3 : count) {
+    case 1:
+        return function(value) {
+            return func.call(context, value);
+        };
+    case 3:
+        return function(value, index, obj) {
+            return func.call(context, value, index, obj);
+        };
 }
+</code></pre><p>}</p>
+<p>//默认迭代器<br>_.identity = function(value) {<br>    return value;<br>}<br><br>这节课还有一个知识点，就是类型判定，这次代码给了更优雅的类型判定的写法</p>
+<p><pre><br>_.each([“Function”, “String”, “Object”, “Number”], function(name) {<br>    _[“is” + name] = function(obj) {<br>        return toString.call(obj) === “[object “ + name + “]”;<br>    }<br>});<br></pre><br>这节课完整代码</p>
 
-//默认迭代器
-_.identity = function(value) {
-    return value;
-}
-</pre>
-这节课还有一个知识点，就是类型判定，这次代码给了更优雅的类型判定的写法
-<pre>
-_.each(["Function", "String", "Object", "Number"], function(name) {
-    _["is" + name] = function(obj) {
-        return toString.call(obj) === "[object " + name + "]";
-    }
-});
-</pre>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/25/网易微专业-Underscore-3-1-3-undefined的处理iteratee设计/" data-id="ck3e9zcny0007ntxq7jy3bkqf" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/25/网易微专业-Underscore-3-1-3-undefined的处理iteratee设计/" data-id="ck3ea2lkp0008obxqzam9vrrx" class="article-share-link">Share</a>
       
       
     </footer>

@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>网易微专业-Underscore-3.2.1-Map-reduce真值检测函数 | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1.map-reduce了解介绍2.map源码这个内容在之前章节已经讲过，在此略过3.reduce介绍4.真值检测函数5.上代码(1)reduce的代码，关于这段代码，只想说，代码太厉害了，逻辑清晰又有深度……(省略万字溢美之词)  var optimizeCb = function(func, context, count) {     if (context == void 0) {">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网易微专业-Underscore-3.2.1-Map-reduce真值检测函数">
+<meta property="og:url" content="http://yoursite.com/2019/11/26/网易微专业-Underscore-3-2-1-Map-reduce真值检测函数/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="1.map-reduce了解介绍2.map源码这个内容在之前章节已经讲过，在此略过3.reduce介绍4.真值检测函数5.上代码(1)reduce的代码，关于这段代码，只想说，代码太厉害了，逻辑清晰又有深度……(省略万字溢美之词)  var optimizeCb = function(func, context, count) {     if (context == void 0) {">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/Underscore/3.2.1_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/Underscore/3.2.1_2.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/Underscore/3.2.1_3.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/Underscore/3.2.1_4.png">
+<meta property="og:updated_time" content="2019-11-27T07:27:47.403Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="网易微专业-Underscore-3.2.1-Map-reduce真值检测函数">
+<meta name="twitter:description" content="1.map-reduce了解介绍2.map源码这个内容在之前章节已经讲过，在此略过3.reduce介绍4.真值检测函数5.上代码(1)reduce的代码，关于这段代码，只想说，代码太厉害了，逻辑清晰又有深度……(省略万字溢美之词)  var optimizeCb = function(func, context, count) {     if (context == void 0) {">
+<meta name="twitter:image" content="https://snakexu.github.io/images/wangyi/Underscore/3.2.1_1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-网易微专业-Underscore-3-2-1-Map-reduce真值检测函数" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/11/26/网易微专业-Underscore-3-2-1-Map-reduce真值检测函数/" class="article-date">
+  <time datetime="2019-11-26T13:27:48.000Z" itemprop="datePublished">2019-11-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      网易微专业-Underscore-3.2.1-Map-reduce真值检测函数
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.map-reduce了解介绍<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.2.1_1.png"><br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.2.1_2.png"><br>2.map源码<br>这个内容在之前章节已经讲过，在此略过<br>3.reduce介绍<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.2.1_3.png"><br>4.真值检测函数<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.2.1_4.png"><br>5.上代码<br>(1)reduce的代码，关于这段代码，只想说，代码太厉害了，逻辑清晰又有深度……(省略万字溢美之词)</p>
+<pre>
+var optimizeCb = function(func, context, count) {
+    if (context == void 0) {
+        return func;
+    }
+
+    switch (count == null ? 3 : count) {
+        case 1:
+            return function(value) {
+                return func.call(context, value);
+            };
+        case 3:
+            return function(value, index, obj) {
+                return func.call(context, value, index, obj);
+            };
+        case 4:
+            return function(memo, value, index, obj) {
+                return func.call(context, memo, value, index, obj);
+            };
+    }
+}
+var createReduce = function(dir) {
+    //累加
+    var reduce = function(obj, iteratee, memo, init) {
+        var keys = !_.isArray(obj) && Object.keys(obj),
+            length = (keys || obj).length,
+            index = dir > 0 ? 0 : length - 1;
+        //给memo设置了初始值memo = obj[0]
+        //即要被操作的obj对象的第一个属性值
+        if (!init) {
+            memo = obj[keys ? keys[index] : index];
+            index += dir; //1   
+        };
+        for (; index >= 0 && index < length; index += dir) {
+            var currnteKey = keys ? keys[index] : index;
+            memo = iteratee(memo, obj[currnteKey], currnteKey, obj)
+        }
+        return memo;
+    }
+    //memo  最终能累加的结果     每一次累加的过程
+    return function(obj, iteratee, memo, context) {
+        var init = arguments.length >= 3;
+        return reduce(obj, optimizeCb(iteratee, context, 4), memo, init);
+    }
+}
+//调用的时候，1为正向从obj[0]处理到obj[Object.keys(obj).length-1]
+//-1为负向，从obj[Object.keys(obj).length-1]处理到obj[0]
+_.reduce = createReduce(1); // 1 || -1
+</pre>
+(2)filter过滤器
+<pre>
+_.filter = function(obj, predicate, context) {
+    var results = [];
+    predicate = cb(predicate, context);
+    _.each(obj, function(value, index, list) {
+        if (predicate(value, index, list)) results.push(value);
+    });
+    return results;
+};
+</pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/11/26/网易微专业-Underscore-3-2-1-Map-reduce真值检测函数/" data-id="ck3s68p24000cgzxqoscya4si" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/11/27/网易微专业-Underscore-3-2-2-条件查询-背后索引查询器实现/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          网易微专业-Underscore-3.2.2-条件查询-背后索引查询器实现
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/11/25/网易微专业-Underscore-3-1-4-rest参数-Underscore创建对象方式/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">网易微专业-Underscore-3.1.4-rest参数-Underscore创建对象方式</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/12/02/网易微专业-Undersocre-3-4-1-Underscore-partial偏函数or-memoize缓存/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2019/12/02/网易微专业-Undersocre-3-3-2-Underscore-unique去重函数-源码拾遗/">网易微专业-Undersocre-3.3.2-Underscore unique去重函数&amp;源码拾遗</a>
+          </li>
+        
+          <li>
+            <a href="/2019/12/01/网易微专业-Undersocre-3-3-1-Underscore数组定位与摊平数组/">网易微专业-Undersocre-3.3.1-Underscore数组定位与摊平数组</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/27/网易微专业-Underscore-3-2-3-乱序数组-洗牌算法/">网易微专业-Underscore-3.2.3-乱序数组-洗牌算法</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/27/网易微专业-Underscore-3-2-2-条件查询-背后索引查询器实现/">网易微专业-Underscore-3.2.2-条件查询-背后索引查询器实现</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

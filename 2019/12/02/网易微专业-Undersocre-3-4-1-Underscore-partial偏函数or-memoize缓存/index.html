@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="title: 网易微专业-Undersocre-3.4.1-Underscore .partial偏函数or.memoize缓存date: 2019-12-02 14:51:43 tags: _.parital _.memorize3.  //返回一个函数的副本 _.partial = function(func) {  //提取参数  var args = [].slice.call(argu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="喵小喵的窝">
+<meta property="og:url" content="http://yoursite.com/2019/12/02/网易微专业-Undersocre-3-4-1-Underscore-partial偏函数or-memoize缓存/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="title: 网易微专业-Undersocre-3.4.1-Underscore .partial偏函数or.memoize缓存date: 2019-12-02 14:51:43 tags: _.parital _.memorize3.  //返回一个函数的副本 _.partial = function(func) {  //提取参数  var args = [].slice.call(argu">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/Underscore/3.4.1_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/Underscore/3.4.1_2.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/Underscore/3.4.1_3.png">
+<meta property="og:updated_time" content="2019-12-02T08:49:36.069Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="喵小喵的窝">
+<meta name="twitter:description" content="title: 网易微专业-Undersocre-3.4.1-Underscore .partial偏函数or.memoize缓存date: 2019-12-02 14:51:43 tags: _.parital _.memorize3.  //返回一个函数的副本 _.partial = function(func) {  //提取参数  var args = [].slice.call(argu">
+<meta name="twitter:image" content="https://snakexu.github.io/images/wangyi/Underscore/3.4.1_1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-网易微专业-Undersocre-3-4-1-Underscore-partial偏函数or-memoize缓存" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/12/02/网易微专业-Undersocre-3-4-1-Underscore-partial偏函数or-memoize缓存/" class="article-date">
+  <time datetime="2019-12-02T06:51:43.225Z" itemprop="datePublished">2019-12-02</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <hr>
+<p>title: 网易微专业-Undersocre-3.4.1-Underscore <em>.partial偏函数or</em>.memoize缓存<br>date: 2019-12-02 14:51:43</p>
+<h2 id="tags"><a href="#tags" class="headerlink" title="tags:"></a>tags:</h2><ol>
+<li>_.parital<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.4.1_1.png"></li>
+<li><p>_.memorize<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.4.1_2.png"><br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.4.1_3.png"><br>3.</p>
+<pre>
+//返回一个函数的副本
+_.partial = function(func) {
+ //提取参数
+ var args = [].slice.call(arguments, 1);
+ var bound = function() {
+     var index = 0;
+     var length = args.length;
+     var ret = Array(length);
+     for (var i = 0; i < length; i++) {
+         ret[i] = args[i];
+     }
+     while (index < arguments.length) {
+         ret.push(arguments[index++]);
+     }
+     return func.apply(this, ret);
+ }
+ return bound;
+}
+_.has = function(obj, key) {
+ return obj != null && hasOwnProperty.call(obj, key);
+};
+//存储中间运算结果,提高效率
+//参数 hasher是个function通过返回值来记录key
+//_.memoize(function, [hashFunction])
+// 适用于需要大量重复求值的场景
+// 比如递归求解斐波那契数
+_.memoize = function(func, hasher) {
+ var memoize = function(key) {
+     // 储存变量,方便使用
+     var cache = memoize.cache;
+     // 求 key
+     // 如果传入了 hasher,则用 hasher 函数来记录 key
+     // 否则用参数 key(即memoize 方法传入的第一个参数)当key
+     var address = '' + (hasher ? hasher.apply(this, arguments) : key);
+     // 如果这个 key 还没被求过值 先记录在缓存中.
+     if (!_.has(cache, address)) {
+         cache[address] = func.apply(this, arguments);
+     }
+     return cache[address];
+ };
+
+ // cache 对象被当做 key-value 键值对缓存中间运算结果
+ memoize.cache = {};
+ return memoize;
+};
+</pre>
+<pre>
+var add = function(a, b) {
+ return a + b;
+};
+var partialAdd = _.partial(add, 5);  //提取出来
+console.log(partialAdd(10)); //    提出来    => 15
+</pre>
+<pre>
+var hasher = function() {
+ var n = arguments[0];
+ return n+"max";
+}
+var fibonacci = _.memoize(function(n) {
+ return n < 2 ? n : fibonacci(n - 1) + fibonacci(n - 2);
+},hasher);
+fibonacci(5);
+console.log(fibonacci.cache);
+</pre></li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/12/02/网易微专业-Undersocre-3-4-1-Underscore-partial偏函数or-memoize缓存/" data-id="ck3s68p2a000mgzxqsmky7yjq" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2019/12/02/网易微专业-Undersocre-3-3-2-Underscore-unique去重函数-源码拾遗/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">网易微专业-Undersocre-3.3.2-Underscore unique去重函数&amp;源码拾遗</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/12/02/网易微专业-Undersocre-3-4-1-Underscore-partial偏函数or-memoize缓存/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2019/12/02/网易微专业-Undersocre-3-3-2-Underscore-unique去重函数-源码拾遗/">网易微专业-Undersocre-3.3.2-Underscore unique去重函数&amp;源码拾遗</a>
+          </li>
+        
+          <li>
+            <a href="/2019/12/01/网易微专业-Undersocre-3-3-1-Underscore数组定位与摊平数组/">网易微专业-Undersocre-3.3.1-Underscore数组定位与摊平数组</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/27/网易微专业-Underscore-3-2-3-乱序数组-洗牌算法/">网易微专业-Underscore-3.2.3-乱序数组-洗牌算法</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/27/网易微专业-Underscore-3-2-2-条件查询-背后索引查询器实现/">网易微专业-Underscore-3.2.2-条件查询-背后索引查询器实现</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

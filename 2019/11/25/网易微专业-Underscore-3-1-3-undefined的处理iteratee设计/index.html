@@ -18,7 +18,7 @@
 <meta property="og:image" content="https://snakexu.github.io/images/wangyi/Underscore/3.1.3_2.png">
 <meta property="og:image" content="https://snakexu.github.io/images/wangyi/Underscore/3.1.3_3.png">
 <meta property="og:image" content="https://snakexu.github.io/images/wangyi/Underscore/3.1.3_4.png">
-<meta property="og:updated_time" content="2019-11-25T10:17:13.578Z">
+<meta property="og:updated_time" content="2019-11-25T12:34:43.550Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="网易微专业-Underscore-3.1.3-undefined的处理iteratee设计">
 <meta name="twitter:description" content="1.undefined的处理2.iteratee3.cb4.optimizeCb5.撸代码这里主要是讲iteratee，上一节内容，_.map()函数内容为空，没有进行处理，这节课我们学习怎么处理 .map = function(obj, iteratee, context) {    //生成不同功能迭代器    var iteratee = cb(iteratee, context);">
@@ -108,10 +108,12 @@ return result;
 <p>//optimizeCb优化迭代器<br>var optimizeCb = function(func, context, count) {<br>    if (context == void 0) {<br>        return func;<br>    }</p>
 <pre><code>switch (count == null ? 3 : count) {
     case 1:
+        //私以为，这个返回写的很腻害哇
         return function(value) {
             return func.call(context, value);
         };
     case 3:
+        //私以为，这个返回写的很腻害哇
         return function(value, index, obj) {
             return func.call(context, value, index, obj);
         };
@@ -123,7 +125,7 @@ return result;
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/25/网易微专业-Underscore-3-1-3-undefined的处理iteratee设计/" data-id="ck3ea4igf0008p5xqcjhxpdb6" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/25/网易微专业-Underscore-3-1-3-undefined的处理iteratee设计/" data-id="ck3s68p1z0009gzxqmxhx3bb4" class="article-share-link">Share</a>
       
       
     </footer>
@@ -168,7 +170,7 @@ return result;
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
     </div>
   </div>
 
@@ -181,23 +183,23 @@ return result;
       <ul>
         
           <li>
-            <a href="/2019/11/25/网易微专业-Underscore-3-1-3-undefined的处理iteratee设计-源代码/">网易微专业-Underscore-3.1.3-undefined的处理iteratee设计-源代码</a>
+            <a href="/2019/12/02/网易微专业-Undersocre-3-4-1-Underscore-partial偏函数or-memoize缓存/">(no title)</a>
           </li>
         
           <li>
-            <a href="/2019/11/25/网易微专业-Underscore-3-1-3-undefined的处理iteratee设计/">网易微专业-Underscore-3.1.3-undefined的处理iteratee设计</a>
+            <a href="/2019/12/02/网易微专业-Undersocre-3-3-2-Underscore-unique去重函数-源码拾遗/">网易微专业-Undersocre-3.3.2-Underscore unique去重函数&amp;源码拾遗</a>
           </li>
         
           <li>
-            <a href="/2019/11/24/网易微专业-Underscore-3-1-2-Underscore整体结构-面向对象风格支持/">网易微专业-Underscore-3.1.2-Underscore整体结构&amp;面向对象风格支持</a>
+            <a href="/2019/12/01/网易微专业-Undersocre-3-3-1-Underscore数组定位与摊平数组/">网易微专业-Undersocre-3.3.1-Underscore数组定位与摊平数组</a>
           </li>
         
           <li>
-            <a href="/2019/11/24/网易微专业-Underscore-3-1-1-函数式编程思想概述/">网易微专业-Underscore-3.1.1-函数式编程思想概述</a>
+            <a href="/2019/11/27/网易微专业-Underscore-3-2-3-乱序数组-洗牌算法/">网易微专业-Underscore-3.2.3-乱序数组-洗牌算法</a>
           </li>
         
           <li>
-            <a href="/2019/11/24/网易微专业-jq源码解析-1118直播课-拆箱装箱/">网易微专业-jq源码解析-1118直播课-拆箱装箱</a>
+            <a href="/2019/11/27/网易微专业-Underscore-3-2-2-条件查询-背后索引查询器实现/">网易微专业-Underscore-3.2.2-条件查询-背后索引查询器实现</a>
           </li>
         
       </ul>

@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="喵小喵的窝">
+<meta property="og:url" content="http://yoursite.com/page/4/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:locale" content="default">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="喵小喵的窝">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-js参数按值传递" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/11/12/js参数按值传递/" class="article-date">
+  <time datetime="2018-11-12T09:44:31.069Z" itemprop="datePublished">2018-11-12</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/11/12/js参数按值传递/">js传递参数</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>ECMAScript中所有函数的参数都是按值传递的。也就是说，把函数外部的值复制给函数内部的参数，就和把值从一个变量复制到另一个变量一样。基本类型值的传递如果基本类型变量的复制一样，而引用类型值的传递，则如同引用类型变量的复制一样。下面是例子：<br>1.基本类型<br>funciton addTen(num){<br>    num+=10;<br>    return num;<br>}<br>var count = 20;<br>var result = addTen(count);<br>alert(count);//20 没有变化<br>alett(result);//30<br>2.引用类型<br>function setName(obj){<br>    obj.name = “snakeXu”;<br>}<br>var person = new Object();<br>setName(person);<br>alert(person.name);//snakeXu<br>3.如果你还不相信是传值<br>function setName(obj){<br>    obj.name = “snakeXu”;<br>    obj = new Object();<br>    obj.name = “handsomeXu”;<br>}<br>var person = new Object();<br>setName(person);<br>alert(person.name);//snakeXu<br>解释一下:再把person传递给setName()后，其name属性被设置为”snakeXu”。然后又将一个新对象赋给变量obj，同时将其name属性设置为”handsomeXu”。如果person是按引用传递的，那么person就会自动被修改为指向其name属性值为”handsomeXu”的新对象。但是，当接下来再访问person.name时，显示的值仍然是”snakeXu”。这说明即使再在函数内部修改了参数的值，但原始的引用仍然保持未变。实际上，在当函数内部重写obj时，这个变量引用的就是一个局部对象了。而这个局部对象会在函数执行完毕后立即被销毁。<br>注:可以把js函数的参数想象成局部变量</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/11/12/js参数按值传递/" data-id="ck3s68p1p0001gzxqp2rhxpf4" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-一些网址" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/11/12/一些网址/" class="article-date">
+  <time datetime="2018-11-12T09:44:31.069Z" itemprop="datePublished">2018-11-12</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <hr>
+<h2 id="title-一些网址"><a href="#title-一些网址" class="headerlink" title="title:一些网址"></a>title:一些网址</h2><p><a href="https://blog.csdn.net/mccand1234/article/details/54577413" target="_blank" rel="noopener">https://blog.csdn.net/mccand1234/article/details/54577413</a>  关于http的request&amp;response<br><a href="https://tech.upyun.com/article/242/%E4%BB%8E%20HTTP%20%E5%88%B0%20HTTPS%20%E5%86%8D%E5%88%B0%20HSTS.html" target="_blank" rel="noopener">https://tech.upyun.com/article/242/%E4%BB%8E%20HTTP%20%E5%88%B0%20HTTPS%20%E5%86%8D%E5%88%B0%20HSTS.html</a> 从 HTTP 到 HTTPS 再到 HSTS<br><a href="https://blog.csdn.net/weixin_36811791/article/details/80756654" target="_blank" rel="noopener">https://blog.csdn.net/weixin_36811791/article/details/80756654</a> HTTPS 到底加密了什么？<br><a href="http://www.cnblogs.com/zhangshitong/p/6478721.html" target="_blank" rel="noopener">http://www.cnblogs.com/zhangshitong/p/6478721.html</a> https原理通俗理解<br><a href="http://www.cnblogs.com/TankXiao/archive/2012/12/12/2794160.html#whats" target="_blank" rel="noopener">http://www.cnblogs.com/TankXiao/archive/2012/12/12/2794160.html#whats</a> HTTP协议 (五) 代理<br>要去理解关于Referer<br><a href="https://snakexu.github.io/" target="_blank" rel="noopener">https://snakexu.github.io/</a>  我的博客，sshkey有问题，要重新配置,但是不能耽误工作git</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/11/12/一些网址/" data-id="ck3s68p1u0005gzxqmh7g3gc9" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-解构赋值" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/11/12/解构赋值/" class="article-date">
+  <time datetime="2018-11-12T09:44:31.069Z" itemprop="datePublished">2018-11-12</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/11/12/解构赋值/">es6解构赋值</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>解构赋值的模型 patterns<br>在解构中，有下面两部分参与：</p>
+<p>Destructuring source: 解构的源，将要被解构的数据，比如解构赋值表达式的右边部分。</p>
+<p>Destructuring target: 解构的目标，比如解构复制表达式的左边部分。</p>
+<p>解构的目标可以是下面三个的任意一个：</p>
+<p>赋值对象，Assigment Patterns。例如 x</p>
+<p>赋值对象通常来说是一个变量。但是在解构赋值中，你有更多的选择，稍后会讲到。</p>
+<p>对象模型，Object Patterns。比如：{ first: «pattern», last: «pattern» }</p>
+<p>数组模型，Object Patterns。比如：[ «pattern», «pattern» ]</p>
+<p>可以任意嵌套模型，而且是可以非常任性的嵌套。</p>
+<p>const obj = { a: [{ foo: 123, bar: ‘abc’ }, {}], b: true };<br>const { a: [{foo: f}] } = obj; // f = 123<br>解构的 patterns 如何访问到值的内部结构？<br>在一个表达式pattern = someValue中，pattern是如何访问someValue的呢？</p>
+<p>Object patterns 将 value 转换成 Object<br>在访问属性之前，object pattern 将解构的源数据（destructuing source）转换成对象。</p>
+<p>const {length : len} = ‘abc’; // len = 3<br>const {toString: s} = 123; // s = Number.prototype.toString<br>使用“对象解构”的缺点<br>在这个过程中，强制转换成对象的过程不是通过Object()方法，而是通过内置的操作方法toObject()。这两个操作处理undefined和null的方式不太一样。</p>
+<p>Object()方法将原始类型值转换成包装类型对象（wrapper object），原来的值原封不动。</p>
+<blockquote>
+<p>typeof Object(‘abc’)<br>‘object’</p>
+</blockquote>
+<blockquote>
+<p>var obj = {};<br>Object(obj) === obj<br>true<br>也会将undefined 和 null 转换成一个空的对象。</p>
+</blockquote>
+<blockquote>
+<p>Object(undefined)<br>{}<br>Object(null)<br>{}<br>对比之下，当遇到undefined和null的时候，toObject()方法则会抛出一个错误。所以下面的解构是失败的：</p>
+</blockquote>
+<p>const { prop: x } = undefined; // TypeError<br>const { prop: y } = null; // TypeError<br>因此，你可以使用空对象模型{}来检查一个值是否被强制转换成了一个对象。正如前面提到的规则，undefined和null将会抛出错误</p>
+<p>({} = [true, false]); // OK, Arrays are coercible to objects<br>({} = ‘abc’); // OK, strings are coercible to objects</p>
+<p>({} = undefined); // TypeError<br>({} = null); // TypeError<br>表达式两边的括号是必须的，因为在 JavaScript 中，声明不能以花括号开始。</p>
+<p>在可遍历的量中使用数组模型<br>数组解构使用一个迭代器来获取数据源中的元素。因此，你可以对任何可以遍历的值使用数组解构。</p>
+<p>字符串是可遍历的：</p>
+<p>const [x, …y] = ‘abc’; // x=’a’; y=[‘b’, ‘c’]<br>我们无法通过索引访问 Set中的元素，但是可以通过迭代器。所以，数组解构能够在 Sets上工作：</p>
+<p>const [x,y] = new Set([‘a’, ‘b’]); // x=’a’; y=’b’;<br>Set的迭代器总是按照元素插入的顺序将元素返回，所以上述的解构返回的结果总是相同的。</p>
+<p>使用“数组解构”的缺点<br>如果一个值有一个 key 为Symbol.iterator的方法，这个方法返回的是一个对象，那么这个值是可以遍历的。如果被解构的值不能遍历的，那么“数组解构”会抛出一个TypeError错误。</p>
+<p>let x;<br>[x] = [true, false]; // OK, Arrays are iterable<br>[x] = ‘abc’; // OK, strings are iterable<br>[x] = { * <a href="">Symbol.iterator</a> { yield 1 } }; // OK, iterable</p>
+<p>[x] = {}; // TypeError, empty objects are not iterable<br>[x] = undefined; // TypeError, not iterable<br>[x] = null; // TypeError, not iterable<br>可以用一个空的数组模型[]来检查值是不是可遍历的:</p>
+<p>[] = {}; // TypeError, empty objects are not iterable<br>[] = undefined; // TypeError, not iterable<br>[] = null; // TypeError, not iterable<br>默认值<br>默认值是可选的，在数据源中找不到对应的值时，如果设置了默认值，则匹配这个默认值作为匹配结果，否则返回 undefined。</p>
+<p>const [x=3, y] = []; // x = 3; y = undefined。<br>const {foo: x=3, bar: y} = {}; // x = 3; y = undefined<br>undefined 也会触发默认值<br>当解构模式有匹配结果，且匹配结果是 undefined 时，也会使用默认值作为返回结果：</p>
+<p>const [x=1] = [undefined]; // x = 1<br>const {prop: y=2} = {prop: undefined}; // y = 2<br>默认值是根据需要计算出来的<br>也就是说下面的解构：</p>
+<p>const {prop: y=someFunc()} = someValue;<br>相当于：</p>
+<p>let y;<br>if (someValue.prop === undefined) {<br>    y = someFunc();<br>} else {<br>    y = someValue.prop;<br>}<br>使用console.log()可以观察到：</p>
+<blockquote>
+<p>function log(x) { console.log(x); return ‘YES’ }<br>const [a=log(‘hello’)] = [];<br>a<br>‘YES’<br>const [b=log(‘hello’)] = [123];<br>b<br>123<br>在第二个解构中，默认值没有触发，并且log()没有被调用。</p>
+</blockquote>
+<p>默认值可以引用模式中的其他变量<br>默认值可以引用模式中的任何变量，包括相同模式中的其他变量：</p>
+<p>const [x=3, y=x] = [];     // x=3; y=3<br>const [x=3, y=x] = [7];    // x=7; y=7<br>const [x=3, y=x] = [7, 2]; // x=7; y=2<br>但是，变量的顺序很关键，从左到右，先声明的变量不能引用后声明的变量，也就是左边的不能引用右边的。</p>
+<p>const [x=y, y=3] = []; // ReferenceError<br>patterns 的默认值<br>到目前为止，我们所看到的都是模式中变量的默认值，我们也可以为模式设置默认值。</p>
+<p>const [{prop: x} = {}] = [];<br>如果整个模式没有匹配结果，则使用{}作为数据源来匹配。</p>
+<p>const { prop: x } = {}; // x = undefined<br>上面的例子中，x 为 undefined 可能还是不够直观。看下面这个例子：</p>
+<p>const [{prop: x} = {props: ‘abc’}] = []; // x=abc<br>对象解构的更多特性<br>属性，属性值的简写<br>如果属性值是一个变量，和属性的 key相同，就可以忽略这个 key:</p>
+<p>const { x, y } = { x: 11, y: 8 }; // x = 11; y = 8</p>
+<p>// 等价于<br>const { x: x, y: y } = { x: 11, y: 8 };<br>计算后的属性的键<br>如果把表达式放入方括号中，可以用这个表达式声明属性的键：</p>
+<p>const FOO = ‘foo’;<br>const { [FOO]: f} = {fooL 123}; // f = 123<br>这也使得可以使用 symbols 来做属性的键：</p>
+<p>// Create and destructure a property whose key is a symbol<br>const KEY = Symbol();<br>const obj = { [KEY]: ‘abc’ };<br>const { [KEY]: x } = obj; // x = ‘abc’</p>
+<p>// Extract Array.prototype[Symbol.iterator]<br>const { [Symbol.iterator]: func } = [];<br>console.log(typeof func); // function<br>数组解构的更多特性<br>省略<br>在解构的过程中可以跳过一些元素：</p>
+<p>const [,,x,y] = [1,2,3,4]; // x= 3 y = 4;<br>剩余运算符 Rest operator (…)<br>剩余运算符可以将一个可遍历对象中剩余的元素提取到一个数组中。如果这个运算符在数组模式中使用，运算符必须放在最后：</p>
+<p>const [x, …y] = [1,2,3,4]; // x=1; y=[2,3,4];<br>要注意的时，拓展运算符（spread operator）与剩余操作符有着相同的语法-三个点。但是它们之间有区别：前者将数组变成多个元素；后者则用来解构和提取数据，多个元素压缩成一个元素。</p>
+<p>如果运算符找不到任何元素，将会匹配一个空的数组，永远不会返回undefined 或者 null。例如：</p>
+<p>const [x, y, …z] = [‘a’]; // x=’a’; y=undefined; z<br>操作符不一定非要是一个变量，也可以使用模式：</p>
+<p>const [x, …[y, z]] = [‘a’, ‘b’, ‘c’]; // x = ‘a’; y = ‘b’; z = ‘c’<br>解构的陷阱<br>在使用解构的时候，有两点要考虑清楚：</p>
+<p>不能使用大括号作为声明语句的开头；</p>
+<p>在解构的过程中，可以申明变量或者分配给变量，但是不能同时这么做；</p>
+<p>解构的几个例子<br>在 for-of 中使用解构：</p>
+<p>const map = new Map().set(false, ‘no’).set(true, ‘yes’);<br>for (const [key, value] of map) {<br>  console.log(key + ‘ is ‘ + value);<br>}<br>使用解构交换两个变量的值：</p>
+<p>[a, b] = [b, a];<br>或者：</p>
+<p>[a, b, c] = [c, a, b];<br>还可以分割数据：</p>
+<p>const [first, …rest] = [‘a’, ‘b’, ‘c’]; // first = ‘a’; rest = [‘b’, ‘c’]<br>处理方法返回的数组更加方便：</p>
+<p>const [all, year, month, day] = /^(\d\d\d\d)-(\d\d)-(\d\d)$/.exec(‘2999-12-31’);</p>
+<p>const cells = ‘Jane\tDoe\tCTO’<br>const [firstName, lastName, title] = cells.split(‘\t’);<br>console.log(firstName, lastName, title);<br>要注意的一点是：exec等一些方法可能会返回 null，导致程序抛出错误TypeError，此时需要添加一个默认值：</p>
+<p>const [, year, month, day] = /^(\d\d\d\d)-(\d\d)-(\d\d)$/.exec(someStr) || [];</p>
+<p>重点:对iterable的理解</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/11/12/解构赋值/" data-id="ck3s68p2x000tgzxqfct6p4mf" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/page/3/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/12/02/网易微专业-Undersocre-3-4-1-Underscore-partial偏函数or-memoize缓存/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2019/12/02/网易微专业-Undersocre-3-3-2-Underscore-unique去重函数-源码拾遗/">网易微专业-Undersocre-3.3.2-Underscore unique去重函数&amp;源码拾遗</a>
+          </li>
+        
+          <li>
+            <a href="/2019/12/01/网易微专业-Undersocre-3-3-1-Underscore数组定位与摊平数组/">网易微专业-Undersocre-3.3.1-Underscore数组定位与摊平数组</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/27/网易微专业-Underscore-3-2-3-乱序数组-洗牌算法/">网易微专业-Underscore-3.2.3-乱序数组-洗牌算法</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/27/网易微专业-Underscore-3-2-2-条件查询-背后索引查询器实现/">网易微专业-Underscore-3.2.2-条件查询-背后索引查询器实现</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

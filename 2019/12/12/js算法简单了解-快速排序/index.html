@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>js算法简单了解-快速排序 | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1.描述（1）从数列中选择一个数作为key值；（2）将比这个数小的数全部放在它的左边，大于或等于它的数全部放在它的右边；（3）对左右两个小数列重复第二步，直至各区间只有1个数。2.代码 function quickSort(a,l,r){    if(l &amp;gt;= r)        return;    var i = l;    var j = r;    var key = a[l];//">
+<meta property="og:type" content="article">
+<meta property="og:title" content="js算法简单了解-快速排序">
+<meta property="og:url" content="http://yoursite.com/2019/12/12/js算法简单了解-快速排序/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="1.描述（1）从数列中选择一个数作为key值；（2）将比这个数小的数全部放在它的左边，大于或等于它的数全部放在它的右边；（3）对左右两个小数列重复第二步，直至各区间只有1个数。2.代码 function quickSort(a,l,r){    if(l &amp;gt;= r)        return;    var i = l;    var j = r;    var key = a[l];//">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-12-13T04:10:48.965Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="js算法简单了解-快速排序">
+<meta name="twitter:description" content="1.描述（1）从数列中选择一个数作为key值；（2）将比这个数小的数全部放在它的左边，大于或等于它的数全部放在它的右边；（3）对左右两个小数列重复第二步，直至各区间只有1个数。2.代码 function quickSort(a,l,r){    if(l &amp;gt;= r)        return;    var i = l;    var j = r;    var key = a[l];//">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-js算法简单了解-快速排序" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/12/12/js算法简单了解-快速排序/" class="article-date">
+  <time datetime="2019-12-12T02:28:59.000Z" itemprop="datePublished">2019-12-12</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      js算法简单了解-快速排序
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.描述<br>（1）从数列中选择一个数作为key值；<br>（2）将比这个数小的数全部放在它的左边，大于或等于它的数全部放在它的右边；<br>（3）对左右两个小数列重复第二步，直至各区间只有1个数。<br>2.代码</p>
+<p><pre><br><!--function partition(arr,low,high){
+    //var low = 0, high = arr.length, i = 0, j = high;
+    var i = 0, j = high;
+    var cm = arr[low];
+    var temp;
+    while(true){
+        while(arr[i] < cm && i < j){
+            i++
+        }
+        while(arr[j] > cm && i < j){
+            j--
+        }
+        if(i >= j)
+            break;
+        temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+    temp = arr[low];
+    arr[low] = arr[j]
+    arr[j] = tem;
+}
+function quicksort(arr,low,high){
+    if(low > high)
+        return
+    var j = partition(arr,low,high);
+    quicksort(arr,low,j-1);
+    quicksort(arr,j,high)
+}
+console.log(quicksort([42,20,17,13,28,14,23,15],0,8))--><br>function quickSort(a,l,r){<br>    if(l &gt;= r)<br>        return;<br>    var i = l;<br>    var j = r;<br>    var key = a[l];//选择第一个数为key<br>    while(i &lt; j){<br>        while(i &lt; j &amp;&amp; a[j] &gt;= key){//从右向左找第一个小于key的值<br>            j–;<br>        }<br>        if(i &lt; j){<br>            a[i] = a[j];<br>            i++;<br>        }<br>        while(i &lt; j &amp;&amp; a[i] &lt; key){//从左向右找第一个大于key的值<br>            i++;<br>        }<br>        if(i &lt; j){<br>            a[j] = a[i];<br>            j–;<br>        }<br>    }<br>    //i == j<br>    a[i] = key;<br>    quickSort(a, l, i-1);//递归调用<br>    quickSort(a, i+1, r);//递归调用<br>    return a;<br> }<br> console.log(quickSort([42,20,17,13,28,14,23,15],0,7))<br></pre><br>3.平均-O(NlogN)，最好-O(NlogN)，最坏-O(N^2)；空间复杂度：O(longN).不稳定<br>4.额外<br>快速排序是一种优秀的排序算法，但是程序细节还是会对算法性能产生一些影响。算法第四版有一些相关阐述。<!--我还没看，阿哈哈哈哈--></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/12/12/js算法简单了解-快速排序/" data-id="ck5hl6rss00088fxqcxxzlljp" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/12/13/js算法简单了解-堆排序/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          js算法简单了解-堆排序
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/12/11/js算法简单了解-归并排序/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">js算法简单了解-归并排序</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/01/14/网易微专业-单页应用-1-3-1-VUE编译器原理探秘一/">网易微专业-单页应用-1.3.1-VUE编译器原理探秘一</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/11/网易微专业福利期-2-2-如何保证你的代码质量/">网易微专业福利期-2.2-如何保证你的代码质量</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/10/网易微专业福利期-2-1-JavaScript内存管理/">网易微专业福利期-2.1-JavaScript内存管理</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/09/张容铭-设计模式-第三篇-结构型设计模式/">张容铭-设计模式-第三篇-结构型设计模式</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/07/网易微专业-现代前端工程实践方案-解锁webpack-3-1-8-webpack的环境，webpack实战演练/">网易微专业-现代前端工程实践方案 解锁webpack-3.1.8-webpack的环境，webpack实战演练</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

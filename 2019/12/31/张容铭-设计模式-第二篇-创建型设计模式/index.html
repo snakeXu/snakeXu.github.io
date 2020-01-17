@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>张容铭-设计模式-第二篇-创建型设计模式 | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="一、简单工厂模式简单工厂模式：又叫静态工厂方法，由一个工厂对象决定创建某一种产品对象类的实例。主要用来创建同一类对象。如果我们写了这样一段代码，假设需求是登陆模块的处理  var LoginAlert = function (text){     this.content = text } LoginAlert.prototype.show = function(){     //显示警告框 }">
+<meta property="og:type" content="article">
+<meta property="og:title" content="张容铭-设计模式-第二篇-创建型设计模式">
+<meta property="og:url" content="http://yoursite.com/2019/12/31/张容铭-设计模式-第二篇-创建型设计模式/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="一、简单工厂模式简单工厂模式：又叫静态工厂方法，由一个工厂对象决定创建某一种产品对象类的实例。主要用来创建同一类对象。如果我们写了这样一段代码，假设需求是登陆模块的处理  var LoginAlert = function (text){     this.content = text } LoginAlert.prototype.show = function(){     //显示警告框 }">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-01-08T14:02:30.477Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="张容铭-设计模式-第二篇-创建型设计模式">
+<meta name="twitter:description" content="一、简单工厂模式简单工厂模式：又叫静态工厂方法，由一个工厂对象决定创建某一种产品对象类的实例。主要用来创建同一类对象。如果我们写了这样一段代码，假设需求是登陆模块的处理  var LoginAlert = function (text){     this.content = text } LoginAlert.prototype.show = function(){     //显示警告框 }">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-张容铭-设计模式-第二篇-创建型设计模式" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/12/31/张容铭-设计模式-第二篇-创建型设计模式/" class="article-date">
+  <time datetime="2019-12-31T03:51:57.000Z" itemprop="datePublished">2019-12-31</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      张容铭-设计模式-第二篇-创建型设计模式
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>一、简单工厂模式<br>简单工厂模式：又叫静态工厂方法，由一个工厂对象决定创建某一种产品对象类的实例。主要用来创建同一类对象。<br><br>如果我们写了这样一段代码，假设需求是登陆模块的处理</p>
+<pre>
+var LoginAlert = function (text){
+    this.content = text
+}
+LoginAlert.prototype.show = function(){
+    //显示警告框
+}
+var userNameAlert = new LoginAlert('用户名不能多于16个字母或数字');
+userNameAlert.show();
+var passwordAlert = new LoginAlert('输入的密码不正确');
+passwordAlert.show();
+var LoginConfirm = function(text){
+    this.content = text;
+}
+LoginConfirm.prototype.show = function(){
+    //显示确认框
+}
+var loginFailConfirm = new LoginConfirm('您的用户名不存在，请重新输入');
+loginFailConfirm.show();
+var LoginPrompt = function(text){
+    this.content = text;
+}
+LoginPrompt.prototype.show = function(){
+    //显示提示框
+}
+</pre>
+那么我们可以用简单工厂模式整理一下
+<pre>
+var PopFactory = function(name){
+    switch(name){
+        case 'alert':
+            return new LoginAlert();
+        case 'confirm':
+            return new LoginConfirm();
+        case 'prompt':
+            return new LoginPrompt();
+    }
+}
+</pre>
+下面我们可以举一个完整的例子
+<pre>
+//篮球基类
+var BasketBall = function(){
+    this.intro = '篮球盛行于美国';
+}
+BasketBall.prototype = {
+    getMember : function(){
+        console.log('每个队伍需要5名运动员');
+    },
+    getBallSize : function(){
+        console.log('篮球很大');
+    }
+}
+//足球基类
+var FootBall = function(){
+    this.intro = '足球在世界范围内很流行';
+}
+FootBall.prototype = {
+    getMember : function(){
+        console.log('每个队伍需要11名运动员');
+    },
+    getBallSize : function(){
+        console.log('足球很大');
+    }
+}
+//网球基类
+var Tennis = function(){
+    this.intro = '每年有很多网球系列赛';
+}
+Tennis.prototype = {
+    getMember : function(){
+        console.log('每个队伍需要1名运动员');
+    },
+    getBallSize : function(){
+        console.log('网球很小');
+    }
+}
+//运动工厂
+var SprotsFactory = function(name){
+    switch(name){
+        case 'NBA':
+            return new BasketBall();
+        case 'worldCup':
+            return new FootBall();
+        case 'FrenchOpen':
+            return new Tennis();
+    }
+}
+var football = SprotsFactory('worldCup');
+console.log(football);
+console.log(football.intro);
+football.getMember();
+</pre>
+我们只需要记住SprotsFactory这个工厂对象，在需要的时候告诉工厂对象我们需要什么。但是我们观察上面的代码，其实还是有一些地方是相同的，是可以抽取出来共用的。比如我们想创建一些书，这些书相似的地方是：都有目录、页码等，但是也有一些不相似的地方：比如书名、出版时间、书的类型等。对于创建的对象相似的属性好处理，对于不同的属性就要有针对性的进行处理了，比如我们将不同的属性作为参数传递进来处理。
+<pre>
+//工厂模式
+function createBook(name, time, type){
+    //创建一个对象，并对对象拓展属性和方法
+    var o = new Object();
+    o.name = name;
+    o.time = time;
+    o.type = type;
+    o.getName = function(){
+        console.lg(this.name);
+    }
+    //将对象返回
+    return o;
+}
+var book1 = createBook('js book',2014, 'js');
+var book2 = createBook('css book',2013,'css');
+book1.getName();
+book2.getName();
+</pre>
+对于登陆验证的代码，我们可以这样整理
+<pre>
+function createPop(type,text){
+    //创建一个对象，并对对象拓展属性和方法
+    var o = new Object();
+    o.content = text;
+    o.show = function(){
+        //显示方法
+    }
+    if(type == 'alert'){
+        //警告框差异部分
+    }
+    if(type == 'prompt'){
+        //提示框差异部分
+    }
+    if(type == 'confirm'){
+        //确认框差异部分
+    }
+    //将对象返回
+    return o;
+}
+//创建警示框
+var userNameAlert = createPop('alert','用户名只能是26个字母和数字')
+</pre>
+上面一共是两种方法，一种是通过类实例化的对象创建的，第二种是通过创建一个新对象然后包装增强其属性和功能来实现的。他们之间的差异性也造成前面通过类创建的对象，如果这些类继承同一父类，那么他们的父类原型上的方法是可以共用的。而后面寄生方式创建的对象都是一个新的个体，所以他们的方法就不能共用了。
+二、工厂方法模式
+工厂方法模式：通过对产品类的抽象使其创建业务主要负责用于创建多类产品的实例。
+我们有下面一些代码，比如下面是一段广告需求，对不同的编程语言有不同的样式：
+<pre>
+var Java = function(content){
+    //将内容保存在content里面以备日后使用
+    this.content = content;
+    //创建对象时，通过闭包，直接执行，将内容按需求的样式插入到页面内
+    (function(content){
+        var div = document.createElement('div');
+        div.innerHTML = content;
+        div.style.color = 'green';
+        document.getElementById('container').appendChild(div);
+    })(content);
+}
+var Php = function(content){
+    //将内容保存在content里面以备日后使用
+    this.content = content;
+    //创建对象时，通过闭包，直接执行，将内容按需求的样式插入到页面内
+    (function(content){
+        var div = document.createElement('div');
+        div.innerHTML = content;
+        div.style.color = 'yellow';
+        div.style.background = 'red';
+        document.getElementById('container').appendChild(div);
+    })(content);
+}
+var JavaScript = function(content){
+    //将内容保存在content里面以备日后使用
+    this.content = content;
+    //创建对象时，通过闭包，直接执行，将内容按需求的样式插入到页面内
+    (function(content){
+        var div = document.createElement('div');
+        div.innerHTML = content;
+        div.style.background = 'pink';
+        document.getElementById('container').appendChild(div);
+    })(content);
+}
+//工厂
+function JobFactory(type,content){
+    switch(type){
+        case 'Java':
+            return new Java(content);
+        case 'Php':
+            return new Php(content);
+        case 'JavaScript':
+            return new JavaScript(content);
+    }
+
+}
+</pre>
+上面代码，我们只写了三种编程语言的可能，如果这时候又有一个编程语言的广告，那么我们就要修改两个地方。如果我们改用工厂方法模式，那只需要修改一个地方就好，另外我们加上安全模式类，确保我们的代码更完整。
+<pre>
+var Factory = function(type,content){
+    if(this instanceof Factory){
+        var s = new this[type](content);
+        return s;
+    }else{
+        return new Factory(type,content);
+    }
+}
+//工厂原型种设置创建所有类型数据对象的基类
+Factory.prototype = {
+    Java : function(content){
+        //...
+    },
+    JavaScript : function(content){
+        //...
+    },
+    UI : function(content){
+        this.content = content;
+        (function(content){
+            var div = document.createElement('div');
+            div.innerHTML = content;
+            div.style.border = '1px solid red';
+            document.getElementById('container').appendChild(div);
+        })(content);
+    },
+    Php : function(content){
+        //...
+    },
+}
+</pre>
+三、抽象工厂模式
+抽象工厂模式：通过对类的工厂抽象使其业务用于对产品类簇的创建，而不负责创建某一类产品的实例。<br>
+1.抽象类是一种声明但不能使用的类，当你使用时就会报错。我们可以在类的方法中手动抛出错误来模拟抽象类。
+<pre>
+//汽车抽象类，当使用其实例对象的方法时会抛出错误
+var Car = function(){}
+Car.prototype = {
+    getPrice : function(){
+        return new Error('抽象方法不能调用')
+    },
+    getSpeed : function(){
+        return new Error('抽象方法不能调用')
+    }
+}
+</pre>
+我们看到我们创建这个Car类其实什么都不能做，创建时没有任何属性，然而原型prototype上的方法也不能用，否则会报错。但在继承上却是很有用的，因为定义了一种类，并定义了该类所必备的方法，如果在子类中没有重写这些方法，那么当调用时能找到这些方法便会报错。这一特点是很有必要的，因为在一些大型应用中，总会有一些子类去继承另一些父类，这些赴美经常会定义一些必要的方法，却没有具体的实现，如Car类中的getPrice()和getSpeed()方法，那么一旦用子类创建了一个对象，该对象总是应该具备一些必要的方法，但是如果这些必要的方法从父类中继承过来而没有具体去重写实现，那么实例化对象便会调用父类中的这些方法，如果父类能有一个友好提示，那么对于忘记重写子类的这些错误遗漏的避免事很有帮助的。这也是抽象类的一个作用，即定义一个产品簇，并声明一些必备方法，如果子类中没有去重写就会抛出错误。
+2.抽象工厂模式
+抽象类中定义的方法只是显性地定义一些功能，但是没有具体的实现，而一个对象是要具有一套完整的功能的，所以用抽象类创建的对象当然也是‘抽象的’，所以我们不能使用它来创建一个真实的对象。一般我们用它作为父类来创建一些子类。
+<pre>
+//抽象工厂方法
+var VehicleFactory = function(subType,superType){
+    //判断抽象工厂中是否有该抽象类
+    if(typeof VehicleFactory[superType] === 'function'){
+        //缓存类
+        function F(){};
+        //继承父类属性和方法
+        F.prototype = new VehicleFactory[superType]();
+        //将子类constructor指向子类
+        subType.constructor = subType;
+        //子类原型继承“父类”
+        subType.prototype = new F();
+    }else{
+        //不存在该抽象类抛出错误
+        throw new Error('未创建该抽象类')
+    }
+}
+VehicleFactory.Car = function(){
+    this.type = 'car';
+}
+VehicleFactory.Car.prototyp = {
+    getPrice : function(){
+        return new Error('抽象方法不能调用')
+    },
+    getSpeed : function(){
+        return new Error('抽象方法不能调用')
+    }
+}
+//公交车抽象类
+VehicleFactory.Bus = function(){
+    this.type = 'bus';
+}
+VehicleFactory.Bus.prototype = {
+    getPrice : function(){
+        return new Error('抽象方法不能调用')
+    },
+    getPassengerNum : function(){
+        return new Error('抽象方法不能调用')
+    }
+}
+//货车抽象类
+VehicleFactory.Truck = function(){
+    this.type = 'truck';
+}
+VehicleFactory.Truck.prototype = {
+    getPrice : function(){
+        return new Error('抽象方法不能调用')
+    },
+    getTrainload : function(){
+        return new Error('抽象方法不能调用')
+    }
+}
+</pre>
+抽象工厂其实是一个实现子类继承父类的方法，在这个方法中我们需要通过传递子类以及要继承父类(抽象类)的名称，并且在抽象工厂方法中又增加了一次对抽象类存在性对一次判断，如果存在，则将子类继承父类的方法。然后子类通过寄生式继承。继承父类过程中有一个地方需要注意，就是在对过渡类的原型继承时，我们不是继承父类的原型，而是通过new关键字复制父类的一个实例，这么做是因为过渡类不应仅仅继承父类的原型方法，还要继承父类的对象属性，所以要通过new关键字将父类的构造函数执行一遍来复制构造函数中的属性和方法。对抽象工厂添加抽象类也很特殊，因为抽象工厂是个方法不需要实例化对象，故只需要一份，因此直接为抽象工厂添加类的属性即可，于是我们就可以通过点语法在抽象工厂上添加我们一会儿需要的三个汽车簇抽象类Car,Bus,Truck。
+3.抽象与实现
+抽象工厂是用来创建子类的(本例中其实是让子类继承父类，是对子类的一个拓展)，所以我们需要一些产品子类，然后让子类继承相应的产品簇抽象类。
+<pre>
+//宝马汽车子类
+var BMW = function(price,speed){
+    this.price = price;
+    this.speed = speed;
+}
+//抽象工厂实现对Car抽象类的继承
+VehicleFactory(BMW,'Car');
+BMW.prototype.getPrice = function(){
+    return this.price;
+}
+BMW.prototype.getSpeed = function(){
+    return this.speed;
+}
+//兰博基尼汽车子类
+var Lamborghini = function(price,speed){
+    this.price = price;
+    this.speed = speed;
+}
+//抽象工厂实现对Car抽象类的继承
+VehicleFactory(Lamborghini,'Car');
+Lamborghini.prototype.getPrice = function(){
+    return this.price;
+}
+Lamborghini.prototype.getSpeed = function(){
+    return this.speed;
+}
+//宇通汽车子类
+var YUTONG = function(price,passenger){
+    this.price = price;
+    this.passenger = passenger;
+}
+//抽象工厂实现对Bus抽象类的继承
+VehicleFactory(YUTONG,'Bus');
+YUTONG.prototype.getPrice = function(){
+    return this.price;
+}
+YUTONG.prorotype.getPassengerNum = function(){
+    return this.passenger;
+}
+//奔驰汽车子类
+var BenzTruck = function(price,trainLoad){
+    this.price = price;
+    this.trainLoad = trainLoad;
+}
+//抽象工厂实现对Truck抽象类的继承
+VehicleFactory(BenzTruck,'Truck');
+BenzTruck.prototype.getPrice = function(){
+    return this.price;
+}
+BenzTruck.prototype.getTrainload = function(){
+    return this.price;
+}
+var truck = new BenzTruck(1000000,1000);
+console.log(truck,getPrice());          //1000000
+console.log(truck.type);                //truck
+</pre>
+通过抽象工厂，我们就能知道每个子类到底是哪一种类别，然后他们也具备了该类所必备的属性和方法。就上面代码而言，创建的truck对象真的可以知道他的类别了，通过重写父类中的getPrice方法也可以正确的使用了。
+四、建造者模式
+建造者模式：将一个复杂对象的构建层与其表示层相互分离，同样的构建过程可采用不同的表示。<br>
+工厂模式主要是为了创建对象实例或者类簇(抽象工厂)，关心的最终结果是产出(创建)的是什么。不关心你创建的整个过程，仅仅需要知道你最终创建的结果。所以通过工厂模式我们得到的都是对象实例或者类簇。然而建造者模式在创建对象时更要为复杂一些，虽然其目的也是为了创建对象，但是它更多关心的是创建这个对象的整个过程，甚至于创建对象的每一个细节，比如创建一个人，我们创建的结果不仅仅要得到人的实例，还要关注创建人的时候，这个人应该穿什么衣服，男的还是女的，爱好兴趣是什么。所以说建造者模式更注重的是创建的细节。
+<pre>
+//创建一位人类
+var Human = function(param){
+    //技能
+    this.skill = param && param.skill || '保密';
+    //兴趣爱好
+    this.hobby = param && param.hobby || '保密';
+}
+//类人原型方法
+Human.prototype = {
+    getSkill : function(){
+        return this.skill;
+    },
+    getHobby : function(){
+        return this.hobby;
+    }
+}
+//实例化姓名类
+var Named = function(name){
+    var that = this;
+    //构造器
+    //构造函数解析姓名的姓与名
+    (function(){
+        that.wholeName = name;
+        if(name.indexOf(' ') > -1){
+            that.FirstName = name.slice(0,name.indexOf(' '));
+            that.SecondName = name.slice(name.indexOf(' '));
+        }
+    })(name,that);
+}
+//实例化职位类
+var Work = function(work){
+    var that = this;
+    //构造器
+    //构造函数中通过传入的职位特征来设置相应职位以及描述
+    (function(work,that){
+        switch(work){
+            case 'code':
+                that.work = '工程师';
+                that.workDescript = '每天沉醉于编程';
+                break;
+            case 'UI':
+            case 'UE':
+                that.work = '设计师';
+                that.workDescript = '设计更似一种艺术';
+                break;
+            case 'teach':
+                that.work = '教师';
+                that.workDescript = '分享也是一种快乐';
+                break;
+            default:
+                that.work = work;
+                that.workDescript = '对不起，我们还不清楚您所选择职位的相关描述';
+        }
+    })(work,that);
+}
+//更换期望的职位
+Work.prototype.changeWork = function(work){
+    this.work = work;
+}
+//添加对职位的描述
+Work.prototype.changeDescript = function(setence){
+    this.workDescript = setence;
+}
+</pre>
+上面我们创建了应聘者类、姓名解析类、期望职位类。下面我们写一个建造者类，在建造者类中我们要通过对这3个类组合调用，创建出一个完整的影评着对象。
+<pre>
+/****
+* 应聘者建造者
+* 参数 name:姓名(全名)
+* 参数 work:期望职位
+**/
+var Person = function(name,work){
+    //创建应聘者缓存对象
+    var _person = new Human();
+    //创建应聘者姓名解析对象
+    _person.name = new Named(name);
+    //创建应聘者期望职位
+    _person.work = new Work(work);
+    //将创建的应聘者对象返回
+    return _person;
+}
+var person = new Person('Xiao Ming','code');
+console.log(person.skill);                      //保密
+console.log(person.name.FirstName);             //Xiao
+console.log(person.work.work);                  //工程师
+console.log(person.work.workDescript);          //每天沉醉于编程
+person.work.changeDescript('更改一下职位描述!')
+console.log(person.work.workDescript);          //更改一下职位描述!
+</pre>
+工厂模式创建出来的是一个对象，它追求的是创建的结果，别无他求，所以那仅仅是一个实实在在的创建过程。而建造者模式就有所不同，它不仅仅可得到创建的结果，也参与了创建的具体过程。对于创建的具体实现的细节也参与了干涉，可以说创建的对象更复杂，或者说这种模式创建的对象是一个复合对象。
+五、原型模式
+原型模式就是将原型对象指向创建对象的类，使这些类共享原型对象的方法或属性。当然JavaScript是基于原型链实现对象之间的继承，这种继承是基于一种对属性或者方法的共享，而不是对属性和方法的复制。在原型模式中，基类是要被子类继承的，那么此时将属性和方法都写在基类的构造函数里会有一些问题，比如每次子类继承都要创建一次父类，假如说父类的构造函数中创建时存在很多消耗时较长的逻辑，或者说每次初始化都做一些重复性的东西，这样的性能消耗还是蛮大。为了提高性能，我们需要有一种共享机制，这样每当创建基类时，对于每次创建的一些简单而又差异化的属性我们可以放在构造函数中，而我们将一些消耗资源比较大的方法放在基类的原型中，这样就会避免很多不必要的消耗，这也就是原型模式的一个雏形。这一模式很像我们之前提到的继承，都是基于原型链。
+原型模式就是将可复用的、可共享的、耗时大的从基类中提取出来然后放在原型中，然后子类通过组合继承或者寄生组合式继承而将方法和属性继承下来，对于类中那些需要重写的方法进行重写，这样子类创建的对象既具有子类的属性和方法也共享了类的原型方法。
+我们的例子是做一个焦点轮播图(没有详细实现细节)
+<pre>
+//图片轮播类
+var LoopImages = function(imgArr,container){
+    this.imagesArray = imgArr;       //轮播图片数组
+    this.container = container;      //轮播图片容器
+}
+LoopImages.prototyp = {
+    //创建轮播图片
+    createImage :  function(){
+        console.log('LoopImages createImage function');
+    },
+    //切换下一张图片
+    changeImage : function(){
+        console.log('LoopImages changeImage function')
+    }
+}
+//上下滑动切换类
+var SlideLoopImage = function(imgArr,container){
+    //构造函数继承图片轮播类
+    LoopImages.call(this,imgArr,container);
+}
+SlideLoopImage.prototye = new LoopImages();
+//重写继承的切换下一张图片方法
+SlideLoopImage.prototye.changeImage = function(){
+    console.log('SlideLoopImage changeImage function');
+}
+//渐隐切换类
+var FadeLoopImage = function(imgArr,container,arrow){
+    LoopImages.call(this,imgArr,container);
+    //切换箭头私有变量
+    this.arrow = arrow;
+}
+FadeLoopImage.prototype = new LoopImages();
+FadeLoopImage.prototype.changeImage = function(){
+    console.log('FadeLoopImage changeImage function');
+}
+//实例化一个渐隐切换图片类
+var fadeImg = new FadeLoopImg(['01.jpg','02.jpg','03.jpg','04.jpg'],'slide',['left.jpg','right.jpg']);
+fadeImg.changeImage(); //FadeLoopImg changeImage function
+console.log(fadeImg);  //slide
+</pre>
+原型对象是一个共享的对象，那么不论是父类的实例对象或是子类的继承，都是对它的一个指向引用，所以原型对象才会被共享。既然被共享，那么对原型对象的拓展，不论是子类或者父类的实例对象都会继承下来。
+<pre>
+LoopImages.prototype.getImageLength = function(){
+    return this.imagesArray.length;
+}
+FadeLoopImg.prototype.getContainer = function(){
+    return this.container;
+}
+console.log(fadeImg.getimageLength());    //4
+console.log(fadeImg.getContainer());      //slide
+</pre>
+原型模式有一个特点就是在任何时候都可以对基类或者子类进行方法的拓展，而且所有被实例化的对象或者类都能获取这些方法，这样给予我们对功能拓展的自由性。但是有一点要注意，正是由于这种方式太自由了，所以不要随意去做，否则如果修改类的其他属性或者方法很有可能影响到他人。
+不过原型模式更多的是用在对对象的创建上。比如创建一个实例对象的构造函数比较复杂，或者耗时比较长，或者通过创建多个对象来实现。此时我们最好不要用new关键字去复制这些基类，但可以通过对这些对象属性或者方法进行复制来实现创建，这是原型模式的最初思想。如果涉及多个对象，我们也可以通过原型模式来实现对新对象的创建。那么首先要有一个原型模式的对象复制方法。
+<pre>
+/****
+*基于已经存在的模版对象克隆出新对象的模式
+*arguments[0],arguments[1],arguments[2]:参数1，参数2，参数3表示模版对象
+*注意。这里对模版引用类型的属性实质上进行了浅复制(引用类型属性共享),当然根据需求可以自行深复制(引用类型属性复制)
+****/
+function prototypeExtend(){
+    var F = function(){},     //缓存类，为实例化返回对象临时创建
+        args = arguments,     //模版对象参数序列
+        i = 0,
+        len = args.length;
+    for(; i < len; i++){
+        //遍历每个模版对象中的属性
+        for(var j in args[i]){
+            //将这些属性复制到缓存类原型中
+            F.prototype[j] = args[i][j];
+        }
+    }
+    //返回缓存类的一个实例
+    return new F();
+}
+</pre>
+比如企鹅游戏(别问，我也不知道什么是企鹅游戏)中我们创建一个企鹅对象，如果游戏中没有企鹅基类，只是提供了一些动作模版对象，我们就可以通过实现对这些模版对象的继承来创建一个企鹅实例对象。
+<pre>
+var penguin = prototypeExtend({
+    speed : 20,
+    swim : function(){
+        console.log('游泳速度'+this.speed);
+    }
+},{
+    run : function(speed){
+        console.log('奔跑速度'+speed);
+    }
+},{
+    jump : function(){
+        console.log('跳跃动作')
+    }
+})
+//prototypeExtend创建的是一个对象，我们无需用new去创建新的实例对象
+penguin.swin();       //游泳速度 20
+penguin.run(10);      //游泳速度 10
+penguin.jump();       //跳跃动作
+</pre>
+六、单例模式
+单例模式：又被称为单体模式，是只允许实例化一次的对象类。有时候我们也用一个对象来规划一个命名空间，井井有条的管理对象上的属性于方法。
+<pre>
+var Ming = {
+    g : function(id){
+        return document.getElementById(id);
+    },
+    css : function(id,key,value){
+        //通过当前对象this来使用g方法
+        this.g(id).style[key] = value;
+    },
+    //...
+}
+</pre>
+其实在JavaScript中单例模式除了定义明明空间外，还有一个作用你需要知道，就是通过单例模式来管理代码库的各个模块，比如早起百度tangram，雅虎的YUI都是通过单例模式来控制自己的每个功能模块的，比如tangram中定义命名空间为baidu，当添加设置元素class方法，插入一个元素方法时，他们会放到dom模块；当添加事件中阻止事件的冒泡方法，阻止事件的默认行为方法的时候，会放到event模块里；当添加去除字符串首尾空白自负方法，将字符串进行html编码时，会放到string模块中……
+<pre>
+baidu.dom.addClass                 //添加元素类
+baidu.dom.append                   //插入元素
+baidu.event.stopPropagation        //阻止冒泡
+baidu.event.preventDefault         //阻止默认行为
+baidu.event.trim                   //去除字符串首尾空白字符
+baidu.string.encodeHTML            //将字符串进行html编码
+</pre>
+所以我们以后写自己的小型方法库的时候也可以用单例模式来规范我们自己代码库的各个模块。比如我们有一个A库，它包含公用模块、工具模块、ajax模块和其他模块，那么我们就可以自己定制一个如下的小型代码库
+<pre>
+var A = {
+    Util:{
+        util_method1:function(){},
+        util_method2:function(){}
+        //...
+    },
+    Tool:{
+        tool_method1:function(){},
+        tool_method2:function(){}
+        //...
+    },
+    Ajax:{
+        get:function(){},
+        post:function(){}
+        //...
+    },
+    others:{
+        //...
+    }
+    //...
+}
+A.Util.util_method1();
+A.Util.util_method2();
+A.Ajax.get();
+</pre>
+有一个功能用单例模式实现更合适，就是管理静态变量。虽然JavaScript中目前为止并没有直接的静态变量，但是我们可以想办法实现静态变量。我们让创建的函数只执行一次，此时我们创建的对象内保存静态变量通过取值器访问，最后将这个对象作为一个单例放在全局空间里作为静态变量单例对象供他人使用。
+<pre>
+var Conf = (function(){
+    //私有变量
+    var conf = {
+        MAX_NUM:100,
+        MIN_NUM:1,
+        COUNT:1000,
+    }
+    //返回取值器对象
+    return {
+        //取值器方法
+        get:function(name){
+            return conf[name] ? conf[name] : null;
+        }
+    }
+})()
+var count = Conf.get('COUNT');
+console.log(count);              //1000
+</pre>
+静态变量大写是一种习惯。有些时候对于单例对象需要延迟创建，所以在单例中还存在一种延迟创建的形式，也有人称之为’惰性创建‘。
+<pre>
+//惰性载入单例
+var LazySingle = (function(){
+    //单例实例引用
+    var instance = null;
+    //单例
+    function Single(){
+        //这里定义私有属性和方法
+        return {
+            publicMethod:function(){},
+            publicProperty:'1.0'
+        }
+    }
+    //获取单例对象接口
+    return function(){
+        //如果为创建单例将创建单例
+        if(!_instance){
+            _instance = Single()
+        }
+        //返回单例
+        return _instance;
+    }
+})()
+console.log(LazySingle().publicProperty);   //1.0
+</pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/12/31/张容铭-设计模式-第二篇-创建型设计模式/" data-id="ck5hl6rv2001r8fxqdn3rhen0" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/01/04/网易微专业-现代前端工程实践方案-解锁webpack-3-1-0-webpack导学/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          网易微专业-现代前端工程实践方案 解锁webpack-3.1.0-webpack导学
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/12/27/张容铭-设计模式-第一篇/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">张容铭-设计模式-第一篇</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/01/14/网易微专业-单页应用-1-3-1-VUE编译器原理探秘一/">网易微专业-单页应用-1.3.1-VUE编译器原理探秘一</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/11/网易微专业福利期-2-2-如何保证你的代码质量/">网易微专业福利期-2.2-如何保证你的代码质量</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/10/网易微专业福利期-2-1-JavaScript内存管理/">网易微专业福利期-2.1-JavaScript内存管理</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/09/张容铭-设计模式-第三篇-结构型设计模式/">张容铭-设计模式-第三篇-结构型设计模式</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/07/网易微专业-现代前端工程实践方案-解锁webpack-3-1-8-webpack的环境，webpack实战演练/">网易微专业-现代前端工程实践方案 解锁webpack-3.1.8-webpack的环境，webpack实战演练</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

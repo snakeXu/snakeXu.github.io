@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>网易微专业-模块化编程-4.1.1-模块系统概述-自定义模块规范-书写约定 | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="一.什么是模块化1.模块化就是把系统分离成独立功能的方法，这样我们需要什么功能，就加载什么功能。(1)当一个项目开发的越来越复杂时，会遇到一些问题:(1-1)命名冲突(1-2)文件依赖(2)使用模块化开发，可以避免以上问题，并且提高开发效率(2-1)可维护性(2-2)可复用性总结:在生产角度，模块化开发是一种生产方式，这种方式生产效率高，维护成本低二.模块化开发演变三.CommonjsCommon">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网易微专业-模块化编程-4.1.1-模块系统概述-自定义模块规范-书写约定">
+<meta property="og:url" content="http://yoursite.com/2019/12/07/网易微专业-模块化编程-4-1-1-模块系统概述-自定义模块规范-书写约定/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="一.什么是模块化1.模块化就是把系统分离成独立功能的方法，这样我们需要什么功能，就加载什么功能。(1)当一个项目开发的越来越复杂时，会遇到一些问题:(1-1)命名冲突(1-2)文件依赖(2)使用模块化开发，可以避免以上问题，并且提高开发效率(2-1)可维护性(2-2)可复用性总结:在生产角度，模块化开发是一种生产方式，这种方式生产效率高，维护成本低二.模块化开发演变三.CommonjsCommon">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/module/4.1.1_1.png">
+<meta property="og:updated_time" content="2019-12-07T09:48:44.349Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="网易微专业-模块化编程-4.1.1-模块系统概述-自定义模块规范-书写约定">
+<meta name="twitter:description" content="一.什么是模块化1.模块化就是把系统分离成独立功能的方法，这样我们需要什么功能，就加载什么功能。(1)当一个项目开发的越来越复杂时，会遇到一些问题:(1-1)命名冲突(1-2)文件依赖(2)使用模块化开发，可以避免以上问题，并且提高开发效率(2-1)可维护性(2-2)可复用性总结:在生产角度，模块化开发是一种生产方式，这种方式生产效率高，维护成本低二.模块化开发演变三.CommonjsCommon">
+<meta name="twitter:image" content="https://snakexu.github.io/images/wangyi/module/4.1.1_1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-网易微专业-模块化编程-4-1-1-模块系统概述-自定义模块规范-书写约定" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/12/07/网易微专业-模块化编程-4-1-1-模块系统概述-自定义模块规范-书写约定/" class="article-date">
+  <time datetime="2019-12-07T06:52:12.000Z" itemprop="datePublished">2019-12-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      网易微专业-模块化编程-4.1.1-模块系统概述-自定义模块规范-书写约定
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>一.什么是模块化<br><br>1.模块化就是把系统分离成独立功能的方法，这样我们需要什么功能，就加载什么功能。<br><br>(1)当一个项目开发的越来越复杂时，会遇到一些问题:<br><br>(1-1)命名冲突<br><br>(1-2)文件依赖<br><br>(2)使用模块化开发，可以避免以上问题，并且提高开发效率<br><br>(2-1)可维护性<br><br>(2-2)可复用性<br><br>总结:在生产角度，模块化开发是一种生产方式，这种方式生产效率高，维护成本低<br><br>二.模块化开发演变<br><img src="https://snakexu.github.io/images/wangyi/module/4.1.1_1.png"><br>三.Commonjs<br><br>CommonJS规范加载模块是同步的，也就是说，加载完成才执行后面的操作。<br><br>Node.js主要用于服务器编程，模块都是存在本地硬盘中加载比较快，所以Node.js采用CommonJS规范。<br><br>CommonJS规范分为三部分：module(模块标识) require(模块引用)  exports(模块定义)<br><br>·module变量在每个模块内部，就代表当前模块；<br><br>·exports属性是对外接口，用于导出当前模块的方法或变量；<br><br>·require()用来加载外部模块，读取并执行js文件，返回该模块的exports对象；<br><br>四.AMD(requirejs)<br><br>AMD也就是异步模块定义。它采用异步方式加载模块，通过define方式去定义模块，require方法去加载模块<br><br>AMD模块定义<br><br>如果这个模块还需要依赖其他模块，那么define函数的第一个参数， 必须是一个数组，指明该模块的依赖。<br></p>
+<p><pre>define([tools],function(){})</pre><br>AMD模块的加载</p>
+<p><pre>requeire([‘modules’],callback);</pre><br>·第一个参数[‘modules’]，是一个数组，里面的成员就是要加载的模块<br><br>·第二个参数callback，则是加载成功之后的回调函数。例如加载Math.js。<br></p>
+<p><pre>require([‘math’],function(){})</pre><br>require异步加载Math,浏览器不会失去响应；它指定的回调函数，只有前面的模块都加载成功后，才会运行，解决了依赖性的问题<br><br>五.CMD(seajs)<br><br>CMD即通用模块定义，CMD规范是国内发展出来的；正如AMD有requirejs，CMD有个浏览器的实现Seajs；Seajs要解决的问题和requirejs一样，只不过在模块定义方式和模块加载方式上有所不同<br><br>在CMD规范中，一个模块就是一个文件。代码的书写格式如下：</p>
+<p><pre>define(function(require,exports,module){<br>//模块代码<br>})</pre><br><i><br>    ·require是可以把其他模块导入进来的一个参数，<br><br>    ·exports可以把模块内的一些属性和方法导出；<br><br>    ·module是一个对象，上面存储了与当前模块相关联的一些属性和方法。<br><br></i><br>CMD推崇依赖就近，延迟执行。文件是提前加载好的，只有在require的时候才去执行文件</p>
+<p><pre><br>define(functioln(require,exports,module){<br>    var Math = require(‘./Math’);<br>    Math.add()<br>})<br></pre><br>六.ES6模块化<br><br>ES6 Module<br><br>在ES6之前没有模块化，为了解决问题，提出了Commonjs、AMD、CMD；ES6模块化汲取了Commonjs和AMD的优点，语法简介，支持异步加载，未来可以成为浏览器和服务器通用的模块化解决方案。<br><br>ES6中模块的定义<br><br>ES6新增了两个关键字：export和import。<br><br>·export用于把模块里的内容暴露出来<br><br>·import用于引入模块提供的功能<br><br>ES6中模块的加载<br><br>import加载模块：<br></p>
+<p><pre>import{bar,foo,test,obj} from ‘./lib’<br>    foo()<br></pre><br>注：可以使用export default命令，为模块指定默认输出，一个模块只能有一个默认输出，所以export default只能用一次。<br><br>ES6模块运行机制<br><br>ES6模块是动态引用，如果使用import从一个模块加载变量(即import foo from ‘foo’),变量不会被缓存，而是成为一个指向被加载模块的引用。等脚本执行时，根据只读引用，到被加载到那个模块中去取值。<br><br>七.自定义规范-书写约定<br><br>书写约定<br><br>自定义加载器<br><br>模块的定义<br><br>·约定：所有的Javascript文件都应该用模块的形式来书写，并且一个文件只包含一个模块；<br><br>·使用全局函数define来定义模块 define(factory[require、export、module])；<br><br>·factroy函数在调用时，会始终传入三个参数require、export和module，这三个参数在所有模块代码里可用。<br></p>
+<p><pre><br>    define(function(require, exports, module){<br>        //模块代码<br>    })<br></pre><br>·exports用来向外提供模块的API || 使用return语句直接向外提供API。<br><br>·require函数用来模仿其他模块提供的API。<br><br>·module参数存储模块的元信息。(id模块的唯一标识 deps依赖列表 exports对外提供的接口对象)<br><br><br><br>factory函数在调用时，会始终传入三个参数：require、exports和module，这三个参数在所有模块代码里可用。<br></p>
+<p><pre><br>    define(function(require, exports, module){<br>        //模块代码<br>    })<br></pre><br>模块加载器会从factory.toString()中解析出当前模块所依赖的模块，它是由一个模块标识组成的数组。<br><br>所以：<br><br>1.在模块代码中，第一个参数必须命名为require。<br><br>2.不要重命名require函数，或在任何作用域总给require重新赋值。<br><br>3.require的参数值必须是字符串的直接量不能是表达式。<br></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/12/07/网易微专业-模块化编程-4-1-1-模块系统概述-自定义模块规范-书写约定/" data-id="ck5hl6rtf000z8fxqepvboibd" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/12/07/网易微专业-模块化编程-4-1-2-加载器结构设计导论-自研模块加载器/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          网易微专业-模块化编程-4.1.2-加载器结构设计导论-自研模块加载器
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/12/06/HTTP和HTTPS协议/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">HTTP和HTTPS协议</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/01/14/网易微专业-单页应用-1-3-1-VUE编译器原理探秘一/">网易微专业-单页应用-1.3.1-VUE编译器原理探秘一</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/11/网易微专业福利期-2-2-如何保证你的代码质量/">网易微专业福利期-2.2-如何保证你的代码质量</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/10/网易微专业福利期-2-1-JavaScript内存管理/">网易微专业福利期-2.1-JavaScript内存管理</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/09/张容铭-设计模式-第三篇-结构型设计模式/">张容铭-设计模式-第三篇-结构型设计模式</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/07/网易微专业-现代前端工程实践方案-解锁webpack-3-1-8-webpack的环境，webpack实战演练/">网易微专业-现代前端工程实践方案 解锁webpack-3.1.8-webpack的环境，webpack实战演练</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

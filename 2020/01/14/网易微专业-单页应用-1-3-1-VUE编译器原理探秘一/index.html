@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>网易微专业-单页应用-1.3.1-VUE编译器原理探秘一 | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1.由一个思维导图开始思维导图源地址https://www.processon.com/view/link/5cb4b6dce4b02a2858ed34a3max老师专栏地址https://www.zhihu.com/people/li-qiang-5-3-60/posts这个思维导图大概讲述了我们在一个vue项目里，是如何一步步把我们写的代码编译为浏览器语言的过程(我这么说应该是没有问题)，并不">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网易微专业-单页应用-1.3.1-VUE编译器原理探秘一">
+<meta property="og:url" content="http://yoursite.com/2020/01/14/网易微专业-单页应用-1-3-1-VUE编译器原理探秘一/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="1.由一个思维导图开始思维导图源地址https://www.processon.com/view/link/5cb4b6dce4b02a2858ed34a3max老师专栏地址https://www.zhihu.com/people/li-qiang-5-3-60/posts这个思维导图大概讲述了我们在一个vue项目里，是如何一步步把我们写的代码编译为浏览器语言的过程(我这么说应该是没有问题)，并不">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/vue/0113_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/vue/0113_2.png">
+<meta property="og:updated_time" content="2020-01-17T03:09:38.498Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="网易微专业-单页应用-1.3.1-VUE编译器原理探秘一">
+<meta name="twitter:description" content="1.由一个思维导图开始思维导图源地址https://www.processon.com/view/link/5cb4b6dce4b02a2858ed34a3max老师专栏地址https://www.zhihu.com/people/li-qiang-5-3-60/posts这个思维导图大概讲述了我们在一个vue项目里，是如何一步步把我们写的代码编译为浏览器语言的过程(我这么说应该是没有问题)，并不">
+<meta name="twitter:image" content="https://snakexu.github.io/images/wangyi/vue/0113_1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-网易微专业-单页应用-1-3-1-VUE编译器原理探秘一" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/01/14/网易微专业-单页应用-1-3-1-VUE编译器原理探秘一/" class="article-date">
+  <time datetime="2020-01-14T03:03:42.000Z" itemprop="datePublished">2020-01-14</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      网易微专业-单页应用-1.3.1-VUE编译器原理探秘一
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.由一个思维导图开始<br><img src="https://snakexu.github.io/images/wangyi/vue/0113_1.png"><br>思维导图源地址<a href="https://www.processon.com/view/link/5cb4b6dce4b02a2858ed34a3" target="_blank" rel="noopener">https://www.processon.com/view/link/5cb4b6dce4b02a2858ed34a3</a><br>max老师专栏地址<a href="https://www.zhihu.com/people/li-qiang-5-3-60/posts" target="_blank" rel="noopener">https://www.zhihu.com/people/li-qiang-5-3-60/posts</a><br>这个思维导图大概讲述了我们在一个vue项目里，是如何一步步把我们写的代码编译为浏览器语言的过程(我这么说应该是没有问题)，并不是我们在项目代码里写了一个div标签，就能在浏览器里看到一个div标签，这其中经过了编译过程。<br>首先我们看一下官网中的生命周期图示<a href="https://cn.vuejs.org/v2/guide/instance.html" target="_blank" rel="noopener">https://cn.vuejs.org/v2/guide/instance.html</a><br>我们主要看这一部分<br><img src="https://snakexu.github.io/images/wangyi/vue/0113_2.png"><br>这一部分对应思维导图的template模版部分。<br>max老师关于这部分的描述<a href="https://zhuanlan.zhihu.com/p/84827482" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/84827482</a><br>非常感谢max老师抽丝剥茧的分析了代码，但是说实话，真是看了四五遍才理清一部分脉络，只想说代码写的真是太优秀了，环环相扣。在我目前看来，这是把vue编译的主脉络剥离出来，分析编译的过程的主脉络代码。</p>
+<pre>
+(function(root) {
+    //Vue编译器默认配置项
+    var baseOptions = {
+        // expectHTML: true,
+        // modules: modules$1,
+        // directives: directives$1,
+        // isPreTag: isPreTag,
+        // isUnaryTag: isUnaryTag,
+        // mustUseProp: mustUseProp,
+        // canBeLeftOpenTag: canBeLeftOpenTag,
+        // isReservedTag: isReservedTag,
+        // getTagNamespace: getTagNamespace,
+        // staticKeys: genStaticKeys(modules$1)
+    };
+
+    function extend(to, _from) {
+        for (var key in _from) {
+            to[key] = _from[key];
+        }
+        return to
+    }
+
+    //渲染函数
+    function createFunction(code, errors) {
+        try {
+            return new Function(code)
+        } catch (err) {
+            errors.push({
+                err: err,
+                code: code
+            });
+            return noop
+        }
+    }
+
+
+    function createCompileToFunctionFn(compile) {
+        var cache = Object.create(null); //缓存对象  优化处理
+
+        return function compileToFunctions(template, options, vm) {
+            options = extend({}, options);
+            // options.warn 编译错误  警告信息的收集
+            {
+                // detect possible CSP restriction
+                try {
+                    new Function('return 1');
+                } catch (e) {
+                    if (e.toString().match(/unsafe-eval|CSP/)) {
+                        warn$$1(
+                            'It seems you are using the standalone build of Vue.js in an ' +
+                            'environment with Content Security Policy that prohibits unsafe-eval. ' +
+                            'The template compiler cannot work in this environment. Consider ' +
+                            'relaxing the policy to allow unsafe-eval or pre-compiling your ' +
+                            'templates into render functions.'
+                        );
+                    }
+                }
+            }
+
+            // check cache
+            var key = options.delimiters ?
+                String(options.delimiters) + template :
+                template;
+            if (cache[key]) {
+                return cache[key] //res   render
+            }
+
+            // compile
+            var compiled = compile(template, options); // 编译以结束
+
+            // check compilation errors/tips
+            {
+                if (compiled.errors && compiled.errors.length) { //错误信息
+                    warn$$1(
+                        "Error compiling template:\n\n" + template + "\n\n" +
+                        compiled.errors.map(function(e) {
+                            return ("- " + e);
+                        }).join('\n') + '\n',
+                        vm
+                    );
+                }
+                if (compiled.tips && compiled.tips.length) { //警告信息
+                    compiled.tips.forEach(function(msg) {
+                        return tip(msg, vm);
+                    });
+                }
+            }
+
+            // turn code into functions
+            var res = {};
+            var fnGenErrors = []; //渲染函数调用时的错误新收集
+            //compiled.render  渲染函数所需的字符串
+            res.render = createFunction(compiled.render, fnGenErrors);
+            res.staticRenderFns = compiled.staticRenderFns.map(function(code) { //标注的静态节点 最终也呈现成渲染函数的格式
+                return createFunction(code, fnGenErrors)
+            });
+
+            { //呈现渲染函数中的错误
+                if ((!compiled.errors || !compiled.errors.length) && fnGenErrors.length) {
+                    warn$$1(
+                        "Failed to generate render function:\n\n" +
+                        fnGenErrors.map(function(ref) {
+                            var err = ref.err;
+                            var code = ref.code;
+
+                            return ((err.toString()) + " in\n\n" + code + "\n");
+                        }).join('\n'),
+                        vm
+                    );
+                }
+            }
+
+            return (cache[key] = res)
+        }
+    }
+
+    function createCompilerCreator(baseCompile) {
+        return function createCompiler(baseOptions) {
+            function compile(template, options) { //正在编译
+                //finalOptions  最终的配置对象
+                var finalOptions = Object.create(baseOptions); //{}.__proto__  baseOptions
+                var errors = [];
+                var tips = [];
+                finalOptions.warn = function(msg, tip) { //错误 警告信息的收集
+                    (tip ? tips : errors).push(msg);
+                };
+
+                if (options) { //extend
+                    // merge custom modules    是否有要处理特殊的属性或者标签
+                    if (options.modules) {
+                        finalOptions.modules =
+                            (baseOptions.modules || []).concat(options.modules);
+                    }
+                    // merge custom directives    合并自定义的指令
+                    if (options.directives) {
+                        finalOptions.directives = extend(
+                            Object.create(baseOptions.directives || null),
+                            options.directives
+                        );
+                    }
+                    // copy other options
+                    for (var key in options) {
+                        if (key !== 'modules' && key !== 'directives') {
+                            finalOptions[key] = options[key];
+                        }
+                    }
+                }
+
+                var compiled = baseCompile(template, finalOptions);
+                compiled.errors = errors;
+                compiled.tips = tips;
+                return compiled
+
+            }
+            return {
+                compile: compile,
+                compileToFunctions: createCompileToFunctionFn(compile)
+            }
+        }
+    }
+
+    var createCompiler = createCompilerCreator(function baseCompile(
+        template, //模板
+        options //配置对象
+    ) {
+        var ast = parse(template.trim(), options); //功能划分区域   模板解析操作  ast对象
+        if (options.optimize !== false) {
+            optimize(ast, options); //标注静态节点
+        }
+        var code = generate(ast, options); //渲染函数所需的字符串
+        return {
+            ast: ast,
+            render: "code.render",
+            staticRenderFns: []
+        }
+    });
+
+
+    var ref$1 = createCompiler(baseOptions);
+    //var compile = ref$1.compile;
+    var compileToFunctions = ref$1.compileToFunctions;
+    //=createCompiler(baseOptions)=createCompilerCreator(baseCompile)(baseOptions).compileToFunctions(template调用函数的时候传进来的)
+     //compileToFunctions = createCompileToFunctionFn(compile){return compileToFunctions(template,options,vm)}
+
+     //编译器解析的工作
+    function parse(template, options) {
+         console.log(template)
+    }
+
+    function optimize() {
+
+    }
+
+    function generate() {
+
+    }
+
+    root.compiler = compileToFunctions;
+})(this);
+</pre>
+调用
+<pre>
+var ref = compiler("<div id="app"></div>");
+</pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/01/14/网易微专业-单页应用-1-3-1-VUE编译器原理探秘一/" data-id="ck5hl6rtc000v8fxq3k4eqd2i" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2020/01/11/网易微专业福利期-2-2-如何保证你的代码质量/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">网易微专业福利期-2.2-如何保证你的代码质量</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/01/14/网易微专业-单页应用-1-3-1-VUE编译器原理探秘一/">网易微专业-单页应用-1.3.1-VUE编译器原理探秘一</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/11/网易微专业福利期-2-2-如何保证你的代码质量/">网易微专业福利期-2.2-如何保证你的代码质量</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/10/网易微专业福利期-2-1-JavaScript内存管理/">网易微专业福利期-2.1-JavaScript内存管理</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/09/张容铭-设计模式-第三篇-结构型设计模式/">张容铭-设计模式-第三篇-结构型设计模式</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/07/网易微专业-现代前端工程实践方案-解锁webpack-3-1-8-webpack的环境，webpack实战演练/">网易微专业-现代前端工程实践方案 解锁webpack-3.1.8-webpack的环境，webpack实战演练</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

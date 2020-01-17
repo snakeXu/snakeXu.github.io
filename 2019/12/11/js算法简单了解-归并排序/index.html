@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>js算法简单了解-归并排序 | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1.描述先递归的分解数列，再合并数列（分治思想的典型应用）（1）将一个数组拆成A、B两个小组，两个小组继续拆，直到每个小组只有一个元素为止。（2）按照拆分过程逐步合并小组，由于各小组初始只有一个元素，可以看做小组内部是有序的，合并小组可以被看做是合并两个有序数组的过程。（3）对左右两个小数列重复第二步，直至各区间只有1个数。下面对数组[42,20,17,13,28,14,23,15]进行归并排序，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="js算法简单了解-归并排序">
+<meta property="og:url" content="http://yoursite.com/2019/12/11/js算法简单了解-归并排序/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="1.描述先递归的分解数列，再合并数列（分治思想的典型应用）（1）将一个数组拆成A、B两个小组，两个小组继续拆，直到每个小组只有一个元素为止。（2）按照拆分过程逐步合并小组，由于各小组初始只有一个元素，可以看做小组内部是有序的，合并小组可以被看做是合并两个有序数组的过程。（3）对左右两个小数列重复第二步，直至各区间只有1个数。下面对数组[42,20,17,13,28,14,23,15]进行归并排序，">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://snakexu.github.io/images/algorithm/mergesort_1.png">
+<meta property="og:updated_time" content="2019-12-12T03:02:38.275Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="js算法简单了解-归并排序">
+<meta name="twitter:description" content="1.描述先递归的分解数列，再合并数列（分治思想的典型应用）（1）将一个数组拆成A、B两个小组，两个小组继续拆，直到每个小组只有一个元素为止。（2）按照拆分过程逐步合并小组，由于各小组初始只有一个元素，可以看做小组内部是有序的，合并小组可以被看做是合并两个有序数组的过程。（3）对左右两个小数列重复第二步，直至各区间只有1个数。下面对数组[42,20,17,13,28,14,23,15]进行归并排序，">
+<meta name="twitter:image" content="https://snakexu.github.io/images/algorithm/mergesort_1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-js算法简单了解-归并排序" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/12/11/js算法简单了解-归并排序/" class="article-date">
+  <time datetime="2019-12-11T01:51:58.000Z" itemprop="datePublished">2019-12-11</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      js算法简单了解-归并排序
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.描述<br>先递归的分解数列，再合并数列（分治思想的典型应用）<br>（1）将一个数组拆成A、B两个小组，两个小组继续拆，直到每个小组只有一个元素为止。<br>（2）按照拆分过程逐步合并小组，由于各小组初始只有一个元素，可以看做小组内部是有序的，合并小组可以被看做是合并两个有序数组的过程。<br>（3）对左右两个小数列重复第二步，直至各区间只有1个数。<br>下面对数组[42,20,17,13,28,14,23,15]进行归并排序，模拟排序过程如下：<br>第一步：拆分数组，一共需要拆分三次（logN）;<br>第一次拆成[42,20,17,13]，[28,14,23,15];<br>第二次拆成[42,20]，[17,13]，[28,14]，[23,15];<br>第三次拆成[42]，[20]，[17]，[13]，[28]，[14]，[23]，[15];<br>第二步：逐步归并数组，采用合并两个有序数组的方法，每一步其算法复杂度基本接近于O(N);<br>第一次归并为[20,42]，[13,17]，[14,28]，[15,23];<br>第二次归并为[13,17,20,42]，[14,15,23,28];<br>第三次归并为[13, 14, 15, 17, 20, 23, 28, 42];<br>2.代码</p>
+<pre>
+function mergearr(arr1,arr2){
+    console.log('arr1:',arr1)
+    console.log('arr2:',arr2)
+    var arr3 = new Array()
+    var len1 = arr1.length;
+    var len2 = arr2.length;
+    var i=0,j=0,k=0;
+    while(i < len1 && j < len2){
+        if(arr1[i] < arr2[j]){
+            arr3[k++] = arr1[i++]
+        }else{
+            arr3[k++] = arr2[j++]
+        }
+    }
+    while(i < len1){
+        arr3[k++] = arr1[i++]
+    }
+    while(j < len2){
+        arr3[k++] = arr2[j++]
+    }
+    return arr3
+}
+function mergesort(arr){
+    var len = arr && arr.length;
+    if(len < = 1){
+        return arr;
+    }
+    var mid = Math.floor(len/2);
+    var left = arr.slice(0,mid);
+    var right = arr.slice(mid,len);
+    return mergearr(mergesor(left),mergesort(right));
+}
+var sortresult = mergesort([42,20,17,13,28,14,23,15])
+console.log('sortresult:',sortresult)
+</pre>
+上面代码的执行结果：
+<img src="https://snakexu.github.io/images/algorithm/mergesort_1.png">
+3.时间复杂度O(NlogN)  空间复杂度O(N) 稳定排序
+4.额外的
+上面是用递归的方法实现归并排序，但是算法(第四版)给我们提供了另外一种思路
+<pre>
+function mergearr(arr1,arr2){
+    //console.log('arr1:',arr1)
+    //console.log('arr2:',arr2)
+    var arr3 = new Array()
+    var len1 = arr1.length;
+    var len2 = arr2.length;
+    var i=0,j=0,k=0;
+    while(i < len1 && j < len2){
+        if(arr1[i] < arr2[j]){
+            arr3[k++] = arr1[i++]
+        }else{
+            arr3[k++] = arr2[j++]
+        }
+    }
+    while(i < len1){
+        arr3[k++] = arr1[i++]
+    }
+    while(j < len2){
+        arr3[k++] = arr2[j++]
+    }
+    return arr3
+}
+function mergesort(arr){
+    var len = arr && arr.length; 
+    var arrresult;
+    if(len< =1)return arr;
+    var sz = 1,i,arrresult;
+    for( ; sz < len; sz+=sz){
+        arrresult = []
+        for(i=0; i < = len - sz; i+= sz + sz){
+            var mid = i+sz
+            var left = arr.slice(mid-sz,mid)
+            var right = arr.slice(mid,Math.min(mid+sz,len))
+            var midarr = mergearr(left,right)
+            arrresult = arrresult.concat(midarr)
+        }
+        arr = arrresult
+    }
+    return arr
+}
+var sortresult = mergesort([42,20,17,13,28,14,23,15])
+console.log('sortresult:',sortresult)
+</pre>
+
+
+
+
+
+
+
+
+
+
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/12/11/js算法简单了解-归并排序/" data-id="ck5hl6rsr00078fxqhuvy8qyz" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/12/12/js算法简单了解-快速排序/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          js算法简单了解-快速排序
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/12/10/js算法简单了解-希尔排序/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">js算法简单了解-希尔排序</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/01/14/网易微专业-单页应用-1-3-1-VUE编译器原理探秘一/">网易微专业-单页应用-1.3.1-VUE编译器原理探秘一</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/11/网易微专业福利期-2-2-如何保证你的代码质量/">网易微专业福利期-2.2-如何保证你的代码质量</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/10/网易微专业福利期-2-1-JavaScript内存管理/">网易微专业福利期-2.1-JavaScript内存管理</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/09/张容铭-设计模式-第三篇-结构型设计模式/">张容铭-设计模式-第三篇-结构型设计模式</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/07/网易微专业-现代前端工程实践方案-解锁webpack-3-1-8-webpack的环境，webpack实战演练/">网易微专业-现代前端工程实践方案 解锁webpack-3.1.8-webpack的环境，webpack实战演练</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

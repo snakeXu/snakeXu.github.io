@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>js算法简单了解-冒泡算法 | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1.其实就是把数组中相邻元素一个个比较，按照排序的条件进行互换，毫无技巧简单粗暴直接有效。不过这个算法在我看来是最容易学习的。2.代码实现，例子里排序得到的结果是从小到大的，可以按照自己的需要更改比较条件 function BubbleSort(arr){    var temp;//临时变量    for(var i=0; i &amp;lt; arr.length-1; i++){   //表示趟数">
+<meta property="og:type" content="article">
+<meta property="og:title" content="js算法简单了解-冒泡算法">
+<meta property="og:url" content="http://yoursite.com/2019/12/10/js算法简单了解-冒泡算法/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="1.其实就是把数组中相邻元素一个个比较，按照排序的条件进行互换，毫无技巧简单粗暴直接有效。不过这个算法在我看来是最容易学习的。2.代码实现，例子里排序得到的结果是从小到大的，可以按照自己的需要更改比较条件 function BubbleSort(arr){    var temp;//临时变量    for(var i=0; i &amp;lt; arr.length-1; i++){   //表示趟数">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://snakexu.github.io/images/algorithm/bubble_1.png">
+<meta property="og:updated_time" content="2019-12-10T04:03:28.154Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="js算法简单了解-冒泡算法">
+<meta name="twitter:description" content="1.其实就是把数组中相邻元素一个个比较，按照排序的条件进行互换，毫无技巧简单粗暴直接有效。不过这个算法在我看来是最容易学习的。2.代码实现，例子里排序得到的结果是从小到大的，可以按照自己的需要更改比较条件 function BubbleSort(arr){    var temp;//临时变量    for(var i=0; i &amp;lt; arr.length-1; i++){   //表示趟数">
+<meta name="twitter:image" content="https://snakexu.github.io/images/algorithm/bubble_1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-js算法简单了解-冒泡算法" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/12/10/js算法简单了解-冒泡算法/" class="article-date">
+  <time datetime="2019-12-10T02:02:50.000Z" itemprop="datePublished">2019-12-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      js算法简单了解-冒泡算法
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!--为了补回算法了解，我也是real认真了，拿出了上学时候的教材——数据结构(C语言版)，清华大学出版社，还是很怀念上学做米虫的日子的，言归正传-->
+<p>1.其实就是把数组中相邻元素一个个比较，按照排序的条件进行互换，毫无技巧简单粗暴直接有效。不过这个算法在我看来是最容易学习的。<br>2.代码实现，例子里排序得到的结果是从小到大的，可以按照自己的需要更改比较条件</p>
+<p><pre><br>function BubbleSort(arr){<br>    var temp;//临时变量<br>    for(var i=0; i &lt; arr.length-1; i++){   //表示趟数，一共arr.length-1次。<br>        var count = 0; //打印用的参数<br>        for(var j=arr.length-1; j&gt;i; j–){<br>            if(arr[j] &lt; arr[j-1]){<br>                temp = arr[j];<br>                arr[j] = arr[j-1];<br>                arr[j-1] = temp;<br>                count++;<br>            }<br>        }<br>        console.log(‘第’+i+’轮的比较次数为’+count);<br>    }<br>    return arr;<br>}<br>var arr = [93,72,35,48,42,37,15,2];<br>BubbleSort(arr)<br></pre><br>执行结果如图所示：<br><img src="https://snakexu.github.io/images/algorithm/bubble_1.png"><br>3.时间复杂度:O(N^2)(N的平方)</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/12/10/js算法简单了解-冒泡算法/" data-id="ck5hl6rsi00018fxqfl5stp96" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/12/10/js算法简单了解-选择排序/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          js算法简单了解-选择排序
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/12/07/网易微专业-模块化编程-4-1-2-加载器结构设计导论-自研模块加载器/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">网易微专业-模块化编程-4.1.2-加载器结构设计导论-自研模块加载器</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/01/14/网易微专业-单页应用-1-3-1-VUE编译器原理探秘一/">网易微专业-单页应用-1.3.1-VUE编译器原理探秘一</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/11/网易微专业福利期-2-2-如何保证你的代码质量/">网易微专业福利期-2.2-如何保证你的代码质量</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/10/网易微专业福利期-2-1-JavaScript内存管理/">网易微专业福利期-2.1-JavaScript内存管理</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/09/张容铭-设计模式-第三篇-结构型设计模式/">张容铭-设计模式-第三篇-结构型设计模式</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/07/网易微专业-现代前端工程实践方案-解锁webpack-3-1-8-webpack的环境，webpack实战演练/">网易微专业-现代前端工程实践方案 解锁webpack-3.1.8-webpack的环境，webpack实战演练</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

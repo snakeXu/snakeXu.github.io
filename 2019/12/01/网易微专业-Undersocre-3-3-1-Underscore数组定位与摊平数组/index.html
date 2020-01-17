@@ -17,7 +17,7 @@
 <meta property="og:image" content="https://snakexu.github.io/images/wangyi/Underscore/3.3.1_1.png">
 <meta property="og:image" content="https://snakexu.github.io/images/wangyi/Underscore/3.3.1_2.png">
 <meta property="og:image" content="https://snakexu.github.io/images/wangyi/Underscore/3.3.1_3.png">
-<meta property="og:updated_time" content="2019-12-02T02:00:43.951Z">
+<meta property="og:updated_time" content="2019-12-10T02:52:32.555Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="网易微专业-Undersocre-3.3.1-Underscore数组定位与摊平数组">
 <meta name="twitter:description" content="1..initial与.flatten2.代码 //摊平数组var flatten = function(array, shallow) {    var ret = [];    var index = 0;    for (var i = 0; i &amp;lt; array.length; i++) {        var value = array[i]; //展开一次        if (">
@@ -91,14 +91,12 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>1.<em>.initial与</em>.flatten<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.3.1_1.png"><br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.3.1_2.png"><br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.3.1_3.png"><br>2.代码</p>
-<p><pre><br>//摊平数组<br>var flatten = function(array, shallow) {<br>    var ret = [];<br>    var index = 0;<br>    for (var i = 0; i &lt; array.length; i++) {<br>        var value = array[i]; //展开一次<br>        if (_.isArray(value) || _.isArguments(value)) {<br>            //递归全部展开<br>            if (!shallow) {<br>                value = flatten(value, shallow);<br>            }<br>            var j = 0,<br>                len = value.length;<br>            //个人以为，这个地方，思路值得学习<br>            ret.length += len;<br>            while (j &lt; len) {<br>                ret[index++] = value[j++];<br>            }<br>        } else {<br>            ret[index++] = value;<br>        }<br>    }<br>    return ret;<br>}</pre></p>
-<p>_.flatten = function(array, shallow) {<br>    return flatten(array, shallow);<br>}<br>//返回数组中除了最后一个元素外的其他全部元素。 在arguments对象上特别有用。<br>_.initial = function(array, n) {<br>    return [].slice.call(array, 0, Math.max(0, array.length - (n == null ? 1 : n)));<br>};</p>
-<p>//返回数组中除了第一个元素外的其他全部元素。传递 n 参数将返回从n开始的剩余所有元素<br><em>.rest = function(array, n, guard) {<br>    return [].slice.call(array, n == null ? 1 : n);<br>};<br><br>Underscore看到现在，这里应该是比较简单的一节了，这节摊平数组主要是递归函数，但是整理摊平出来的数组也就是递归语句下面生成新数组的思路，还是很值得学习的。</em>.initial和_.rest很容易理解，就不多说了。</p>
+<p><pre><br>//摊平数组<br>var flatten = function(array, shallow) {<br>    var ret = [];<br>    var index = 0;<br>    for (var i = 0; i &lt; array.length; i++) {<br>        var value = array[i]; //展开一次<br>        if (_.isArray(value) || _.isArguments(value)) {<br>            //递归全部展开<br>            if (!shallow) {<br>                value = flatten(value, shallow);<br>            }<br>            var j = 0,<br>                len = value.length;<br>            //个人以为，这个地方，思路值得学习<br>            ret.length += len;<br>            while (j &lt; len) {<br>                ret[index++] = value[j++];<br>            }<br>        } else {<br>            ret[index++] = value;<br>        }<br>    }<br>    return ret;<br>}<br>_.flatten = function(array, shallow) {<br>    return flatten(array, shallow);<br>}<br>//返回数组中除了最后一个元素外的其他全部元素。 在arguments对象上特别有用。<br>_.initial = function(array, n) {<br>    return [].slice.call(array, 0, Math.max(0, array.length - (n == null ? 1 : n)));<br>};<br>//返回数组中除了第一个元素外的其他全部元素。传递 n 参数将返回从n开始的剩余所有元素<br><em>.rest = function(array, n, guard) {<br>    return [].slice.call(array, n == null ? 1 : n);<br>};<br></em></pre><br>Underscore看到现在，这里应该是比较简单的一节了，这节摊平数组主要是递归函数，但是整理摊平出来的数组也就是递归语句下面生成新数组的思路，还是很值得学习的。.initial和_.rest很容易理解，就不多说了。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/01/网易微专业-Undersocre-3-3-1-Underscore数组定位与摊平数组/" data-id="ck3s6arub000ci5xqpyuki8lk" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/12/01/网易微专业-Undersocre-3-3-1-Underscore数组定位与摊平数组/" data-id="ck5hl6rt6000m8fxq2eb7ra4y" class="article-share-link">Share</a>
       
       
     </footer>
@@ -143,7 +141,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
     </div>
   </div>
 
@@ -156,23 +154,23 @@
       <ul>
         
           <li>
-            <a href="/2019/12/02/网易微专业-Undersocre-3-4-1-Underscore-partial偏函数or-memoize缓存/">(no title)</a>
+            <a href="/2020/01/14/网易微专业-单页应用-1-3-1-VUE编译器原理探秘一/">网易微专业-单页应用-1.3.1-VUE编译器原理探秘一</a>
           </li>
         
           <li>
-            <a href="/2019/12/02/网易微专业-Undersocre-3-3-2-Underscore-unique去重函数-源码拾遗/">网易微专业-Undersocre-3.3.2-Underscore unique去重函数&amp;源码拾遗</a>
+            <a href="/2020/01/11/网易微专业福利期-2-2-如何保证你的代码质量/">网易微专业福利期-2.2-如何保证你的代码质量</a>
           </li>
         
           <li>
-            <a href="/2019/12/01/网易微专业-Undersocre-3-3-1-Underscore数组定位与摊平数组/">网易微专业-Undersocre-3.3.1-Underscore数组定位与摊平数组</a>
+            <a href="/2020/01/10/网易微专业福利期-2-1-JavaScript内存管理/">网易微专业福利期-2.1-JavaScript内存管理</a>
           </li>
         
           <li>
-            <a href="/2019/11/27/网易微专业-Underscore-3-2-3-乱序数组-洗牌算法/">网易微专业-Underscore-3.2.3-乱序数组-洗牌算法</a>
+            <a href="/2020/01/09/张容铭-设计模式-第三篇-结构型设计模式/">张容铭-设计模式-第三篇-结构型设计模式</a>
           </li>
         
           <li>
-            <a href="/2019/11/27/网易微专业-Underscore-3-2-2-条件查询-背后索引查询器实现/">网易微专业-Underscore-3.2.2-条件查询-背后索引查询器实现</a>
+            <a href="/2020/01/07/网易微专业-现代前端工程实践方案-解锁webpack-3-1-8-webpack的环境，webpack实战演练/">网易微专业-现代前端工程实践方案 解锁webpack-3.1.8-webpack的环境，webpack实战演练</a>
           </li>
         
       </ul>
@@ -187,7 +185,7 @@
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2019 snakeXu<br>
+      &copy; 2020 snakeXu<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>

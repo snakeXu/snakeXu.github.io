@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>网易微专业-模块化编程-4.2.3-依赖解析-依赖管理处理方案 | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1.源码startUp.js (function(global) {    var startUp = global.startUp = {        version: “1.0.1”,    }    var data = {};    var cache = {};    var anonymousMeta = {};    //模块的生命周期    var status = {">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网易微专业-模块化编程-4.2.3-依赖解析-依赖管理处理方案">
+<meta property="og:url" content="http://yoursite.com/2019/12/20/网易微专业-模块化编程-4-2-3-依赖解析-依赖管理处理方案/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="1.源码startUp.js (function(global) {    var startUp = global.startUp = {        version: “1.0.1”,    }    var data = {};    var cache = {};    var anonymousMeta = {};    //模块的生命周期    var status = {">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/module/4.2.3_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/module/4.2.3_2.png">
+<meta property="og:updated_time" content="2019-12-20T08:02:12.783Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="网易微专业-模块化编程-4.2.3-依赖解析-依赖管理处理方案">
+<meta name="twitter:description" content="1.源码startUp.js (function(global) {    var startUp = global.startUp = {        version: “1.0.1”,    }    var data = {};    var cache = {};    var anonymousMeta = {};    //模块的生命周期    var status = {">
+<meta name="twitter:image" content="https://snakexu.github.io/images/wangyi/module/4.2.3_1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-网易微专业-模块化编程-4-2-3-依赖解析-依赖管理处理方案" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/12/20/网易微专业-模块化编程-4-2-3-依赖解析-依赖管理处理方案/" class="article-date">
+  <time datetime="2019-12-20T03:16:54.000Z" itemprop="datePublished">2019-12-20</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      网易微专业-模块化编程-4.2.3-依赖解析-依赖管理处理方案
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!--https://www.cnblogs.com/beyonds/p/8992619.html-->
+<p>1.源码<br><br>startUp.js</p>
+<p><pre><br>(function(global) {<br>    var startUp = global.startUp = {<br>        version: “1.0.1”,<br>    }<br>    var data = {};<br>    var cache = {};<br>    var anonymousMeta = {};<br>    //模块的生命周期<br>    var status = {<br>        FETCHED: 1,<br>        SAVED: 2,<br>        LOADING: 3,<br>        LOADED: 4,<br>        EXECUTING: 5,<br>        EXECUTED: 6,<br>    }</pre></p>
+<pre><code>var isArray = function(obj) {
+    return toString.call(obj) === &quot;[object Array]&quot;;
+}
+
+var isFunction = function(obj) {
+    return toString.call(obj) === &quot;[object Function]&quot;;
+}
+
+//是否使用了别名
+function parseAlias(id) { //a  b
+    var alias = data.alias; //配置
+    return alias &amp;&amp; isString(alias[id]) ? alias[id] : id;
+}
+
+//不能以&quot;/&quot; &quot;:&quot;开头  结尾必须是一个&quot;/&quot; 后面跟随任意字符至少一个
+var PATHS_RE = /^([^\/:]+)(\/.+)$/; //([^\/:]+)   路径的短名称配置
+
+// 检测是否 书写路径短名称
+function parsePaths(id) {
+    var paths = data.paths; //配置
+    if (paths &amp;&amp; (m = id.match(PATHS_RE)) &amp;&amp; isString(paths[m[1]])) {
+        id = paths[m[1]] + m[2]
+    }
+    return id;
+}
+
+//检测是否添加后缀
+function normalize(path) {
+    var last = path.length - 1;
+    var lastC = path.charAt(last);
+    return (lastC === &quot;/&quot; || path.substring(last - 2) === &quot;.js&quot;) ? path : path + &quot;.js&quot;;
+
+}
+
+//添加根目录
+function addBase(id, uri) {
+    var result;
+    if (id.charAt(0) === &quot;.&quot;) {
+        result = relapath((uri ? uri.match(/[^?]*\//)[0] : data.cwd) + id);
+    } else {
+        result = data.cwd + id;
+    }
+    return result;
+}
+
+var DOT_RE = /\/.\//g; // 规范路径  &quot;/./&quot; =&gt; &quot;/&quot;   
+function relapath(path) {
+    path = path.replace(DOT_RE, &quot;/&quot;);
+    return path;
+}
+
+//生成绝对路径  parent child
+startUp.resolve = function(child, parent) {
+    if (!child) return &quot;&quot;;
+    child = parseAlias(child); //检测是否有别名
+    child = parsePaths(child); // 检测是否有路径别名 依赖模块中引包的模块路径地址 require(&quot;app/c&quot;);
+    child = normalize(child); //检测是否添加后缀
+    return addBase(child, parent); //添加根目录
+}
+
+startUp.request = function(url, callback) {
+    var node = document.createElement(&quot;script&quot;);
+    node.src = url;
+    document.body.appendChild(node);
+    node.onload = function() {
+        //node.onload = null;
+        //document.body.removeChild(node); 
+        callback();
+    }
+}
+
+//构造函数  模块初始化数据
+function Module(uri, deps) {
+    this.uri = uri;
+    this.deps = deps || [];
+    this.exports = null;
+    this.status = 0;
+    this._waitings = {};
+    this._remain = 0;
+}
+
+//分析主干 (左子树 | 右子树) 上的依赖项
+Module.prototype.load = function() {
+    var module = this;
+    module.status = status.LOADING;
+    var uris = module.resolve(); //获取主干上的依赖项
+    var len = module._remain = uris.length;
+    //console.log(uris)
+    //加载主干上的依赖项(模块)
+    var m;
+    for (var i = 0; i &lt; len; i++) {
+        m = Module.get(uris[i]); //  创建缓存信息
+        if (m.status &lt; status.LOADED) {
+            m._waitings[module.uri] = m._waitings[module.uri] || 1;
+        } else {
+            module._remain--;
+        }
+    }
+    //如果依赖列表模块全都加载完毕
+    if (module._remain == 0) {//考虑不全面，并没有考虑比如主模块依赖的a.js/b.js是否加载完毕
+        module.onload();
+    };
+
+    //准备执行根目录下的依赖列表中的模块
+    var requestCache = {};
+    for (var i = 0; i &lt; len; i++) {
+        m = Module.get(uris[i]);
+        if (m.status &lt; status.FETCHED) {
+            m.fetch(requestCache);
+        }
+    }
+
+    for (uri in requestCache) {
+        requestCache[uri]();
+    }
+}
+
+//加载依赖列表中的模块
+Module.prototype.fetch = function(requestCache) {
+    var module = this;
+    console.log(module)
+    module.status = status.FETCHED;
+    var uri = module.uri;
+    requestCache[uri] = sendRequest; //Document.createElement(&quot;script&quot;) 
+
+    function sendRequest() {
+        startUp.request(uri, onRequest);
+    }
+
+    function onRequest() {
+        if (anonymousMeta) {
+            module.save(uri, anonymousMeta);
+        }
+        module.load(); //递归 模块加载策略
+    }
+}
+
+Module.prototype.onload = function() {
+    var mod = this;
+    mod.status = status.LOADED;
+    if (mod.callback) {
+        mod.callback();
+    }
+    //伪递归
+    _waitings = mod._waitings;
+    var uri, m;
+    for (uri in _waitings) {
+        //console.log(uri);   //根目录对应的Module实例对象
+        m = cache[uri];
+        m._remain -= _waitings[uri];
+        if (m._remain == 0) {
+            m.onload()
+        };
+    }
+
+}
+
+//更改初始化数据 
+Module.prototype.save = function(uri, meta) {
+    var module = Module.get(uri); //是否在缓存
+    module.id = uri;
+    module.deps = meta.deps || [];
+    module.factory = meta.factory;
+    module.status = status.SAVED;
+}
+
+//获取模块对外的接口对象
+Module.prototype.exec = function() {
+    var module = this;
+    //防止重复执行
+    if (module.status &gt;= status.EXECUTING) {
+        return module.exports;
+    }
+    module.status = status.EXECUTING; //5
+    var uri = module.uri;
+
+    function require(id) {
+        //console.log(require.resolve(id));   //更新过后的数据
+        return Module.get(require.resolve(id)).exec(); //获取接口对象
+    }
+
+    require.resolve = function(id) {
+        return startUp.resolve(id, uri); 
+    }
+
+    var factory = module.factory;
+    var exports = isFunction(factory) ? factory(require, module.exports = {}, module) : factory;
+
+    if (exports === undefined) {
+        exports = module.exports;
+    }
+    module.exports = exports;
+    module.status = status.EXECUTED; 
+    return exports;
+}
+
+//资源定位 解析依赖项生成绝对路径
+Module.prototype.resolve = function() {
+    var mod = this;
+    var ids = mod.deps; //[&quot;./a&quot;,&quot;./b&quot;]
+    var uris = [];
+    for (var i = 0; i &lt; ids.length; i++) {
+        uris[i] = startUp.resolve(ids[i], mod.uri); //依赖项   (主干| 子树)
+    }
+    //console.log(uris)
+    return uris;
+}
+
+//定义一个模块
+Module.define = function(factory) {
+    var deps;
+    if (isFunction(factory)) {
+        //正则解析依赖项
+        deps = parseDependencies(factory.toString());
+    }
+    //存储当前模块的信息
+    var meta = {
+        id: &quot;&quot;,
+        uri: &quot;&quot;,
+        deps: deps,
+        factory: factory
+    }
+    anonymousMeta = meta;
+}
+
+//检测缓存对象上是否有当前模块信息
+Module.get = function(uri, deps) {
+    return cache[uri] || (cache[uri] = new Module(uri, deps));
+}
+
+Module.use = function(deps, callback, uri) {
+    var module = Module.get(uri, isArray(deps) ? deps : [deps]);
+    //所有模块都加载完毕
+    module.callback = function() {
+        var exports = []; //所以依赖项模块的接口对象
+        var uris = module.resolve();
+        for (var i = 0; i &lt; uris.length; i++) {
+            exports[i] = cache[uris[i]].exec(); //获取模块对外定义的接口对象
+        }
+        if (callback) {
+            callback.apply(global, exports);
+        }
+    }
+    module.load();
+}
+
+var _cid = 0;
+
+function cid() {
+    return _cid++;
+};
+
+data.preload = [];
+//获取当前项目文档的URL
+data.cwd = document.URL.match(/[^?]*\//)[0];
+Module.preload = function(callback) {
+    var length = data.preload.length;
+    if (!length) callback();
+    //length !== 0 先加载预先设定模块
+};
+
+startUp.use = function(list, callback) {
+    //检测有没有预先加载的模块  
+    Module.preload(function() {
+        Module.use(list, callback, data.cwd + &quot;_use_&quot; + cid()); //虚拟的根目录
+    });
+}
+
+var REQUIRE_RE = /\brequire\s*\(\s*([&quot;&apos;])(.+?)\1\s*\)/g
+
+function parseDependencies(code) {
+    var ret = []
+    code.replace(REQUIRE_RE, function(m, m1, m2) {
+        if (m2) ret.push(m2);
+    });
+    return ret
+};
+
+global.define = Module.define;
+</code></pre><p>})(this);<br><br>a.js</p>
+<p><pre><br>define(function( require, exports, module){<br>    var age = “30”;<br>    var b = require(“b.js”);<br>    console.log(b.sex);<br>    exports.age = age;<br>});<br></pre><br>b.js</p>
+<p><pre><br>define(function( require, exports, module){<br>    var sex = “男”;<br>    return {<br>        sex:sex,<br>    }<br>});<br></pre><br>html</p>
+<p><pre><br>startUp.use([“a.js”, “b.js”], function(a, b) {<br>    console.log(a);<br>    console.log(b);<br>    console.log(“startUp…”);<br>});<br></pre><br>2.回顾<br><img src="https://snakexu.github.io/images/wangyi/module/4.2.3_1.png"><br><img src="https://snakexu.github.io/images/wangyi/module/4.2.3_2.png"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/12/20/网易微专业-模块化编程-4-2-3-依赖解析-依赖管理处理方案/" data-id="ck5hl6rth00128fxqi3teqg3g" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/12/21/基于Websocket的火拼俄罗斯-基础/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          基于Websocket的火拼俄罗斯(基础)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/12/13/网易微专业-模块化编程-4-2-2-模块资源定位-异步加载/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">网易微专业-模块化编程-4.2.2-模块资源定位-异步加载</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/01/14/网易微专业-单页应用-1-3-1-VUE编译器原理探秘一/">网易微专业-单页应用-1.3.1-VUE编译器原理探秘一</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/11/网易微专业福利期-2-2-如何保证你的代码质量/">网易微专业福利期-2.2-如何保证你的代码质量</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/10/网易微专业福利期-2-1-JavaScript内存管理/">网易微专业福利期-2.1-JavaScript内存管理</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/09/张容铭-设计模式-第三篇-结构型设计模式/">张容铭-设计模式-第三篇-结构型设计模式</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/07/网易微专业-现代前端工程实践方案-解锁webpack-3-1-8-webpack的环境，webpack实战演练/">网易微专业-现代前端工程实践方案 解锁webpack-3.1.8-webpack的环境，webpack实战演练</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

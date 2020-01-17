@@ -7,21 +7,21 @@
   
   <title>网易微专业-Undersocre-3.3.2-Underscore unique去重函数&amp;源码拾遗 | 喵小喵的窝</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="_.unique _.compact _.range4..unique = function(array, isSorted, iteratee, context){ //参数isSorted作用是被处理数组array是否是有序的 if(!.isBoolean(isSorted)){context = iteratee; iteratee = isSorted; isSorted = false">
+  <meta name="description" content="_.unique _.compact _.range4._.unique = function(array, isSorted, iteratee, context){ //参数isSorted作用是被处理数组array是否是有序的 if(!_.isBoolean(isSorted)){context = iteratee; iteratee = isSorted; isSorted = fal">
 <meta property="og:type" content="article">
 <meta property="og:title" content="网易微专业-Undersocre-3.3.2-Underscore unique去重函数&amp;源码拾遗">
 <meta property="og:url" content="http://yoursite.com/2019/12/02/网易微专业-Undersocre-3-3-2-Underscore-unique去重函数-源码拾遗/index.html">
 <meta property="og:site_name" content="喵小喵的窝">
-<meta property="og:description" content="_.unique _.compact _.range4..unique = function(array, isSorted, iteratee, context){ //参数isSorted作用是被处理数组array是否是有序的 if(!.isBoolean(isSorted)){context = iteratee; iteratee = isSorted; isSorted = false">
+<meta property="og:description" content="_.unique _.compact _.range4._.unique = function(array, isSorted, iteratee, context){ //参数isSorted作用是被处理数组array是否是有序的 if(!_.isBoolean(isSorted)){context = iteratee; iteratee = isSorted; isSorted = fal">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="https://snakexu.github.io/images/wangyi/Underscore/3.3.2_1.png">
 <meta property="og:image" content="https://snakexu.github.io/images/wangyi/Underscore/3.3.2_2.png">
 <meta property="og:image" content="https://snakexu.github.io/images/wangyi/Underscore/3.3.2_3.png">
 <meta property="og:image" content="https://snakexu.github.io/images/wangyi/Underscore/3.3.2_4.png">
-<meta property="og:updated_time" content="2019-12-02T06:50:41.045Z">
+<meta property="og:updated_time" content="2019-12-10T02:49:34.572Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="网易微专业-Undersocre-3.3.2-Underscore unique去重函数&amp;源码拾遗">
-<meta name="twitter:description" content="_.unique _.compact _.range4..unique = function(array, isSorted, iteratee, context){ //参数isSorted作用是被处理数组array是否是有序的 if(!.isBoolean(isSorted)){context = iteratee; iteratee = isSorted; isSorted = false">
+<meta name="twitter:description" content="_.unique _.compact _.range4._.unique = function(array, isSorted, iteratee, context){ //参数isSorted作用是被处理数组array是否是有序的 if(!_.isBoolean(isSorted)){context = iteratee; iteratee = isSorted; isSorted = fal">
 <meta name="twitter:image" content="https://snakexu.github.io/images/wangyi/Underscore/3.3.2_1.png">
   
     <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
@@ -94,7 +94,7 @@
         <ol>
 <li>_.unique<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.3.2_1.png"></li>
 <li>_.compact<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.3.2_2.png"><br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.3.2_3.png"></li>
-<li>_.range<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.3.2_4.png"><br>4.<br><pre><br><em>.unique = function(array, isSorted, iteratee, context){<br> //参数isSorted作用是被处理数组array是否是有序的<br> if(!</em>.isBoolean(isSorted)){<pre><code>context = iteratee;
+<li>_.range<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.3.2_4.png"><br>4.<br><pre><br>_.unique = function(array, isSorted, iteratee, context){<br> //参数isSorted作用是被处理数组array是否是有序的<br> if(!_.isBoolean(isSorted)){<pre><code>context = iteratee;
 iteratee = isSorted;
 isSorted = false;
 </code></pre> }<br> if(iteratee != null){<pre><code>iteratee = cb(iteratee,context)
@@ -112,13 +112,13 @@ if(isSorted){
 </code></pre> });<br> return results;<br>};<br>//去掉数组中所有的假值   _.identity = function(value){return value};<br>_.compact = function(array) {<br> return _.filter(array, _.identity);<br>};<br>_.range = function(start, stop, step){<br> if(stop == null){<pre><code>stop = start || 0;
 start = 0
 </code></pre> }<br> step = step || 1;<br> var length = Math.max((Math.ceil(stop - start) / step), 0);<br> var range = Array(length);<br> for(var index = 0; index &lt; length; index++, start+=step){<pre><code>range[index] = start
-</code></pre> }<br> return range<br>}<br></pre><br>这一节内容丰满了我们之前的<em>.unique的程序，添加了数组有序的情况下如何处理，在数组有序的情况下，如果再一一查找，显然是浪费性能的，这里给了一个更好的方法。上面的</em>.filter在判断是否是真值的时候用了很聪明的方法。</li>
+</code></pre> }<br> return range<br>}<br></pre><br>这一节内容丰满了我们之前的_.unique的程序，添加了数组有序的情况下如何处理，在数组有序的情况下，如果再一一查找，显然是浪费性能的，这里给了一个更好的方法。上面的_.filter在判断是否是真值的时候用了很聪明的方法。</li>
 </ol>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/02/网易微专业-Undersocre-3-3-2-Underscore-unique去重函数-源码拾遗/" data-id="ck3s6arud000ei5xqo7wmddgx" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/12/02/网易微专业-Undersocre-3-3-2-Underscore-unique去重函数-源码拾遗/" data-id="ck5hl6rt4000l8fxq556fr86v" class="article-share-link">Share</a>
       
       
     </footer>
@@ -163,7 +163,7 @@ start = 0
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
     </div>
   </div>
 
@@ -176,23 +176,23 @@ start = 0
       <ul>
         
           <li>
-            <a href="/2019/12/02/网易微专业-Undersocre-3-4-1-Underscore-partial偏函数or-memoize缓存/">(no title)</a>
+            <a href="/2020/01/14/网易微专业-单页应用-1-3-1-VUE编译器原理探秘一/">网易微专业-单页应用-1.3.1-VUE编译器原理探秘一</a>
           </li>
         
           <li>
-            <a href="/2019/12/02/网易微专业-Undersocre-3-3-2-Underscore-unique去重函数-源码拾遗/">网易微专业-Undersocre-3.3.2-Underscore unique去重函数&amp;源码拾遗</a>
+            <a href="/2020/01/11/网易微专业福利期-2-2-如何保证你的代码质量/">网易微专业福利期-2.2-如何保证你的代码质量</a>
           </li>
         
           <li>
-            <a href="/2019/12/01/网易微专业-Undersocre-3-3-1-Underscore数组定位与摊平数组/">网易微专业-Undersocre-3.3.1-Underscore数组定位与摊平数组</a>
+            <a href="/2020/01/10/网易微专业福利期-2-1-JavaScript内存管理/">网易微专业福利期-2.1-JavaScript内存管理</a>
           </li>
         
           <li>
-            <a href="/2019/11/27/网易微专业-Underscore-3-2-3-乱序数组-洗牌算法/">网易微专业-Underscore-3.2.3-乱序数组-洗牌算法</a>
+            <a href="/2020/01/09/张容铭-设计模式-第三篇-结构型设计模式/">张容铭-设计模式-第三篇-结构型设计模式</a>
           </li>
         
           <li>
-            <a href="/2019/11/27/网易微专业-Underscore-3-2-2-条件查询-背后索引查询器实现/">网易微专业-Underscore-3.2.2-条件查询-背后索引查询器实现</a>
+            <a href="/2020/01/07/网易微专业-现代前端工程实践方案-解锁webpack-3-1-8-webpack的环境，webpack实战演练/">网易微专业-现代前端工程实践方案 解锁webpack-3.1.8-webpack的环境，webpack实战演练</a>
           </li>
         
       </ul>
@@ -207,7 +207,7 @@ start = 0
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2019 snakeXu<br>
+      &copy; 2020 snakeXu<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>

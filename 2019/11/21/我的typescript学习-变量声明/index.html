@@ -14,7 +14,7 @@
 <meta property="og:site_name" content="喵小喵的窝">
 <meta property="og:description" content="二、变量声明1.关于var声明的一些弱点var声明会提升变量，在编程语言里，变量都是有作用域的，这些都会引起一些奇奇怪怪的问题，其中著名的问题就是： for (var i = 0; i &amp;lt; 10; i++) {    setTimeout(function() { console.log(i); }, 1000);}控制台打印的结果是： 101010101010101010102.let我个">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-11-21T11:12:07.111Z">
+<meta property="og:updated_time" content="2019-12-06T02:05:35.666Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="我的typescript学习-变量声明">
 <meta name="twitter:description" content="二、变量声明1.关于var声明的一些弱点var声明会提升变量，在编程语言里，变量都是有作用域的，这些都会引起一些奇奇怪怪的问题，其中著名的问题就是： for (var i = 0; i &amp;lt; 10; i++) {    setTimeout(function() { console.log(i); }, 1000);}控制台打印的结果是： 101010101010101010102.let我个">
@@ -90,11 +90,38 @@
 <p><pre><br>for (var i = 0; i &lt; 10; i++) {<br>    setTimeout(function() { console.log(i); }, 1000);<br>}<br></pre><br>控制台打印的结果是：</p>
 <p><pre><br>10<br>10<br>10<br>10<br>10<br>10<br>10<br>10<br>10<br>10<br></pre><br>2.let<br>我个人的理解，在typescript里，let和const其实和es6的let/const是相同的<br><br>特点1:不存在变量提升<br><br>特点2:存在暂时性死区<br><br>特点3:不允许重复声明<br><br>其中最大的也是最常用的就是利用let/const的块级作用域<br><br>3.const<br>const是声明常量的，变量指向的内存地址，保存的只是一个指向实际数据的指针，const只能保证这个指针是固定的（即总是指向另一个固定的地址），至于它指向的数据结构是不是可变的，就完全不能控制了。也就是说，如果这个常量是一个数组/对象，数组中的一项或者对象的属性变了，const是不会报错的<br></p>
 <p>关于let和const，阮一峰的es6入门解释的比较清楚<a href="http://es6.ruanyifeng.com/#docs/let#const-%E5%91%BD%E4%BB%A4" target="_blank" rel="noopener">http://es6.ruanyifeng.com/#docs/let#const-%E5%91%BD%E4%BB%A4</a><br></p>
+<p>3.解构<br>(1)解构数组<br>最简单的解构莫过于数组的解构赋值了：</p>
+<p>let input = [1, 2];<br>let [first, second] = input;<br>console.log(first); // outputs 1<br>console.log(second); // outputs 2<br>这创建了2个命名变量 first 和 second。 相当于使用了索引，但更为方便：</p>
+<p>first = input[0];<br>second = input[1];<br>解构作用于已声明的变量会更好：</p>
+<p>// swap variables<br>[first, second] = [second, first];<br>作用于函数参数：</p>
+<p>function f([first, second]: [number, number]) {<br>    console.log(first);<br>    console.log(second);<br>}<br>f(input);<br>你可以在数组里使用…语法创建剩余变量：</p>
+<p>let [first, …rest] = [1, 2, 3, 4];<br>console.log(first); // outputs 1<br>console.log(rest); // outputs [ 2, 3, 4 ]<br>当然，由于是JavaScript, 你可以忽略你不关心的尾随元素：</p>
+<p>let [first] = [1, 2, 3, 4];<br>console.log(first); // outputs 1<br>或其它元素：</p>
+<p>let [, second, , fourth] = [1, 2, 3, 4];<br>(2)对象解构<br>你也可以解构对象：</p>
+<p>let o = {<br>    a: “foo”,<br>    b: 12,<br>    c: “bar”<br>};<br>let { a, b } = o;<br>这通过 o.a and o.b 创建了 a 和 b 。 注意，如果你不需要 c 你可以忽略它。</p>
+<p>就像数组解构，你可以用没有声明的赋值：</p>
+<p>({ a, b } = { a: “baz”, b: 101 });<br>注意，我们需要用括号将它括起来，因为Javascript通常会将以 { 起始的语句解析为一个块。</p>
+<p>你可以在对象里使用…语法创建剩余变量：</p>
+<p>let { a, …passthrough } = o;<br>let total = passthrough.b + passthrough.c.length;<br>(2-1)属性重命名<br>你也可以给属性以不同的名字：</p>
+<p>let { a: newName1, b: newName2 } = o;<br>这里的语法开始变得混乱。 你可以将 a: newName1 读做 “a 作为 newName1”。 方向是从左到右，好像你写成了以下样子：</p>
+<p>let newName1 = o.a;<br>let newName2 = o.b;<br>令人困惑的是，这里的冒号不是指示类型的。 如果你想指定它的类型， 仍然需要在其后写上完整的模式。</p>
+<p>let {a, b}: {a: string, b: number} = o;<br>(2-2)默认值<br>默认值可以让你在属性为 undefined 时使用缺省值：</p>
+<p>function keepWholeObject(wholeObject: { a: string, b?: number }) {<br>    let { a, b = 1001 } = wholeObject;<br>}<br>现在，即使 b 为 undefined ， keepWholeObject 函数的变量 wholeObject 的属性 a 和 b 都会有值。<br>(3)函数声明<br>解构也能用于函数声明。 看以下简单的情况：</p>
+<p>type C = { a: string, b?: number }<br>function f({ a, b }: C): void {<br>    // …<br>}<br>但是，通常情况下更多的是指定默认值，解构默认值有些棘手。 首先，你需要在默认值之前设置其格式。</p>
+<p>function f({ a=””, b=0 } = {}): void {<br>    // …<br>}<br>f();<br>上面的代码是一个类型推断的例子，将在本手册后文介绍。</p>
+<p>其次，你需要知道在解构属性上给予一个默认或可选的属性用来替换主初始化列表。 要知道 C 的定义有一个 b 可选属性：</p>
+<p>function f({ a, b = 0 } = { a: “” }): void {<br>    // …<br>}<br>f({ a: “yes” }); // ok, default b = 0<br>f(); // ok, default to {a: “”}, which then defaults b = 0<br>f({}); // error, ‘a’ is required if you supply an argument<br>要小心使用解构。 从前面的例子可以看出，就算是最简单的解构表达式也是难以理解的。 尤其当存在深层嵌套解构的时候，就算这时没有堆叠在一起的重命名，默认值和类型注解，也是令人难以理解的。 解构表达式要尽量保持小而简单。 你自己也可以直接使用解构将会生成的赋值表达式。<br>(4)展开<br>展开操作符正与解构相反。 它允许你将一个数组展开为另一个数组，或将一个对象展开为另一个对象。 例如：</p>
+<p>let first = [1, 2];<br>let second = [3, 4];<br>let bothPlus = [0, …first, …second, 5];<br>这会令bothPlus的值为[0, 1, 2, 3, 4, 5]。 展开操作创建了 first和second的一份浅拷贝。 它们不会被展开操作所改变。</p>
+<p>你还可以展开对象：</p>
+<p>let defaults = { food: “spicy”, price: “$$”, ambiance: “noisy” };<br>let search = { …defaults, food: “rich” };<br>search的值为{ food: “rich”, price: “$$”, ambiance: “noisy” }。 对象的展开比数组的展开要复杂的多。 像数组展开一样，它是从左至右进行处理，但结果仍为对象。 这就意味着出现在展开对象后面的属性会覆盖前面的属性。 因此，如果我们修改上面的例子，在结尾处进行展开的话：</p>
+<p>let defaults = { food: “spicy”, price: “$$”, ambiance: “noisy” };<br>let search = { food: “rich”, …defaults };<br>那么，defaults里的food属性会重写food: “rich”，在这里这并不是我们想要的结果。</p>
+<p>对象展开还有其它一些意想不到的限制。 首先，它仅包含对象 自身的可枚举属性。 大体上是说当你展开一个对象实例时，你会丢失其方法：</p>
+<p>class C {<br>  p = 12;<br>  m() {<br>  }<br>}<br>let c = new C();<br>let clone = { …c };<br>clone.p; // ok<br>clone.m(); // error!<br>其次，TypeScript编译器不允许展开泛型函数上的类型参数。 这个特性会在TypeScript的未来版本中考虑实现。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/21/我的typescript学习-变量声明/" data-id="ck3s6artz0002i5xq83xafshp" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/21/我的typescript学习-变量声明/" data-id="ck5hl6rsy000e8fxq0ttc7cy0" class="article-share-link">Share</a>
       
       
     </footer>
@@ -139,7 +166,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
     </div>
   </div>
 
@@ -152,23 +179,23 @@
       <ul>
         
           <li>
-            <a href="/2019/12/02/网易微专业-Undersocre-3-4-1-Underscore-partial偏函数or-memoize缓存/">(no title)</a>
+            <a href="/2020/01/14/网易微专业-单页应用-1-3-1-VUE编译器原理探秘一/">网易微专业-单页应用-1.3.1-VUE编译器原理探秘一</a>
           </li>
         
           <li>
-            <a href="/2019/12/02/网易微专业-Undersocre-3-3-2-Underscore-unique去重函数-源码拾遗/">网易微专业-Undersocre-3.3.2-Underscore unique去重函数&amp;源码拾遗</a>
+            <a href="/2020/01/11/网易微专业福利期-2-2-如何保证你的代码质量/">网易微专业福利期-2.2-如何保证你的代码质量</a>
           </li>
         
           <li>
-            <a href="/2019/12/01/网易微专业-Undersocre-3-3-1-Underscore数组定位与摊平数组/">网易微专业-Undersocre-3.3.1-Underscore数组定位与摊平数组</a>
+            <a href="/2020/01/10/网易微专业福利期-2-1-JavaScript内存管理/">网易微专业福利期-2.1-JavaScript内存管理</a>
           </li>
         
           <li>
-            <a href="/2019/11/27/网易微专业-Underscore-3-2-3-乱序数组-洗牌算法/">网易微专业-Underscore-3.2.3-乱序数组-洗牌算法</a>
+            <a href="/2020/01/09/张容铭-设计模式-第三篇-结构型设计模式/">张容铭-设计模式-第三篇-结构型设计模式</a>
           </li>
         
           <li>
-            <a href="/2019/11/27/网易微专业-Underscore-3-2-2-条件查询-背后索引查询器实现/">网易微专业-Underscore-3.2.2-条件查询-背后索引查询器实现</a>
+            <a href="/2020/01/07/网易微专业-现代前端工程实践方案-解锁webpack-3-1-8-webpack的环境，webpack实战演练/">网易微专业-现代前端工程实践方案 解锁webpack-3.1.8-webpack的环境，webpack实战演练</a>
           </li>
         
       </ul>
@@ -183,7 +210,7 @@
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2019 snakeXu<br>
+      &copy; 2020 snakeXu<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>

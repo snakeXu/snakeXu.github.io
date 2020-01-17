@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>张容铭-设计模式-第三篇-结构型设计模式 | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="一、外观模式外观模式:为一组复杂的子系统借口提供一个更高级的统一接口，通过这个接口使得对子系统接口的访问更容易。在JavaScript中有时也会用于对底层结构兼容性做统一封装用来简化用户使用。当我们用如下代码为页面添加点击事件 document.onclick = funcrtion(e){    e.preventDefault();    if(e.target !== document.ge">
+<meta property="og:type" content="article">
+<meta property="og:title" content="张容铭-设计模式-第三篇-结构型设计模式">
+<meta property="og:url" content="http://yoursite.com/2020/01/09/张容铭-设计模式-第三篇-结构型设计模式/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="一、外观模式外观模式:为一组复杂的子系统借口提供一个更高级的统一接口，通过这个接口使得对子系统接口的访问更容易。在JavaScript中有时也会用于对底层结构兼容性做统一封装用来简化用户使用。当我们用如下代码为页面添加点击事件 document.onclick = funcrtion(e){    e.preventDefault();    if(e.target !== document.ge">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-01-16T01:55:01.299Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="张容铭-设计模式-第三篇-结构型设计模式">
+<meta name="twitter:description" content="一、外观模式外观模式:为一组复杂的子系统借口提供一个更高级的统一接口，通过这个接口使得对子系统接口的访问更容易。在JavaScript中有时也会用于对底层结构兼容性做统一封装用来简化用户使用。当我们用如下代码为页面添加点击事件 document.onclick = funcrtion(e){    e.preventDefault();    if(e.target !== document.ge">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-张容铭-设计模式-第三篇-结构型设计模式" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/01/09/张容铭-设计模式-第三篇-结构型设计模式/" class="article-date">
+  <time datetime="2020-01-09T02:07:49.000Z" itemprop="datePublished">2020-01-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      张容铭-设计模式-第三篇-结构型设计模式
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>一、外观模式<br>外观模式:为一组复杂的子系统借口提供一个更高级的统一接口，通过这个接口使得对子系统接口的访问更容易。在JavaScript中有时也会用于对底层结构兼容性做统一封装用来简化用户使用。<br>当我们用如下代码为页面添加点击事件</p>
+<p><pre><br>document.onclick = funcrtion(e){<br>    e.preventDefault();<br>    if(e.target !== document.getElementById(‘myinput’)){<br>        hidePageAlert();<br>    }<br>}<br>function hidePageAlert(){<br>    //…<br>}<br></pre><br>为document绑定了onclick事件，但是onclick是DOM0级事件，也就是说这种方式绑定的事件相当于为元素绑定了一个事件方法，所以如果这时团队中有人再次通过这种方式为document绑定click事件时，就相当于重新定义了一个方法，会将上面定义的click事件方法覆盖。因此我们应该用DOM2级事件处理程序提供的方法addEventListener来实现，然而你知道老版本的IE浏览器(低于IE9)是不支持这个方法的，所以你要用attachEvent，当然如果有不支持DOM2级事件处理程序的浏览器，你只能用onclick事件方法绑定事件。外观模式可以用来封装他们，兼容所有浏览器。</p>
+<p><pre><br>//外观模式实现<br>function addEvent(dom,type,fn){<br>    //对于支持DOM2级事件处理程序addEventListener方法的浏览器<br>    if(dom.addEventListener){<br>        dom.addEventListener(type,fn,false);<br>    //对于不支持addEventListener方法但支持attachEvent方法的浏览器<br>    }else if(dom.attachEvent){<br>        dom.attachEvent(‘on’+type,fn);<br>    //对于不支持addEventListener方法也不支持attachEvent方法，但支持’on’+事件名称的浏览器<br>    }else{<br>        dom[‘on’+type] = fn<br>    }<br>}<br>var myInput = document.getElementById(‘myinput’);<br>addEvent(myInput,’click’,function(){<br>    console.log(‘绑定第一个事件’)<br>})<br>addEvent(myInput,’click’,function(){<br>    console.log(‘绑定第二个事件’)<br>})<br>addEvent(myInput,’click’,function(){<br>    console.log(‘绑定第三个事件’)<br>})<br></pre><br>这样我们对于支持addEventListener或者attachEvent方法的浏览器就可以放心地绑定多个事件了。另外我们发现，在一开始的代码中，IE低版本浏览器中不兼容e.preventDefault()和e.target,我们也可以通过外观模式来解决。</p>
+<p><pre><br>//获取事件对象<br>var getEvent = function(event){<br>    //标准浏览器返回event,IE下window.event<br>    return event || window.event;<br>}<br>//获取元素<br>var getTarget = function(event){<br>    var event = getEvent(event);<br>    //标准浏览器下event.target,IE下event.srcElement<br>    return event.getTarget || event.srcElement<br>}<br>//阻止默认行为<br>var preventDefault = function(event){<br>    var event = getEvent(event);<br>    //标准浏览器<br>    if(event.preventDefault){<br>        event.preventDefault();<br>    //IE浏览器<br>    }else{<br>        event.returnValue = false;<br>    }<br>}<br></pre><br>然后我们可以重写开始的代码</p>
+<p><pre><br>document.onclick = function(e){<br>    //阻止默认行为<br>    preventDefault(e);<br>    //获取事件源目标对象<br>    if(getTarget(e) !== document.getElementById(‘myinput’)){<br>        hideInputSug();<br>    }<br>}<br></pre><br>外观模式可以将浏览器不兼容的方法变得简单而又兼容各个浏览器，然而这只是外观模式应用的一部分，很多代码库中都是通过外观模式来封装多个功能，简化底层操作方法，比如我们简单实现获取元素的属性样式的简单方法库。</p>
+<p><pre><br>//简约版属性样式方法库<br>var A = {<br>    //通过ID获取元素<br>    g:function(id){<br>        return document.getElementById(id);<br>    },<br>    //设置元素css属性<br>    css:function(id,key,value){<br>        document.getElementById(id).style[key] = value;<br>    },<br>    //设置元素的属性<br>    attr:function(id,key,value){<br>        document.getElementById(id)[key] = value;<br>    },<br>    html:function(id,html){<br>        document.getElementById(id).innerHTML = html;<br>    },<br>    //为元素绑定事件<br>    on:function(){<br>        document.getElementById(id)[‘on’+type] = fn;<br>    }<br>}<br>A.css(‘box’,’background’,’red’);   //设置css样式<br>A.attr(‘box’,’className’,’box’);   //设置class<br>A.html(‘box’,’这是新添加的内容’);     //设置内容<br>A.on(‘box’,’click’,function(){     //绑定事件<br>    A.css(‘box’,’width’,’500px’);<br>})<br></pre><br>二、适配器模式<br>适配器模式:将一个类(对象)的接口(方法或属性)转化成另外一个接口，以满足用户需求，使类(对象)之间的接口的不兼容问题通过适配器得以解决。<br>假如我们现在用公司内部开发的框架A已经写了一部分需求了，这时候发现公司内部的框架不能完全满足现在的需求，我们又引入了jQuery，那现在就有问题了，怎么解决A和jQuery的兼容，毕竟重写之前的需求并不是一个明智的决定。如果框架A和jQuery相似程度很高，那么就可以用一行代码解决问题</p>
+<p><pre><br>window.A = A = jQuery;<br></pre><br>但是如果框架A与jQuery差异很大，那情况就要复杂很多了。我们这里用两个事件举例，一个是页面加载事件，一个是点击事件。</p>
+<p><pre><br>//定义框架<br>var A = A || {};<br>//通过ID获取元素<br>A.g = function(id){<br>    return document.getElementById(id);<br>}<br>//为元素绑定事件<br>A.on = function(id,type,fn){<br>    //如果传递参数是字符串则以id处理，否则以元素对象处理<br>    var dom = typeof id === ‘string’?this.g(id):id;<br>    //标准DOM2级添加事件方式<br>    if(dom.addEventListener){<br>        dom.addEventListener(type,fn,false);<br>    //IE DOM2级添加事件方式<br>    }else if(dom.attachEvent){<br>        dom.attachEvent(‘on’+type,fn);<br>    //简易添加事件方式<br>    }else{<br>        dom[‘on’+type,fn];<br>    }<br>}<br>//窗口加载完成事件<br>A.on(window,’load’,function(){<br>    //按钮点击事件<br>    A.on(‘mybutton’,’click’,function(){<br>        //do something<br>    })<br>})<br></pre><br>现在，如果我们想引入jQuery来换原有的A库，该怎么做？首先g方法是通过id获取元素，所以通过$(jQuery的简写名称)方法直接获取jQuery对象然后通过get获取第一个成员即可，不过on的方法有些复杂，我们不能直接替换，因为jQuery和我们的A库在通过id获取元素时是有区别的，jQuery的id前面要加#。所以异类框架的适配器做法如下</p>
+<p><pre><br>A.g = function(id){<br>    //通过jQuery获取jQuery对象，然后返回第一个成员<br>    return $(id).get(0);<br>}<br>A.on = function(id,type,fn){<br>    //如果传递参数是字符串则以id处理，否则以元素对象处理<br>    var dom = typeof id === ‘string’?$(‘#’+id):$(id);<br>    dom.on(type,fn);<br>}<br></pre><br>除此之外，适配器还有很多用途，比如方法需要传递多个参数，例如……</p>
+<p><pre><br>function doSomething(name,title,age,color,size,prize){}<br></pre><br>我们记住上面的代码参数的顺序是很困难的，所以我们经常以一个参数对象的方式传入，如</p>
+<p><pre><br>/<strong><br><em>obj.name:name
+</em>obj.title:title<br><em>obj.age:age
+</em>obj.color:color<br><em>obj.size:size
+</em>obj.prize:prize
+</strong>/<br>function doSomething(obj){}<br></pre><br>当调用它的时候又不知道传递的参数是否完整，如果有一些必须参数没有传入，一些参数是有默认值的等待，此时我们通常的做法是用适配器来适配传入的这个参数对象，如下</p>
+<p><pre><br>function doSomething(obj){<br>    var _adapter = {<br>        name : ‘雨夜清荷’,<br>        title : ‘设计模式’,<br>        age : 24,<br>        color : ‘pink’,<br>        size : 100,<br>        prize : 50<br>    };<br>    for(var i in _adapter){<br>        _adapter[i] = obj[i] || _adapter[i];<br>    }<br>    //或者extend(_adapter,obj) 注:此时可能会多添加属性<br>    //do things<br>}<br></pre><br>对于这类对参数的适配又有衍生性，比如对数据的适配，比如这里有一个数组</p>
+<p><pre><br>var arr = [‘JavaScript’,’book’,’前端编程语言’,’8月1日’];<br></pre><br>我们发现数组中每个成员代表的意义不同，所以这种数据结构语义不好，我们通常会将其适配成对象形式，比如下面这种对象数据结构</p>
+<p><pre><br>var obj = {<br>    name:’’,<br>    title:’’,<br>    type:’’,<br>    time:’’<br>}<br></pre><br>我们就可以像下面这样适配</p>
+<p><pre><br>function arrToObjAdapter(arr){<br>    return {<br>        name:arr[0],<br>        type:arr[1],<br>        title:arr[2],<br>        data:arr[3]<br>    }<br>}<br>var adapterData = arrToObjAdapter(arr);<br>console.log(adapterData);         //[name:’JavaScript’,type:’book’,title:’前端编程语言’,data:’8月1日’]<br></pre><br>它解决了前后端数据依赖，如果后端架构改变导致传递数据结构发生变化，前端只需要写个适配器就好了。</p>
+<p><pre><br>//为简化模型，这里使用jQuery的ajax方法 理想数据是一个一维数组<br>function ajaxAdapter(data){<br>    //处理数据并返回新数据<br>    return [data[‘key1’],data[‘key2’],data[‘key3’]]<br>}<br>$.ajax({<br>    url:’someAddress.php’,<br>    success:function(data,status){<br>        if(data){<br>            //使用适配后的数据-返回的对象<br>            doSomething(ajaxAdapter(data))<br>        }<br>    }<br>})<br></pre><br>这样以后后端如果有任何数据变化，我们只需要相应的更改ajaxAdapter适配器转换格式就可以了。<br>三、代理模式<br>代理模式:由于一个对象不能直接饮用另一个兑现过，所以需要通过代理对象在这两个对象之间起到中介的作用<br>如果我们想让跨域两端的对象之间实现通信，就需要找个代理对象来实现它们之间的通信。<br>1.代理对象一:img标签<br>img之类的标签通过src属性可以向其他域下的服务器发送请求，不过这类请求是get请求，并且是单向的，它不会有响应数据。可以用于统计，比如：一些站长平台会有对于你的页面统计项，其实现原理就是在你的页面触发一些动作的时候向站长平台发送这类img的get请求，然后它们会对你发送的请求做统计，然而你并不知道统计的相关信息。</p>
+<p><pre><br>//统计代理<br>var Count = (function(){<br>    //缓存图片<br>    var _img = new Image();<br>    //返回统计函数<br>    return function(param){<br>        //统计请求字符串<br>        var str = ‘<a href="http://www.count.com/a.gif?&#39;" target="_blank" rel="noopener">http://www.count.com/a.gif?&#39;</a>;<br>        //拼接请求字符串<br>        for(var i in param){<br>            str += i + ‘=’ + param[i];<br>        }<br>        //发送统计请求<br>        _img.src = str;<br>    }<br>})()<br>Count({num:10})<br></pre><br>2.代理对象二:script标签(JSONP)<br>我们知道通过src属性可实现get请求，因此我们可以在src指向的url(请求地址)上面添加一些字段信息，然后服务器端获取这些字段，再相应地生成一份内容</p>
+<p><pre><br>//前端浏览器页面<br>&lt; script type=”text/javascript” &gt;<br>//回调函数，打印出请求数据与响应数据<br>function jsonpCallBack(res,req){<br>    console.log(res,req);<br>}<br>&lt; /script &gt;<br>&lt; script type=”text/javascript” src=”<a href="http://localhost/test/jsonp.php?callback=jsonp_CallBack&amp;data=getJsonPData&quot;" target="_blank" rel="noopener">http://localhost/test/jsonp.php?callback=jsonp_CallBack&amp;data=getJsonPData&quot;</a> &gt;&lt; /script &gt;<br>&lt;?php<br>/<em>后端获取请求字段数据，并生成返回内容</em>/<br>$data = $_GET[‘data’];<br>$callback = $_GET[“callback”];<br>echo $callback.”(‘success’,’”.$data.”‘)”;<br>?&gt;<br></pre><br>3.代理对象三:代理模版<br>代理模版的解决思路是这样的:既然不同域之间互相调用对方的页面是有限制的，那么自己域中的两个页面相互之间的调用是可以的，即代理页面B调用被代理页面A中对象的方式是可以的。那么要实现这种方式我们只需要在被访问页面的域中，请求返回的Header重定向到代理页面，并在代理页面中处理被代理的页面A就可以了。<br>比如我们将自己的域称为X域，另外的域称为Y域，X域中要有一个被代理页面，即A页面。在A页面中应该具备三个部分，第一个部分是发送请求的模块，如form表单提交，负责向Y域发送请求，并提供额外两组数据，其一是要执行的回调函数名称，其二是X域中代理模版所在的路径，并将target目标指向内嵌框架。第二个部分是一个内嵌框架，如iframe，负责提供第一个部分中form表单的响应目标target的指向，并将迁入X域中的代理页面作为子页面，即B页面。第三个部分是一个回调函数，负责处理返回的数据。</p>
+<p><pre><br>//X域中被代理页面A<br>&lt; script type=”text/javascript” &gt;<br>function callback(data){<br>    console.log(‘成功接收数据’,data);<br>}<br>&lt; /script &gt;<br>&lt; iframe name=”proxyIframe” id=”proxyIframe” src=”” &gt;&lt; /iframe &gt;<br>&lt; form  action=”<a href="http://loacalhost/test/proxy.php&quot;" target="_blank" rel="noopener">http://loacalhost/test/proxy.php&quot;</a> method=”post” target=”proxyIframe”&gt;<br>    &lt; input type=”text” name=”callback” value=”callback” &gt;<br>    &lt; input type=”text” name=”proxy” value=”<a href="http://localhost:8080/proxy.html&quot;" target="_blank" rel="noopener">http://localhost:8080/proxy.html&quot;</a> &gt;<br>    &lt; input type=”submit” value=”提交” &gt;<br>&lt; /form &gt;<br></pre><br>其次在X域中我们也要有一个代理页面，主要负责将自己的页面URL中searcher部分的数据解析出来，如 <a href="http://www.a.com?type=1&amp;title=aa" target="_blank" rel="noopener">http://www.a.com?type=1&amp;title=aa</a> 这个URL中searcher部分指的就是?type=1&amp;title=aa 。将数据重新组装好，调用A页面里的回调函数，将组装好的数据作为参数传入父页面中定义的回调函数中并执行。</p>
+<p><pre><br>//X域中被代理页面B<br>&lt; script type=”text/javascript” &gt;<br>//页面加载后执行<br>window.onload = function(){<br>    //如果不在A页面中返回，不执行<br>    if(top == self) return;<br>    //获取并解析searcher中的数据<br>    var arr = location.search.substr(1).split(‘&amp;’);<br>    //预定义函数名称以及参数集<br>    fn,args;<br>    for(var i = 0, len = arr.length, item; i &lt; len; i++){<br>        //解析searcher中的每组数据<br>        item = arr[i].split(‘=’);<br>        //判断是否为回调函数<br>        if(item[0] == ‘callback’){<br>            //设置回调函数<br>            fn = item[1];<br>        //判断是否是参数集<br>        }else if(item[0] == ‘arg’){<br>            //设置参数集<br>            args = item[1];<br>        }<br>    }<br>    try{<br>        //执行A页面中预设的回调函数<br>        eval(‘top.’+fn+’(“‘+args+’”)’);<br>    }cache(e){}<br>}<br>&lt; /script &gt;<br></pre><br>最后是Y域中的被请求的接口文件C，它的主要工作是将从X域过来的请求的数据解析并获取回调函数字段与代理模版路径字段数据，并打包返回，并将自己的Header重定向为X域的代理模版B所在路径</p>
+<p><pre><br>&lt;?php<br>$proxy = $_POST[“proxy”];<br>$callback = $_POST[“callback”];<br>header(“Location: “.$proxy.”?callback=”.$callback.”&amp;arg=success”);<br>?&gt;<br>测试结果<br>控制台输出依次是<br>成功接收数据success<br></pre><br>四、装饰者模式<br>装饰者模式:在不改变原对象的基础上，通过对其进行包装拓展(添加属性或方法)使原有对象可以满足用户对更复杂需求</p>
+<p><pre><br>//装饰者<br>var decorator = function(input,fn){<br>    //获取事件源<br>    var input = document.getElementById(input);<br>    //若事件源已经绑定事件<br>    if(typeof input.onclick === ‘function’){<br>        //缓存事件源原有回调函数<br>        var oldClickFn = input.onclick;<br>        //为事件源定义新的事件<br>        input.onclick = function(){<br>            //事件源原有回调函数<br>            oldClickFn();<br>            //执行事件源新增回调函数<br>            fn();<br>        }<br>    }else{<br>        //事件源未绑定事件，直接为事件源添加新增回调函数<br>        input.onclick = fn;<br>    }<br>    //做其他事情<br>}<br>//电话输入框功能装饰<br>decorator(‘tel_input’,function(){<br>    document.getElementById(‘tel_demo_text’).style.display = ‘none’;<br>})<br></pre><br>装饰器模式与适配器模式的不同:适配器模式进行拓展很多时候是对对象内部结构的重组，因此了解其自身结构是必须的，而装饰者模式对对象的拓展是一种良性循环，不用了解其具体实现，只是在外部进行了一次封装拓展，这又是对原有功能完整性的一种保护。<br>五、桥接模式<br>桥接模式:在系统沿着多个维度变化的同时，又不增加其复杂度并已达到解耦。<br>写代码时一定要注意对相同的逻辑做抽象提取处理，这样很重要，并且重用率也会很大，可读性更高。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/01/09/张容铭-设计模式-第三篇-结构型设计模式/" data-id="ck5hl6ru1001g8fxqf7whh03y" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/01/10/网易微专业福利期-2-1-JavaScript内存管理/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          网易微专业福利期-2.1-JavaScript内存管理
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/01/07/网易微专业-现代前端工程实践方案-解锁webpack-3-1-8-webpack的环境，webpack实战演练/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">网易微专业-现代前端工程实践方案 解锁webpack-3.1.8-webpack的环境，webpack实战演练</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/01/14/网易微专业-单页应用-1-3-1-VUE编译器原理探秘一/">网易微专业-单页应用-1.3.1-VUE编译器原理探秘一</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/11/网易微专业福利期-2-2-如何保证你的代码质量/">网易微专业福利期-2.2-如何保证你的代码质量</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/10/网易微专业福利期-2-1-JavaScript内存管理/">网易微专业福利期-2.1-JavaScript内存管理</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/09/张容铭-设计模式-第三篇-结构型设计模式/">张容铭-设计模式-第三篇-结构型设计模式</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/07/网易微专业-现代前端工程实践方案-解锁webpack-3-1-8-webpack的环境，webpack实战演练/">网易微专业-现代前端工程实践方案 解锁webpack-3.1.8-webpack的环境，webpack实战演练</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

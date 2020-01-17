@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>网易微专业-现代前端工程实践方案 解锁webpack-3.1.6-CSS的编译与处理,webpack的概念与基础使用 | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1.css的引入webpack是以JavaScript文件为入口打包的，那么项目的css怎么办？如何引入css？css文件可以通过js文件引入，但必须使用相应的loader:01.css-loader,让css可以被js正确的引入。02.style-loader,让css被引入后可以被正确的以一个style标签插入页面03.两者的顺序很重要，要先通过css-loader处理，再由style-loa">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网易微专业-现代前端工程实践方案 解锁webpack-3.1.6-CSS的编译与处理,webpack的概念与基础使用">
+<meta property="og:url" content="http://yoursite.com/2020/01/06/网易微专业-现代前端工程实践方案-解锁webpack-3-1-6-CSS的编译与处理-webpack的概念与基础使用/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="1.css的引入webpack是以JavaScript文件为入口打包的，那么项目的css怎么办？如何引入css？css文件可以通过js文件引入，但必须使用相应的loader:01.css-loader,让css可以被js正确的引入。02.style-loader,让css被引入后可以被正确的以一个style标签插入页面03.两者的顺序很重要，要先通过css-loader处理，再由style-loa">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/webpack/3.1.6_1.png">
+<meta property="og:updated_time" content="2020-01-07T07:18:24.246Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="网易微专业-现代前端工程实践方案 解锁webpack-3.1.6-CSS的编译与处理,webpack的概念与基础使用">
+<meta name="twitter:description" content="1.css的引入webpack是以JavaScript文件为入口打包的，那么项目的css怎么办？如何引入css？css文件可以通过js文件引入，但必须使用相应的loader:01.css-loader,让css可以被js正确的引入。02.style-loader,让css被引入后可以被正确的以一个style标签插入页面03.两者的顺序很重要，要先通过css-loader处理，再由style-loa">
+<meta name="twitter:image" content="https://snakexu.github.io/images/wangyi/webpack/3.1.6_1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-网易微专业-现代前端工程实践方案-解锁webpack-3-1-6-CSS的编译与处理-webpack的概念与基础使用" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/01/06/网易微专业-现代前端工程实践方案-解锁webpack-3-1-6-CSS的编译与处理-webpack的概念与基础使用/" class="article-date">
+  <time datetime="2020-01-06T09:30:15.000Z" itemprop="datePublished">2020-01-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      网易微专业-现代前端工程实践方案 解锁webpack-3.1.6-CSS的编译与处理,webpack的概念与基础使用
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.css的引入<br>webpack是以JavaScript文件为入口打包的，那么项目的css怎么办？如何引入css？<br>css文件可以通过js文件引入，但必须使用相应的loader:<br>01.css-loader,让css可以被js正确的引入。<br>02.style-loader,让css被引入后可以被正确的以一个style标签插入页面<br>03.两者的顺序很重要，要先通过css-loader处理，再由style-loader处理<br>1-1.实战<br>首先建一个文件夹，文件夹中有app.js,index.html,package.json,test.css,test2.css,webpack.config.js。app.js中有以下内容</p>
+<p><pre><br>import ‘./test.css’;<br>import ‘./test2.css’;<br>console.log(‘123’);<br></pre><br>test.css中的内容</p>
+<p><pre><br>*{background-color:red}<br></pre><br>test2.css中的内容</p>
+<p><pre><br>body{<br>    font-size:20px;<br>}<br>.colorblue{<br>    color:blue;<br>}<br></pre><br>index.html中的内容</p>
+<p><pre><br>&lt; div id=”mydiv” &gt;&lt; /div &gt;<br>&lt; script type=”text/javascript” src=”./src/dist/app.bundle.js” &gt;&lt; /script &gt;<br></pre><br>webpack.config.js中的内容</p>
+<p><pre><br>modules.exports= {<br>    entry : {<br>        app : ‘./app’<br>    },<br>    output : {<br>        path : __dirname + ‘/src/dist’,<br>        filename : ‘./[name].bundle.js’<br>    },<br>    modules : {<br>        rules : [{<br>            test : /.css$/,<br>            use : [<br>                //此处需要注意，loader的执行顺序是从后往前的，下面就是先执行css-loader再执行style-loader<br>                {<br>                    loader : ‘style-loader’<br>                },<br>                {<br>                    loader : ‘css-loader’<br>                }<br>            ]<br>        }]<br>    }<br>}<br></pre><br>在浏览器中打开网页，可以看到<br><img src="https://snakexu.github.io/images/wangyi/webpack/3.1.6_1.png"><br>test.css和test2.css已经被加载称为style标签<br>1-2.style-loader的核心配置<br>insertAt:style标签插入在哪一块区域,可选项top/bottom是插入head标签的头部/底部<br>insertInto:插入指定的DOM<br>singleton:是否合并为一个style标签<br>transform:在浏览器环境下，插入style到页面前，用js对css进行操作。<br>用法举例</p>
+<p><pre><br>module.exports= {<br>    entry : {<br>        app : ‘./app’<br>    },<br>    output : {<br>        path : __dirname + ‘/src/dist’,<br>        filename : ‘./[name].bundle.js’<br>    },<br>    modules : {<br>        rules : [{<br>            test : /.css$/,<br>            use : [<br>                //此处需要注意，loader的执行顺序是从后往前的，下面就是先执行css-loader再执行style-loader<br>                {<br>                    loader : ‘style-loader’,<br>                    options : {<br>                        insertInto : “#mydiv”,<br>                        singleton : true,<br>                        transform : ‘./transform.js’//指定用哪个文件对我们当前css进行修改<br>                    }<br>                },<br>                {<br>                    loader : ‘css-loader’<br>                }<br>            ]<br>        }]<br>    }<br>}<br></pre><br>如果指定了transform文件(本例中我们是transform.js文件)，文件内容</p>
+<p><pre><br> module.exports = function(css){<br>     //参数css代表css所有内容，是一个字符串，只能进行字符串的操作。本例演示获取屏幕宽度，并对css进行修改<br>     if(window.screen.width &lt; 500){<br>         css = css.replace(‘red’,’yellow’);<br>    }<br>    return css<br>}<br></pre><br>1-3.css-loader的核心配置<br>minimize:是否压缩css,已经在webpack4中移除，webpack4建议使用uglifyjs<br>module:是否使用css模块化<br>alias:css中的全局别名,同样在webpack4中已经被移除<br>本节演示module的用法</p>
+<p><pre><br>module.exports= {<br>    entry : {<br>        app : ‘./app’<br>    },<br>    output : {<br>        path : __dirname + ‘/src/dist’,<br>        filename : ‘./[name].bundle.js’<br>    },<br>    modules : {<br>        rules : [{<br>            test : /.css$/,<br>            use : [<br>                //此处需要注意，loader的执行顺序是从后往前的，下面就是先执行css-loader再执行style-loader<br>                {<br>                    loader : ‘style-loader’,<br>                    options : {<br>                        insertInto : “#mydiv”,<br>                        singleton : true,<br>                        transform : ‘./transform.js’//指定用哪个文件对我们当前css进行修改<br>                    }<br>                },<br>                {<br>                    loader : ‘css-loader’,<br>                    options : {<br>                        module : true<br>                    }<br>                }<br>            ]<br>        }]<br>    }<br>}<br></pre><br>修改test2.css</p>
+<p><pre><br>body{<br>    font-size:20px;<br>}<br>//global是全局的意思 可以定义全局类<br>:global .border-white{<br>    border:4px solid white;<br>}<br>//local本地/局部类名<br>:local .div1{<br>    width:50px;<br>    height:50px;<br>    background-color:pink;<br>    //继承的意思，继承另外一个类<br>    composes:border-white from ‘./test2.css’;//继承border-white这个类,test2.css是文件名，也可以是别的css文件<br>}<br></pre><br>打包之后我们可以发现，webpack如果开启了cssmodule功能，对上面global包含对样式类名没有重新编码，而对local包含的样式进行类名重新编码，对没有设置任何(global/local等)修饰的类名进行重新编码。如果对类名进行了重新编码，那么我们在html上写的类名也就不会生效，为此我们要结合JavaScript来控制类名。对app.js进行如下修改</p>
+<p><pre><br>import ‘./test.css’;<br>import ‘./test2.css’;<br>document.getElementById(‘mydiv’).setAttribute(‘class’,test2.div1)<br></pre><br>webpack打包之后，我们在浏览器中看到css已经生效了。对于打包之后重新编码的类名非常复杂，难以阅读，我们可以重新指定编码类名。</p>
+<p><pre><br>module.exports= {<br>    entry : {<br>        app : ‘./app’<br>    },<br>    output : {<br>        path : __dirname + ‘/src/dist’,<br>        filename : ‘./[name].bundle.js’<br>    },<br>    modules : {<br>        rules : [{<br>            test : /.css$/,<br>            use : [<br>                //此处需要注意，loader的执行顺序是从后往前的，下面就是先执行css-loader再执行style-loader<br>                {<br>                    loader : ‘style-loader’,<br>                    options : {<br>                        insertInto : “#mydiv”,<br>                        singleton : true,<br>                        transform : ‘./transform.js’//指定用哪个文件对我们当前css进行修改<br>                    }<br>                },<br>                {<br>                    loader : ‘css-loader’,<br>                    options : {<br>                        module : {<br>                            //local是本来类名，比如上面我们设置的div1，那么生成的类名是路径名文件名和本身类名再加上重新编码的hash值截取4位<br>                            localIdentName:’[path][name]<em>[local]</em>[hash:4]’<br>                        }<br>                    }<br>                }<br>            ]<br>        }]<br>    }<br>}<br></pre><br>上面css-loader的对类名的修改，如果是webpack3，那么要进行如下修改</p>
+<p><pre><br>//只截取了需要修改相关的部分<br>{<br>    loader : ‘css-loader’,<br>    options : {<br>        module : true,<br>        localIdentName:’[path][name]<em>[local]</em>[hash:4]’<br>    }<br>}<br></pre><br>在cssmodule中，继承并不是完全继承，而是在使用过程中可以把两个类都加在class中<br>2.less，sass等预处理语言的编译<br>2-1.less，sass<br>01.less，sass是css预处理语言，用来帮助我们更方便的写css。更方便团队合作<br>02.less，sass浏览器是无法直接识别的，需要编译成css才能被识别。所以我们用less，sass写的文件都要编译。<br>2-2.less，sass编译所需loader<br>01.less:less,less-loader<br>02.sass:sass-loader,node-sass<br>2-3.实战<br>我们对上面test.css/test2.css进行一些修改,修改成less文件<br>test2.less</p>
+<p><pre><br>body{<br>    font-size:20px;<br>}<br>:global .border-white{<br>    border:4px solid white;<br>}<br>:local .div1{<br>    width:50px;<br>    height:50px;<br>    background-color:pink;<br>    composes:border-yellow from ‘./test.less’;<br>}<br></pre><br>test.less</p>
+<p><pre><br>@base:green;<br>*{<br>    background-color:red;<br>}<br>.border-yellow{<br>    border:4px solid @base;<br>}<br></pre><br>webpack.config.js</p>
+<p><pre><br>module.exports= {<br>    entry : {<br>        app : ‘./app’<br>    },<br>    output : {<br>        path : __dirname + ‘/src/dist’,<br>        filename : ‘./[name].bundle.js’<br>    },<br>    modules : {<br>        rules : [{<br>            test : /.less$/,<br>            use : [<br>                {<br>                    loader : ‘style-loader’,<br>                    options : {<br>                        insertInto : “#mydiv”,<br>                        singleton : true,<br>                        transform : ‘./transform.js’<br>                    }<br>                },<br>                {<br>                    loader : ‘css-loader’,<br>                    options : {<br>                        module : {<br>                            localIdentName:’[path][name]<em>[local]</em>[hash:4]’<br>                        }<br>                    }<br>                },<br>                {<br>                    loader : ‘less-loader’<br>                }<br>            ]<br>        }]<br>    }<br>}<br></pre><br>3.提取css代码<br>3-1.如何把css提取为单独的文件<br>01.安装对应的插件:extract-text-webpack-plugin<br>02.改造loader处的写法:    把use改为使用extract-text-webpack-plugin<br>03.在plugin处添加:把extract-text-webpack-plugin加入到plugin里<br>3-2.注意，如果是webpack3，安装命令npm extract-text-webpack-plugin –save;如果是webpack4，安装命令npm extract-text-webpack-plugin@next –save。依赖于局部webpack<br>3-3.修改配置文件</p>
+<p><pre><br>var extractTextCss = require(‘extract-text-webpack-plugin’)<br>module.exports= {<br>    entry : {<br>        app : ‘./app’<br>    },<br>    output : {<br>        path : __dirname + ‘/src/dist’,<br>        filename : ‘./[name].bundle.js’<br>    },<br>    modules : {<br>        rules : [{<br>            test : /.less$/,<br>            use : extractTextCss.extract({<br>                fallback : {<br>                    loader : ‘style-loader’,<br>                    options : {<br>                        insertInto : “#mydiv”,<br>                        singleton : true,<br>                        transform : ‘./transform.js’<br>                    }<br>                },<br>                use : [<br>                    {<br>                        loader : ‘css-loader’,<br>                        options : {<br>                            module : {<br>                                localIdentName:’[path][name]<em>[local]</em>[hash:4]’<br>                            }<br>                        }<br>                    },<br>                    {<br>                        loader : ‘less-loader’<br>                    }<br>                ]<br>            })<br>        }]<br>    },<br>    plugins:[<br>        new extractTextCss({<br>            filename : ‘[name].min.css’<br>        })<br>    ]<br>}<br></pre><br>打包之后，我们已经能看到app.min.css文件了，但是对于这个文件，我们需要手动在index.html文件中引入<br>4.autoprefixer/cssnext(postcss插件)<br>4-1.安装<br>npm install postcss postcss-loader autoprefixer postcss-cssnext –save<br>4-2.修改配置文件</p>
+<p><pre><br>var extractTextCss = require(‘extract-text-webpack-plugin’)<br>module.exports= {<br>    entry : {<br>        app : ‘./app’<br>    },<br>    output : {<br>        path : __dirname + ‘/src/dist’,<br>        filename : ‘./[name].bundle.js’<br>    },<br>    modules : {<br>        rules : [{<br>            test : /.less$/,<br>            use : extractTextCss.extract({<br>                fallback : {<br>                    loader : ‘style-loader’,<br>                    options : {<br>                        insertInto : “#mydiv”,<br>                        singleton : true,<br>                        transform : ‘./transform.js’<br>                    }<br>                },<br>                use : [<br>                    {<br>                        loader : ‘css-loader’,<br>                        options : {<br>                            module : {<br>                                localIdentName:’[path][name]<em>[local]</em>[hash:4]’<br>                            }<br>                        }<br>                    },<br>                    {<br>                        loader : ‘postcss-loader’,<br>                        options : {<br>                            ident : ‘postcss’，//给谁使用的<br>                            plugin : [<br>                                require(‘autoprefixer’)()<br>                            ]<br>                        }<br>                    },<br>                    {<br>                        loader : ‘less-loader’<br>                    }<br>                ]<br>            })<br>        }]<br>    },<br>    plugins:[<br>        new extractTextCss({<br>            filename : ‘[name].min.css’<br>        })<br>    ]<br>}<br></pre><br>此时，我们对test.less进行一点点修改</p>
+<p><pre><br>@base:green;<br>*{<br>    background-color:red;<br>}<br>.border-yellow{<br>    border:4px solid @base;<br>    display:flex;//弹性盒模型样式，有兼容性问题,我们期待用autoprefixer解决兼容性问题<br>}<br></pre><br>打包之后我们发现，并没有给display:flex;加前缀，是因为我们在配置文件里没有完善配置</p>
+<p><pre><br>//此处我们只提取相关内容<br>{<br>    loader : ‘postcss-loader’,<br>    options : {<br>        ident : ‘postcss’，//给谁使用的<br>        plugin : [<br>            require(‘autoprefixer’)({<br>                “overrideBrowserslist”:[//属性名，webpack3和webpack4有差异<br>                “&gt;1%”,”last 2 versions”<br>                ]<br>            })<br>        ]<br>    }<br>},<br></pre><br>由以上配置我们发现，只要有兼容性要求的地方，我们都需要配置兼容性要求，这无疑是非常冗余的做法，我们可以直接在package.json文件中配置</p>
+<p><pre><br>“browserslist”:[<br>“&gt;1%”,”last 2 versions”<br>]<br></pre><br>或者直接在根目录下建立一个文件.browserslistrc，但是我们还是推荐写在package.json文件中<br>5.cssnext<br>修改test.less文件</p>
+<p><pre><br>@base:green;<br>*{<br>    background-color:red;<br>}<br>.border-yellow{<br>    border:4px solid var(–mainColor);<br>    display:flex;<br>}<br>:root{<br>    –mainColor:red;<br>}<br></pre><br>修改配置文件</p>
+<p><pre><br>{<br>    loader : ‘postcss-loader’,<br>    options : {<br>        ident : ‘postcss’，//给谁使用的<br>        plugin : [<br>            require(‘autoprefixer’)({<br>                “overrideBrowserslist”:[//属性名，webpack3和webpack4有差异<br>                “&gt;1%”,”last 2 versions”<br>                ]<br>            }),<br>            require(‘postcss-cssnext’)()<br>        ]<br>    }<br>},<br></pre><br>webpack打包之后我们可以发现，test.less已经被编译了，其中.border-yellow{border:4px solid var(–mainColor);display:flex;}的–mainColory已经被编译成red</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/01/06/网易微专业-现代前端工程实践方案-解锁webpack-3-1-6-CSS的编译与处理-webpack的概念与基础使用/" data-id="ck5hl6ru5001m8fxqxscvpqmo" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/01/07/网易微专业-现代前端工程实践方案-解锁webpack-3-1-6-HTML的处理与打包-webpack的概念与基础使用/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          网易微专业-现代前端工程实践方案 解锁webpack-3.1.6-HTML的处理与打包,webpack的概念与基础使用
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/01/06/网易微专业-现代前端工程实践方案-解锁webpack-3-1-5-JavaScript的编译-webpack的概念与基础使用/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">网易微专业-现代前端工程实践方案 解锁webpack-3.1.5-JavaScript的编译,webpack的概念与基础使用</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/01/14/网易微专业-单页应用-1-3-1-VUE编译器原理探秘一/">网易微专业-单页应用-1.3.1-VUE编译器原理探秘一</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/11/网易微专业福利期-2-2-如何保证你的代码质量/">网易微专业福利期-2.2-如何保证你的代码质量</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/10/网易微专业福利期-2-1-JavaScript内存管理/">网易微专业福利期-2.1-JavaScript内存管理</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/09/张容铭-设计模式-第三篇-结构型设计模式/">张容铭-设计模式-第三篇-结构型设计模式</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/07/网易微专业-现代前端工程实践方案-解锁webpack-3-1-8-webpack的环境，webpack实战演练/">网易微专业-现代前端工程实践方案 解锁webpack-3.1.8-webpack的环境，webpack实战演练</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

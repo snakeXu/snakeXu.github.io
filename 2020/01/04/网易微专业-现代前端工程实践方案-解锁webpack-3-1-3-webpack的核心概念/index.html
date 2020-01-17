@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>网易微专业-现代前端工程实践方案 解锁webpack-3.1.3-webpack的核心概念 | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1.配置文件的重要性配置文件：是webpack打包的依据，webpack如何打包，打包成什么样，全都由配置文件来决定；对于webpack我们的主要工作也是编写、修改webpack的配置文件2.核心概念有哪些·Enter和Output-Enter是webpack打包的入口，代码从这里开始编译，程序开始的起点。Output是webpack打包的出口，最终的打包结果会根据Output的定义输出，会影响到">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网易微专业-现代前端工程实践方案 解锁webpack-3.1.3-webpack的核心概念">
+<meta property="og:url" content="http://yoursite.com/2020/01/04/网易微专业-现代前端工程实践方案-解锁webpack-3-1-3-webpack的核心概念/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="1.配置文件的重要性配置文件：是webpack打包的依据，webpack如何打包，打包成什么样，全都由配置文件来决定；对于webpack我们的主要工作也是编写、修改webpack的配置文件2.核心概念有哪些·Enter和Output-Enter是webpack打包的入口，代码从这里开始编译，程序开始的起点。Output是webpack打包的出口，最终的打包结果会根据Output的定义输出，会影响到">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/webpack/3.1.3_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/webpack/3.1.3_2.png">
+<meta property="og:updated_time" content="2020-01-04T11:49:01.181Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="网易微专业-现代前端工程实践方案 解锁webpack-3.1.3-webpack的核心概念">
+<meta name="twitter:description" content="1.配置文件的重要性配置文件：是webpack打包的依据，webpack如何打包，打包成什么样，全都由配置文件来决定；对于webpack我们的主要工作也是编写、修改webpack的配置文件2.核心概念有哪些·Enter和Output-Enter是webpack打包的入口，代码从这里开始编译，程序开始的起点。Output是webpack打包的出口，最终的打包结果会根据Output的定义输出，会影响到">
+<meta name="twitter:image" content="https://snakexu.github.io/images/wangyi/webpack/3.1.3_1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-网易微专业-现代前端工程实践方案-解锁webpack-3-1-3-webpack的核心概念" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/01/04/网易微专业-现代前端工程实践方案-解锁webpack-3-1-3-webpack的核心概念/" class="article-date">
+  <time datetime="2020-01-04T09:58:12.000Z" itemprop="datePublished">2020-01-04</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      网易微专业-现代前端工程实践方案 解锁webpack-3.1.3-webpack的核心概念
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.配置文件的重要性<br>配置文件：是webpack打包的依据，webpack如何打包，打包成什么样，全都由配置文件来决定；对于webpack我们的主要工作也是编写、修改webpack的配置文件<br>2.核心概念有哪些<br>·Enter和Output-Enter是webpack打包的入口，代码从这里开始编译，程序开始的起点。Output是webpack打包的出口，最终的打包结果会根据Output的定义输出，会影响到资源的路径。<br>·loader-webpack的编译方法：webpack自身职能处理JavaScript，所以对于别的资源需要loader；webpack自身只能负责打包，相关的编译等操作，需要loader；loader本质是一个方法，使用时大多需要额外安装<br>·plugin-webpack的额外扩展，一些插件的额外扩展功能由plugin定义，帮助webpack优化代码，提供功能；plugin有的是webpack自带的，也有需要额外安装的<br>3.常用loader<br><img src="https://snakexu.github.io/images/wangyi/webpack/3.1.3_1.png"><br>4.常用plugin举例<br><img src="https://snakexu.github.io/images/wangyi/webpack/3.1.3_2.png"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/01/04/网易微专业-现代前端工程实践方案-解锁webpack-3-1-3-webpack的核心概念/" data-id="ck5hl6rti00148fxqbk0zwk0i" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/01/06/网易微专业-现代前端工程实践方案-解锁webpack-3-1-4-用webpack开始一次打包/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          网易微专业-现代前端工程实践方案 解锁webpack-3.1.4-用webpack开始一次打包
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/01/04/网易微专业-现代前端工程实践方案-解锁webpack-3-1-2-前端模块化/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">网易微专业-现代前端工程实践方案 解锁webpack-3.1.2-前端模块化</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/01/14/网易微专业-单页应用-1-3-1-VUE编译器原理探秘一/">网易微专业-单页应用-1.3.1-VUE编译器原理探秘一</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/11/网易微专业福利期-2-2-如何保证你的代码质量/">网易微专业福利期-2.2-如何保证你的代码质量</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/10/网易微专业福利期-2-1-JavaScript内存管理/">网易微专业福利期-2.1-JavaScript内存管理</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/09/张容铭-设计模式-第三篇-结构型设计模式/">张容铭-设计模式-第三篇-结构型设计模式</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/07/网易微专业-现代前端工程实践方案-解锁webpack-3-1-8-webpack的环境，webpack实战演练/">网易微专业-现代前端工程实践方案 解锁webpack-3.1.8-webpack的环境，webpack实战演练</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

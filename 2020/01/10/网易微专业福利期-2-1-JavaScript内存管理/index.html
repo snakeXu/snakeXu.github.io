@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>网易微专业福利期-2.1-JavaScript内存管理 | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1.前端为什么要关注内存任何一个程序的运行都要分配内存空间，对于一个页面来说，如果一些不需要使用的内存没有得到及时释放，我们称这种现象为内存泄漏。一次内存泄漏似乎不会有太大影响，但是内存泄漏的堆积会造成内存的溢出(内存溢出简单来说就是我们所需要使用的内存空间大于可用内存，此时我们的程序就会出现内存溢出错误)，在浏览器的表现就是浏览器长时间无响应或者浏览器崩溃。作为前端程序员我们需要给用户良好的用户">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网易微专业福利期-2.1-JavaScript内存管理">
+<meta property="og:url" content="http://yoursite.com/2020/01/10/网易微专业福利期-2-1-JavaScript内存管理/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="1.前端为什么要关注内存任何一个程序的运行都要分配内存空间，对于一个页面来说，如果一些不需要使用的内存没有得到及时释放，我们称这种现象为内存泄漏。一次内存泄漏似乎不会有太大影响，但是内存泄漏的堆积会造成内存的溢出(内存溢出简单来说就是我们所需要使用的内存空间大于可用内存，此时我们的程序就会出现内存溢出错误)，在浏览器的表现就是浏览器长时间无响应或者浏览器崩溃。作为前端程序员我们需要给用户良好的用户">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://snakexu.github.io/images/fuliqi/javascript/2.1_1.png">
+<meta property="og:updated_time" content="2020-01-11T04:19:51.948Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="网易微专业福利期-2.1-JavaScript内存管理">
+<meta name="twitter:description" content="1.前端为什么要关注内存任何一个程序的运行都要分配内存空间，对于一个页面来说，如果一些不需要使用的内存没有得到及时释放，我们称这种现象为内存泄漏。一次内存泄漏似乎不会有太大影响，但是内存泄漏的堆积会造成内存的溢出(内存溢出简单来说就是我们所需要使用的内存空间大于可用内存，此时我们的程序就会出现内存溢出错误)，在浏览器的表现就是浏览器长时间无响应或者浏览器崩溃。作为前端程序员我们需要给用户良好的用户">
+<meta name="twitter:image" content="https://snakexu.github.io/images/fuliqi/javascript/2.1_1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-网易微专业福利期-2-1-JavaScript内存管理" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/01/10/网易微专业福利期-2-1-JavaScript内存管理/" class="article-date">
+  <time datetime="2020-01-10T07:52:37.000Z" itemprop="datePublished">2020-01-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      网易微专业福利期-2.1-JavaScript内存管理
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.前端为什么要关注内存<br>任何一个程序的运行都要分配内存空间，对于一个页面来说，如果一些不需要使用的内存没有得到及时释放，我们称这种现象为内存泄漏。一次内存泄漏似乎不会有太大影响，但是内存泄漏的堆积会造成内存的溢出(内存溢出简单来说就是我们所需要使用的内存空间大于可用内存，此时我们的程序就会出现内存溢出错误)，在浏览器的表现就是浏览器长时间无响应或者浏览器崩溃。作为前端程序员我们需要给用户良好的用户体验，因为我们需要<br>·防止页面占用内存过大，引起客户端卡顿甚至无响应<br>·Node.js使用V8引擎，内存对于后台服务的性能至关重要，因为后端服务的持久性，后端更容易造成内存溢出<br>2.js数据类型与js内存机制<br>2-1.数据类型<br>·原始数据类型:字符串(string)、数字(number)、布尔(boolean)、空对象(null)、为定义(undefined)、symbol<br>·引用数据类型:object<br>·内存空间:栈内存(stack)、堆内存(heap)<br>JavaScript原始数据类型都有固定的大小，保存在栈内存中，由系统自动分配存储空间我们可以进行操作，因此原始数据都是按值访问的。栈是一种运算受限的线性表，其限制是仅允许在表的一端进行插入和删除运算。<br>var a=10;这个赋值过程都发生了什么？首先，将10存入内存空间，之后在我们当前的作用域中声明一个变量a,此时a的值为undefined，然后将变量a与我们刚才存入内存空间的10关联，变量定义到此结束。<br>js中的引用数据类型大小是不固定的，存储在堆内存空间，js不允许直接访问堆内存，我们操作对象时是在操作对象的引用而不是操作实际对象。我们可以粗浅理解操作引用就是操作保存在栈内存中的一个内存地址，该地址与堆内存的实际值相关联。引用数据的值是保存在堆内存中的对象。<br>当我们定义一个函数的时候，会在堆内存先开辟一个内存空间，将函数体中的代码以字符串的形式存储到内存中去，这块空间会有一个十六进制的内存地址，会把这个内存地址赋值给函数名(此时函数名与内存地址类似于原始数据类型存储在栈内存中)<br>3.垃圾回收<br>JavaScript的垃圾回收机制<br>垃圾回收:找出那些不再继续使用的变量，然后释放其所占用的内存，垃圾回收器会按照固定的时间间隔周期性的执行这一操作。(也就是说垃圾回收是自动执行的、不可见的)<br>JavaScript使用垃圾回收机制来自动管理内存，垃圾回收是一把双刃剑:优势——可以大幅简化程序的内存管理代码，降低程序员的负担，减少因长时间内存运转带来的内存泄漏问题；不足——意味着程序员将无法掌控内存，JavaScript没有暴露任何关于内存的API，我们无法强迫其进行垃圾回收，更无法干预内存管理。<br>3-1.垃圾回收策略<br>3-1-1.引用计数<br>引用计数:跟踪记录每个值被引用的次数，如果有一个值的引用次数为0，就表示这个值不再用到了，因此可以将这块内存释放。<br>原理:每次引用加一，被释放时减一，当这个值当引用次数变成0时，就可以将其内存空间回收。<br>示例:<br>const obj = {a:10};      //引用+1<br>const obj1 = {a:10};     //引用+1<br>const obj = {};          //引用-1<br>const obj = null;        //引用为0<br>·声明了一个变量并将一个引用类型的值赋值给这个变量，这个引用类型的值的引用次数是1<br>·同一个值又被赋值给另外一个变量，这个引用类型值的引用次数加1<br>·当包含这个引用类型值的变量又被赋值成另外一个值了，难么这个引用类型值的引用次数减1<br>·当引用次数变成0时，说明没办法访问这个值了<br>·当垃圾收集器下一次运行时，它就会释放引用次数是0的值所占用的内存<br>引用计数的bug——循环引用(也就是相互引用),会造成js垃圾回收机制无法回收内存，浪费大量性能<br>function fn(){<br>    var objA = {a:10};<br>    var objB = {a:10};<br>    objA.c = objA;<br>    objB.d = objB;<br>}<br>在采用引用策略的实现中，当函数执行完毕后，objA和objB还将继续存在，因为它们的引用次数永远不会是0，假如这个函数被多次重复调用就会导致大量内存得不到回收。这个问题主要出现在IE8以及以前的时代，现在浏览器更多采用标记清除垃圾回收机制。<br>3-1-2.标记清除<br>(1)标记清除指的是当变量进入环境时，这个变量标记为“进入环境”；而当变量离开环境时，则将其标记为“离开环境”，最后，垃圾收集器完成内存清楚工作，销毁那些带标记的值并回收它们所占用的内存空间。<br>(2)上面说到的环境即为执行环境，执行环境:执行环境定义了变量或函数有权访问的其他数据，决定了它们各自的行为。每个执行环境都有一个与之关联的变量对象(variable object)，环境中定义的所有变量和函数都保存在这个对象中。<br>执行环境分为全局执行环境和局部执行环境，虽然我们在编程时无法访问这个变量，但解析器在处理数据时，会在后台使用它。<br>(2-1)全局执行环境<br>·最外围的一个执行环境<br>·根据宿主环境不同表示执行环境的对象也不一样。在浏览器中，全局的执行环境被认为是window对象(node环境是global)<br>·全局变量和函数都是作为window对象的属性和方法创建的<br>·某个执行环境中的所有代码执行完毕后，该环境被销毁，保存在其中的所有变量和函数定义也随之销毁(例如关闭网页或浏览器)<br>(2-2)环境栈(局部)<br>每个函数都有自己的执行环境。当执行流进入一个函数时，函数的环境就会被推入一个环境栈中。而在函数执行之后，栈将其环境弹出，把控制权返回给之前的执行环境。ECMAScript程序中的执行流正是由这个方便的机制控制着。<br>示例<br>function foo(){<br>    var a = 10;        //被标记进入环境<br>    var b = ‘Hello’;   //被标记进入环境<br>}<br>foo();      //执行完毕，a和b被标记离开环境，内存被回收<br>目前主流浏览器都使用标记清除垃圾回收策略<br>4.V8内存管理机制<br>4-1.V8限制内存的原因<br>·V8最初为浏览器而设计，不太可能遇到大量内存的使用场景<br>·防止因为垃圾回收所导致的线程暂停执行的时间过长<br>4-1.V8的回收策略<br>·V8采用了一种分代回收的策略，将内存分为两个生代:新生代和老生代<br>·V8分别对新生代和老生代使用不同的垃圾回收算法来提升垃圾回收的效率<br>(1-1)新生代垃圾回收<br><img src="https://snakexu.github.io/images/fuliqi/javascript/2.1_1.png"><br>(1-2)新生代对象的晋升<br>·在新生代垃圾回收的过程中，当一个对象经过多次复制后依然存活，它将被认为是生命周期较长的对象，随后会被移动到老生代中，采用新的算法进行管理。<br>·在From空间和To空间进行反转的过程中，如果To空间中的使用量已经超过了25%，那么就将From中的对象直接晋升到老生代内存空间中<br>(1-3)老生代垃圾回收<br>老生代内存空间是一个连续的结构<br>(1-4)老生代垃圾清除<br>·标记清除(Mark Sweep):是将需要被回收的对象进行标记，在垃圾回收运行时直接释放相应的地址空间<br>·标记合并(Mark Compact):将存活的对象移动到一边，将需要被回收的对象移动到另一边，然后对需要被回收的对象区域进行整体的垃圾回收</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/01/10/网易微专业福利期-2-1-JavaScript内存管理/" data-id="ck5hl6rtm001b8fxql0e6dz05" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/01/11/网易微专业福利期-2-2-如何保证你的代码质量/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          网易微专业福利期-2.2-如何保证你的代码质量
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/01/09/张容铭-设计模式-第三篇-结构型设计模式/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">张容铭-设计模式-第三篇-结构型设计模式</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/01/14/网易微专业-单页应用-1-3-1-VUE编译器原理探秘一/">网易微专业-单页应用-1.3.1-VUE编译器原理探秘一</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/11/网易微专业福利期-2-2-如何保证你的代码质量/">网易微专业福利期-2.2-如何保证你的代码质量</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/10/网易微专业福利期-2-1-JavaScript内存管理/">网易微专业福利期-2.1-JavaScript内存管理</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/09/张容铭-设计模式-第三篇-结构型设计模式/">张容铭-设计模式-第三篇-结构型设计模式</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/07/网易微专业-现代前端工程实践方案-解锁webpack-3-1-8-webpack的环境，webpack实战演练/">网易微专业-现代前端工程实践方案 解锁webpack-3.1.8-webpack的环境，webpack实战演练</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

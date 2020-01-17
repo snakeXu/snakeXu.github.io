@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>网易微专业-现代前端工程实践方案 解锁webpack-3.1.4-用webpack开始一次打包 | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1.不利用webpack打包直接指定入口与出口：webpack-cli –entry &amp;lt; entry &amp;gt; –output &amp;lt; output &amp;gt;,只指定入口和出口文件，不进行任何配置。如果是webpack 4.0以下，则用webpack命令，不用webpack-cli命令。简单的打包分析2.利用配置文件打包配置文件，默认文件名-webpack.config.js,配置文件的结">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网易微专业-现代前端工程实践方案 解锁webpack-3.1.4-用webpack开始一次打包">
+<meta property="og:url" content="http://yoursite.com/2020/01/06/网易微专业-现代前端工程实践方案-解锁webpack-3-1-4-用webpack开始一次打包/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="1.不利用webpack打包直接指定入口与出口：webpack-cli –entry &amp;lt; entry &amp;gt; –output &amp;lt; output &amp;gt;,只指定入口和出口文件，不进行任何配置。如果是webpack 4.0以下，则用webpack命令，不用webpack-cli命令。简单的打包分析2.利用配置文件打包配置文件，默认文件名-webpack.config.js,配置文件的结">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/webpack/3.1.4_1.png">
+<meta property="og:updated_time" content="2020-01-06T07:03:23.469Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="网易微专业-现代前端工程实践方案 解锁webpack-3.1.4-用webpack开始一次打包">
+<meta name="twitter:description" content="1.不利用webpack打包直接指定入口与出口：webpack-cli –entry &amp;lt; entry &amp;gt; –output &amp;lt; output &amp;gt;,只指定入口和出口文件，不进行任何配置。如果是webpack 4.0以下，则用webpack命令，不用webpack-cli命令。简单的打包分析2.利用配置文件打包配置文件，默认文件名-webpack.config.js,配置文件的结">
+<meta name="twitter:image" content="https://snakexu.github.io/images/wangyi/webpack/3.1.4_1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-网易微专业-现代前端工程实践方案-解锁webpack-3-1-4-用webpack开始一次打包" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/01/06/网易微专业-现代前端工程实践方案-解锁webpack-3-1-4-用webpack开始一次打包/" class="article-date">
+  <time datetime="2020-01-06T01:46:57.000Z" itemprop="datePublished">2020-01-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      网易微专业-现代前端工程实践方案 解锁webpack-3.1.4-用webpack开始一次打包
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.不利用webpack打包<br>直接指定入口与出口：webpack-cli –entry &lt; entry &gt; –output &lt; output &gt;,只指定入口和出口文件，不进行任何配置。如果是webpack 4.0以下，则用webpack命令，不用webpack-cli命令。<br><br>简单的打包分析<br><img src="https://snakexu.github.io/images/wangyi/webpack/3.1.4_1.png"><br>2.利用配置文件打包<br>配置文件，默认文件名-webpack.config.js,配置文件的结构</p>
+<pre>
+var webpack = require('webpack');
+var PurifyWebpack = require('purifycss-webpack');
+module.exports = {
+    entry:{},
+    output:{},
+    module:{
+        rules:[],
+    },
+    plugins:[]
+}
+</pre>
+3.利用配置文件进行一次打包
+webpack:直接以当前目录下名为webpack.config.js的文件作为配置文件进行打包。<br>
+如果需要指定一个文件作为配置文件打包:webpack --config configfile
+4.全局webpack
+什么是全局的webpack:通过npm install webpack -g命令安装的webpack就是全局webpack,-g指令就是在npm全局目录下安装包。<br>
+全局webpack的作用:全局webpack是必须安装的，我们在命令行直接执行webpack指令时，使用的就是全局的webpack去完成的。
+5.局部webpack
+什么是局部webpack:局部的webpack是指在项目文件夹下安装的webpack，即安装在项目文件夹里的node_modules里。<br>
+局部webpack的作用:全局的webpack有且只有一个，但是实际情况中，不同项目的webpack版本有可能完全不同。当我们项目需求的webpack版本和我们全局的webpack版本不一致时，就需要安装局部webpack。
+6.如何在局部安装指定版本的webpack
+打开命令行，进入项目文件夹，在该目录下输入<pre>npm install webpack@3.10.0 --save</pre>
+7.利用局部webpack打包
+7-1.局部安装
+7-2.配置package.json文件
+7-3.命令行运行package.json定义的命令
+具体：打开项目中的package.json文件，在文件的scripts对象中，输入你需要执行局部webpack的命令作为scripts的一个属性，比如build，将webpack作为属性值。如果执行npm run build，会首先看scripts中有没有webpack，有的话执行，没有的话执行全局的webpack。
+<pre>
+"scripts":{
+    "build":"webpack"
+}
+</pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/01/06/网易微专业-现代前端工程实践方案-解锁webpack-3-1-4-用webpack开始一次打包/" data-id="ck5hl6rtk00168fxqj0gzh3nz" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/01/06/网易微专业-现代前端工程实践方案-解锁webpack-3-1-5-JavaScript的编译-webpack的概念与基础使用/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          网易微专业-现代前端工程实践方案 解锁webpack-3.1.5-JavaScript的编译,webpack的概念与基础使用
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/01/04/网易微专业-现代前端工程实践方案-解锁webpack-3-1-3-webpack的核心概念/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">网易微专业-现代前端工程实践方案 解锁webpack-3.1.3-webpack的核心概念</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/01/14/网易微专业-单页应用-1-3-1-VUE编译器原理探秘一/">网易微专业-单页应用-1.3.1-VUE编译器原理探秘一</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/11/网易微专业福利期-2-2-如何保证你的代码质量/">网易微专业福利期-2.2-如何保证你的代码质量</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/10/网易微专业福利期-2-1-JavaScript内存管理/">网易微专业福利期-2.1-JavaScript内存管理</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/09/张容铭-设计模式-第三篇-结构型设计模式/">张容铭-设计模式-第三篇-结构型设计模式</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/07/网易微专业-现代前端工程实践方案-解锁webpack-3-1-8-webpack的环境，webpack实战演练/">网易微专业-现代前端工程实践方案 解锁webpack-3.1.8-webpack的环境，webpack实战演练</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

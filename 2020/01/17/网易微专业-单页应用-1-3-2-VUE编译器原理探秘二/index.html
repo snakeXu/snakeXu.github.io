@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>网易微专业-单页应用-1.3.2-VUE编译器原理探秘二 | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="这节课主要是分析了vue解析模版的过程，如何把页面的HTML字符串，例如&amp;lt; div id=”app” &amp;gt;&amp;lt; /div &amp;gt;内容解析成AST抽象语法树，还是先奉上老师的专栏链接https://zhuanlan.zhihu.com/p/88363312解析出来的AST对象例子如下  var template = &quot;&amp;lt; div id=&apos;app&apos; &amp;gt;&amp;lt; span &amp;gt;&amp;lt; /span &amp;gt;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网易微专业-单页应用-1.3.2-VUE编译器原理探秘二">
+<meta property="og:url" content="http://yoursite.com/2020/01/17/网易微专业-单页应用-1-3-2-VUE编译器原理探秘二/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="这节课主要是分析了vue解析模版的过程，如何把页面的HTML字符串，例如&amp;lt; div id=”app” &amp;gt;&amp;lt; /div &amp;gt;内容解析成AST抽象语法树，还是先奉上老师的专栏链接https://zhuanlan.zhihu.com/p/88363312解析出来的AST对象例子如下  var template = &quot;&amp;lt; div id=&apos;app&apos; &amp;gt;&amp;lt; span &amp;gt;&amp;lt; /span &amp;gt;">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-01-17T10:08:44.497Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="网易微专业-单页应用-1.3.2-VUE编译器原理探秘二">
+<meta name="twitter:description" content="这节课主要是分析了vue解析模版的过程，如何把页面的HTML字符串，例如&amp;lt; div id=”app” &amp;gt;&amp;lt; /div &amp;gt;内容解析成AST抽象语法树，还是先奉上老师的专栏链接https://zhuanlan.zhihu.com/p/88363312解析出来的AST对象例子如下  var template = &quot;&amp;lt; div id=&apos;app&apos; &amp;gt;&amp;lt; span &amp;gt;&amp;lt; /span &amp;gt;">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-网易微专业-单页应用-1-3-2-VUE编译器原理探秘二" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/01/17/网易微专业-单页应用-1-3-2-VUE编译器原理探秘二/" class="article-date">
+  <time datetime="2020-01-17T03:25:13.000Z" itemprop="datePublished">2020-01-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      网易微专业-单页应用-1.3.2-VUE编译器原理探秘二
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>这节课主要是分析了vue解析模版的过程，如何把页面的HTML字符串，例如&lt; div id=”app” &gt;&lt; /div &gt;内容解析成AST抽象语法树，还是先奉上老师的专栏链接<a href="https://zhuanlan.zhihu.com/p/88363312" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/88363312</a><br>解析出来的AST对象例子如下</p>
+<pre>
+var template = "< div id='app' >< span >< /span >< /div >";
+//解析单个标签
+var initAst = {
+    type: 1,
+    tag: "div",
+    attrs: [{
+        name: "id",
+        value: "app",
+    }],
+    attrsList: [{
+        name: "id",
+        value: "app"
+    }],
+    attrsMap: {
+        id: "app"
+    },
+    parent: undefined,
+    plain: false,
+    static: false,
+    staticRoot: false
+} 
+//完整的模板抽象描述对象(AST)
+var AST = {
+    type: 1,
+    tag: "div",
+    attrs: [{
+        name: "id",
+        value: "app",
+    }],
+    attrsList: [{
+        name: "id",
+        value: "app"
+    }],
+    attrsMap: {
+        id: "app"
+    },
+    children: [{
+            type: 2,
+            expression: "_s(message)",
+            token: [{
+                "@binding": "message"
+            }],
+            text: "",
+            static: false
+        },
+        {
+            type: 1,
+            tag: "span",
+            attrsList: [],
+            attrsMap: {},
+            parent: {type: 1,tag: "div",attrsList: [{name: "id",value: "app"}] …},
+            children: [],
+            plain: true,
+            static: true
+            staticInFor: false
+            staticRoot: false
+            pre: undefined
+        }
+    ],
+    parent: undefined,
+    plain: false,
+    static: false,
+    staticRoot: false
+}
+</pre>
+这里主要是为了明确parseHTML的参数start/end/chars/comment的含义，comment是注释
+<pre>
+function parse(template, options) {
+    warn$2 = options.warn || baseWarn;
+    parseHTML(template, {
+        start: function() {
+            console.log("开始标签的钩子函数")
+        },
+        end: function() {},
+        chars: function() {
+            console.log("纯文本的钩子函数")
+        },
+        comment: function() {}
+    });
+}
+</pre>
+<pre>
+function parseHTML(html, options) {
+    var stack = [];//检测非一元标签是否缺少闭合标签，比如< div >< span > < a href="" >< /a >< /span > < /div >
+                   //stack数组内依次为['div','span','a']
+    var expectHTML = options.expectHTML; //布尔值 默认为false
+    var isUnaryTag$$1 = options.isUnaryTag || no; //是不是单标签
+    var canBeLeftOpenTag$$1 = options.canBeLeftOpenTag || no; //是不是可以省略闭合标签的双标签
+    var index = 0; //解析过程字符流读入的位置
+    var last, lastTag; //last 剩余为解析的html字符串   lastTag 始终存储 stack 栈顶的元素名称
+
+    //while (html){   //< /div > 
+    //其实这里的while是有用的，至于while循环的判断html是在循环中html陆续被解析token操作(通过正则文法)，最终会为空结束循环
+    if (!lastTag || !isPlainTextElement(lastTag)) {//第一次进入循环lastTag为undefined,第二次进入循环，存储的是stack栈顶的元素，会有值
+    //isPlainTextElement限定不能为script/style/textarea标签
+        var textEnd = html.indexOf('<'); 考虑很多边界情况，比如各种注释方式="" <="" !----=""> <![]> 或者<!doctype>
+        if (textEnd === 0) {
+            // Start tag:
+            var startTagMatch = parseStartTag();
+            console.log(startTagMatch)
+            if (startTagMatch) {
+                handleStartTag(startTagMatch);
+                //忽略< pre > 标签 < textarea > 标签的内容中第一个换行符
+                if (shouldIgnoreFirstNewline(startTagMatch.tagName, html)) {
+                    advance(1);
+                }
+            }
+
+            //continue
+        }
+        var text = (void 0),
+            rest = (void 0),
+            next = (void 0);
+        if (textEnd >= 0) { //解析纯文本
+            rest = html.slice(textEnd);
+            while (
+                !endTag.test(rest) &&
+                !startTagOpen.test(rest) &&
+                !comment.test(rest) &&
+                !conditionalComment.test(rest)
+            ) {
+                // < in plain text, be forgiving and treat it as text
+                next = rest.indexOf('<', 1);="" if="" (next="" <="" 0)="" {="" break="" }="" textend="" +="next;" 重置字符流解析的位置="" rest="html.slice(textEnd);" 纯文本后面的内容="" div="">
+            }
+            text = html.substring(0, textEnd);
+            advance(textEnd);
+        }
+        //调用处理纯文本的钩子函数
+        if (options.chars && text) {
+            options.chars(text);
+        }
+    }
+    //}
+
+    function advance(n) {
+        index += n;
+        html = html.substring(n);
+    }
+
+    function parseStartTag() {
+        var start = html.match(startTagOpen); //startTagOpen  正则文法   token
+        if (start) {
+            var match = {
+                tagName: start[1],
+                attrs: [],
+                start: index,//解析开始标签字符流起始位置
+            };
+            advance(start[0].length);
+            var end, attr;//end 分析当前标签是否一元标签 id="value" v-pre ... >  />
+            //startTagClose  检测标签是否是一个完整的开始标签   "/> || >"
+            while (!(end = html.match(startTagClose)) && (attr = html.match(attribute))) {
+                advance(attr[0].length);
+                match.attrs.push(attr);
+            }
+            if (end) {
+                match.unarySlash = end[1]; //unarySlash 属性 是否有值  判断元素是否为一元标签
+                advance(end[0].length);
+                match.end = index;
+                return match
+            }
+
+        }
+    }
+
+    //handleStartTag 处理开始标签的解析结果
+    function handleStartTag(match) {
+        var tagName = match.tagName; //开始标签的名称
+        var unarySlash = match.unarySlash; // 一元或非一元标签
+
+        var unary = isUnaryTag$$1(tagName) || !!unarySlash; //非一元标签
+        console.log(match.attrs)
+        var l = match.attrs.length; //数组 [" id='app'", "id", "=", undefined, "app", undefined, index: 0]
+        var attrs = new Array(l);
+        for (var i = 0; i < l; i++) {
+            var args = match.attrs[i];
+            var value = args[3] || args[4] || args[5] || ''; //value
+            //
+            var shouldDecodeNewlines = tagName === 'a' && args[1] === 'href' ?
+                options.shouldDecodeNewlinesForHref :
+                options.shouldDecodeNewlines;
+            attrs[i] = {
+                name: args[1],
+                value: value //decodeAttr(value, shouldDecodeNewlines)
+            };
+        }
+
+        if (!unary) { //true
+            stack.push({
+                tag: tagName,
+                lowerCasedTag: tagName.toLowerCase(),
+                attrs: attrs
+            });
+            lastTag = tagName;
+        }
+        //调用开始标签的钩子函数
+        if (options.start) {
+            options.start(tagName, attrs, unary, match.start, match.end);
+        }
+    }
+
+}
+</',></');></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/01/17/网易微专业-单页应用-1-3-2-VUE编译器原理探秘二/" data-id="ck5iwofni000ytjxq0s69s7l9" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/01/18/js运算符优先级/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          js运算符优先级
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/01/14/网易微专业-单页应用-1-3-1-VUE编译器原理探秘一/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">网易微专业-单页应用-1.3.1-VUE编译器原理探秘一</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/01/18/js运算符优先级/">js运算符优先级</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/17/网易微专业-单页应用-1-3-2-VUE编译器原理探秘二/">网易微专业-单页应用-1.3.2-VUE编译器原理探秘二</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/14/网易微专业-单页应用-1-3-1-VUE编译器原理探秘一/">网易微专业-单页应用-1.3.1-VUE编译器原理探秘一</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/11/网易微专业福利期-2-2-如何保证你的代码质量/">网易微专业福利期-2.2-如何保证你的代码质量</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/10/网易微专业福利期-2-1-JavaScript内存管理/">网易微专业福利期-2.1-JavaScript内存管理</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

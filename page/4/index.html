@@ -62,6 +62,88 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-网易微专业-模块化编程-4-1-2-加载器结构设计导论-自研模块加载器" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/12/07/网易微专业-模块化编程-4-1-2-加载器结构设计导论-自研模块加载器/" class="article-date">
+  <time datetime="2019-12-07T09:54:59.000Z" itemprop="datePublished">2019-12-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/12/07/网易微专业-模块化编程-4-1-2-加载器结构设计导论-自研模块加载器/">网易微专业-模块化编程-4.1.2-加载器结构设计导论-自研模块加载器</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.结构导论<br><img src="https://snakexu.github.io/images/wangyi/module/4.1.2_1.png"><br>2.数据初始化<br><img src="https://snakexu.github.io/images/wangyi/module/4.1.2_2.png"><br>3.模块存储<br><img src="https://snakexu.github.io/images/wangyi/module/4.1.2_3.png"><br>4.资源定位<br><img src="https://snakexu.github.io/images/wangyi/module/4.1.2_4.png"><br>5.动态加载script文件<br><img src="https://snakexu.github.io/images/wangyi/module/4.1.2_5.png"><br>6.资源定位实现思路<br><img src="https://snakexu.github.io/images/wangyi/module/4.1.2_6.png"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/12/07/网易微专业-模块化编程-4-1-2-加载器结构设计导论-自研模块加载器/" data-id="ck5iwofnj0010tjxqdqu0dr7n" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-模块化编程-4-1-1-模块系统概述-自定义模块规范-书写约定" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/12/07/网易微专业-模块化编程-4-1-1-模块系统概述-自定义模块规范-书写约定/" class="article-date">
+  <time datetime="2019-12-07T06:52:12.000Z" itemprop="datePublished">2019-12-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/12/07/网易微专业-模块化编程-4-1-1-模块系统概述-自定义模块规范-书写约定/">网易微专业-模块化编程-4.1.1-模块系统概述-自定义模块规范-书写约定</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>一.什么是模块化<br><br>1.模块化就是把系统分离成独立功能的方法，这样我们需要什么功能，就加载什么功能。<br><br>(1)当一个项目开发的越来越复杂时，会遇到一些问题:<br><br>(1-1)命名冲突<br><br>(1-2)文件依赖<br><br>(2)使用模块化开发，可以避免以上问题，并且提高开发效率<br><br>(2-1)可维护性<br><br>(2-2)可复用性<br><br>总结:在生产角度，模块化开发是一种生产方式，这种方式生产效率高，维护成本低<br><br>二.模块化开发演变<br><img src="https://snakexu.github.io/images/wangyi/module/4.1.1_1.png"><br>三.Commonjs<br><br>CommonJS规范加载模块是同步的，也就是说，加载完成才执行后面的操作。<br><br>Node.js主要用于服务器编程，模块都是存在本地硬盘中加载比较快，所以Node.js采用CommonJS规范。<br><br>CommonJS规范分为三部分：module(模块标识) require(模块引用)  exports(模块定义)<br><br>·module变量在每个模块内部，就代表当前模块；<br><br>·exports属性是对外接口，用于导出当前模块的方法或变量；<br><br>·require()用来加载外部模块，读取并执行js文件，返回该模块的exports对象；<br><br>四.AMD(requirejs)<br><br>AMD也就是异步模块定义。它采用异步方式加载模块，通过define方式去定义模块，require方法去加载模块<br><br>AMD模块定义<br><br>如果这个模块还需要依赖其他模块，那么define函数的第一个参数， 必须是一个数组，指明该模块的依赖。<br></p>
+<p><pre>define([tools],function(){})</pre><br>AMD模块的加载</p>
+<p><pre>requeire([‘modules’],callback);</pre><br>·第一个参数[‘modules’]，是一个数组，里面的成员就是要加载的模块<br><br>·第二个参数callback，则是加载成功之后的回调函数。例如加载Math.js。<br></p>
+<p><pre>require([‘math’],function(){})</pre><br>require异步加载Math,浏览器不会失去响应；它指定的回调函数，只有前面的模块都加载成功后，才会运行，解决了依赖性的问题<br><br>五.CMD(seajs)<br><br>CMD即通用模块定义，CMD规范是国内发展出来的；正如AMD有requirejs，CMD有个浏览器的实现Seajs；Seajs要解决的问题和requirejs一样，只不过在模块定义方式和模块加载方式上有所不同<br><br>在CMD规范中，一个模块就是一个文件。代码的书写格式如下：</p>
+<p><pre>define(function(require,exports,module){<br>//模块代码<br>})</pre><br><i><br>    ·require是可以把其他模块导入进来的一个参数，<br><br>    ·exports可以把模块内的一些属性和方法导出；<br><br>    ·module是一个对象，上面存储了与当前模块相关联的一些属性和方法。<br><br></i><br>CMD推崇依赖就近，延迟执行。文件是提前加载好的，只有在require的时候才去执行文件</p>
+<p><pre><br>define(functioln(require,exports,module){<br>    var Math = require(‘./Math’);<br>    Math.add()<br>})<br></pre><br>六.ES6模块化<br><br>ES6 Module<br><br>在ES6之前没有模块化，为了解决问题，提出了Commonjs、AMD、CMD；ES6模块化汲取了Commonjs和AMD的优点，语法简介，支持异步加载，未来可以成为浏览器和服务器通用的模块化解决方案。<br><br>ES6中模块的定义<br><br>ES6新增了两个关键字：export和import。<br><br>·export用于把模块里的内容暴露出来<br><br>·import用于引入模块提供的功能<br><br>ES6中模块的加载<br><br>import加载模块：<br></p>
+<p><pre>import{bar,foo,test,obj} from ‘./lib’<br>    foo()<br></pre><br>注：可以使用export default命令，为模块指定默认输出，一个模块只能有一个默认输出，所以export default只能用一次。<br><br>ES6模块运行机制<br><br>ES6模块是动态引用，如果使用import从一个模块加载变量(即import foo from ‘foo’),变量不会被缓存，而是成为一个指向被加载模块的引用。等脚本执行时，根据只读引用，到被加载到那个模块中去取值。<br><br>七.自定义规范-书写约定<br><br>书写约定<br><br>自定义加载器<br><br>模块的定义<br><br>·约定：所有的Javascript文件都应该用模块的形式来书写，并且一个文件只包含一个模块；<br><br>·使用全局函数define来定义模块 define(factory[require、export、module])；<br><br>·factroy函数在调用时，会始终传入三个参数require、export和module，这三个参数在所有模块代码里可用。<br></p>
+<p><pre><br>    define(function(require, exports, module){<br>        //模块代码<br>    })<br></pre><br>·exports用来向外提供模块的API || 使用return语句直接向外提供API。<br><br>·require函数用来模仿其他模块提供的API。<br><br>·module参数存储模块的元信息。(id模块的唯一标识 deps依赖列表 exports对外提供的接口对象)<br><br><br><br>factory函数在调用时，会始终传入三个参数：require、exports和module，这三个参数在所有模块代码里可用。<br></p>
+<p><pre><br>    define(function(require, exports, module){<br>        //模块代码<br>    })<br></pre><br>模块加载器会从factory.toString()中解析出当前模块所依赖的模块，它是由一个模块标识组成的数组。<br><br>所以：<br><br>1.在模块代码中，第一个参数必须命名为require。<br><br>2.不要重命名require函数，或在任何作用域总给require重新赋值。<br><br>3.require的参数值必须是字符串的直接量不能是表达式。<br></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/12/07/网易微专业-模块化编程-4-1-1-模块系统概述-自定义模块规范-书写约定/" data-id="ck5iwofnm0012tjxqvvt77p8u" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-HTTP和HTTPS协议" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/12/06/HTTP和HTTPS协议/" class="article-date">
@@ -89,7 +171,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/06/HTTP和HTTPS协议/" data-id="ck5hl9hcl001f95xq9nccxxrt" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/12/06/HTTP和HTTPS协议/" data-id="ck5iwofoo001ftjxqswjtemj0" class="article-share-link">Share</a>
       
       
     </footer>
@@ -183,7 +265,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/06/我的typescript学习-接口/" data-id="ck5hl9hco001i95xqebspd957" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/12/06/我的typescript学习-接口/" data-id="ck5iwofot001ktjxq1nybjqk8" class="article-share-link">Share</a>
       
       
     </footer>
@@ -280,7 +362,7 @@ console.log(fibonacci.cache);
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/02/网易微专业-Undersocre-3-4-1-Underscore-partial偏函数or-memoize缓存/" data-id="ck5hl9hbi000i95xqfvtc7m8i" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/12/02/网易微专业-Undersocre-3-4-1-Underscore-partial偏函数or-memoize缓存/" data-id="ck5iwofn5000ktjxqey54k62e" class="article-share-link">Share</a>
       
       
     </footer>
@@ -339,7 +421,7 @@ start = 0
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/02/网易微专业-Undersocre-3-3-2-Underscore-unique去重函数-源码拾遗/" data-id="ck5hl9hbn000n95xqkai4imp6" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/12/02/网易微专业-Undersocre-3-3-2-Underscore-unique去重函数-源码拾遗/" data-id="ck5iwofn5000ltjxqdrz4qr8p" class="article-share-link">Share</a>
       
       
     </footer>
@@ -377,7 +459,7 @@ start = 0
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/01/网易微专业-Undersocre-3-3-1-Underscore数组定位与摊平数组/" data-id="ck5hl9hbk000l95xq3tnvms9z" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/12/01/网易微专业-Undersocre-3-3-1-Underscore数组定位与摊平数组/" data-id="ck5iwofn2000htjxq6bzpnnys" class="article-share-link">Share</a>
       
       
     </footer>
@@ -442,7 +524,7 @@ _.sample = function(array, n){
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/27/网易微专业-Underscore-3-2-3-乱序数组-洗牌算法/" data-id="ck5hl9hbj000j95xqwdalyqla" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/27/网易微专业-Underscore-3-2-3-乱序数组-洗牌算法/" data-id="ck5iwofn4000jtjxqp1aubmnn" class="article-share-link">Share</a>
       
       
     </footer>
@@ -555,7 +637,7 @@ _.lastIndexOf = createIndexFinder(-1, _.findLastIndex);
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/27/网易微专业-Underscore-3-2-2-条件查询-背后索引查询器实现/" data-id="ck5hl9hbh000h95xqainmgc39" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/27/网易微专业-Underscore-3-2-2-条件查询-背后索引查询器实现/" data-id="ck5iwofn7000ntjxqhpo9l41s" class="article-share-link">Share</a>
       
       
     </footer>
@@ -651,243 +733,7 @@ _.filter = function(obj, predicate, context) {
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/26/网易微专业-Underscore-3-2-1-Map-reduce真值检测函数/" data-id="ck5hl9hbj000k95xqzylqfhf1" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-Underscore-3-1-4-rest参数-Underscore创建对象方式" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/11/25/网易微专业-Underscore-3-1-4-rest参数-Underscore创建对象方式/" class="article-date">
-  <time datetime="2019-11-25T12:04:05.000Z" itemprop="datePublished">2019-11-25</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/11/25/网易微专业-Underscore-3-1-4-rest参数-Underscore创建对象方式/">网易微专业-Underscore-3.1.4-rest参数-Underscore创建对象方式</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.rest参数<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.1.4_1.png"><br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.1.4_2.png"><br>2.Object.create.polyfill<br>这个没啥可说的，直接撸代码吧</p>
-<p><pre><br>var Ctor = function(){};</pre></p>
-<p>//Object.create polyfill   Object.create(object)   baseCreate(object)<br>var baseCreate = function(prototype) {<br>    if (!_.isObject(prototype)) return {};<br>    if (Object.create) return Object.create(prototype);<br>    Ctor.prototype = prototype;<br>    var result = new Ctor;<br>    Ctor.prototype = null;//要清空<br>    return result;<br>};<br><br>3.rest参数的实现<br>下面代码里的讲解，是以下面代码为例的</p>
-<p><pre><br>function test(count, rest){<br>    console.log(rest);   //[2,3,4]<br>}<br>//包装器<br>var restTest = _.restArguments(test);<br>restTest(1,2,3,4);<br></pre></p>
-<p><pre><br>// rest 参数<br>_.restArguments = function(func) {<br>    //rest参数位置<br>    var startIndex = func.length - 1;   //1<br>    return function() {<br>        var length = arguments.length - startIndex,<br>            rest = Array(length),<br>            index = 0;<br>        // rest数组中的成员  rest==[2,3,4]<br>        for (; index &lt; length; index++) {<br>            rest[index] = arguments[index + startIndex];  //1<br>        }<br>        //非rest参数成员的值一一对应  args  ===2  []<br>        var args = Array(startIndex + 1);<br>        for (index = 0; index &lt; startIndex; index++) {<br>            args[index] = arguments[index];  //args [1]<br>        }</pre></p>
-<pre><code>    args[startIndex] = rest;   //args [1,[2,3,4]]
-    return func.apply(this, args);
-}
-</code></pre><p>}<br><br>上面代码，关于index和startIndex的设定和应用很有技巧</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/25/网易微专业-Underscore-3-1-4-rest参数-Underscore创建对象方式/" data-id="ck5hl9hbe000f95xqn0fr7yn8" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-Underscore-3-1-3-undefined的处理iteratee设计-源代码" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/11/25/网易微专业-Underscore-3-1-3-undefined的处理iteratee设计-源代码/" class="article-date">
-  <time datetime="2019-11-25T10:07:46.000Z" itemprop="datePublished">2019-11-25</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/11/25/网易微专业-Underscore-3-1-3-undefined的处理iteratee设计-源代码/">网易微专业-Underscore-3.1.3-undefined的处理iteratee设计-源代码</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>js部分代码</p>
-<pre>
-(function(root) {
-    var push = Array.prototype.push;
-
-    var _ = function(obj) {
-        if (obj instanceof _) {
-            return obj;
-        }
-
-        if (!(this instanceof _)) {
-            return new _(obj);
-        }
-        this._wrapped = obj;
-    }
-
-    _.unique = function(arr, callback) {
-        var ret = [];
-        var target, i = 0;
-        for (; i < arr.length; i++) {
-            var target = callback ? callback(arr[i]) : arr[i];
-            if (ret.indexOf(target) === -1) {
-                ret.push(target);
-            }
-        }
-
-        return ret;
-    }
-
-    //开启链接式的调用
-    _.chain = function(obj) {
-        var instance = _(obj);
-        instance._chain = true;
-        return instance;
-    }
-
-    //辅助函数    obj   数据结果
-    var result = function(instance, obj) {
-        return instance._chain ? _(obj).chain() : obj;
-    }
-
-    _.prototype.value = function() {
-        return this._wrapped;
-    }
-
-    _.functions = function(obj) {
-        var result = [];
-        var key;
-        for (key in obj) {
-            result.push(key);
-        }
-        return result;
-    }
-
-    _.map = function(obj, iteratee, context) {
-        //生成不同功能迭代器
-        var iteratee = cb(iteratee, context);
-        //分辨 obj是数组对象, 还是object对象
-        var keys = !_.isArray(obj) && Object.keys(obj);
-        var length = (keys || obj).length;
-        var result = Array(length);
-
-        for (var index = 0; index < length; index++) {
-            var currentKey = keys ? keys[index] : index;
-            result[index] = iteratee(obj[currentKey], index, obj);
-        }
-
-        return result;
-    }
-
-    var cb = function(iteratee, context, count) {
-        if (iteratee == null) {
-            return _.identity;
-        }
-
-        if (_.isFunction(iteratee)) {
-            return optimizeCb(iteratee, context, count);
-        }
-    }
-
-    //optimizeCb优化迭代器
-    var optimizeCb = function(func, context, count) {
-        if (context == void 0) {
-            return func;
-        }
-
-        switch (count == null ? 3 : count) {
-            case 1:
-                return function(value) {
-                    return func.call(context, value);
-                };
-            case 3:
-                return function(value, index, obj) {
-                    return func.call(context, value, index, obj);
-                };
-        }
-    }
-
-   //默认迭代器
-    _.identity = function(value) {
-        return value;
-    }
-
-
-    _.each = function(target, callback) {
-        var key, i = 0;
-        if (_.isArray(target)) {
-            var length = target.length;
-            for (; i < length; i++) {
-                callback.call(target, target[i], i);
-            }
-        } else {
-            for (key in target) {
-                callback.call(target, key, target[key]);
-            }
-        }
-
-    }
-
-    //类型检测
-    _.isArray = function(array) {
-        return toString.call(array) === "[object Array]";
-    }
-
-    _.each(["Function", "String", "Object", "Number"], function(name) {
-        _["is" + name] = function(obj) {
-            return toString.call(obj) === "[object " + name + "]";
-        }
-    });
-
-    //mixin  
-    _.mixin = function(obj) {
-        _.each(_.functions(obj), function(name) {
-            var func = obj[name];
-
-            _.prototype[name] = function() {
-                var args = [this._wrapped];
-                push.apply(args, arguments);
-                // instance      去重之后的结果
-                return result(this, func.apply(this, args));
-            }
-        });
-    }
-
-    _.mixin(_);
-    root._ = _;
-})(this);
-</pre>
-可以用如下js测试
-<pre>
-var obj = {name:"max"}
-console.log(_.map([1, 2, 3], function(value, index, object){
-    console.log(this)
-    return value*3;
-},obj));
-</pre>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/25/网易微专业-Underscore-3-1-3-undefined的处理iteratee设计-源代码/" data-id="ck5hl9hbg000g95xqw3ne626o" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/26/网易微专业-Underscore-3-2-1-Map-reduce真值检测函数/" data-id="ck5iwofn3000itjxqliflm60t" class="article-share-link">Share</a>
       
       
     </footer>
@@ -933,6 +779,14 @@ console.log(_.map([1, 2, 3], function(value, index, object){
       <ul>
         
           <li>
+            <a href="/2020/01/18/js运算符优先级/">js运算符优先级</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/17/网易微专业-单页应用-1-3-2-VUE编译器原理探秘二/">网易微专业-单页应用-1.3.2-VUE编译器原理探秘二</a>
+          </li>
+        
+          <li>
             <a href="/2020/01/14/网易微专业-单页应用-1-3-1-VUE编译器原理探秘一/">网易微专业-单页应用-1.3.1-VUE编译器原理探秘一</a>
           </li>
         
@@ -942,14 +796,6 @@ console.log(_.map([1, 2, 3], function(value, index, object){
         
           <li>
             <a href="/2020/01/10/网易微专业福利期-2-1-JavaScript内存管理/">网易微专业福利期-2.1-JavaScript内存管理</a>
-          </li>
-        
-          <li>
-            <a href="/2020/01/09/张容铭-设计模式-第三篇-结构型设计模式/">张容铭-设计模式-第三篇-结构型设计模式</a>
-          </li>
-        
-          <li>
-            <a href="/2020/01/07/网易微专业-现代前端工程实践方案-解锁webpack-3-1-8-webpack的环境，webpack实战演练/">网易微专业-现代前端工程实践方案 解锁webpack-3.1.8-webpack的环境，webpack实战演练</a>
           </li>
         
       </ul>

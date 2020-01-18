@@ -62,6 +62,567 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-网易微专业-jq源码解析-1112DOM操作方法-html-text-css" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/11/17/网易微专业-jq源码解析-1112DOM操作方法-html-text-css/" class="article-date">
+  <time datetime="2019-11-17T12:30:15.000Z" itemprop="datePublished">2019-11-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/11/17/网易微专业-jq源码解析-1112DOM操作方法-html-text-css/">网易微专业-jq源码解析-1112DOM操作方法-html/text/css</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1、html()/text()/css()的作用<br>(1)html()用来读取和修改元素的HTML标签<br>(2)text()用来读取和修改元素的纯文本内容<br>(3)css()设置或返回被返回元素的一个或多个样式属性<br>·html()&amp;text()&amp;css()都是通过jQuery.access提供底层支持。jQuery.access()是一个多功能方法，作为set()和get()值来使用<br>2、举个栗子</p>
+<pre>
+< div id="app">< /div>
+< style type="text/css">
+    #app{
+        color:#abcdef;
+    }
+< /style>
+</pre>
+//get    return String
+console.log($("#app").css("color"));
+//set    return  Object
+console.log($("#app").css("color","red"));
+//批量  get    return Object
+console.log($("#app").css(["color"]));
+//批量  set    return Object
+console.log($("#app").css({
+   color:"red",
+   "font-size":"20px"
+}));
+从这个栗子里我们看出来什么呢，这几个API其实有个相同点，就是，根据不同的参数，get/set返回不同的对象,我们要思考的问题就是，对这种灵活的参数，我们应该怎么架构代码
+3、撸代码，然鹅，我们不是为了撸代码而撸代码，是为了理解代码的思想精髓  
+<pre>
+jQuery.fn.extend({
+    text : function(value) {
+        //这里为什么会有null这个参数
+        //因为text区别于css，text参数相对于css少，text只是有或者无参数
+        //css会有0/1/2个参数，而一个参数时，这一个参数可能是数组，也可能是对象
+        //于是，下面四个参数的意义
+        //this-执行对象，function-callback函数，null-key(如css两个参数，一个是key，一个是value)
+        //value-value
+        jQuery.access(this, function(value){
+            return value === undefined ? jQuery.text(this) : jQuery.content(this,value)
+        }, null, value)
+    },
+    css : function(key, value){
+        jQuery.access(this, function(key, value){
+            var CSSStyleDeclaration, len;
+            var map = {}
+            if(jQuery.isArray(key)){
+                CSSStyleDeclaration = window.getComputedStyle(this);
+                len = key.length
+                for(var i = 0;i < len ; i++){
+                    map[key[i]] = CSSStyleDeclaration.getPropertyValue[key[i]]
+                }
+                return map;
+            }
+            return value !== undefined ? jQuery.style(this, key, value) : window.getComputedStyle(this).getPropertyValue(key) || undefined
+        }, key, value)
+    },
+})
+</pre> 
+这节课核心的内容-access,要注意的是，这里是教学代码，虽然和jquery的真实实现有区别，但是精髓总算是一样的
+<pre>
+jQuery.extend({
+    access : funcion(elems, callback, key, value){
+        var len = elems.length;
+        var testing = key === null; //false
+        var cache, chain; //chain 开始链式调用
+        if(jQuery.isPlainObject(key)){
+            chain = true;
+            for(var name in key){
+                jQuery.access(elems, callback, name, key[name]);  //color => red  font-size =>20px
+            }
+        }
+        if (value !== undefined) {
+            chain = true;
+            if (testing) {
+                cache = callback;
+                callback = function(key, value) {
+                    //增强功能的写法，vue也采用了这种写法，比如vue的$mount功能
+                    //具体增强功能写法的意义，课程内容大概讲述了，或者以后学习工程中慢慢了解
+                    cache.call(this, value);
+                }
+            }
+            for (var i = 0; i < len; i++) { //1 || 1+
+                callback.call(elems[i], key, value);
+            }
+        }
+
+        return chain ? elems : testing ? callback.call(elems[0], value) : callback.call(elems[0], key, value);
+    },
+    text : function(elem){
+        var nodeType = elem.nodeType
+        if(nodeType === 1 || nodeType === 9 || nodeType === 11){
+            return elem.textContent
+        }
+    },
+    content : function(elem, value){
+        var nodeType = elem.nodeType
+        if(nodeType === 1 || nodeType === 9 || nodeType === 11){
+            elem.textContent = value;
+        }
+    },
+    style : function(elem, key, value){
+        if (!elem || elem.nodeType === 3 || !elem.style) {
+            return;
+        }
+        elem.style[key] = value;
+    },
+})
+</pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/11/17/网易微专业-jq源码解析-1112DOM操作方法-html-text-css/" data-id="ck5iwofna000qtjxqe4ehlewc" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-jq源码解析-1107直播课源码" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/11/17/网易微专业-jq源码解析-1107直播课源码/" class="article-date">
+  <time datetime="2019-11-17T09:54:35.000Z" itemprop="datePublished">2019-11-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/11/17/网易微专业-jq源码解析-1107直播课源码/">网易微专业-jq源码解析-1107直播课源码</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>html部分源码，请自行在html中调用，其中注释的汉字内容解释了链式回调的思路，即对</p>
+<pre>
+deferred[tuple[1]](function() {
+    var returndefer = fn && fn.apply(this, arguments);
+    if (returndefer && jQuery.isFunction(returndefer.promise)) {
+         returndefer.done(newdefer.resolve)
+                    .fail(newdefer.reject)
+                    .progress(newdefer.notify);
+    }
+});
+</pre>
+这段内容中if判断执行的解释
+<pre>
+/*
+    var obj = {};
+    var callList = $.callbacks();  // 队列
+    callList.add(function(name){
+        console.log(this)
+    });
+    callList.add(function(name){
+        console.log(2+"name")
+    });
+
+    callList.fireWith(obj);
+    */
+
+
+    var wait = function(src) {
+        var der = jQuery.Deferred();
+        var img = document.getElementsByTagName("img")[0];
+
+        img.onload = function() {
+            der.resolve("加载成功1122333");    //权限 绑定状态   done  fail ...
+        }
+        img.src = src;
+        return der.promise(); //状态凝固   promise
+    }
+
+    /*
+    $.when(wait("index.jpg")).done(function(message){
+        console.log(message)     //this  === der
+    });
+    */
+
+   //新的 Deferred 对象, 链式调用     
+   wait("index.jpg").then(function(message){
+       var der = jQuery.Deferred();
+       der.resolve("又是一个Deferred对象");
+       return der.promise();  //权限
+   }).then(function(message){
+       console.log(message)
+   });
+
+
+  /*
+  then方法返回的是一个新的Deferred实例
+
+  wait("index.jpg")   
+  有了一个Deferred对象  =>der  
+  状态   resolve
+  队列中的callback呢？
+  then(function(message){
+                 console.log(message)
+  })
+
+
+
+  返回的是一个新的Deferred实例
+  */ 
+
+
+  /*
+  then方法的第一个参数是resolved状态的回调函数，第二个参数（可选）是rejected状态的回调函数。
+
+  第一个then方法指定的回调函数，返回的是另一个Promise对象。这时，第二个then方法指定的回调函数，就会等待这个新的Promise对象状态发生变化。
+  如果变为resolved，就调用第一个回调函数，如果状态变为rejected，就调用第二个回调函数。
+  */
+
+  //异步操作  开始  -  结束 -> 状态 成功  | 失败   做什么?   队列里面的callback
+</pre><br>
+js部分源码
+<pre>
+/*
+ * @Author: Administrator
+ * @Date:   2018-10-30 20:40:51
+ * @Last Modified by:   Administrator
+ * @Last Modified time: 2018-11-01 22:10:22
+ */
+(function(root) {
+    var testExp = /^\s*(<[\w\w]+>)[^>]*$/;
+    var rejectExp = /^<(\w+)\s*\ ?="">(?:<\ \1="">|)$/;
+    var version = "1.0.1";
+    var optionsCache = {};
+    var jQuery = function(selector, context) {
+        return new jQuery.prototype.init(selector, context);
+    }
+
+    jQuery.fn = jQuery.prototype = { //原型对象
+        length: 0,
+        jquery: version,
+        selector: "",
+        init: function(selector, context) {
+            context = context || document;
+            var match, elem, index = 0;
+            //$()  $(undefined)  $(null) $(false)  
+            if (!selector) {
+                return this;
+            }
+
+            if (typeof selector === "string") {
+                if (selector.charAt(0) === "<" &&="" selector.charat(selector.length="" -="" 1)="==" "="">" && selector.length >= 3) {
+                    match = [selector]
+                }
+                //创建DOM
+                if (match) {
+                    //this  
+                    jQuery.merge(this, jQuery.parseHTML(selector, context));
+                    //查询DOM节点
+                } else {
+                    elem = document.querySelectorAll(selector);
+                    var elems = Array.prototype.slice.call(elem);
+                    this.length = elems.length;
+                    for (; index < elems.length; index++) {
+                        this[index] = elems[index];
+                    }
+                    this.context = context;
+                    this.selector = selector;
+                }
+            } else if (selector.nodeType) {
+                this.context = this[0] = selector;
+                this.length = 1;
+                return this;
+            }
+
+        },
+        css: function() {
+            console.log("di~~didi~~")
+        },
+        //....
+    }
+
+    jQuery.fn.init.prototype = jQuery.fn;
+
+
+    //克隆    架构    jQuery.extend({}, obj1, obj2);   以默认配置为优先 以用户配置为覆盖
+    jQuery.extend = jQuery.prototype.extend = function() {
+        var target = arguments[0] || {};
+        var length = arguments.length;
+        var i = 1;
+        var deep = false; //默认为浅拷贝 
+        var option;
+        var name;
+        var copy;
+        var src;
+        var copyIsArray;
+        var clone;
+
+        if (typeof target === "boolean") {
+            deep = target;
+            target = arguments[1];
+            i = 2;
+        }
+
+        if (typeof target !== "object") {
+            target = {};
+        }
+
+        if (length == i) {
+            target = this;
+            i--; //0   
+        }
+
+        for (; i < length; i++) {
+            if ((option = arguments[i]) !== null) {
+                for (name in option) {
+                    src = target[name];
+                    copy = option[name];
+                    if (deep && (jQuery.isPlainObject(copy) || (copyIsArray = jQuery.isArray(copy)))) {
+                        if (copyIsArray) {
+                            copyIsArray = false;
+                            clone = src && jQuery.isArray(src) ? src : [];
+                        } else {
+                            clone = src && jQuery.isPlainObject(src) ? src : {};
+                        }
+                        target[name] = jQuery.extend(deep, clone, copy);
+                    } else if (copy !== undefined) {
+                        target[name] = copy;
+                    }
+                }
+            }
+        }
+        return target;
+    }
+
+
+    jQuery.extend({
+        //类型检测     
+        isPlainObject: function(obj) {
+            return typeof obj === "object";
+        },
+
+        isArray: function(obj) {
+            return toString.call(obj) === "[object Array]";
+        },
+
+        isFunction: function(fn) {
+            return toString.call(fn) === "[object Function]";
+        },
+        //类数组转化成正真的数组  
+        markArray: function(arr, results) {
+            var ret = results || [];
+            if (arr != null) {
+                jQuery.merge(ret, typeof arr === "string" ? [arr] : arr);
+            }
+            return ret;
+        },
+
+        //合并数组
+        merge: function(first, second) {
+            var l = second.length,
+                i = first.length,
+                j = 0;
+
+            if (typeof l === "number") {
+                for (; j < l; j++) {
+                    first[i++] = second[j];
+                }
+            } else {
+                while (second[j] !== undefined) {
+                    first[i++] = second[j++];
+                }
+            }
+
+            first.length = i;
+
+            return first;
+        },
+
+        parseHTML: function(data, context) {
+            if (!data || typeof data !== "string") {
+                return null;
+            }
+            //过滤掉<a>   <a>   => a 
+            var parse = rejectExp.exec(data);
+            console.log(parse)
+            return [context.createElement(parse[1])];
+        },
+
+        //$.Callbacks用于管理函数队列
+        callbacks: function(options) {
+            options = typeof options === "string" ? (optionsCache[options] || createOptions(options)) : {};
+            var list = [];
+            var index, length, testting, memory, start, starts;
+            var fire = function(data) {
+                memory = options.memory && data;
+                index = starts || 0;
+                starts = 0;
+                testting = true;
+                length = list.length;
+                for (; index < length; index++) {
+                    if (list[index].apply(data[0], data[1]) === false && options.stopOnfalse) {
+                        break;
+                    }
+                }
+            }
+            var self = {
+                add: function() {
+                    var args = Array.prototype.slice.call(arguments);
+                    start = list.length;
+                    args.forEach(function(fn) {
+                        if (toString.call(fn) === "[object Function]") {
+                            list.push(fn);
+                        }
+                    });
+                    if (memory) {
+                        starts = start;
+                        fire(memory);
+                    }
+                    return this;
+                },
+                //指定上下文对象     resolve(object,"操作成功")  fireWith()
+                fireWith: function(context, arguments) {
+                    var args = [context, arguments];
+                    if (!options.once || !testting) {
+                        fire(args);
+                    }
+
+                },
+                //参数传递
+                fire: function() {
+                    self.fireWith(this, arguments);
+                }
+            }
+            return self;
+        },
+
+        // 异步回调解决方案
+        Deferred: function(func) {
+            var tuples = [
+                    ["resolve", "done", jQuery.callbacks("once memory"), "resolved"],
+                    ["reject", "fail", jQuery.callbacks("once memory"), "rejected"],
+                    ["notify", "progress", jQuery.callbacks("memory")]
+                ],
+                state = "pending",
+                //promise   权限分配  add   添加callback
+                promise = {
+                    state: function() {
+                        return state;
+                    },
+                    then: function( /* fnDone, fnFail, fnProgress */ ) {
+                        var fns = [].slice.call(arguments); //真正数组对象
+                        //创建一个Deferred 延迟对象  返回一个promise对象
+                        return jQuery.Deferred(function(newdefer) {
+                            tuples.forEach(function(tuple, i) {
+                                var fn = jQuery.isFunction(fns[i]) && fns[i];
+                                /*
+                                deferred   通过闭包去访问  此处链接式调用时指向的deferred对象
+                                newdefer   通过参数传递    指向新创建的deferred对象
+                                */
+                                //resolve  队列中的 callback
+                                deferred[tuple[1]](function() {
+                                    var returndefer = fn && fn.apply(this, arguments);
+                                    if (returndefer && jQuery.isFunction(returndefer.promise)) {
+                                         //console.log(newdefer)
+                                         returndefer.done(newdefer.resolve)
+                                                    .fail(newdefer.reject)
+                                                    .progress(newdefer.notify);
+                                    }
+                                });
+
+                            })
+                        }).promise();
+                    },
+                    promise: function(obj) {
+                        return obj != null ? jQuery.extend(obj, promise) : promise;
+                    }
+                },
+                deferred = {};
+
+            tuples.forEach(function(tuple, i) {
+                var list = tuple[2],
+                    stateString = tuple[3];
+
+                // promise[ done | fail | progress ] = list.add
+                promise[tuple[1]] = list.add;
+
+                // Handle state
+                if (stateString) {
+                    list.add(function() {
+                        // state = [ resolved | rejected ]
+                        state = stateString;
+                    });
+                }
+
+                // deferred[ resolve | reject | notify ]  der.resolve("加载成功");    
+                deferred[tuple[0]] = function() {
+                    deferred[tuple[0] + "With"](this === deferred ? promise : this, arguments);
+                    return this;
+                };
+                deferred[tuple[0] + "With"] = list.fireWith;
+            });
+
+            // Make the deferred a promise
+            promise.promise(deferred);
+
+            //新创建的deferred 对象
+            if (func) {
+                func.call(deferred, deferred);
+            }
+            return deferred;
+        },
+        //执行一个或多个对象的延迟对象的回调函数
+        when: function(subordinate) {
+            return subordinate.promise();
+        },
+
+    });
+
+    function createOptions(options) {
+        var object = optionsCache[options] = {};
+        options.split(/\s+/).forEach(function(value) {
+            object[value] = true;
+        });
+        return object;
+    }
+
+    root.$ = root.jQuery = jQuery;
+})(this);
+</a></a></"></\></(\w+)\s*\></[\w\w]+></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/11/17/网易微专业-jq源码解析-1107直播课源码/" data-id="ck5iwofou001ltjxq62t8ef2a" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-网易微专业-jq源码解析-事件绑定-自定义事件-模拟事件-完整源码" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/11/16/网易微专业-jq源码解析-事件绑定-自定义事件-模拟事件-完整源码/" class="article-date">
@@ -773,7 +1334,7 @@ html部分测试代码：
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/16/网易微专业-jq源码解析-事件绑定-自定义事件-模拟事件-完整源码/" data-id="ck5hl9hdf001q95xq81u99v3z" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/16/网易微专业-jq源码解析-事件绑定-自定义事件-模拟事件-完整源码/" data-id="ck5iwofpp001stjxqk17iqkff" class="article-share-link">Share</a>
       
       
     </footer>
@@ -815,7 +1376,7 @@ html部分测试代码：
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/15/网易微专业-jq源码解析-2-5-3-事件绑定-自定义事件-模拟事件/" data-id="ck5hl9hbr000u95xqfyd898k0" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/15/网易微专业-jq源码解析-2-5-3-事件绑定-自定义事件-模拟事件/" data-id="ck5iwofnc000ttjxqlb6rmlz7" class="article-share-link">Share</a>
       
       
     </footer>
@@ -951,7 +1512,7 @@ ws.close();//关闭连接
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/15/轮询/" data-id="ck5hl9hc3001c95xqt2y4va5i" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/15/轮询/" data-id="ck5iwofnx001etjxqxg0iup1r" class="article-share-link">Share</a>
       
       
     </footer>
@@ -1470,7 +2031,7 @@ ws.close();//关闭连接
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/15/网易微专业-jq源码解析-事件绑定-体系结构-完整源码/" data-id="ck5hl9hcr001l95xqbhrsgffb" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/15/网易微专业-jq源码解析-事件绑定-体系结构-完整源码/" data-id="ck5iwofow001ntjxq3x8or4cz" class="article-share-link">Share</a>
       
       
     </footer>
@@ -1625,7 +2186,7 @@ event.delegateTarget = this;
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/10/网易微专业-jq源码解析-2-5-1-事件绑定-bind-delegate-on/" data-id="ck5hl9hcq001k95xqy9agfygl" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/10/网易微专业-jq源码解析-2-5-1-事件绑定-bind-delegate-on/" data-id="ck5iwofov001mtjxqx7l179lm" class="article-share-link">Share</a>
       
       
     </footer>
@@ -1705,7 +2266,7 @@ return deferred;
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/09/网易微专业-jq源码解析-1107直播课deferred相关/" data-id="ck5hl9hbl000m95xqkbdosub3" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/09/网易微专业-jq源码解析-1107直播课deferred相关/" data-id="ck5iwofn6000mtjxqv5nfuoj6" class="article-share-link">Share</a>
       
       
     </footer>
@@ -2396,7 +2957,7 @@ jQuery.extend( {
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/08/网易微专业-jq源码解析-2-4-1-延时对象-Deferred概念-源码剖析/" data-id="ck5hl9hde001p95xqiwcwezpb" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/08/网易微专业-jq源码解析-2-4-1-延时对象-Deferred概念-源码剖析/" data-id="ck5iwofpp001rtjxqw2vzyib2" class="article-share-link">Share</a>
       
       
     </footer>
@@ -2524,191 +3085,7 @@ jQuery.extend( {
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/07/js正则表达式基础总结/" data-id="ck5hl9hck001e95xquq8lnfq4" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-jq源码解析-2-3-1-jq的Callbacks入门-原理分析" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/11/02/网易微专业-jq源码解析-2-3-1-jq的Callbacks入门-原理分析/" class="article-date">
-  <time datetime="2019-11-02T08:54:09.000Z" itemprop="datePublished">2019-11-02</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/11/02/网易微专业-jq源码解析-2-3-1-jq的Callbacks入门-原理分析/">网易微专业-jq源码解析-2.3.1-jq的Callbacks入门&amp;原理分析</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>一、关于$.Callbacks<br>1、callbacks介绍<br>·$.Callbacks用于管理函数队列<br>·通过add添加处理函数到队列当中，通过fire去执行这些处理函数<br>另:$.Callbacks是在jQuery内部使用的，如为 .ajax，$.Deferred等组件提供基础功能的函数。它也可以用在类似功能的一些组件中，如自己开发的插件。<br>API例子：<br>var cb = $.Callbacks();<br>cb.add(function(){console.log(‘add one’)});//add() 添加处理函数<br>cb.fire();//add one //fire()按照添加函数的顺序依次执行处理函数<br>2、参数<br>$.Callbacks通过字符串参数的形式，支持4种特定功能：<br>once:函数队列只执行一次<br><img src="https://snakexu.github.io/images/wangyi/jq/callback_2.png"><br>unique:往内部队列添加的函数保持唯一，不能重复添加<br><img src="https://snakexu.github.io/images/wangyi/jq/callback_3.png"><br>stopOnFalse:内部队列里的函数是依次执行的，当某个函数的返回值是false时，停止继续执行剩下的函数<br><img src="https://snakexu.github.io/images/wangyi/jq/callback_4.png"><br>memory:当函数队列fire一次过后，内部函数会记录当前fire的参数。当下次调用add的时候，会把记录的参数传递给新添加的函数并立即执行这个新添加的函数<br><img src="https://snakexu.github.io/images/wangyi/jq/callback_5.png"><br>3、从事件函数了解callbacks<br>事件通常与函数配合使用，这样就可以通过发生的事件来驱动函数的执行。<br>原则：<br>(1)一个事件对应一个事件函数<br>(2)在一个事件对应多个事件函数的情况下，后者会覆盖前者<br>例：<br>Element.onclick = function() {<br>  console.log(code);<br>}<br>Element.onclick = function() {<br>  console.log(code1);<br>}<br>我们往DOM元素上绑定两次onclick事件，当我们触发该点击事件时，只触发打印code1。<br>如果我们想要改变这种一对一的原则，那可以按照下列栗子对事件驱动方案进行改造。<br>var callbacks = [function(){}, function(){}, function(){}];<br>Element.onclick = function() {<br>  var _this = this;<br>  callbacks.forEach(function(fn) {<br>    fn.call(_this);<br>  })<br>}<br>首先，可以先将函数存储在callbacks数组中，在元素绑定的onclick函数上去遍历并依次执行处理函数。这样就建立起一对多的事件模型。<br>这时候的callbacks是一个数组。但我们其实更想callbacks它不仅是一个数组，更是一个容器，能比数组赋予更多的功能。<br>callbacks作为数组时，虽然可以通过push添加元素，通过循环执行函数。但我们如果想通过参数去在添加元素时控制数组的形成，在执行的之后通过参数去控制哪些执行哪些不执行，这时候callbacks就应运而生。jQuery的callbacks中对外提供add和fire两个方法，该两个方法的功能与数组的push和遍历执行功能类似，但可以根据传入的参数去控制执行函数的执行。<br>二、源码实现</p>
-<p><pre><br>(function(root){<br>    var optionsCache = {};<br>    var _ = {<br>        //options参数,接收once、unique、stopOnFalse、memory这四个参数之一<br>        callbacks:function(options){<br>            options = typeof options === ‘string’ ? (optionsCache[options] || createOptions(options)) : {};<br>            var list = [];//执行队列<br>            //这里定义的变量基本都是用于记录队列执行进度，根据各种不同的参数记录不同的数值<br>            var index, length, testting, memory, starts, start;<br>            //执行方法，执行队列<br>            var fire = function(data){<br>                memory = options.memory &amp;&amp; data;<br>                //如果有参数memory，则需要从上次队列执行到的地方开始执行，否则从list队列里下标为0的地方开始执行<br>                index = starts || 0;<br>                start = 0;<br>                testting = true;<br>                length = list.length;<br>                for(; index &lt; length ; index++){<br>                    //data[0]绑定上下文执行环境对象,options.stopOnFalse调用$.Callbacks是否传递参数stopOnFalse<br>                    if(list[index].apply(data[0], data[1]) === false &amp;&amp; options.stopOnFalse){<br>                        break;<br>                    }<br>                }<br>            }<br>            //这里函数颗粒度的划分的思路add/fire/fireWith然后再去fire()执行<br>            var self = {<br>                //添加<br>                add:function(){<br>                    var args = Array.prototype.slice.call(arguments);<br>                    start = list.length;<br>                    args.forEach(function(fn){<br>                        if(toString.call(fn) === ‘[object Function]’){<br>                            list.push(fn);<br>                        }<br>                    });<br>                    if(memory){<br>                        starts = start;<br>                        fire(memory)<br>                    }<br>                },<br>                //函数执行过程中上下文的绑定<br>                fireWith:function(context, arguments){<br>                    var args = [context, arguments];<br>                    if(!options.once || !testting){<br>                        fire(args)<br>                    }<br>                },<br>                //与callbacks的执行方法fire不同<br>                fire:function(){<br>                    //this-&gt;self,传递上下文执行环境<br>                    self.fireWith(this, arguments);<br>                }<br>            }<br>            //个人认为第一个需要注意的思路<br>            return self;//每次调用callbacks都返回一个队列，队列里对应有add和fire的操作<br>        }<br>    }<br>    function createOptions(options){<br>        var object = optionsCache[options] = {};<br>        //如果参数为一个以上，如$.Callbacks(“once memory”)<br>        options.split(/\s+/).forEach(function(value){<br>            object[value] = true;<br>        })<br>        retrun object;<br>    }<br>    root._ = _;<br>})(this);<br></pre><br><!--线性队列处理提供了很好的思路--><br>add方法的核心，其实就是把参数这种类数组转换为数组，并循环push到定义的list数组中，这个list数组也称之为队列。<br>fire方法的调用比较复杂，之所以要拆开为self.fire、self.fireWith、fire三个函数，是为了后续的参数控制做准备。self.fire是用于调用时进行传参，fire是通过call方法去执行队列list中的执行函数，其上下文是self.fireWith进行绑定的。当然，self.fireWith的作用远不止如此，后续我们会继续说到。<br>注意：最后一行代码，callbacks最后会返回self，这是一个很核心的设计。那我们就要思考，这里为什么不将add、fire方法直接返回呢？原因是，我们想要每次调用self，最终返回出去的是一个队列，这样每次调用所得到的队列都是不同的，彼此之之间不会相互影响。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/02/网易微专业-jq源码解析-2-3-1-jq的Callbacks入门-原理分析/" data-id="ck5hl9hbr000t95xqmjq20dwl" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-jq源码解析-2-2-1-jq选择器" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/11/01/网易微专业-jq源码解析-2-2-1-jq选择器/" class="article-date">
-  <time datetime="2019-11-01T09:28:04.000Z" itemprop="datePublished">2019-11-01</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/11/01/网易微专业-jq源码解析-2-2-1-jq选择器/">网易微专业-jq源码解析-2.2.1:jq选择器</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p></p><h4>一、常用就jQuery选择器接口</h4><br>1.jQuery对象和DOM对象的区别<br><img src="https://snakexu.github.io/images/wangyi/jq/xuanzeqi_1.png"><br>2.常用jQuery选择器接口<br><img src="https://snakexu.github.io/images/wangyi/jq/xuanzeqi_2.png"><p></p>
-<p></p><h4>二、选择器源码解析</h4><br>问题：<br>(1)如何把创建的DOM节点包装成jQuery对象?<br>(2)jQuery实例对象length属性的作用?<br>(3)merge方法的应用场景有哪些?<br>(4)$(document).ready()与$(function(){})的关系?<br>关于：sizzle与querySelector<br><img src="https://snakexu.github.io/images/wangyi/jq/selector_1.png"><br>本课程选用querySelector替换jQuery的Sizzle减轻大家对源码理解的难度<p></p>
-<p>$(“&lt; a &gt;”)//创建DOM节点<br>$(“#a”)//查询DOM节点<br>还可以$(对象，函数)</p>
-<p>源码:</p>
-<p><pre><br>(function(root){<br>    var testExp = /^\s<em>(&lt;[\w\W]+&gt;)[^&gt;]</em>$/;<br>    var rejectExp = /^&lt;(\w+)\s*\/?&gt;(?:&lt;\/\1&gt;)|)$/;<br>    var version = “1.0.1”;<br>    var jQuery = function(selector, context){<br>        return new jQuery.prototype.init(selector, context)<br>    }<br>    jQuery.fn = jQuery.prototype = {//原型对象<br>        length: 0,<br>        jquery: version,<br>        selector: “”,<br>        init: function(selector, context){<br>            context = context || document;<br>            var match,elem,index = 0;<br>            //$() $(undefined) $null $false<br>            if(!selector){<br>                return this;<br>            }<br>            if(typeof selector === “string”){<br>                if(selector.charAt(0) === “&lt;” &amp;&amp; selector.charAt(selector.length-1)==”&gt;” &amp;&amp; selector.length &gt;= 3){<br>                    match = [selector]<br>                }<br>                //创建DOM<br>                if(match){<br>                    //合并数组object array2<br>                    //$.parseHTML() 函数用于将HTML字符串解析为对应的DOM节点数组<br>                    //$.parseHTML( htmlString [, context ] [, keepScripts ] )<br>                    //<a href="https://www.runoob.com/jquery/misc-parsehtml.html相关介绍" target="_blank" rel="noopener">https://www.runoob.com/jquery/misc-parsehtml.html相关介绍</a><br>                    jQuery.merge(this, jQuery.parseHTML(selector, context))<br>                }else{<br>                    //querySelector&amp;querySelectorAll的区别:<br>                    //querySelector从上到下筛选出第一个存在于筛选器中的标签<br>                    //querySelectorAll筛选出所有符合条件的标签。生成一个    NodeList (节点列表) , 我们可以懒惰的通过下标进行访问<br>                    elem = document.querySelectorAll(selector)<br>                    var elems = Array.prototype.slice.call(elem);<br>                    this.length = elems.length;<br>                    for(;index &lt; elems.length;index++){<br>                        this[index] = elems[index];<br>                    }<br>                    this.context = context;<br>                    this.selector = selector;<br>                }<br>            }else if(selector.nodeType){<br>                //如果传入的是document/window等<br>                this.context = this[0] = selector;<br>                this.length = 1;<br>                return this;<br>            }else if(isFunction( selector )){<br>                return root.ready !== undefined ? root.ready(selector) : selector( jQuery );<br>            }<br>        }<br>    }<br>    jQuery.fn.init.prototype = jQuery.fn;<br>    jQuery.fn.ready = function( fn ) {<br>        readyList //关于此处，需要了解更多，请查看源码<br>            .then( fn )<br>            // Wrap jQuery.readyException in a function so that the lookup<br>            // happens at the time of error handling instead of callback<br>            // registration.<br>            .catch( function( error ) {<br>                jQuery.readyException( error );<br>            } );</pre></p>
-<pre><code>    return this;
-};
-jQuery.extend = jQuery.prototype.extend = function() {
-    var target = arguments[0] || {}; 
-    var length = arguments.length;
-    var i = 1;
-    var deep = false; //默认为浅拷贝 
-    var option;
-    var name;
-    var copy;
-    var src;
-    var copyIsArray;
-    var clone;
-    if (typeof target === &quot;boolean&quot;) { 
-        deep = target;
-        target = arguments[1]; 
-        i = 2;
-    }
-    if (typeof target !== &quot;object&quot;) {
-        target = {};
-    }
-    if (length == i) {
-        target = this;
-        i--; //0   
-    }
-    for (; i &lt; length; i++) {
-        if ((option = arguments[i]) !== null) {
-            for (name in option) {
-                src = target[name]; 
-                copy = option[name];
-                if (deep &amp;&amp; (jQuery.isPlainObject(copy) || (copyIsArray = jQuery.isArray(copy)))) {
-                    if (copyIsArray) { 
-                        copyIsArray = false;
-                        clone = src &amp;&amp; jQuery.isArray(src) ? src : [];
-                    } else { 
-                        clone = src &amp;&amp; jQuery.isPlainObject(src) ? src : {};
-                    }
-                    target[name] = jQuery.extend(deep, clone, copy);
-                } else if (copy !== undefined) {
-                    target[name] = copy; 
-                }
-            }
-        }
-    }
-    return target;
-}
-jQuery.extend = ({
-    //类型检测     
-    isPlainObject: function(obj) {
-        return typeof obj === &quot;object&quot;;
-    },
-    isArray: function(obj) { 
-        return toString.call(obj) === &quot;[object Array]&quot;;
-    },
-    isFunction: function(fn) {
-       return toString.call(fn) === &quot;[object Function]&quot;;
-    },
-    isFunction: function(obj) {
-        // Support: Chrome &lt;=57, Firefox &lt;=52
-        // In some browsers, typeof returns &quot;function&quot; for HTML &lt; object &gt; elements
-        // (i.e., `typeof document.createElement( &quot;object&quot; ) === &quot;function&quot;`).
-        // We don&apos;t want to classify *any* DOM node as a function.
-        return typeof obj === &quot;function&quot; &amp;&amp; typeof obj.nodeType !== &quot;number&quot;;
-    };
-    //类数组转化成正真的数组  
-    markArray: function(arr, results) {
-        var ret = results || [];
-        if (arr != null) {
-            jQuery.merge(ret, typeof arr === &quot;string&quot; ? [arr] : arr);
-        }
-        return ret;
-    },
-    //合并数组
-    merge:function(first,second){
-        var l = second.length,
-            i = first.length,//jQuery.fn = jQuery.prototype的时候定义length为0;
-            //一般情况下Function.length中的是函数对象的一个属性值，指该函数有多少个必须要传入的参数，即形参的个数。
-            //(接上一行)形参的数量不包括剩余参数个数，仅包括第一个具有默认值之前的参数个数。
-            //(接上一行)与之对比的是，  arguments.length 是函数被调用时实际传参的个数。
-            //Function.prototype  对象的 length 属性值为 0 。
-            j = 0;
-        if(typeof l === &apos;number&apos;){
-            for(;j &lt; l;j++){
-                first[i++] = second[j]
-            }
-        }else{
-            while(second[j] !== undefined){
-                first[i++] = second[j++]
-            }
-            first.length = i;
-            return first;
-        }
-    },
-    parseHTML: function(data, context){
-        if(!data || typeof data !== &quot;string&quot;){
-            return null;
-        }
-        var parse = rejectExp.exec(data);
-        return [context.createElement(parse[1])];
-    },
-})
-root.$ = root.jQuery = jQuery;
-</code></pre><p>})(this)<br><br>插播一条，max老师在知乎的专栏：<a href="https://zhuanlan.zhihu.com/c_1162017153112363008" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/c_1162017153112363008</a><br>jquery3.4.1源码：<a href="https://code.jquery.com/jquery-3.4.1.js" target="_blank" rel="noopener">https://code.jquery.com/jquery-3.4.1.js</a><br>关于正则表达式的总结，我找到了一篇个人认为比较全面的文章：<a href="https://www.jianshu.com/p/488d60349325" target="_blank" rel="noopener">https://www.jianshu.com/p/488d60349325</a></p>
-<p>关于本篇用到的正则var rejectExp = /^&lt;(\w+)\s<em>\/?&gt;(?:&lt;\/\1&gt;|)$/;<br>解释如下:<br>1、^:必须以 “ &lt; “ 开头<br>2、(\w+)：匹配一个单字字符（字母、数字或者下划线）一次或多次<br>3、\s</em>：匹配 0 次或多次空白字符<br>4、\/：’\’转义字符，此处将’/‘转义为’/‘,<br>5、第一个?:匹配前面/斜杠 0 次或者 1 次。<br>6、第一个?后的&gt;:匹配&gt;<br>7、(?:&lt;\/\1&gt;|) 这里不捕获，并用\1去反向引用前面表达式&lt;(\w+)\s*\/?&gt;的结果</p>
-<p><img src="https://snakexu.github.io/images/wangyi/jq/selector_2.png"><br>如何把创建的DOM节点包装成jquery对象，例子：jQuery.merge(this, jQuery.parseHTML(selector, context))<br><img src="https://snakexu.github.io/images/wangyi/jq/selector_3.png"></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/01/网易微专业-jq源码解析-2-2-1-jq选择器/" data-id="ck5hl9hbp000r95xq838mml43" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/07/js正则表达式基础总结/" data-id="ck5iwofop001gtjxqgh95vf8c" class="article-share-link">Share</a>
       
       
     </footer>
@@ -2754,6 +3131,14 @@ root.$ = root.jQuery = jQuery;
       <ul>
         
           <li>
+            <a href="/2020/01/18/js运算符优先级/">js运算符优先级</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/17/网易微专业-单页应用-1-3-2-VUE编译器原理探秘二/">网易微专业-单页应用-1.3.2-VUE编译器原理探秘二</a>
+          </li>
+        
+          <li>
             <a href="/2020/01/14/网易微专业-单页应用-1-3-1-VUE编译器原理探秘一/">网易微专业-单页应用-1.3.1-VUE编译器原理探秘一</a>
           </li>
         
@@ -2763,14 +3148,6 @@ root.$ = root.jQuery = jQuery;
         
           <li>
             <a href="/2020/01/10/网易微专业福利期-2-1-JavaScript内存管理/">网易微专业福利期-2.1-JavaScript内存管理</a>
-          </li>
-        
-          <li>
-            <a href="/2020/01/09/张容铭-设计模式-第三篇-结构型设计模式/">张容铭-设计模式-第三篇-结构型设计模式</a>
-          </li>
-        
-          <li>
-            <a href="/2020/01/07/网易微专业-现代前端工程实践方案-解锁webpack-3-1-8-webpack的环境，webpack实战演练/">网易微专业-现代前端工程实践方案 解锁webpack-3.1.8-webpack的环境，webpack实战演练</a>
           </li>
         
       </ul>

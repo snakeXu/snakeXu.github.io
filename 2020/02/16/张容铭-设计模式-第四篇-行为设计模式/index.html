@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>张容铭-设计模式-第四篇-行为设计模式 | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="其实本来还没看到这里的，但是最近学习的东西有些与观察者模式相关，所以这里先记录观察者模式。一、观察者模式观察者模式:又被称作发布-订阅者模式或消息机制，定义了一种依赖关系，解决了主体对象于观察者之间功能的耦合。假设我们现在有一颗卫星(观察者)，可以接收飞机飞行的信息，并且把这些信息发布到需要(订阅者)这个消息的地方。观察者对象有一个消息容器，和三个方法，分别是订阅消息方法，取消订阅的消息方法，发送">
+<meta property="og:type" content="article">
+<meta property="og:title" content="张容铭-设计模式-第四篇-行为设计模式">
+<meta property="og:url" content="http://yoursite.com/2020/02/16/张容铭-设计模式-第四篇-行为设计模式/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="其实本来还没看到这里的，但是最近学习的东西有些与观察者模式相关，所以这里先记录观察者模式。一、观察者模式观察者模式:又被称作发布-订阅者模式或消息机制，定义了一种依赖关系，解决了主体对象于观察者之间功能的耦合。假设我们现在有一颗卫星(观察者)，可以接收飞机飞行的信息，并且把这些信息发布到需要(订阅者)这个消息的地方。观察者对象有一个消息容器，和三个方法，分别是订阅消息方法，取消订阅的消息方法，发送">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-02-17T07:56:20.228Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="张容铭-设计模式-第四篇-行为设计模式">
+<meta name="twitter:description" content="其实本来还没看到这里的，但是最近学习的东西有些与观察者模式相关，所以这里先记录观察者模式。一、观察者模式观察者模式:又被称作发布-订阅者模式或消息机制，定义了一种依赖关系，解决了主体对象于观察者之间功能的耦合。假设我们现在有一颗卫星(观察者)，可以接收飞机飞行的信息，并且把这些信息发布到需要(订阅者)这个消息的地方。观察者对象有一个消息容器，和三个方法，分别是订阅消息方法，取消订阅的消息方法，发送">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-张容铭-设计模式-第四篇-行为设计模式" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/02/16/张容铭-设计模式-第四篇-行为设计模式/" class="article-date">
+  <time datetime="2020-02-16T10:50:35.000Z" itemprop="datePublished">2020-02-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      张容铭-设计模式-第四篇-行为设计模式
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>其实本来还没看到这里的，但是最近学习的东西有些与观察者模式相关，所以这里先记录观察者模式。<br>一、观察者模式<br>观察者模式:又被称作发布-订阅者模式或消息机制，定义了一种依赖关系，解决了主体对象于观察者之间功能的耦合。<br>假设我们现在有一颗卫星(观察者)，可以接收飞机飞行的信息，并且把这些信息发布到需要(订阅者)这个消息的地方。观察者对象有一个消息容器，和三个方法，分别是订阅消息方法，取消订阅的消息方法，发送订阅的消息方法。</p>
+<p><pre><br>//将观察者放在闭包中，当页面加载就立即执行<br>var Observer = (<br>    function(){<br>        //防止消息队列暴露而被篡改故意将消息容器作为静态私有变量保存<br>        var _messages = {};<br>        return {<br>            //注册信息接口<br>            regist : function(){},<br>            //发布信息接口<br>            fire : fuction(){},<br>            //移除信息接口<br>            remove : function(){}<br>        }<br>    }<br>)();<br></pre><br>消息注册方法，该方法的作用是将订阅者注册的消息推入到消息队列中，因此我们需要接受两个参数:消息类型以及相应的处理动作，在推入到消息队列时如果此消息不存在则应创建一个该消息类型并将该消息放入消息队列中，如果此消息存在则应该将该消息执行方法推入该消息对应的执行方法队列中，这么做的目的也是保证多个模块注册同一则消息时能顺利执行。</p>
+<p><pre><br>regist : function(type,fn){<br>    //如果此消息不存在则应该创建一个该消息类型<br>    if(typeof _messages[type] === ‘undefined){<br>        //将动作推入到该消息对应的动作执行队列中<br>        _messages[type] = [fn];<br>    //如果此消息存在<br>    }else{<br>        //将动作方法推入该消息对应的动作执行序列中<br>        _messages[type].push(fn)<br>    }<br>}<br></pre><br>对于发布消息方法，其功能是当观察者发布一个消息时将所有订阅者订阅的消息一次执行。故应接收两个参数，消息类型以及动作执行时需要传递的参数，当然在这里消息类型过是必须的。在执行消息动作队列之前校验消息的存在是很有必要的。然后遍历消息执行方法队列，并依次执行。然后将消息类别以及传递的参数打包后依次传入消息执行方法中。</p>
+<p><pre><br>fire : function(type,args){<br>    //如果该消息没有被注册，则返回<br>    if(!_messages[type]){<br>        return;<br>    }<br>    //定义消息信息<br>    var events = {<br>        type : type,                      //消息类型<br>        args : args || {}                 //消息携带数据<br>    },<br>    i = 0,                               //消息动作循环变量<br>    len = _messages[type].length;        //消息动作长度<br>    //遍历消息动作<br>    for( ; i &lt; len ; i++){<br>        //依次执行注册的消息对应的动作序列<br>        _messages[type][i].call(this, events)<br>    }<br>}<br></pre><br>最后是消息注销方法，其功能是将订阅者注销的消息从消息队列中清除，因此我们也需要两个参数，即消息类型以及执行的某一动作。当然为了避免删除消息动作时消息不存在的情况的出现，对消息队列中消息的存在性校验也是很有必要的</p>
+<p><pre><br>remove : function(type,fn){<br>    //如果消息动作队列存在<br>    if(_message[type] instanceof Array){<br>        //从最后一个消息动作遍历<br>        var i = _messages[type].length - 1;<br>        for( ; i &gt;=0 ; i–){<br>            //如果存在该动作则在消息动作序列中移除相应动作<br>            _messages[type][i] === fn &amp;&amp; _message[type].splice(i,1)<br>        }<br>    }<br>}<br></pre><br>观察者对象或者说消息系统创建成功之后，我们先简单测试一下，首先我们订阅一条消息</p>
+<p><pre><br>Observer.regist(‘test’,function(e){<br>    console.log(e.type,e.args.msg)<br>})<br></pre><br>然后我们发布这则消息</p>
+<p><pre><br>Observer.fire(‘test’,{msg:’传递参数’})            //test传递参数<br></pre><br>上面我们初步了解了观察者模式。但是观察者模式有什么作用？观察者模式有一个作用是解耦代码。下面我们更详细的了解一下<br>如果有一个这样的需求:一个新闻评论模块，当用户发布评论时，会在评论展示模块末尾处追加新的评论，与此同时用户的消息模块的消息数量也会递增。如果用户删除留言区的信息时，用户的消息模块消息数量也会递减，但是这些模块是三位不同的工程师写的，也就是说都写在自己独立闭包的模块里。如果要完成现在的需求，又不想将他们的模块合并到一起，该如何解决？<br>同一模块内的功能应该放在一起，这样管理起来菜会更加方便。所以对于追加留言的功能就应放在之前开发过的留言模块里；对于用户消息递增功能应当放在之前开发过的用户信息模块里。对于留言的提交，理应放在提交模块里。不过，既然我们选择观察者模式来解决问题，首先就要分析那些模块应该注册消息，那些模块应该发布消息。<br>发布留言与删除留言功能需求是用户主动触发，所以应该是观察者发布消息，而评论的追加以及用户消息的增减是被动触发的，所以他们应该是订阅者去注册消息。这样的话用户信息模块既是信息的发送者，也是信息的接收者，提交模块是信息的发送者，浏览模块是信息的接收者。<br>首先实现用户追加评论的功能，如下</p>
+<p><pre><br>//外观模式 简化获取元素<br>function $(id){<br>    return document.getElementById(id);<br>}<br>//工程师A<br>(function(){<br>    //追加一则消息<br>    function addMsgItem(e){<br>        var text = e.arg.text,                //获取消息中用户添加的文本内容<br>            ul = $(‘msg’),                        //留言容器元素<br>            li = document.createElement(‘span’),  //创建内容容器元素<br>            span = document.createElement(‘span’);//删除按钮<br>        li.innerHTML = text;                      //写入评论<br>        //关闭按钮<br>        span.onclick = function(){<br>            ul.removeChild(li);                  //移除留言<br>            //发布删除留言消息<br>            Observer.fire(‘removeCommentMessage’,{num:-1});<br>        }<br>        //添加删除按钮<br>        li.appendChild(span);<br>        //添加留言节点<br>        ul.appendChild(li);<br>    }<br>    //注册添加评论信息<br>    Observer.regist(‘addCommentMessage’,addMsgItem);<br>})();<br></pre><br>实现递增用户信息功能，只需要在原信息数目基础上加一即可。</p>
+<p><pre><br>//工程师B<br>(function(){<br>    //更改用户消息数目<br>    function changeMsgNum(e){<br>        //获取需要增加的用户消息数目<br>        var num = e.args.num;<br>        //增加用户消息数目并写入页面中<br>        $(‘msg_num’).innerHTML = parseInt($(‘msg_num’).innerHTML) + num;<br>    }<br>    //注册添加评论信息<br>    Observer.regist(‘addCommentMessage’,changeMsgNum)<br>            .regist(‘removeCommentMessage’,changeMsgNum);<br>})()<br></pre><br>最后对于一个用户来说，当他提交信息时，就要触发消息发布功能</p>
+<p><pre><br>//工程师C<br>(function(){<br>    //用户点击提交按钮<br>    $(‘user_submit’).onclick = function(){<br>        //获取用户输入框中输入的信息<br>        var text = $(‘user_input’);<br>        //如果消息为空则提交失败<br>        if(text.value === ‘’){<br>            return<br>        }<br>        //发布一则评论消息<br>        Observer.fire(‘addCommentmessage’,{<br>            text:text.value,          //消息评论内容<br>            num:1                     //消息评论数目<br>        })<br>        text.value = ‘’;              //将输入框置为空<br>    }<br>})()<br></pre><br>观察者模式就这样轻松的解决了模块之间的耦合问题，那么观察者模式能不能解决类或对象之间的耦合呢？我们举个例子：课堂老师提问学生。我们首先创建学生类，学生是被提问对象，因此他们是订阅者。同时学生也有对问题的思考结果，以及回答问题的动作。</p>
+<p><pre><br>//学生类<br>var Student = function(result){<br>    var that = this<br>    //学生回答结果<br>    that.result = result;<br>    //学生回答问题动作<br>    that.say = function(){<br>        console.log(that.result)<br>    }<br>}<br>//学生回答问题的方法<br>Student.prototype.answer = function(question){<br>    //注册参数问题<br>    Observer.regist(question,this.say);<br>}<br>//如果有睡着的学生，此时不能回答问题<br>Student.prototyp.sleep = function(question){<br>    console.log(this.result+’ ‘+question+’已被注销’)<br>    Observer.remove(question,this.say);<br>}<br></pre><br>对于教师，他会提问学生，所以他是一个观察者。所以他需要有一个提问问题的方法</p>
+<p><pre><br>//教师类<br>var Teacher = function(){}<br>//教师提问问题的方法<br>Teacher.prototype.ask = function(question){<br>    console.log(‘问题是’+question);<br>    //发布提问消息<br>    Observer.fire(question)<br>}<br></pre><br>学生与教师类创建完成了，接下来我们模拟创建处三位听课学生</p>
+<p><pre><br>var student1 = new Student(‘学生1回答问题’),<br>    student2 = new Student(‘学生2回答问题’),<br>    student3 = new Student(‘学生3回答问题’);<br>//三位同学订阅(监听)了老师提出的两个问题<br>student1.answer(‘什么是设计模式’);<br>student1.answer(‘简述观察者模式’);<br>student2.answer(‘什么是设计模式’);<br>student3.answer(‘什么是设计模式’);<br>student3.answer(‘简述观察者模式’);<br>//同学3睡着了，所以对于订阅的第二个问题’简述观察者模式’消息就注销了<br>student3.sleep(‘简述观察者模式’);<br>//创建一个教师类<br>var teacher = new Teacher();<br>//提问两个问题<br>teacher.ask(‘什么是设计模式’)<br>teacher.ask(‘简述观察者模式’)<br></pre><br>浏览器输出结果：<br>//学生3回答问题 简述观察者模式 已被注销<br>//问题是： 什么是设计模式<br>//学生1 回答问题<br>//学生2 回答问题<br>//学生3 回答问题<br>//问题是： 简述观察者模式<br>//学生1 回答问题<br>观察者模式最主要的作用是解决类或对象之间的耦合，解耦两个相互依赖的对象，使其依赖于观察者的消息机制。这样对于任意一个订阅者对象来说，其他订阅者对象的改变不会影响到自身。对于每一个订阅者来说，其自身既可以是消息的发出者也可以是消息的执行者，这都依赖于调用观察者对象的三种方法(订阅消息，注销消息，发布消息)中的哪一种。<br>团队开发中，尤其大型项目的模块开发中，每个人很难做到熟知项目中的每个模块，此时为完成一个涉及多个模块调用的需求，观察者模式的优势就显而易见了，模块间的信息传递不必要相互引用其他模块，只需要通过观察者模式注册或者发布消息即可。通过观察者模式，工程师间对功能的开发只需要按照给定的消息格式开发各自功能即可，而不必去担忧其他人的模块。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/02/16/张容铭-设计模式-第四篇-行为设计模式/" data-id="ck910dtcd002l2lxqr1vc2j6b" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/02/19/网易微专业-MV-组件化开发React专题-2-1-2-React基础-React与es6/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          网易微专业-MV*&amp;组件化开发React专题-2.1.6-React基础-React与es6
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/02/16/网易微专业-MV-组件化开发React专题-2-1-2-React基础-ReactDOM与表单/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">网易微专业-MV*&amp;组件化开发React专题-2.1.5-React基础-ReactDOM与表单</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/04/15/网易微专业-node-1-1-8-MySQL入门与应用/">网易微专业-node-1.1.8-MySQL入门与应用</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/14/网易微专业-node-1-1-7-MongoDB入门与应用/">网易微专业-node-1.1.7-MongoDB入门与应用</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/13/网易微专业-node-1-1-6-Redis入门及应用/">网易微专业-node-1.1.6-Redis入门及应用</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/12/网易微专业-node-1-1-5-Nginx反向代理-静态资源服务/">网易微专业-node-1.1.5-Nginx反向代理 静态资源服务</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/11/网易微专业-node-1-1-3-Linux快速上手玩转典型应用/">网易微专业-node-1.1.3-Linux快速上手玩转典型应用</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

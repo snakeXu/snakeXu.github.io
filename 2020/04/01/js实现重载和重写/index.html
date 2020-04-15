@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>js实现重载和重写 | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="重载函数名相同，函数的参数列表不同(包括参数个数和参数类型)，根据参数的不同去执行不同的操作。在JavaScript中，同一个作用域，出现两个名字一样的函数，后面的会覆盖前面的，所以 JavaScript 没有真正意义的重载。 // 可以跟据arguments个数实现重载function fn(){    switch(arguments.length){        case 0:">
+<meta property="og:type" content="article">
+<meta property="og:title" content="js实现重载和重写">
+<meta property="og:url" content="http://yoursite.com/2020/04/01/js实现重载和重写/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="重载函数名相同，函数的参数列表不同(包括参数个数和参数类型)，根据参数的不同去执行不同的操作。在JavaScript中，同一个作用域，出现两个名字一样的函数，后面的会覆盖前面的，所以 JavaScript 没有真正意义的重载。 // 可以跟据arguments个数实现重载function fn(){    switch(arguments.length){        case 0:">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-04-01T09:05:58.137Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="js实现重载和重写">
+<meta name="twitter:description" content="重载函数名相同，函数的参数列表不同(包括参数个数和参数类型)，根据参数的不同去执行不同的操作。在JavaScript中，同一个作用域，出现两个名字一样的函数，后面的会覆盖前面的，所以 JavaScript 没有真正意义的重载。 // 可以跟据arguments个数实现重载function fn(){    switch(arguments.length){        case 0:">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-js实现重载和重写" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/04/01/js实现重载和重写/" class="article-date">
+  <time datetime="2020-04-01T09:02:12.000Z" itemprop="datePublished">2020-04-01</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      js实现重载和重写
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>重载<br>函数名相同，函数的参数列表不同(包括参数个数和参数类型)，根据参数的不同去执行不同的操作。在JavaScript中，同一个作用域，出现两个名字一样的函数，后面的会覆盖前面的，所以 JavaScript 没有真正意义的重载。</p>
+<p><pre><br>// 可以跟据arguments个数实现重载<br>function fn(){<br>    switch(arguments.length){<br>        case 0:<br>        addFn(arguments.length)<br>        break<br>        case 1:<br>        deleteFn(arguments.length)<br>    }<br>}<br>function addFn(n){<br>    console.log(<code>fn函数参数个数为${n+1}个</code>)<br>}<br>function deleteFn(n){<br>    console.log(<code>fn函数参数个数为${n-1}个</code>)<br>}<br>fn()  // fn函数参数个数为1个<br>fn(1) // fn函数参数个数为0个<br></pre><br>重写<br>“实例中的指针仅指向原型，而不是指向构造函数”。<br>“重写原型对象切断了现有原型与任何之前已经存在的对象实例之间的关系；它们引用的仍然是最初的原型”。</p>
+<p><pre><br>var parent = function(name,age){<br>    this.name = name;<br>    this.age = age;<br>}<br>parent.prototype.showProper = function(){<br>    console.log(this.name+”:”+this.age);<br>}<br>var child = function(name,age){<br>    parent.call(this,name,age);<br>}<br>// inheritance<br>child.prototype = Object.create(parent.prototype);<br>// child.prototype = new parent();<br>child.prototype.constructor = child;<br>// rewrite function<br>child.prototype.showProper = function(){<br>    console.log(‘I am ‘+this.name+”:”+this.age);<br>}<br>var obj = new child(‘wozien’,’22’);<br>obj.showProper();<br></pre><br>上面这段代码通过使用寄生组合继承，实现子类私有继承父类私有，子类公有继承父类公有，达到重写父类的showProper</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/04/01/js实现重载和重写/" data-id="ck910dt9u00022lxqw28q86ms" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/04/09/网易微专业-node-1-1-1-es6快速入门/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          网易微专业-node-1.1.1-es6快速入门
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/04/01/网易微专业-MV-组件化开发React专题-React生态-2-4-3-Redux源码解析分享/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">网易微专业-MV-组件化开发React专题-React生态-2.4.3-Redux源码解析分享</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/04/15/网易微专业-node-1-1-8-MySQL入门与应用/">网易微专业-node-1.1.8-MySQL入门与应用</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/14/网易微专业-node-1-1-7-MongoDB入门与应用/">网易微专业-node-1.1.7-MongoDB入门与应用</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/13/网易微专业-node-1-1-6-Redis入门及应用/">网易微专业-node-1.1.6-Redis入门及应用</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/12/网易微专业-node-1-1-5-Nginx反向代理-静态资源服务/">网易微专业-node-1.1.5-Nginx反向代理 静态资源服务</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/11/网易微专业-node-1-1-3-Linux快速上手玩转典型应用/">网易微专业-node-1.1.3-Linux快速上手玩转典型应用</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

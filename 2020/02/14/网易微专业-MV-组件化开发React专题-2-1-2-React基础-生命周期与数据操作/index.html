@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>网易微专业-MV*&amp;组件化开发React专题-2.1.3-React基础-生命周期与数据操作 | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="引出:假设我们需要一个列表刷新，列表初识数据是a=[‘a’,’b’,’c’],需要变成b=[‘b’,’c’,’d’]，那么tree diff算法需要经历的阶段为:(1)删除a(2)b,c更新(3)d创建1.生命周期(1)创建期react创建时继承react的基类React.component，react官方提供了component类，component里实现了一些列生命周期和方法(上图中的生命周期">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网易微专业-MV*&amp;组件化开发React专题-2.1.3-React基础-生命周期与数据操作">
+<meta property="og:url" content="http://yoursite.com/2020/02/14/网易微专业-MV-组件化开发React专题-2-1-2-React基础-生命周期与数据操作/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="引出:假设我们需要一个列表刷新，列表初识数据是a=[‘a’,’b’,’c’],需要变成b=[‘b’,’c’,’d’]，那么tree diff算法需要经历的阶段为:(1)删除a(2)b,c更新(3)d创建1.生命周期(1)创建期react创建时继承react的基类React.component，react官方提供了component类，component里实现了一些列生命周期和方法(上图中的生命周期">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/react/2.1.3_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/react/2.1.3_2.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/react/2.1.3_3.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/react/2.1.3_4.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/react/2.1.3_5.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/react/2.1.3_6.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/react/2.1.3_7.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/react/2.1.3_8.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/react/2.1.3_9.png">
+<meta property="og:updated_time" content="2020-03-11T11:36:49.814Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="网易微专业-MV*&amp;组件化开发React专题-2.1.3-React基础-生命周期与数据操作">
+<meta name="twitter:description" content="引出:假设我们需要一个列表刷新，列表初识数据是a=[‘a’,’b’,’c’],需要变成b=[‘b’,’c’,’d’]，那么tree diff算法需要经历的阶段为:(1)删除a(2)b,c更新(3)d创建1.生命周期(1)创建期react创建时继承react的基类React.component，react官方提供了component类，component里实现了一些列生命周期和方法(上图中的生命周期">
+<meta name="twitter:image" content="https://snakexu.github.io/images/wangyi/react/2.1.3_1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-网易微专业-MV-组件化开发React专题-2-1-2-React基础-生命周期与数据操作" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/02/14/网易微专业-MV-组件化开发React专题-2-1-2-React基础-生命周期与数据操作/" class="article-date">
+  <time datetime="2020-02-14T04:34:44.000Z" itemprop="datePublished">2020-02-14</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      网易微专业-MV*&amp;组件化开发React专题-2.1.3-React基础-生命周期与数据操作
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>引出:<br>假设我们需要一个列表刷新，列表初识数据是a=[‘a’,’b’,’c’],需要变成b=[‘b’,’c’,’d’]，那么tree diff算法需要经历的阶段为:<br>(1)删除a(2)b,c更新(3)d创建<br>1.生命周期<br>(1)创建期<br><img src="https://snakexu.github.io/images/wangyi/react/2.1.3_1.png"><br>react创建时继承react的基类React.component，react官方提供了component类，component里实现了一些列生命周期和方法(上图中的生命周期和方法)。<br>(2)存在期<br>组件已经挂载成功，但是需要一些重绘/更新<br><img src="https://snakexu.github.io/images/wangyi/react/2.1.3_2.png"><br>(2)销毁期<br><img src="https://snakexu.github.io/images/wangyi/react/2.1.3_3.png"><br>2.例子<br>2-1.创建期探索<br>demo2.js</p>
+<p><pre><br>import React,{Component} from ‘react’<br>class App extends Component{<br>    render(){<br>        return (&lt; div &gt;App&lt; Son1/&gt;&lt; /div &gt;)<br>    }<br>    componentDidMount(){<br>        console.log(‘App mount’)<br>    }<br>}<br>class Son1 extends Component{<br>    render(){<br>        return (&lt; div &gt;Son1&lt; GrandSon1/&gt;&lt; /div &gt;)<br>    }<br>    componentDidMount(){<br>        console.log(‘Son1 mount’)<br>    }<br>}<br>class GrandSon1 extends Component{<br>    render(){<br>        return (&lt; div &gt;GrandSon1&lt; /div &gt;)<br>    }<br>    componentDidMount(){<br>        console.log(‘GrandSon1 mount’)<br>    }<br>}<br>export default App<br></pre><br>index.js</p>
+<p><pre><br>import React from ‘react’;<br>import ReactDOM from ‘react-dom’;<br>import App from ‘./demo2’;<br>import * as serviceWorker from ‘./serviceWorker’;<br>ReactDOM.render(&lt; App/&gt;,document.getElementById(‘root’));<br>serviceWorker.unregister();<br></pre><br>启动项目，打开浏览器我们可以看到，console打印到控制台上的效果如下：<br><img src="https://snakexu.github.io/images/wangyi/react/2.1.3_4.png"><br>也就是说，只有在某一个组件被挂载完全之后，这个组件才被挂载完，才会往上去调用父组件的componentDidMount。<br>接下来，我们看render函数，我们将demo2.js做一些简单修改(render函数同时存在于三个周期的每一个阶段)<br>demo2.js</p>
+<p><pre><br>import React,{Component} from ‘react’<br>class App extends Component{<br>    render(){<br>        console.log(‘App rerender’)<br>        return (&lt; div &gt;App&lt; Son1/&gt;&lt; /div &gt;)<br>    }<br>    componentDidMount(){<br>        console.log(‘App mount’)<br>    }<br>}<br>class Son1 extends Component{<br>    render(){<br>        console.log(‘Son1 rerender’)<br>        return (&lt; div &gt;Son1&lt; GrandSon1/&gt;&lt; /div &gt;)<br>    }<br>    componentDidMount(){<br>        console.log(‘Son1 mount’)<br>    }<br>}<br>class GrandSon1 extends Component{<br>    render(){<br>        console.log(‘GrandSon1 rerender’)<br>        return (&lt; div &gt;GrandSon1&lt; /div &gt;)<br>    }<br>    componentDidMount(){<br>        console.log(‘GrandSon1 mount’)<br>    }<br>}<br>export default App<br></pre><br>控制台打印效果如下<br><img src="https://snakexu.github.io/images/wangyi/react/2.1.3_5.png"><br>2-2.存在期探索<br>接下来，我们探索存在期的变化<br>demo2.js</p>
+<p><pre><br>import React,{Component} from ‘react’<br>class App extends Component{<br>    constructor(props){<br>        super(props)<br>        this.state = {<br>            name : ‘react’<br>        }<br>    }<br>    render(){<br>        console.log(‘App rerender’)<br>        return (&lt; div &gt;App&lt; Son1 name={this.state.name + ‘-son’}/&gt;&lt; /div &gt;)<br>    }<br>    componentDidMount(){<br>        window.app = this<br>        console.log(‘App mount’)<br>    }<br>    componentWillUpdate(nextProps,nextState){<br>        console.log(‘App will update’)<br>    }<br>    componentDidUpdate(prevProps,prevState){<br>        console.log(‘App did update’)<br>    }<br>}<br>class Son1 extends Component{<br>    render(){<br>        console.log(‘Son1 rerender’)<br>        return (&lt; div &gt;{this.props.name}&lt; GrandSon1 name={this.state.name + ‘-grandson’}/&gt;&lt; /div &gt;)<br>    }<br>    componentDidMount(){<br>        console.log(‘Son1 mount’)<br>    }<br>    componentWillUpdate(nextProps,nextState){<br>        console.log(‘Son1 will update’)<br>    }<br>    componentDidUpdate(prevProps,prevState){<br>        console.log(‘Son1 did update’)<br>    }<br>}<br>class GrandSon1 extends Component{<br>    render(){<br>        console.log(‘GrandSon1 rerender’)<br>        return (&lt; div &gt;{this.props.name}&lt; /div &gt;)<br>    }<br>    componentDidMount(){<br>        console.log(‘GrandSon1 mount’)<br>    }<br>    componentWillUpdate(nextProps,nextState){<br>        console.log(‘GrandSon1 will update’)<br>    }<br>    componentDidUpdate(prevProps,prevState){<br>        console.log(‘GrandSon1 did update’)<br>    }<br>}<br>export default App<br></pre><br>props是组件被实例化的时候传的一个值属性，在浏览器中，我们进行了一些修改，展示效果如下<br><img src="https://snakexu.github.io/images/wangyi/react/2.1.3_6.png"><br>2-3.销毁期<br>还是之前的代码，稍微进行一些修改<br>demo2.js</p>
+<p><pre><br>import React,{Component} from ‘react’<br>class App extends Component{<br>    constructor(props){<br>        super(props)<br>        this.state = {<br>            name : ‘react’<br>        }<br>    }<br>    render(){<br>        console.log(‘App rerender’)<br>        return (<br>            &lt; div &gt;<br>                {this.state.name}<br>                {this.state.name &amp;&amp; &lt; Son1 name={this.state.name + ‘-son’}/&gt;}<br>            &lt; /div &gt;<br>        )<br>    }<br>    componentDidMount(){<br>        window.app = this<br>        console.log(‘App mount’)<br>    }<br>    componentWillUpdate(nextProps,nextState){<br>        console.log(‘App will update’)<br>    }<br>    componentDidUpdate(prevProps,prevState){<br>        console.log(‘App did update’)<br>    }<br>}<br>class Son1 extends Component{<br>    render(){<br>        console.log(‘Son1 rerender’)<br>        return (<br>            &lt; div &gt;<br>                {this.props.name}<br>                &lt; GrandSon1 name={this.state.name + ‘-grandson’}/&gt;<br>            &lt; /div &gt;<br>        )<br>    }<br>    componentDidMount(){<br>        console.log(‘Son1 mount’)<br>    }<br>    componentWillUpdate(nextProps,nextState){<br>        console.log(‘Son1 will update’)<br>    }<br>    componentDidUpdate(prevProps,prevState){<br>        console.log(‘Son1 did update’)<br>    }<br>    componentWillUnmount(){<br>        console.log(‘Son1 unmount’)<br>    }<br>}<br>class GrandSon1 extends Component{<br>    render(){<br>        console.log(‘GrandSon1 rerender’)<br>        return (&lt; div &gt;{this.props.name}&lt; /div &gt;)<br>    }<br>    componentDidMount(){<br>        console.log(‘GrandSon1 mount’)<br>    }<br>    componentWillUpdate(nextProps,nextState){<br>        console.log(‘GrandSon1 will update’)<br>    }<br>    componentDidUpdate(prevProps,prevState){<br>        console.log(‘GrandSon1 did update’)<br>    }<br>    componentWillUnmount(){<br>        console.log(‘GrandSon1 unmount’)<br>    }<br>}<br>export default App<br></pre><br><img src="https://snakexu.github.io/images/wangyi/react/2.1.3_7.png"><br>可以看出，删除阶段，是从上往下删除的<br>3.数据操作<br><img src="https://snakexu.github.io/images/wangyi/react/2.1.3_8.png"><br>state和props都是比较简单的，还有一个知识点，是上下文，一般用在组件嵌套比较深的地方，解决的痛点是嵌套层次比较深的时候，如何从最外层传到最内层 </p>
+<p><pre><br>import React from ‘react’<br>import PropTypes from “prop-types”;<br>class App extends React.Component{<br>    getChildContext() {<br>        return {color: “purple”};<br>    }<br>    constructor(props) {<br>        super(props);<br>        this.state = {<br>            name: ‘react’<br>        }<br>    }<br>    render() {<br>        return (<br>            &lt; div&gt;<br>                {this.state.name}<br>                <son><br>            &lt; /div&gt;<br>        );<br>    }<br>}<br>App.childContextTypes = {<br>    color: PropTypes.string<br>}<br>class Son extends React.Component{<br>    render() {<br>        return (<br>            &lt; div&gt;<br>                <grandson><br>            &lt; /div&gt;<br>        );<br>    }<br>}<br>class GrandSon  extends React.Component{<br>    render() {<br>        return (<br>            &lt; div&gt;<br>                <grandsongrandson><br>            &lt; /div&gt;<br>        );<br>    }<br>}<br>class GrandSonGrandSon extends React.Component{<br>    render() {<br>        return (<br>            &lt; div&gt;<br>                {this.context.color}<br>            &lt; /div&gt;<br>        );<br>    }<br>}<br>GrandSonGrandSon.contextTypes = {<br>    color: PropTypes.string<br>};<br>export default App<br></grandsongrandson></grandson></son></pre><br><img src="https://snakexu.github.io/images/wangyi/react/2.1.3_9.png"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/02/14/网易微专业-MV-组件化开发React专题-2-1-2-React基础-生命周期与数据操作/" data-id="ck910dta8000i2lxq9vdej0tf" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/02/16/网易微专业-MV-组件化开发React专题-2-1-2-React基础-组件通信/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          网易微专业-MV*&amp;组件化开发React专题-2.1.2-React基础-组件通信
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/02/13/网易微专业-MV-组件化开发React专题-2-1-2-React基础-虚拟DOM和JSX/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">网易微专业-MV*&amp;组件化开发React专题-2.1.2-React基础-虚拟DOM和JSX</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/04/15/网易微专业-node-1-1-8-MySQL入门与应用/">网易微专业-node-1.1.8-MySQL入门与应用</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/14/网易微专业-node-1-1-7-MongoDB入门与应用/">网易微专业-node-1.1.7-MongoDB入门与应用</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/13/网易微专业-node-1-1-6-Redis入门及应用/">网易微专业-node-1.1.6-Redis入门及应用</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/12/网易微专业-node-1-1-5-Nginx反向代理-静态资源服务/">网易微专业-node-1.1.5-Nginx反向代理 静态资源服务</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/11/网易微专业-node-1-1-3-Linux快速上手玩转典型应用/">网易微专业-node-1.1.3-Linux快速上手玩转典型应用</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

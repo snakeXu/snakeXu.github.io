@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>网易微专业-MV*&amp;组件化开发React专题-2.1.1-React介绍与React代码规范 | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1.React初识1-1.开发环境1-2.react开发工具react devtools原地址是 https://github.com/facebook/react-devtools ,但是现在看到页面已经说明项目被迁移了，具体细节见页面。按照课程内容，我选择了v3版本链接，下载zip文件后，解压缩，在命令行进入解压缩的文件夹。(1)npm config set registry http://r">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网易微专业-MV*&amp;组件化开发React专题-2.1.1-React介绍与React代码规范">
+<meta property="og:url" content="http://yoursite.com/2020/02/07/网易微专业-MV-组件化开发React专题-2-1-1-React介绍与React代码规范/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="1.React初识1-1.开发环境1-2.react开发工具react devtools原地址是 https://github.com/facebook/react-devtools ,但是现在看到页面已经说明项目被迁移了，具体细节见页面。按照课程内容，我选择了v3版本链接，下载zip文件后，解压缩，在命令行进入解压缩的文件夹。(1)npm config set registry http://r">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/react/2.1.1_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/react/2.1.1_2.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/react/2.1.1_3.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/react/2.1.1_4.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/react/2.1.1_5.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/react/2.1.1_6.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/react/2.1.1_7.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/react/2.1.1_8.png">
+<meta property="og:updated_time" content="2020-02-11T08:10:13.224Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="网易微专业-MV*&amp;组件化开发React专题-2.1.1-React介绍与React代码规范">
+<meta name="twitter:description" content="1.React初识1-1.开发环境1-2.react开发工具react devtools原地址是 https://github.com/facebook/react-devtools ,但是现在看到页面已经说明项目被迁移了，具体细节见页面。按照课程内容，我选择了v3版本链接，下载zip文件后，解压缩，在命令行进入解压缩的文件夹。(1)npm config set registry http://r">
+<meta name="twitter:image" content="https://snakexu.github.io/images/wangyi/react/2.1.1_1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-网易微专业-MV-组件化开发React专题-2-1-1-React介绍与React代码规范" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/02/07/网易微专业-MV-组件化开发React专题-2-1-1-React介绍与React代码规范/" class="article-date">
+  <time datetime="2020-02-07T12:20:37.000Z" itemprop="datePublished">2020-02-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      网易微专业-MV*&amp;组件化开发React专题-2.1.1-React介绍与React代码规范
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.React初识<br>1-1.开发环境<br><img src="https://snakexu.github.io/images/wangyi/react/2.1.1_1.png"><br>1-2.react开发工具react devtools<br>原地址是 <a href="https://github.com/facebook/react-devtools" target="_blank" rel="noopener">https://github.com/facebook/react-devtools</a> ,但是现在看到页面已经说明项目被迁移了，具体细节见页面。按照课程内容，我选择了v3版本链接，下载zip文件后，解压缩，在命令行进入解压缩的文件夹。<br>(1)npm config set registry <a href="http://registry.npm.taobao.org/" target="_blank" rel="noopener">http://registry.npm.taobao.org/</a><br>(2)npm install<br>(3)进入文件夹，找到shells/chrome/build/unpacked文件夹<br>(4)打开chrome浏览器扩展，将步骤3的文件夹移到扩展页面<br>至此react-devtools安装完成，打开本地react项目的浏览器开发工具可以看到在console/network···后有了react，如图<br><img src="https://snakexu.github.io/images/wangyi/react/2.1.1_2.png"><br>1-3.示例代码</p>
+<p><pre><br>import React from ‘react’;<br>import ReactDOM from ‘react-dom’;<br>class HelloWorld extends Component{<br>    render(){<br>        return (<br>            <div classname="App"><br>                hello world<br>            </div><br>        )<br>    }<br>}<br>ReactDOM.render(<br>  <helloworld>,<br>  document.getElementById(‘root’)<br>);<br></helloworld></pre><br>1-4.浏览器上的react示例代码<br><img src="https://snakexu.github.io/images/wangyi/react/2.1.1_3.png"><br>上图里的代码中 type=”text/babel” 方便于书写es6的代码，两个script引入的包是react和react-dom，和1-3的代码中import功能是一样的<br>1-5.模块化示例代码<br><img src="https://snakexu.github.io/images/wangyi/react/2.1.1_4.png"><br>2.react生态<br>react生态在github上有一个项目<a href="https://github.com/enaqx/awesome-react" target="_blank" rel="noopener">https://github.com/enaqx/awesome-react</a><br><img src="https://snakexu.github.io/images/wangyi/react/2.1.1_5.png"><br>2-1.UI组件库<br><img src="https://snakexu.github.io/images/wangyi/react/2.1.1_6.png"><br>3.react代码规范<br>3-1.开发规范<br>3-1-1.standard.js<br><img src="https://snakexu.github.io/images/wangyi/react/2.1.1_7.png"><br>其中第三步是帮助我们在提交项目之前对项目进行一次格式化检测<br>另外老师讲了如何在webstorm中配置standard.js，如果使用别的编辑器，那么可自行查看如何配置，这里也不在对课程里如何在webstorm中配置进行赘述，如需要自行查询配置方法。<br>3-1-2.bem css规范<br><img src="https://snakexu.github.io/images/wangyi/react/2.1.1_8.png"><br>在bem中，b-block，e-element，m-行为,在上图例子中，双下划线__表示子元素，双中横线–表示某种状态</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/02/07/网易微专业-MV-组件化开发React专题-2-1-1-React介绍与React代码规范/" data-id="ck910dta7000f2lxqhbaby6fd" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/02/11/react官网教程起步案例/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          react官网教程起步案例
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/01/29/网易微专业-webpack实战演练-3-2-2-webpack原理解析/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">网易微专业-webpack实战演练-3.2.2-webpack原理解析</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/04/15/网易微专业-node-1-1-8-MySQL入门与应用/">网易微专业-node-1.1.8-MySQL入门与应用</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/14/网易微专业-node-1-1-7-MongoDB入门与应用/">网易微专业-node-1.1.7-MongoDB入门与应用</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/13/网易微专业-node-1-1-6-Redis入门及应用/">网易微专业-node-1.1.6-Redis入门及应用</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/12/网易微专业-node-1-1-5-Nginx反向代理-静态资源服务/">网易微专业-node-1.1.5-Nginx反向代理 静态资源服务</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/11/网易微专业-node-1-1-3-Linux快速上手玩转典型应用/">网易微专业-node-1.1.3-Linux快速上手玩转典型应用</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

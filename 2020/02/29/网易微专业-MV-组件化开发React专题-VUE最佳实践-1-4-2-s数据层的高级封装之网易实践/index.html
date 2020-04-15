@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>网易微专业-MV*&amp;组件化开发React专题-VUE最佳实践-1.4.2-s数据层的高级封装之网易实践 | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1.数据层封装课程演示项目/src/views/modules.js里面有这样一段代码 export default getModules(    require.context(‘./‘, true, /.\/([^/]*?)\/index.js$/),    modulesOrder,);这里用require.context主要是容易实现模块的热插拔，也就是说随时增加/删除模块非常方便，当然还">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网易微专业-MV*&amp;组件化开发React专题-VUE最佳实践-1.4.2-s数据层的高级封装之网易实践">
+<meta property="og:url" content="http://yoursite.com/2020/02/29/网易微专业-MV-组件化开发React专题-VUE最佳实践-1-4-2-s数据层的高级封装之网易实践/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="1.数据层封装课程演示项目/src/views/modules.js里面有这样一段代码 export default getModules(    require.context(‘./‘, true, /.\/([^/]*?)\/index.js$/),    modulesOrder,);这里用require.context主要是容易实现模块的热插拔，也就是说随时增加/删除模块非常方便，当然还">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/vue/1.4.2_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/vue/1.4.2_2.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/vue/1.4.2_3.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/vue/1.4.2_4.png">
+<meta property="og:updated_time" content="2020-03-11T12:06:39.041Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="网易微专业-MV*&amp;组件化开发React专题-VUE最佳实践-1.4.2-s数据层的高级封装之网易实践">
+<meta name="twitter:description" content="1.数据层封装课程演示项目/src/views/modules.js里面有这样一段代码 export default getModules(    require.context(‘./‘, true, /.\/([^/]*?)\/index.js$/),    modulesOrder,);这里用require.context主要是容易实现模块的热插拔，也就是说随时增加/删除模块非常方便，当然还">
+<meta name="twitter:image" content="https://snakexu.github.io/images/wangyi/vue/1.4.2_1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-网易微专业-MV-组件化开发React专题-VUE最佳实践-1-4-2-s数据层的高级封装之网易实践" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/02/29/网易微专业-MV-组件化开发React专题-VUE最佳实践-1-4-2-s数据层的高级封装之网易实践/" class="article-date">
+  <time datetime="2020-02-29T04:35:44.000Z" itemprop="datePublished">2020-02-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      网易微专业-MV*&amp;组件化开发React专题-VUE最佳实践-1.4.2-s数据层的高级封装之网易实践
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.数据层封装<br><img src="https://snakexu.github.io/images/wangyi/vue/1.4.2_1.png"><br>课程演示项目/src/views/modules.js里面有这样一段代码</p>
+<p><pre><br>export default getModules(<br>    require.context(‘./‘, true, /.\/([^/]*?)\/index.js$/),<br>    modulesOrder,<br>);<br></pre><br>这里用require.context主要是容易实现模块的热插拔，也就是说随时增加/删除模块非常方便，当然还有别的好处，慢慢发觉吧<br>1-1.直接在页面组件中请求<br>1-2.封装service层<br>1-3.JSON配置的方式<br>小结：<br><img src="https://snakexu.github.io/images/wangyi/vue/1.4.2_2.png"><br>emmm，这部分老师都是讲的代码，其实看一下项目大概也能了解了，就不再详细讲述了，项目地址 <a href="https://vusion-templates.github.io/cloud-admin-site/" target="_blank" rel="noopener">https://vusion-templates.github.io/cloud-admin-site/</a> 不过项目中可能没有数据，需要自己实现一下<br>2.路由相关<br>2-1.路由懒加载<br><img src="https://snakexu.github.io/images/wangyi/vue/1.4.2_3.png"></p>
+<p><pre><br>{ path: ‘detail’, component: () =&gt; import(/<em> webpackChunkName: ‘ingress’ </em>/ ‘./views/detail/index.vue’), meta: { title: ‘负载均衡详情’ }, children: [<br>    { path: ‘’, redirect: ‘info’ },<br>    { path: ‘info’, component: () =&gt; import(/<em> webpackChunkName: ‘ingress’ </em>/ ‘./views/detail/info.vue’) },<br>    { path: ‘securityGroups’, component: () =&gt; import(/<em> webpackChunkName: ‘ingress’ </em>/ ‘./views/detail/monitor.vue’) },<br>    { path: ‘monitor’, component: () =&gt; import(/<em> webpackChunkName: ‘ingress’ </em>/ ‘./views/detail/monitor.vue’) },<br>    { path: ‘logs’, component: () =&gt; import(/<em> webpackChunkName: ‘ingress’ </em>/ ‘./views/detail/monitor.vue’) },<br>] },<br></pre><br>上面代码中/<em> webpackChunkName: ‘ingress’ </em>/ 这部分是分组，可以看webpack或者vue-router了解<br>2-2.路由权限<br>一般从后台获取权限，路由有一个meta，我们可以做如下配置</p>
+<p><pre><br>meta: {<br>    title: ‘负载均衡’,<br>    crumb: ‘负载均衡’,<br>    auth(to, from, next) {<br>         if (!window.auth.ingress) {<br>             next(‘/‘);<br>         }<br>    },<br>    locks: [{<br>        params: [‘teamId’],<br>    }],<br>},<br></pre><br>在各个路由做了上述配置之后，还需要做如下更改</p>
+<p><pre><br>// 权限验证<br>router.beforeEach((to, from, next) =&gt; {<br>    let called = false;<br>    const _next = function (…args) {<br>        if (called) {<br>            return;<br>        }<br>        called = true;<br>        next(…args);<br>    };<br>    to.matched.every((item) =&gt; {<br>        item.meta &amp;&amp; item.meta.auth &amp;&amp; item.meta.auth(to, from, _next);<br>        return !called;<br>    });<br>    _next();<br>});<br></pre><br>2-3.把参数固定在路由上-路由锁<br>下面事件是一个select的触发事件</p>
+<p><pre><br>onTeamChange($event) {<br>    this.$routerLock({<br>        teamId: $event.value,<br>    });<br>}<br></pre><br>在页面路由加上locks</p>
+<p><pre><br>meta: {<br>    title: ‘负载均衡’,<br>    crumb: ‘负载均衡’,<br>    auth(to, from, next) {<br>        // if (!window.auth.ingress) {<br>        //     next(‘/‘);<br>        // }<br>    },<br>    locks: [{<br>        params: [‘teamId’],<br>    }],<br>},<br></pre><br>上面代码能如此实现，并不是vue原生的，而是因为</p>
+<p><pre><br>const routerLock = {<br>    beforeEach(to, from, next) {<br>        const matched = to.matched || [];<br>        const locks = [];<br>        matched.forEach((item) =&gt; {<br>            if (item.meta &amp;&amp; item.meta.locks) {<br>                const itemLocks = item.meta.locks;<br>                itemLocks.forEach((lock) =&gt; {<br>                    if (lock.params &amp;&amp; lock.params.length) {<br>                        locks.push(lock);<br>                    }<br>                });<br>            }<br>        });<br>        if (!locks.length) {<br>            next();<br>            return;<br>        }<br>        const includePath = function (path) {<br>            if (typeof path === ‘string’) {<br>                return path === to.name || path === to.path;<br>            }<br>            if (path instanceof RegExp) {<br>                return path.test(to.name) || path.test(to.path);<br>            }<br>            return false;<br>        };<br>        const fromQuery = from.query;<br>        const toQuery = to.query;<br>        let isChanged = false;<br>        locks.forEach((lock) =&gt; {<br>            // 没有 include 时全通过<br>            if (lock.include &amp;&amp; !lock.include.some(includePath))<br>                return;<br>            if (lock.exclude &amp;&amp; lock.exclude.some(includePath))<br>                return;<br>            lock.params.forEach((param) =&gt; {<br>                if (!(param in toQuery)) {<br>                    isChanged = true;<br>                    toQuery[param] = fromQuery[param];<br>                }<br>                if (toQuery[param] === ‘’) {<br>                    toQuery[param] = undefined;<br>                } // 美化路由<br>            });<br>        });<br>        if (isChanged) {<br>            next({<br>                path: to.path,<br>                query: toQuery,<br>            });<br>        } else {<br>            next();<br>        }<br>    },<br>    update(query, route, router) {<br>        if (Object.keys(query).some((key) =&gt; query[key] !== route.query[key])) {<br>            router.push({<br>                path: route.path,<br>                query: {<br>                    …route.query,<br>                    …query,<br>                },<br>            });<br>        }<br>    },<br>    install(Vue) {<br>        Vue.prototype.$routerLock = function (query) {<br>            return routerLock.update(query, this.$route, this.$router);<br>        };<br>    },<br>};<br>export default routerLock;<br></pre><br>3.数据管理和通信<br><img src="https://snakexu.github.io/images/wangyi/vue/1.4.2_4.png"><br>课程里老师项目封装了一种基于eventbus的组件 <a href="https://vusion.github.io/cloud-ui/components/m-pub-sub/examples" target="_blank" rel="noopener">https://vusion.github.io/cloud-ui/components/m-pub-sub/examples</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/02/29/网易微专业-MV-组件化开发React专题-VUE最佳实践-1-4-2-s数据层的高级封装之网易实践/" data-id="ck910dtaj000z2lxqve1ubo3n" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/03/01/网易微专业-MV-组件化开发React专题-React进阶-2-2-4-数据管理Redux/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          网易微专业-MV*&amp;组件化开发React专题-React进阶-2.2.4-数据管理Redux
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/02/27/网易微专业-MV-组件化开发React专题-React进阶-2-2-3-React与Typescript/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">网易微专业-MV*&amp;组件化开发React专题-React进阶-2.2.3-React与Typescript</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/04/15/网易微专业-node-1-1-8-MySQL入门与应用/">网易微专业-node-1.1.8-MySQL入门与应用</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/14/网易微专业-node-1-1-7-MongoDB入门与应用/">网易微专业-node-1.1.7-MongoDB入门与应用</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/13/网易微专业-node-1-1-6-Redis入门及应用/">网易微专业-node-1.1.6-Redis入门及应用</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/12/网易微专业-node-1-1-5-Nginx反向代理-静态资源服务/">网易微专业-node-1.1.5-Nginx反向代理 静态资源服务</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/11/网易微专业-node-1-1-3-Linux快速上手玩转典型应用/">网易微专业-node-1.1.3-Linux快速上手玩转典型应用</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

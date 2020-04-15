@@ -7,17 +7,17 @@
   
   <title>网易微专业-单页应用-1.3.2-VUE编译器原理探秘二 | 喵小喵的窝</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="这节课主要是分析了vue解析模版的过程，如何把页面的HTML字符串，例如&amp;lt; div id=”app” &amp;gt;&amp;lt; /div &amp;gt;内容解析成AST抽象语法树，还是先奉上老师的专栏链接https://zhuanlan.zhihu.com/p/88363312解析出来的AST对象例子如下  var template = &quot;&amp;lt; div id=&apos;app&apos; &amp;gt;&amp;lt; span &amp;gt;&amp;lt; /span &amp;gt;">
+  <meta name="description" content="这节课主要是分析了vue解析模版的过程，如何把页面的HTML字符串，例如&amp;lt; div id=”app” &amp;gt;{ {message} }&amp;lt; /div &amp;gt;内容解析成AST抽象语法树，还是先奉上老师的专栏链接https://zhuanlan.zhihu.com/p/88363312解析出来的AST对象例子如下  var template = &quot;&amp;lt; div id=&apos;app&apos; &amp;gt;{ {m">
 <meta property="og:type" content="article">
 <meta property="og:title" content="网易微专业-单页应用-1.3.2-VUE编译器原理探秘二">
 <meta property="og:url" content="http://yoursite.com/2020/01/17/网易微专业-单页应用-1-3-2-VUE编译器原理探秘二/index.html">
 <meta property="og:site_name" content="喵小喵的窝">
-<meta property="og:description" content="这节课主要是分析了vue解析模版的过程，如何把页面的HTML字符串，例如&amp;lt; div id=”app” &amp;gt;&amp;lt; /div &amp;gt;内容解析成AST抽象语法树，还是先奉上老师的专栏链接https://zhuanlan.zhihu.com/p/88363312解析出来的AST对象例子如下  var template = &quot;&amp;lt; div id=&apos;app&apos; &amp;gt;&amp;lt; span &amp;gt;&amp;lt; /span &amp;gt;">
+<meta property="og:description" content="这节课主要是分析了vue解析模版的过程，如何把页面的HTML字符串，例如&amp;lt; div id=”app” &amp;gt;{ {message} }&amp;lt; /div &amp;gt;内容解析成AST抽象语法树，还是先奉上老师的专栏链接https://zhuanlan.zhihu.com/p/88363312解析出来的AST对象例子如下  var template = &quot;&amp;lt; div id=&apos;app&apos; &amp;gt;{ {m">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-01-17T10:08:44.497Z">
+<meta property="og:updated_time" content="2020-04-15T07:23:03.633Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="网易微专业-单页应用-1.3.2-VUE编译器原理探秘二">
-<meta name="twitter:description" content="这节课主要是分析了vue解析模版的过程，如何把页面的HTML字符串，例如&amp;lt; div id=”app” &amp;gt;&amp;lt; /div &amp;gt;内容解析成AST抽象语法树，还是先奉上老师的专栏链接https://zhuanlan.zhihu.com/p/88363312解析出来的AST对象例子如下  var template = &quot;&amp;lt; div id=&apos;app&apos; &amp;gt;&amp;lt; span &amp;gt;&amp;lt; /span &amp;gt;">
+<meta name="twitter:description" content="这节课主要是分析了vue解析模版的过程，如何把页面的HTML字符串，例如&amp;lt; div id=”app” &amp;gt;{ {message} }&amp;lt; /div &amp;gt;内容解析成AST抽象语法树，还是先奉上老师的专栏链接https://zhuanlan.zhihu.com/p/88363312解析出来的AST对象例子如下  var template = &quot;&amp;lt; div id=&apos;app&apos; &amp;gt;{ {m">
   
     <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
   
@@ -86,9 +86,9 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>这节课主要是分析了vue解析模版的过程，如何把页面的HTML字符串，例如&lt; div id=”app” &gt;&lt; /div &gt;内容解析成AST抽象语法树，还是先奉上老师的专栏链接<a href="https://zhuanlan.zhihu.com/p/88363312" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/88363312</a><br>解析出来的AST对象例子如下</p>
+        <p>这节课主要是分析了vue解析模版的过程，如何把页面的HTML字符串，例如&lt; div id=”app” &gt;{ {message} }&lt; /div &gt;内容解析成AST抽象语法树，还是先奉上老师的专栏链接<a href="https://zhuanlan.zhihu.com/p/88363312" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/88363312</a><br>解析出来的AST对象例子如下</p>
 <pre>
-var template = "< div id='app' >< span >< /span >< /div >";
+var template = "< div id='app' >{ {message} }< span >< /span >< /div >";
 //解析单个标签
 var initAst = {
     type: 1,
@@ -130,7 +130,7 @@ var AST = {
             token: [{
                 "@binding": "message"
             }],
-            text: "",
+            text: "{ {message} }",
             static: false
         },
         {
@@ -293,7 +293,7 @@ function parseHTML(html, options) {
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/01/17/网易微专业-单页应用-1-3-2-VUE编译器原理探秘二/" data-id="ck5iwofni000ytjxq0s69s7l9" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/01/17/网易微专业-单页应用-1-3-2-VUE编译器原理探秘二/" data-id="ck910dtba00252lxqq8rhst2x" class="article-share-link">Share</a>
       
       
     </footer>
@@ -338,7 +338,7 @@ function parseHTML(html, options) {
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
     </div>
   </div>
 
@@ -351,23 +351,23 @@ function parseHTML(html, options) {
       <ul>
         
           <li>
-            <a href="/2020/01/18/js运算符优先级/">js运算符优先级</a>
+            <a href="/2020/04/15/网易微专业-node-1-1-8-MySQL入门与应用/">网易微专业-node-1.1.8-MySQL入门与应用</a>
           </li>
         
           <li>
-            <a href="/2020/01/17/网易微专业-单页应用-1-3-2-VUE编译器原理探秘二/">网易微专业-单页应用-1.3.2-VUE编译器原理探秘二</a>
+            <a href="/2020/04/14/网易微专业-node-1-1-7-MongoDB入门与应用/">网易微专业-node-1.1.7-MongoDB入门与应用</a>
           </li>
         
           <li>
-            <a href="/2020/01/14/网易微专业-单页应用-1-3-1-VUE编译器原理探秘一/">网易微专业-单页应用-1.3.1-VUE编译器原理探秘一</a>
+            <a href="/2020/04/13/网易微专业-node-1-1-6-Redis入门及应用/">网易微专业-node-1.1.6-Redis入门及应用</a>
           </li>
         
           <li>
-            <a href="/2020/01/11/网易微专业福利期-2-2-如何保证你的代码质量/">网易微专业福利期-2.2-如何保证你的代码质量</a>
+            <a href="/2020/04/12/网易微专业-node-1-1-5-Nginx反向代理-静态资源服务/">网易微专业-node-1.1.5-Nginx反向代理 静态资源服务</a>
           </li>
         
           <li>
-            <a href="/2020/01/10/网易微专业福利期-2-1-JavaScript内存管理/">网易微专业福利期-2.1-JavaScript内存管理</a>
+            <a href="/2020/04/11/网易微专业-node-1-1-3-Linux快速上手玩转典型应用/">网易微专业-node-1.1.3-Linux快速上手玩转典型应用</a>
           </li>
         
       </ul>

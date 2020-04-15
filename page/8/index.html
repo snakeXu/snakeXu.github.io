@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="喵小喵的窝">
+<meta property="og:url" content="http://yoursite.com/page/8/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:locale" content="default">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="喵小喵的窝">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-js算法简单了解-插入排序" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/12/10/js算法简单了解-插入排序/" class="article-date">
+  <time datetime="2019-12-10T06:37:09.000Z" itemprop="datePublished">2019-12-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/12/10/js算法简单了解-插入排序/">js算法简单了解-插入排序</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.描述<br>插入排序的工作原理就是将未排序数据，对已排序数据序列从后向前扫描，找到对应的位置并插入。插入排序通常采用占位的形式，空间复杂度为O(1),因此，在从后向前扫描的过程中，需要反复的把已排序的元素逐步向后挪位，为新插入元素提供插入的位置。<br>(1）从第一个元素开始，该元素可以被认为已经被排序<br>(2）取出下一个元素，在已经排好序的序列中从后往前扫描<br>(3）直到找到小于或者等于该元素的位置<br>(4）将该位置后面的所有已排序的元素从后往前依次移一位<br>(5)将该元素插入到该位置<br>(6)重复步骤2-5<br>另外，插入排序所需的时间取决于输入中元素的初始顺序。<br>2.代码</p>
+<p><pre><br>function insertsort(arr){<br>    var len = arr &amp;&amp; arr.length,i=1,j;<br>    for( ; i &lt; len; i++){<br>        for(j = i; j &gt; 0 &amp;&amp; arr[j] &lt; arr[j-1]; j–){<br>            var temp = arr[j];<br>            arr[j] = arr[j-1]<br>            arr[j-1] = temp;<br>        }<br>        //console.log(arr)这里是为了打印每轮比较的结果<br>    }<br>    return arr<br>}<br>var arr = [49,38,65,101,76,13,27,49,55,1]<br>insertsort(arr)<br></pre><br>结果打印<br><img src="https://snakexu.github.io/images/algorithm/insertsort_1.png"><br>3.时间复杂度最好为O(N) 最坏为(N^2) 平均为O(N^2)   空间复杂度为O(1) 稳定<br>4.额外<br>4.1数组是部分有序的：数组中倒置的数量小于数组大小的某个倍数，那么我们说这个数组是部分有序的。下面是几种典型的部分有序的数组：<br>(1)数组中每个元素距离它最终位置都不远<br>(2)一个有序的大数组接一个小数组<br>(3)数组中只有几个元素的位置不正确<br>——以上来自：算法(第四版)<br><br>插入排序对这样的数组很有效。<br><br>4.2要大幅提高插入排序的速度并不难，只需要在内循环中将较大的元素都向右移动而不总是交换两个元素(这样访问数组的次数就能减半)</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/12/10/js算法简单了解-插入排序/" data-id="ck910dta000082lxqnbc13icz" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-js算法简单了解-选择排序" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/12/10/js算法简单了解-选择排序/" class="article-date">
+  <time datetime="2019-12-10T03:50:51.000Z" itemprop="datePublished">2019-12-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/12/10/js算法简单了解-选择排序/">js算法简单了解-选择排序</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.描述<br>在长度为N的无序数组中，第一次遍历n-1个数，找到最小的数值与第一个元素交换；第二次遍历n-2个数，找到最小的数值与第二个元素交换；。。。第n-1次遍历，找到最小的数值与第n-1个元素交换，排序完成。相较其他算法，选择排序的运行时间与数据初始状态无关，总会进行大约N2/2(N的平方除以2)次比较，而其他算法更善于利用数据初始状态<br>2.代码实现</p>
+<p><pre><br>function selectsort(arr){<br>    var len = arr &amp;&amp; arr.length,i=0,j,min;<br>    for( ; i &lt; len - 1; i++){<br>        min = i;<br>        for(j = i+1; j &lt; len; j++){<br>            if(a[j] &lt; a[min])<br>                min = j;<br>        }<br>        if(min != i){<br>            var temp = a[i];<br>            a[i] = a[min];<br>            a[min] = temp;<br>        }<br>    }<br>    return arr<br>}<br></pre><br>3.时间复杂度均为O(N^2)    空间复杂度为O(1)  不稳定(不稳定的意思就是，如果有个数组arr = [4,5,2,3,3,1],在排序之后，a[3]依然在a[4]前边)</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/12/10/js算法简单了解-选择排序/" data-id="ck910dta100092lxqv1k4r7lw" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-js算法简单了解-冒泡算法" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/12/10/js算法简单了解-冒泡算法/" class="article-date">
+  <time datetime="2019-12-10T02:02:50.000Z" itemprop="datePublished">2019-12-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/12/10/js算法简单了解-冒泡算法/">js算法简单了解-冒泡算法</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!--为了补回算法了解，我也是real认真了，拿出了上学时候的教材——数据结构(C语言版)，清华大学出版社，还是很怀念上学做米虫的日子的，言归正传-->
+<p>1.其实就是把数组中相邻元素一个个比较，按照排序的条件进行互换，毫无技巧简单粗暴直接有效。不过这个算法在我看来是最容易学习的。<br>2.代码实现，例子里排序得到的结果是从小到大的，可以按照自己的需要更改比较条件</p>
+<p><pre><br>function BubbleSort(arr){<br>    var temp;//临时变量<br>    for(var i=0; i &lt; arr.length-1; i++){   //表示趟数，一共arr.length-1次。<br>        var count = 0; //打印用的参数<br>        for(var j=arr.length-1; j&gt;i; j–){<br>            if(arr[j] &lt; arr[j-1]){<br>                temp = arr[j];<br>                arr[j] = arr[j-1];<br>                arr[j-1] = temp;<br>                count++;<br>            }<br>        }<br>        console.log(‘第’+i+’轮的比较次数为’+count);<br>    }<br>    return arr;<br>}<br>var arr = [93,72,35,48,42,37,15,2];<br>BubbleSort(arr)<br></pre><br>执行结果如图所示：<br><img src="https://snakexu.github.io/images/algorithm/bubble_1.png"><br>3.时间复杂度:O(N^2)(N的平方)</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/12/10/js算法简单了解-冒泡算法/" data-id="ck910dt9w00042lxq1mkigqhs" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-模块化编程-4-1-2-加载器结构设计导论-自研模块加载器" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/12/07/网易微专业-模块化编程-4-1-2-加载器结构设计导论-自研模块加载器/" class="article-date">
+  <time datetime="2019-12-07T09:54:59.000Z" itemprop="datePublished">2019-12-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/12/07/网易微专业-模块化编程-4-1-2-加载器结构设计导论-自研模块加载器/">网易微专业-模块化编程-4.1.2-加载器结构设计导论-自研模块加载器</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.结构导论<br><img src="https://snakexu.github.io/images/wangyi/module/4.1.2_1.png"><br>2.数据初始化<br><img src="https://snakexu.github.io/images/wangyi/module/4.1.2_2.png"><br>3.模块存储<br><img src="https://snakexu.github.io/images/wangyi/module/4.1.2_3.png"><br>4.资源定位<br><img src="https://snakexu.github.io/images/wangyi/module/4.1.2_4.png"><br>5.动态加载script文件<br><img src="https://snakexu.github.io/images/wangyi/module/4.1.2_5.png"><br>6.资源定位实现思路<br><img src="https://snakexu.github.io/images/wangyi/module/4.1.2_6.png"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/12/07/网易微专业-模块化编程-4-1-2-加载器结构设计导论-自研模块加载器/" data-id="ck910dtb2001y2lxq70k6742a" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-模块化编程-4-1-1-模块系统概述-自定义模块规范-书写约定" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/12/07/网易微专业-模块化编程-4-1-1-模块系统概述-自定义模块规范-书写约定/" class="article-date">
+  <time datetime="2019-12-07T06:52:12.000Z" itemprop="datePublished">2019-12-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/12/07/网易微专业-模块化编程-4-1-1-模块系统概述-自定义模块规范-书写约定/">网易微专业-模块化编程-4.1.1-模块系统概述-自定义模块规范-书写约定</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>一.什么是模块化<br><br>1.模块化就是把系统分离成独立功能的方法，这样我们需要什么功能，就加载什么功能。<br><br>(1)当一个项目开发的越来越复杂时，会遇到一些问题:<br><br>(1-1)命名冲突<br><br>(1-2)文件依赖<br><br>(2)使用模块化开发，可以避免以上问题，并且提高开发效率<br><br>(2-1)可维护性<br><br>(2-2)可复用性<br><br>总结:在生产角度，模块化开发是一种生产方式，这种方式生产效率高，维护成本低<br><br>二.模块化开发演变<br><img src="https://snakexu.github.io/images/wangyi/module/4.1.1_1.png"><br>三.Commonjs<br><br>CommonJS规范加载模块是同步的，也就是说，加载完成才执行后面的操作。<br><br>Node.js主要用于服务器编程，模块都是存在本地硬盘中加载比较快，所以Node.js采用CommonJS规范。<br><br>CommonJS规范分为三部分：module(模块标识) require(模块引用)  exports(模块定义)<br><br>·module变量在每个模块内部，就代表当前模块；<br><br>·exports属性是对外接口，用于导出当前模块的方法或变量；<br><br>·require()用来加载外部模块，读取并执行js文件，返回该模块的exports对象；<br><br>四.AMD(requirejs)<br><br>AMD也就是异步模块定义。它采用异步方式加载模块，通过define方式去定义模块，require方法去加载模块<br><br>AMD模块定义<br><br>如果这个模块还需要依赖其他模块，那么define函数的第一个参数， 必须是一个数组，指明该模块的依赖。<br></p>
+<p><pre>define([tools],function(){})</pre><br>AMD模块的加载</p>
+<p><pre>requeire([‘modules’],callback);</pre><br>·第一个参数[‘modules’]，是一个数组，里面的成员就是要加载的模块<br><br>·第二个参数callback，则是加载成功之后的回调函数。例如加载Math.js。<br></p>
+<p><pre>require([‘math’],function(){})</pre><br>require异步加载Math,浏览器不会失去响应；它指定的回调函数，只有前面的模块都加载成功后，才会运行，解决了依赖性的问题<br><br>五.CMD(seajs)<br><br>CMD即通用模块定义，CMD规范是国内发展出来的；正如AMD有requirejs，CMD有个浏览器的实现Seajs；Seajs要解决的问题和requirejs一样，只不过在模块定义方式和模块加载方式上有所不同<br><br>在CMD规范中，一个模块就是一个文件。代码的书写格式如下：</p>
+<p><pre>define(function(require,exports,module){<br>//模块代码<br>})</pre><br><i><br>    ·require是可以把其他模块导入进来的一个参数，<br><br>    ·exports可以把模块内的一些属性和方法导出；<br><br>    ·module是一个对象，上面存储了与当前模块相关联的一些属性和方法。<br><br></i><br>CMD推崇依赖就近，延迟执行。文件是提前加载好的，只有在require的时候才去执行文件</p>
+<p><pre><br>define(functioln(require,exports,module){<br>    var Math = require(‘./Math’);<br>    Math.add()<br>})<br></pre><br>六.ES6模块化<br><br>ES6 Module<br><br>在ES6之前没有模块化，为了解决问题，提出了Commonjs、AMD、CMD；ES6模块化汲取了Commonjs和AMD的优点，语法简介，支持异步加载，未来可以成为浏览器和服务器通用的模块化解决方案。<br><br>ES6中模块的定义<br><br>ES6新增了两个关键字：export和import。<br><br>·export用于把模块里的内容暴露出来<br><br>·import用于引入模块提供的功能<br><br>ES6中模块的加载<br><br>import加载模块：<br></p>
+<p><pre>import{bar,foo,test,obj} from ‘./lib’<br>    foo()<br></pre><br>注：可以使用export default命令，为模块指定默认输出，一个模块只能有一个默认输出，所以export default只能用一次。<br><br>ES6模块运行机制<br><br>ES6模块是动态引用，如果使用import从一个模块加载变量(即import foo from ‘foo’),变量不会被缓存，而是成为一个指向被加载模块的引用。等脚本执行时，根据只读引用，到被加载到那个模块中去取值。<br><br>七.自定义规范-书写约定<br><br>书写约定<br><br>自定义加载器<br><br>模块的定义<br><br>·约定：所有的Javascript文件都应该用模块的形式来书写，并且一个文件只包含一个模块；<br><br>·使用全局函数define来定义模块 define(factory[require、export、module])；<br><br>·factroy函数在调用时，会始终传入三个参数require、export和module，这三个参数在所有模块代码里可用。<br></p>
+<p><pre><br>    define(function(require, exports, module){<br>        //模块代码<br>    })<br></pre><br>·exports用来向外提供模块的API || 使用return语句直接向外提供API。<br><br>·require函数用来模仿其他模块提供的API。<br><br>·module参数存储模块的元信息。(id模块的唯一标识 deps依赖列表 exports对外提供的接口对象)<br><br><br><br>factory函数在调用时，会始终传入三个参数：require、exports和module，这三个参数在所有模块代码里可用。<br></p>
+<p><pre><br>    define(function(require, exports, module){<br>        //模块代码<br>    })<br></pre><br>模块加载器会从factory.toString()中解析出当前模块所依赖的模块，它是由一个模块标识组成的数组。<br><br>所以：<br><br>1.在模块代码中，第一个参数必须命名为require。<br><br>2.不要重命名require函数，或在任何作用域总给require重新赋值。<br><br>3.require的参数值必须是字符串的直接量不能是表达式。<br></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/12/07/网易微专业-模块化编程-4-1-1-模块系统概述-自定义模块规范-书写约定/" data-id="ck910dtb2001z2lxq5ni8tor4" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-HTTP和HTTPS协议" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/12/06/HTTP和HTTPS协议/" class="article-date">
+  <time datetime="2019-12-06T08:37:32.000Z" itemprop="datePublished">2019-12-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/12/06/HTTP和HTTPS协议/">HTTP和HTTPS协议</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>写在前面<br><br>版权声明：本文为CSDN博主「会飞的狗~」的原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接及本声明。<br>原文链接：<a href="https://blog.csdn.net/xiaoming100001/article/details/81109617" target="_blank" rel="noopener">https://blog.csdn.net/xiaoming100001/article/details/81109617</a><br><br>文章对http和https解释的比较详细，但是也略有一些不足，比如三次握手的图略有差池，但是瑕不掩瑜，整体来说还是了解http和https一篇比较好的文章<br><br>一、前言：<br><img src="https://snakexu.github.io/images/http&https/http_1.jpeg"><br><img src="https://snakexu.github.io/images/http&https/http_2.jpeg"><br>先来观察这两张图，第一张访问域名<a href="http://www.12306.cn，谷歌浏览器提示不安全链接，第二张是https://kyfw.12306.cn/otn/regist/init，浏览器显示安全，为什么会这样子呢？2017年1月发布的Chrome" target="_blank" rel="noopener">http://www.12306.cn，谷歌浏览器提示不安全链接，第二张是https://kyfw.12306.cn/otn/regist/init，浏览器显示安全，为什么会这样子呢？2017年1月发布的Chrome</a> 56浏览器开始把收集密码或信用卡数据的HTTP页面标记为“不安全”，若用户使用2017年10月推出的Chrome 62，带有输入数据的HTTP页面和所有以无痕模式浏览的HTTP页面都会被标记为“不安全”，此外，苹果公司强制所有iOS App在2017年1月1日前使用HTTPS加密。<br><br>二、HTTP和HTTPS发展历史<br><br>什么是HTTP?<br><br>超文本传输协议，是一个基于请求与响应，无状态的，应用层的协议，常基于TCP/IP协议传输数据，互联网上应用最为广泛的一种网络协议,所有的WWW文件都必须遵守这个标准。设计HTTP的初衷是为了提供一种发布和接收HTML页面的方法。<br><br>发展历史：<br><img src="https://snakexu.github.io/images/http&https/http_3.png"><br><img src="https://snakexu.github.io/images/http&https/http_4.png"><br>这个Akamai公司建立的一个官方的演示，使用HTTP/1.1和HTTP/2同时请求379张图片，观察请求的时间，明显看出HTTP/2性能占优势。<br><img src="https://snakexu.github.io/images/http&https/http_5.jpeg"><br>多路复用：通过单一的HTTP/2连接请求发起多重的请求-响应消息，多个请求stream共享一个TCP连接，实现多留并行而不是依赖建立多个TCP连接。<br><br><br>HTTP报文格式<br><img src="https://snakexu.github.io/images/http&https/http_6.png"><br>什么是HTTPS？<br><br>《图解HTTP》这本书中曾提过HTTPS是身披SSL外壳的HTTP。HTTPS是一种通过计算机网络进行安全通信的传输协议，经由HTTP进行通信，利用SSL/TLS建立全信道，加密数据包。HTTPS使用的主要目的是提供对网站服务器的身份认证，同时保护交换数据的隐私与完整性。<br><br>PS:TLS是传输层加密协议，前身是SSL协议，由网景公司1995年发布，有时候两者不区分。<br><br>三、HTTP VS HTTPS<br><br>HTTP特点：<br><br>1.无状态：协议对客户端没有状态存储，对事物处理没有“记忆”能力，比如访问一个网站需要反复进行登录操作<br><br>2.无连接：HTTP/1.1之前，由于无状态特点，每次请求需要通过TCP三次握手四次挥手，和服务器重新建立连接。比如某个客户机在短时间多次请求同一个资源，服务器并不能区别是否已经响应过用户的请求，所以每次需要重新响应请求，需要耗费不必要的时间和流量。<br><br>3.基于请求和响应：基本的特性，由客户端发起请求，服务端响应<br><br>4.简单快速、灵活<br><br>5.通信使用明文、请求和响应不会对通信方进行确认、无法保护数据的完整性<br><br>下面通过一个简单的抓包实验观察使用HTTP请求传输的数据：<br><img src="https://snakexu.github.io/images/http&https/http_7.jpeg"><br><img src="https://snakexu.github.io/images/http&https/http_8.jpeg"><br>结果分析：HTTP协议传输数据以明文形式显示<br><br>针对无状态的一些解决策略：<br><br>场景：逛电商商场用户需要使用的时间比较长，需要对用户一段时间的HTTP通信状态进行保存，比如执行一次登陆操作，在30分钟内所有的请求都不需要再次登陆。<br><br>1.通过Cookie/Session技术<br><br>2.HTTP/1.1持久连接（HTTP keep-alive）方法，只要任意一端没有明确提出断开连接，则保持TCP连接状态，在请求首部字段中的Connection:keep-alive即为表明使用了持久连接<br><br>HTTPS特点：<br><br>基于HTTP协议，通过SSL或TLS提供加密处理数据、验证对方身份以及数据完整性保护<br><img src="https://snakexu.github.io/images/http&https/http_9.jpeg"><br>通过抓包可以看到数据不是明文传输，而且HTTPS有如下特点：<br><br>1.内容加密：采用混合加密技术，中间者无法直接查看明文内容<br><br>2.验证身份：通过证书认证客户端访问的是自己的服务器<br><br>3.保护数据完整性：防止传输的内容被中间人冒充或者篡改<br><br><strong>混合加密：</strong>结合非对称加密和对称加密技术。客户端使用对称加密生成密钥对传输数据进行加密，然后使用非对称加密的公钥再对秘钥进行加密，所以网络上传输的数据是被秘钥加密的密文和用公钥加密后的秘密秘钥，因此即使被黑客截取，由于没有私钥，无法获取到加密明文的秘钥，便无法获取到明文数据。<br><br><strong>数字摘要：</strong>通过单向hash函数对原文进行哈希，将需加密的明文“摘要”成一串固定长度(如128bit)的密文，不同的明文摘要成的密文其结果总是不相同，同样的明文其摘要必定一致，并且即使知道了摘要也不能反推出明文。<br><br><strong>数字签名技术：</strong>数字签名建立在公钥加密体制基础上，是公钥加密技术的另一类应用。它把公钥加密技术和数字摘要结合起来，形成了实用的数字签名技术。<br><br>·收方能够证实发送方的真实身份；<br><br>·发送方事后不能否认所发送过的报文；<br><br>·收方或非法者不能伪造、篡改报文。<br><br><img src="https://snakexu.github.io/images/http&https/http_10.png"><br>非对称加密过程需要用到公钥进行加密，那么公钥从何而来？其实公钥就被包含在数字证书中，数字证书通常来说是由受信任的数字证书颁发机构CA，在验证服务器身份后颁发，证书中包含了一个密钥对（公钥和私钥）和所有者识别信息。数字证书被放到服务端，具有服务器身份验证和数据传输加密功能。<br><br>四、HTTP通信传输<br><img src="https://snakexu.github.io/images/http&https/http_11.jpeg"><br>客户端输入URL回车，DNS解析域名得到服务器的IP地址，服务器在80端口监听客户端请求，端口通过TCP/IP协议（可以通过Socket实现）建立连接。HTTP属于TCP/IP模型中的运用层协议，所以通信的过程其实是对应数据的入栈和出栈。<br><img src="https://snakexu.github.io/images/http&https/http_12.jpeg"><br>报文从运用层传送到运输层，运输层通过TCP三次握手和服务器建立连接，四次挥手释放连接。<br><img src="https://snakexu.github.io/images/http&https/http_13.png"><br>为什么需要三次握手呢？为了防止已失效的连接请求报文段突然又传送到了服务端，因而产生错误。<br><br>比如：client发出的第一个连接请求报文段并没有丢失，而是在某个网络结点长时间的滞留了，以致延误到连接释放以后的某个时间才到达server。本来这是一个早已失效的报文段，但是server收到此失效的连接请求报文段后，就误认为是client再次发出的一个新的连接请求，于是就向client发出确认报文段，同意建立连接。假设不采用“三次握手”，那么只要server发出确认，新的连接就建立了，由于client并没有发出建立连接的请求，因此不会理睬server的确认，也不会向server发送数据，但server却以为新的运输连接已经建立，并一直等待client发来数据。所以没有采用“三次握手”，这种情况下server的很多资源就白白浪费掉了。<br><img src="https://snakexu.github.io/images/http&https/http_14.png"><br>为什么需要四次挥手呢？TCP是全双工模式，当client发出FIN报文段时，只是表示client已经没有数据要发送了，client告诉server，它的数据已经全部发送完毕了；但是，这个时候client还是可以接受来server的数据；当server返回ACK报文段时，表示它已经知道client没有数据发送了，但是server还是可以发送数据到client的；当server也发送了FIN报文段时，这个时候就表示server也没有数据要发送了，就会告诉client，我也没有数据要发送了，如果收到client确认报文段，之后彼此就会愉快的中断这次TCP连接。<br><br>五、HTTPS实现原理<br><br>SSL建立连接过程<br><br><img src="https://snakexu.github.io/images/http&https/http_15.png"><br>1.client向server发送请求<a href="https://baidu.com，然后连接到server的443端口，发送的信息主要是随机值1和客户端支持的加密算法。" target="_blank" rel="noopener">https://baidu.com，然后连接到server的443端口，发送的信息主要是随机值1和客户端支持的加密算法。</a><br><br>2.server接收到信息之后给予client响应握手信息，包括随机值2和匹配好的协商加密算法，这个加密算法一定是client发送给server加密算法的子集。<br><br>3.随即server给client发送第二个响应报文是数字证书。服务端必须要有一套数字证书，可以自己制作，也可以向组织申请。区别就是自己颁发的证书需要客户端验证通过，才可以继续访问，而使用受信任的公司申请的证书则不会弹出提示页面，这套证书其实就是一对公钥和私钥。传送证书，这个证书其实就是公钥，只是包含了很多信息，如证书的颁发机构，过期时间、服务端的公钥，第三方证书认证机构(CA)的签名，服务端的域名信息等内容。<br><br>4.客户端解析证书，这部分工作是由客户端的TLS来完成的，首先会验证公钥是否有效，比如颁发机构，过期时间等等，如果发现异常，则会弹出一个警告框，提示证书存在问题。如果证书没有问题，那么就生成一个随即值（预主秘钥）。<br><br>5.客户端认证证书通过之后，接下来是通过随机值1、随机值2和预主秘钥组装会话秘钥。然后通过证书的公钥加密会话秘钥。<br><br>6.传送加密信息，这部分传送的是用证书加密后的会话秘钥，目的就是让服务端使用秘钥解密得到随机值1、随机值2和预主秘钥。<br><br>7.服务端解密得到随机值1、随机值2和预主秘钥，然后组装会话秘钥，跟客户端会话秘钥相同。<br><br>8.客户端通过会话秘钥加密一条消息发送给服务端，主要验证服务端是否正常接受客户端加密的消息。<br><br>9.同样服务端也会通过会话秘钥加密一条消息回传给客户端，如果客户端能够正常接受的话表明SSL层连接建立完成了。<br><br>问题：<br><br>1.怎么保证保证服务器给客户端下发的公钥是真正的公钥，而不是中间人伪造的公钥呢？<br><br><img src="https://snakexu.github.io/images/http&https/http_16.png"><br>2.证书如何安全传输，被掉包了怎么办？<br><img src="https://snakexu.github.io/images/http&https/http_17.png"><br>数字证书内容<br><br>包括了加密后服务器的公钥、权威机构的信息、服务器域名，还有经过CA私钥签名之后的证书内容（经过先通过Hash函数计算得到证书数字摘要，然后用权威机构私钥加密数字摘要得到数字签名)，签名计算方法以及证书对应的域名。<br><br>验证证书安全性过程<br><br>1.当客户端收到这个证书之后，使用本地配置的权威机构的公钥对证书进行解密得到服务端的公钥和证书的数字签名，数字签名经过CA公钥解密得到证书信息摘要。<br><br>2.然后证书签名的方法计算一下当前证书的信息摘要，与收到的信息摘要作对比，如果一样，表示证书一定是服务器下发的，没有被中间人篡改过。因为中间人虽然有权威机构的公钥，能够解析证书内容并篡改，但是篡改完成之后中间人需要将证书重新加密，但是中间人没有权威机构的私钥，无法加密，强行加密只会导致客户端无法解密，如果中间人强行乱修改证书，就会导致证书内容和证书签名不匹配。<br><br>那第三方攻击者能否让自己的证书显示出来的信息也是服务端呢？（伪装服务端一样的配置）显然这个是不行的，因为当第三方攻击者去CA那边寻求认证的时候CA会要求其提供例如域名的whois信息、域名管理邮箱等证明你是服务端域名的拥有者，而第三方攻击者是无法提供这些信息所以他就是无法骗CA他拥有属于服务端的域名。<br><br>六、运用与总结<br><br>安全性考虑：<br><br>1.HTTPS协议的加密范围也比较有限，在黑客攻击、拒绝服务攻击、服务器劫持等方面几乎起不到什么作用<br><br>2.SSL证书的信用链体系并不安全，特别是在某些国家可以控制CA根证书的情况下，中间人攻击一样可行<br><br>中间人攻击（MITM攻击）是指，黑客拦截并篡改网络中的通信数据。又分为被动MITM和主动MITM，被动MITM只窃取通信数据而不修改，而主动MITM不但能窃取数据，还会篡改通信数据。最常见的中间人攻击常常发生在公共wifi或者公共路由上。<br><br>成本考虑：<br><br>1.SSL证书需要购买申请，功能越强大的证书费用越高<br><br>2.SSL证书通常需要绑定IP，不能在同一IP上绑定多个域名，IPv4资源不可能支撑这个消耗（SSL有扩展可以部分解决这个问题，但是比较麻烦，而且要求浏览器、操作系统支持，Windows XP就不支持这个扩展，考虑到XP的装机量，这个特性几乎没用）。<br><br>3.根据ACM CoNEXT数据显示，使用HTTPS协议会使页面的加载时间延长近50%，增加10%到20%的耗电。<br><br>4.HTTPS连接缓存不如HTTP高效，流量成本高。<br><br>5.HTTPS连接服务器端资源占用高很多，支持访客多的网站需要投入更大的成本。<br><br>6.HTTPS协议握手阶段比较费时，对网站的响应速度有影响，影响用户体验。比较好的方式是采用分而治之，类似12306网站的主页使用HTTP协议，有关于用户信息等方面使用HTTPS。<br><br><br><br><br><br>另外还看到分节介绍，更详细的介绍了一些相关细节的博文：<br><a href="https://blog.csdn.net/hherima/article/details/52469267" target="_blank" rel="noopener">https://blog.csdn.net/hherima/article/details/52469267</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/12/06/HTTP和HTTPS协议/" data-id="ck910dtcb002i2lxqkb3hhntk" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-我的typescript学习-接口" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/12/06/我的typescript学习-接口/" class="article-date">
+  <time datetime="2019-12-06T02:09:18.000Z" itemprop="datePublished">2019-12-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/12/06/我的typescript学习-接口/">我的typescript学习-接口</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.介绍<br>TypeScript的核心原则之一是对值所具有的结构进行类型检查。 它有时被称做“鸭式辨型法”或“结构性子类型化”。 在TypeScript里，接口的作用就是为这些类型命名和为你的代码或第三方代码定义契约。<br>2.接口初探<br>下面通过一个简单示例来观察接口是如何工作的：</p>
+<p>function printLabel(labelledObj: { label: string }) {<br>  console.log(labelledObj.label);<br>}</p>
+<p>let myObj = { size: 10, label: “Size 10 Object” };<br>printLabel(myObj);<br>类型检查器会查看printLabel的调用。 printLabel有一个参数，并要求这个对象参数有一个名为label类型为string的属性。 需要注意的是，我们传入的对象参数实际上会包含很多属性，但是编译器只会检查那些必需的属性是否存在，并且其类型是否匹配。 然而，有些时候TypeScript却并不会这么宽松，我们下面会稍做讲解。</p>
+<p>下面我们重写上面的例子，这次使用接口来描述：必须包含一个label属性且类型为string：</p>
+<p>interface LabelledValue {<br>  label: string;<br>}</p>
+<p>function printLabel(labelledObj: LabelledValue) {<br>  console.log(labelledObj.label);<br>}</p>
+<p>let myObj = {size: 10, label: “Size 10 Object”};<br>printLabel(myObj);<br>LabelledValue接口就好比一个名字，用来描述上面例子里的要求。 它代表了有一个 label属性且类型为string的对象。 需要注意的是，我们在这里并不能像在其它语言里一样，说传给 printLabel的对象实现了这个接口。我们只会去关注值的外形。 只要传入的对象满足上面提到的必要条件，那么它就是被允许的。</p>
+<p>还有一点值得提的是，类型检查器不会去检查属性的顺序，只要相应的属性存在并且类型也是对的就可以。<br>3.可选属性<br>接口里的属性不全都是必需的。 有些是只在某些条件下存在，或者根本不存在。 可选属性在应用“option bags”模式时很常用，即给函数传入的参数对象中只有部分属性赋值了。</p>
+<p>下面是应用了“option bags”的例子：</p>
+<p>interface SquareConfig {<br>  color?: string;<br>  width?: number;<br>}</p>
+<p>function createSquare(config: SquareConfig): {color: string; area: number} {<br>  let newSquare = {color: “white”, area: 100};<br>  if (config.color) {<br>    newSquare.color = config.color;<br>  }<br>  if (config.width) {<br>    newSquare.area = config.width * config.width;<br>  }<br>  return newSquare;<br>}</p>
+<p>let mySquare = createSquare({color: “black”});<br>带有可选属性的接口与普通的接口定义差不多，只是在可选属性名字定义的后面加一个?符号。</p>
+<p>可选属性的好处之一是可以对可能存在的属性进行预定义，好处之二是可以捕获引用了不存在的属性时的错误。 比如，我们故意将 createSquare里的color属性名拼错，就会得到一个错误提示：</p>
+<p>interface SquareConfig {<br>  color?: string;<br>  width?: number;<br>}</p>
+<p>function createSquare(config: SquareConfig): { color: string; area: number } {<br>  let newSquare = {color: “white”, area: 100};<br>  if (config.clor) {<br>    // Error: Property ‘clor’ does not exist on type ‘SquareConfig’<br>    newSquare.color = config.clor;<br>  }<br>  if (config.width) {<br>    newSquare.area = config.width * config.width;<br>  }<br>  return newSquare;<br>}</p>
+<p>let mySquare = createSquare({color: “black”});<br>4.只读属性<br>一些对象属性只能在对象刚刚创建的时候修改其值。 你可以在属性名前用 readonly来指定只读属性:</p>
+<p>interface Point {<br>    readonly x: number;<br>    readonly y: number;<br>}<br>你可以通过赋值一个对象字面量来构造一个Point。 赋值后， x和y再也不能被改变了。</p>
+<p>let p1: Point = { x: 10, y: 20 };<br>p1.x = 5; // error!<br>TypeScript具有ReadonlyArray<t>类型，它与Array<t>相似，只是把所有可变方法去掉了，因此可以确保数组创建后再也不能被修改：</t></t></p>
+<p>let a: number[] = [1, 2, 3, 4];<br>let ro: ReadonlyArray&lt; number &gt; = a;<br>ro[0] = 12; // error!<br>ro.push(5); // error!<br>ro.length = 100; // error!<br>a = ro; // error!<br>上面代码的最后一行，可以看到就算把整个ReadonlyArray赋值到一个普通数组也是不可以的。 但是你可以用类型断言重写：</p>
+<p>a = ro as number[];<br>readonly vs const<br>最简单判断该用readonly还是const的方法是看要把它做为变量使用还是做为一个属性。 做为变量使用的话用 const，若做为属性则使用readonly。<br>5.额外的属性检查<br>我们在第一个例子里使用了接口，TypeScript让我们传入{ size: number; label: string; }到仅期望得到{ label: string; }的函数里。 我们已经学过了可选属性，并且知道他们在“option bags”模式里很有用。</p>
+<p>然而，天真地将这两者结合的话就会像在JavaScript里那样搬起石头砸自己的脚。 比如，拿 createSquare例子来说：</p>
+<p>interface SquareConfig {<br>    color?: string;<br>    width?: number;<br>}</p>
+<p>function createSquare(config: SquareConfig): { color: string; area: number } {<br>    // …<br>}</p>
+<p>let mySquare = createSquare({ colour: “red”, width: 100 });<br>注意传入createSquare的参数拼写为colour而不是color。 在JavaScript里，这会默默地失败。</p>
+<p>你可能会争辩这个程序已经正确地类型化了，因为width属性是兼容的，不存在color属性，而且额外的colour属性是无意义的。</p>
+<p>然而，TypeScript会认为这段代码可能存在bug。 对象字面量会被特殊对待而且会经过 额外属性检查，当将它们赋值给变量或作为参数传递的时候。 如果一个对象字面量存在任何“目标类型”不包含的属性时，你会得到一个错误。</p>
+<p>// error: ‘colour’ not expected in type ‘SquareConfig’<br>let mySquare = createSquare({ colour: “red”, width: 100 });<br>绕开这些检查非常简单。 最简便的方法是使用类型断言：</p>
+<p>let mySquare = createSquare({ width: 100, opacity: 0.5 } as SquareConfig);<br>然而，最佳的方式是能够添加一个字符串索引签名，前提是你能够确定这个对象可能具有某些做为特殊用途使用的额外属性。 如果 SquareConfig带有上面定义的类型的color和width属性，并且还会带有任意数量的其它属性，那么我们可以这样定义它：</p>
+<p>interface SquareConfig {<br>    color?: string;<br>    width?: number;<br>    [propName: string]: any;<br>}<br>我们稍后会讲到索引签名，但在这我们要表示的是SquareConfig可以有任意数量的属性，并且只要它们不是color和width，那么就无所谓它们的类型是什么。</p>
+<p>还有最后一种跳过这些检查的方式，这可能会让你感到惊讶，它就是将这个对象赋值给一个另一个变量： 因为 squareOptions不会经过额外属性检查，所以编译器不会报错。</p>
+<p>let squareOptions = { colour: “red”, width: 100 };<br>let mySquare = createSquare(squareOptions);<br>要留意，在像上面一样的简单代码里，你可能不应该去绕开这些检查。 对于包含方法和内部状态的复杂对象字面量来讲，你可能需要使用这些技巧，但是大部额外属性检查错误是真正的bug。 就是说你遇到了额外类型检查出的错误，比如“option bags”，你应该去审查一下你的类型声明。 在这里，如果支持传入 color或colour属性到createSquare，你应该修改SquareConfig定义来体现出这一点。</p>
+<p>6.函数类型<br>接口能够描述JavaScript中对象拥有的各种各样的外形。 除了描述带有属性的普通对象外，接口也可以描述函数类型。</p>
+<p>为了使用接口表示函数类型，我们需要给接口定义一个调用签名。 它就像是一个只有参数列表和返回值类型的函数定义。参数列表里的每个参数都需要名字和类型。</p>
+<p>interface SearchFunc {<br>  (source: string, subString: string): boolean;<br>}<br>这样定义后，我们可以像使用其它接口一样使用这个函数类型的接口。 下例展示了如何创建一个函数类型的变量，并将一个同类型的函数赋值给这个变量。</p>
+<p>let mySearch: SearchFunc;<br>mySearch = function(source: string, subString: string) {<br>  let result = source.search(subString);<br>  return result &gt; -1;<br>}<br>对于函数类型的类型检查来说，函数的参数名不需要与接口里定义的名字相匹配。 比如，我们使用下面的代码重写上面的例子：</p>
+<p>let mySearch: SearchFunc;<br>mySearch = function(src: string, sub: string): boolean {<br>  let result = src.search(sub);<br>  return result &gt; -1;<br>}<br>函数的参数会逐个进行检查，要求对应位置上的参数类型是兼容的。 如果你不想指定类型，TypeScript的类型系统会推断出参数类型，因为函数直接赋值给了 SearchFunc类型变量。 函数的返回值类型是通过其返回值推断出来的（此例是 false和true）。 如果让这个函数返回数字或字符串，类型检查器会警告我们函数的返回值类型与 SearchFunc接口中的定义不匹配。</p>
+<p>let mySearch: SearchFunc;<br>mySearch = function(src, sub) {<br>    let result = src.search(sub);<br>    return result &gt; -1;<br>}<br>7.可索引的类型<br>与使用接口描述函数类型差不多，我们也可以描述那些能够“通过索引得到”的类型，比如a[10]或ageMap[“daniel”]。 可索引类型具有一个 索引签名，它描述了对象索引的类型，还有相应的索引返回值类型。 让我们看一个例子：</p>
+<p>interface StringArray {<br>  [index: number]: string;<br>}</p>
+<p>let myArray: StringArray;<br>myArray = [“Bob”, “Fred”];</p>
+<p>let myStr: string = myArray[0];<br>上面例子里，我们定义了StringArray接口，它具有索引签名。 这个索引签名表示了当用 number去索引StringArray时会得到string类型的返回值。</p>
+<p>TypeScript支持两种索引签名：字符串和数字。 可以同时使用两种类型的索引，但是数字索引的返回值必须是字符串索引返回值类型的子类型。 这是因为当使用 number来索引时，JavaScript会将它转换成string然后再去索引对象。 也就是说用 100（一个number）去索引等同于使用”100”（一个string）去索引，因此两者需要保持一致。</p>
+<p>class Animal {<br>    name: string;<br>}<br>class Dog extends Animal {<br>    breed: string;<br>}</p>
+<p>// 错误：使用数值型的字符串索引，有时会得到完全不同的Animal!<br>interface NotOkay {<br>    [x: number]: Animal;<br>    [x: string]: Dog;<br>}<br>字符串索引签名能够很好的描述dictionary模式，并且它们也会确保所有属性与其返回值类型相匹配。 因为字符串索引声明了 obj.property和obj[“property”]两种形式都可以。 下面的例子里， name的类型与字符串索引类型不匹配，所以类型检查器给出一个错误提示：</p>
+<p>interface NumberDictionary {<br>  [index: string]: number;<br>  length: number;    // 可以，length是number类型<br>  name: string       // 错误，<code>name</code>的类型与索引类型返回值的类型不匹配<br>}<br>最后，你可以将索引签名设置为只读，这样就防止了给索引赋值：</p>
+<p>interface ReadonlyStringArray {<br>    readonly [index: number]: string;<br>}<br>let myArray: ReadonlyStringArray = [“Alice”, “Bob”];<br>myArray[2] = “Mallory”; // error!<br>你不能设置myArray[2]，因为索引签名是只读的。<br>8.类类型<br>8-1.实现接口<br>与C#或Java里接口的基本作用一样，TypeScript也能够用它来明确的强制一个类去符合某种契约。<br>interface ClockInterface {<br>    currentTime: Date;<br>}</p>
+<p>class Clock implements ClockInterface {<br>    currentTime: Date;<br>    constructor(h: number, m: number) { }<br>}<br>你也可以在接口中描述一个方法，在类里实现它，如同下面的setTime方法一样：<br>interface ClockInterface {<br>    currentTime: Date;<br>    setTime(d: Date);<br>}</p>
+<p>class Clock implements ClockInterface {<br>    currentTime: Date;<br>    setTime(d: Date) {<br>        this.currentTime = d;<br>    }<br>    constructor(h: number, m: number) { }<br>}<br>接口描述了类的公共部分，而不是公共和私有两部分。 它不会帮你检查类是否具有某些私有成员。<br>8-2.类静态部分与实例部分的区别<br>当你操作类和接口的时候，你要知道类是具有两个类型的：静态部分的类型和实例的类型。你会注意到，当你用构造器签名去定义一个接口并试图定义一个类去实现这个接口时会得到一个错误：<br>interface ClockConstructor {<br>    new (hour: number, minute: number);<br>}</p>
+<p>class Clock implements ClockConstructor {<br>    currentTime: Date;<br>    constructor(h: number, m: number) { }<br>}<br>这里因为当一个类实现了一个接口时，只对其实例部分进行类型检查。 constructor存在于类的静态部分，所以不在检查的范围内。<br>因此，我们应该直接操作类的静态部分。 看下面的例子，我们定义了两个接口， ClockConstructor为构造函数所用和ClockInterface为实例方法所用。为了方便我们定义一个构造函数 createClock，它用传入的类型创建实例。<br>interface ClockConstructor {<br>    new (hour: number, minute: number): ClockInterface;<br>}<br>interface ClockInterface {<br>    tick();<br>}</p>
+<p>function createClock(ctor: ClockConstructor, hour: number, minute: number): ClockInterface {<br>    return new ctor(hour, minute);<br>}</p>
+<p>class DigitalClock implements ClockInterface {<br>    constructor(h: number, m: number) { }<br>    tick() {<br>        console.log(“beep beep”);<br>    }<br>}<br>class AnalogClock implements ClockInterface {<br>    constructor(h: number, m: number) { }<br>    tick() {<br>        console.log(“tick tock”);<br>    }<br>}</p>
+<p>let digital = createClock(DigitalClock, 12, 17);<br>let analog = createClock(AnalogClock, 7, 32);<br>因为createClock的第一个参数是ClockConstructor类型，在createClock(AnalogClock, 7, 32)里，会检查AnalogClock是否符合构造函数签名。<br>9.继承接口<br>和类一样，接口也可以相互继承。 这让我们能够从一个接口里复制成员到另一个接口里，可以更灵活地将接口分割到可重用的模块里。<br>interface Shape {<br>    color: string;<br>}</p>
+<p>interface Square extends Shape {<br>    sideLength: number;<br>}</p>
+<p>let square = <square>{};<br>square.color = “blue”;<br>square.sideLength = 10;<br>一个接口可以继承多个接口，创建出多个接口的合成接口。<br>interface Shape {<br>    color: string;<br>}</square></p>
+<p>interface PenStroke {<br>    penWidth: number;<br>}</p>
+<p>interface Square extends Shape, PenStroke {<br>    sideLength: number;<br>}</p>
+<p>let square = <square>{};<br>square.color = “blue”;<br>square.sideLength = 10;<br>square.penWidth = 5.0;<br>10.混合类型<br>先前我们提过，接口能够描述JavaScript里丰富的类型。 因为JavaScript其动态灵活的特点，有时你会希望一个对象可以同时具有上面提到的多种类型。<br>一个例子就是，一个对象可以同时做为函数和对象使用，并带有额外的属性。<br>interface Counter {<br>    (start: number): string;<br>    interval: number;<br>    reset(): void;<br>}</square></p>
+<p>function getCounter(): Counter {<br>    let counter = <counter>function (start: number) { };<br>    counter.interval = 123;<br>    counter.reset = function () { };<br>    return counter;<br>}</counter></p>
+<p>let c = getCounter();<br>c(10);<br>c.reset();<br>c.interval = 5.0;<br>在使用JavaScript第三方库的时候，你可能需要像上面那样去完整地定义类型。<br>11.接口继承类</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/12/06/我的typescript学习-接口/" data-id="ck910dtce002m2lxqny5r7bfh" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-Undersocre-3-4-1-Underscore-partial偏函数or-memoize缓存" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/12/02/网易微专业-Undersocre-3-4-1-Underscore-partial偏函数or-memoize缓存/" class="article-date">
+  <time datetime="2019-12-02T06:51:43.225Z" itemprop="datePublished">2019-12-02</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <hr>
+<p>title: 网易微专业-Undersocre-3.4.1-Underscore <em>.partial偏函数or</em>.memoize缓存<br>date: 2019-12-02 14:51:43</p>
+<h2 id="tags"><a href="#tags" class="headerlink" title="tags:"></a>tags:</h2><ol>
+<li>_.parital<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.4.1_1.png"></li>
+<li><p>_.memorize<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.4.1_2.png"><br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.4.1_3.png"><br>3.</p>
+<pre>
+//返回一个函数的副本
+_.partial = function(func) {
+ //提取参数
+ var args = [].slice.call(arguments, 1);
+ var bound = function() {
+     var index = 0;
+     var length = args.length;
+     var ret = Array(length);
+     for (var i = 0; i < length; i++) {
+         ret[i] = args[i];
+     }
+     while (index < arguments.length) {
+         ret.push(arguments[index++]);
+     }
+     return func.apply(this, ret);
+ }
+ return bound;
+}
+_.has = function(obj, key) {
+ return obj != null && hasOwnProperty.call(obj, key);
+};
+//存储中间运算结果,提高效率
+//参数 hasher是个function通过返回值来记录key
+//_.memoize(function, [hashFunction])
+// 适用于需要大量重复求值的场景
+// 比如递归求解斐波那契数
+_.memoize = function(func, hasher) {
+ var memoize = function(key) {
+     // 储存变量,方便使用
+     var cache = memoize.cache;
+     // 求 key
+     // 如果传入了 hasher,则用 hasher 函数来记录 key
+     // 否则用参数 key(即memoize 方法传入的第一个参数)当key
+     var address = '' + (hasher ? hasher.apply(this, arguments) : key);
+     // 如果这个 key 还没被求过值 先记录在缓存中.
+     if (!_.has(cache, address)) {
+         cache[address] = func.apply(this, arguments);
+     }
+     return cache[address];
+ };
+
+ // cache 对象被当做 key-value 键值对缓存中间运算结果
+ memoize.cache = {};
+ return memoize;
+};
+</pre>
+<pre>
+var add = function(a, b) {
+ return a + b;
+};
+var partialAdd = _.partial(add, 5);  //提取出来
+console.log(partialAdd(10)); //    提出来    => 15
+</pre>
+<pre>
+var hasher = function() {
+ var n = arguments[0];
+ return n+"max";
+}
+var fibonacci = _.memoize(function(n) {
+ return n < 2 ? n : fibonacci(n - 1) + fibonacci(n - 2);
+},hasher);
+fibonacci(5);
+console.log(fibonacci.cache);
+</pre></li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/12/02/网易微专业-Undersocre-3-4-1-Underscore-partial偏函数or-memoize缓存/" data-id="ck910dtap001b2lxqu6rwhnf0" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-Undersocre-3-3-2-Underscore-unique去重函数-源码拾遗" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/12/02/网易微专业-Undersocre-3-3-2-Underscore-unique去重函数-源码拾遗/" class="article-date">
+  <time datetime="2019-12-02T02:05:46.000Z" itemprop="datePublished">2019-12-02</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/12/02/网易微专业-Undersocre-3-3-2-Underscore-unique去重函数-源码拾遗/">网易微专业-Undersocre-3.3.2-Underscore unique去重函数&amp;源码拾遗</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ol>
+<li>_.unique<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.3.2_1.png"></li>
+<li>_.compact<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.3.2_2.png"><br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.3.2_3.png"></li>
+<li>_.range<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.3.2_4.png"><br>4.<br><pre><br>_.unique = function(array, isSorted, iteratee, context){<br> //参数isSorted作用是被处理数组array是否是有序的<br> if(!_.isBoolean(isSorted)){<pre><code>context = iteratee;
+iteratee = isSorted;
+isSorted = false;
+</code></pre> }<br> if(iteratee != null){<pre><code>iteratee = cb(iteratee,context)
+</code></pre> }<br> var result = []<br> var seen<br> for(var i = 0; i &lt; array.length; i++){<pre><code>var computed = iteratee ? iteratee(value, i, array) : array[i];
+// 如果是有序数组,则当前元素只需跟上一个元素对比即可
+// 用 seen 变量保存上一个元素
+if(isSorted){
+    if(!i || !seen !== computed)
+        result.push(computed);
+    seen = computed;
+}else if(result.indexOf(computed)=== -1){
+        result.push(computed)
+}
+</code></pre> }<br>}<br>//predicate  真值检测(重点: 返回值)<br>_.filter = _.select = function(obj, predicate, context) {<br> var results = [];<br> predicate = cb(predicate, context);<br> _.each(obj, function(value, index, list) {<pre><code>if (predicate(value, index, list)) results.push(value);
+</code></pre> });<br> return results;<br>};<br>//去掉数组中所有的假值   _.identity = function(value){return value};<br>_.compact = function(array) {<br> return _.filter(array, _.identity);<br>};<br>_.range = function(start, stop, step){<br> if(stop == null){<pre><code>stop = start || 0;
+start = 0
+</code></pre> }<br> step = step || 1;<br> var length = Math.max((Math.ceil(stop - start) / step), 0);<br> var range = Array(length);<br> for(var index = 0; index &lt; length; index++, start+=step){<pre><code>range[index] = start
+</code></pre> }<br> return range<br>}<br></pre><br>这一节内容丰满了我们之前的_.unique的程序，添加了数组有序的情况下如何处理，在数组有序的情况下，如果再一一查找，显然是浪费性能的，这里给了一个更好的方法。上面的_.filter在判断是否是真值的时候用了很聪明的方法。</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/12/02/网易微专业-Undersocre-3-3-2-Underscore-unique去重函数-源码拾遗/" data-id="ck910dtap00192lxqwenvq4o4" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-Undersocre-3-3-1-Underscore数组定位与摊平数组" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/12/01/网易微专业-Undersocre-3-3-1-Underscore数组定位与摊平数组/" class="article-date">
+  <time datetime="2019-12-01T13:42:29.000Z" itemprop="datePublished">2019-12-01</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/12/01/网易微专业-Undersocre-3-3-1-Underscore数组定位与摊平数组/">网易微专业-Undersocre-3.3.1-Underscore数组定位与摊平数组</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.<em>.initial与</em>.flatten<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.3.1_1.png"><br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.3.1_2.png"><br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.3.1_3.png"><br>2.代码</p>
+<p><pre><br>//摊平数组<br>var flatten = function(array, shallow) {<br>    var ret = [];<br>    var index = 0;<br>    for (var i = 0; i &lt; array.length; i++) {<br>        var value = array[i]; //展开一次<br>        if (_.isArray(value) || _.isArguments(value)) {<br>            //递归全部展开<br>            if (!shallow) {<br>                value = flatten(value, shallow);<br>            }<br>            var j = 0,<br>                len = value.length;<br>            //个人以为，这个地方，思路值得学习<br>            ret.length += len;<br>            while (j &lt; len) {<br>                ret[index++] = value[j++];<br>            }<br>        } else {<br>            ret[index++] = value;<br>        }<br>    }<br>    return ret;<br>}<br>_.flatten = function(array, shallow) {<br>    return flatten(array, shallow);<br>}<br>//返回数组中除了最后一个元素外的其他全部元素。 在arguments对象上特别有用。<br>_.initial = function(array, n) {<br>    return [].slice.call(array, 0, Math.max(0, array.length - (n == null ? 1 : n)));<br>};<br>//返回数组中除了第一个元素外的其他全部元素。传递 n 参数将返回从n开始的剩余所有元素<br><em>.rest = function(array, n, guard) {<br>    return [].slice.call(array, n == null ? 1 : n);<br>};<br></em></pre><br>Underscore看到现在，这里应该是比较简单的一节了，这节摊平数组主要是递归函数，但是整理摊平出来的数组也就是递归语句下面生成新数组的思路，还是很值得学习的。.initial和_.rest很容易理解，就不多说了。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/12/01/网易微专业-Undersocre-3-3-1-Underscore数组定位与摊平数组/" data-id="ck910dtao00182lxq6z7p39nf" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/page/7/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/9/">Next &raquo;</a>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/04/15/网易微专业-node-1-1-8-MySQL入门与应用/">网易微专业-node-1.1.8-MySQL入门与应用</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/14/网易微专业-node-1-1-7-MongoDB入门与应用/">网易微专业-node-1.1.7-MongoDB入门与应用</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/13/网易微专业-node-1-1-6-Redis入门及应用/">网易微专业-node-1.1.6-Redis入门及应用</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/12/网易微专业-node-1-1-5-Nginx反向代理-静态资源服务/">网易微专业-node-1.1.5-Nginx反向代理 静态资源服务</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/11/网易微专业-node-1-1-3-Linux快速上手玩转典型应用/">网易微专业-node-1.1.3-Linux快速上手玩转典型应用</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

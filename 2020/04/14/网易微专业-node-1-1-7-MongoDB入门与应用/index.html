@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>网易微专业-node-1.1.7-MongoDB入门与应用 | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1.MongoDB简介1-1.简介1-2.特性2.MongoDB安装及配置2-1.安装安装的时候尽量不要选择rpm，因为rpm对一些需要下载的依赖没有自动处理；也尽量不要选download source(tgz)，因为编译安装一是耗时，另外就是如果编译安装过程中配置不对容易出错。在官网底部我们可以找到installation，点击installation，找到我们需要安装的版本，老师因为是安装在L">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网易微专业-node-1.1.7-MongoDB入门与应用">
+<meta property="og:url" content="http://yoursite.com/2020/04/14/网易微专业-node-1-1-7-MongoDB入门与应用/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="1.MongoDB简介1-1.简介1-2.特性2.MongoDB安装及配置2-1.安装安装的时候尽量不要选择rpm，因为rpm对一些需要下载的依赖没有自动处理；也尽量不要选download source(tgz)，因为编译安装一是耗时，另外就是如果编译安装过程中配置不对容易出错。在官网底部我们可以找到installation，点击installation，找到我们需要安装的版本，老师因为是安装在L">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/node/1.1.7_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/node/1.1.7_2.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/node/1.1.7_3.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/node/1.1.7_4.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/node/1.1.7_5.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/node/1.1.7_6.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/node/1.1.7_7.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/node/1.1.7_8.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/node/1.1.7_9.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/node/1.1.7_10.png">
+<meta property="og:updated_time" content="2020-04-15T02:31:12.469Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="网易微专业-node-1.1.7-MongoDB入门与应用">
+<meta name="twitter:description" content="1.MongoDB简介1-1.简介1-2.特性2.MongoDB安装及配置2-1.安装安装的时候尽量不要选择rpm，因为rpm对一些需要下载的依赖没有自动处理；也尽量不要选download source(tgz)，因为编译安装一是耗时，另外就是如果编译安装过程中配置不对容易出错。在官网底部我们可以找到installation，点击installation，找到我们需要安装的版本，老师因为是安装在L">
+<meta name="twitter:image" content="https://snakexu.github.io/images/wangyi/node/1.1.7_1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-网易微专业-node-1-1-7-MongoDB入门与应用" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/04/14/网易微专业-node-1-1-7-MongoDB入门与应用/" class="article-date">
+  <time datetime="2020-04-14T02:05:29.000Z" itemprop="datePublished">2020-04-14</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      网易微专业-node-1.1.7-MongoDB入门与应用
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.MongoDB简介<br>1-1.简介<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.7_1.png"><br>1-2.特性<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.7_2.png"><br>2.MongoDB安装及配置<br>2-1.安装<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.7_3.png"><br>安装的时候尽量不要选择rpm，因为rpm对一些需要下载的依赖没有自动处理；也尽量不要选download source(tgz)，因为编译安装一是耗时，另外就是如果编译安装过程中配置不对容易出错。在官网底部我们可以找到installation，点击installation，找到我们需要安装的版本，老师因为是安装在Linux的虚拟机里，所以选择了Linux的版本，在用yum安装的时候(yum可以自动下载安装相关依赖)可以把镜像源替换成阿里的镜像( 阿里云镜像网址: <a href="https://developer.aliyun.com/mirror/mongodb?spm=a2c6h.13651102.0.0.3e221b11VnKXtR" target="_blank" rel="noopener">https://developer.aliyun.com/mirror/mongodb?spm=a2c6h.13651102.0.0.3e221b11VnKXtR</a> ，按照页面提示操作)因为如果是国外的镜像源可能下载地址较慢(如果阿里云版本比较低，可以把版本号换一下，换成最新版本)</p>
+<p><pre><br>命令:<br>vim /etc/yum.repos.d/mongodb-org.repo<br>i命令编辑文件<br>[mongodb-org]<br>name = MongoDB Repository<br>baseurl = <a href="https://mirrors.aliyun.com/mongodb/yum/redhat/$releasever/mongodb-org/4.2/x86_64/" target="_blank" rel="noopener">https://mirrors.aliyun.com/mongodb/yum/redhat/$releasever/mongodb-org/4.2/x86_64/</a><br>gpgcheck = 1<br>enabled = 1<br>gpgkey = https：// <a href="http://www.mongodb.org/static/pgp/server-4.2.asc" target="_blank" rel="noopener">www.mongodb.org/static/pgp/server-4.2.asc</a><br>:wq (保存退出)<br>yum search mongodb(会更新一些缓存)<br>yum install -y mongodb<br>yum install -y mongodb-org<br>ps -ef|grep mongod(查询进程)<br>service mongod start<br></pre><br>如果用上面提到的方法安装的mongodb，就按照上面的方法启动，不要找到运行目录再启动，因为在运行目录下启动，是root启动的，如果在用mongod启动，就回有权限问题。如果不小心遇到了，就要修改用户组用户名为mongod(在/var/lib目录下输入命令行chown mongod:mongod -R mongo/)<br>2-2.MongoDB常用配置<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.7_4.png"><br>3.MongoDB查询与应用<br>这里查询的概念不单单是对数据的增删改查<br>3-1.MongoDB基础概念<br>3-1-1.文档:数据的基本单元，相当于关系型数据库中的行<br>·由键值对组成的有序集<br>·不仅区分大小写，还区分数据类型<br>3-1-2.集合:由多个文档组成集合，文档可以是不同的结构，相当于关系型数据库中的表<br>·不能以system开头，且不能使用保留字符<br>·动态模式可以使一个集合中包含多样化文档对象<br>3-1-3.数据库:多个集合聚合组成数据库<br>·数据库名称区分大小写<br>·几个特殊意义的数据库:admin(用户数据)、local(本地数据)、config(配置数据)<br>3-2.MongoDB客户端shell<br>·客户端shell可以使用命令行于MongoDB实例进行交互<br>·它是一个功能完备的JavaScript解释器，所以又称为JavaScript shell，可以运行任意JavaScript代码<br>·通过shell可以对数据进行基本操作:CURD<br>假设我们写了这样一段js代码放到mongoDB中执行<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.7_5.png"><br>可以给MongoDB添加数据<br>3-3.MongoDB连接<br>标准URI连接语法</p>
+<p><pre><br>mongodb://[username:password@]host1[:port1][,host2[:port2]],···[,hostN[,portN]]][/[database][?options]]<br></pre><br><img src="https://snakexu.github.io/images/wangyi/node/1.1.7_6.png"><br>3-4.MongoDB用户管理<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.7_7.png"><br>3-5.MongoDB数据库、集合操作<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.7_8.png"><br>3-6.MongoDB文档操作<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.7_9.png"><br>3-7.文档查询$特殊符号<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.7_10.png"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/04/14/网易微专业-node-1-1-7-MongoDB入门与应用/" data-id="ck910dtaz001s2lxqs5yks1x6" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/04/15/网易微专业-node-1-1-8-MySQL入门与应用/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          网易微专业-node-1.1.8-MySQL入门与应用
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/04/13/网易微专业-node-1-1-6-Redis入门及应用/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">网易微专业-node-1.1.6-Redis入门及应用</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/04/15/网易微专业-node-1-1-8-MySQL入门与应用/">网易微专业-node-1.1.8-MySQL入门与应用</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/14/网易微专业-node-1-1-7-MongoDB入门与应用/">网易微专业-node-1.1.7-MongoDB入门与应用</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/13/网易微专业-node-1-1-6-Redis入门及应用/">网易微专业-node-1.1.6-Redis入门及应用</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/12/网易微专业-node-1-1-5-Nginx反向代理-静态资源服务/">网易微专业-node-1.1.5-Nginx反向代理 静态资源服务</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/11/网易微专业-node-1-1-3-Linux快速上手玩转典型应用/">网易微专业-node-1.1.3-Linux快速上手玩转典型应用</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

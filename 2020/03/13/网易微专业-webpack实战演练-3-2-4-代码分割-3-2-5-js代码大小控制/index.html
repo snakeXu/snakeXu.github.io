@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>网易微专业-webpack实战演练-3.2.4-代码分割-3.2.5-js代码大小控制 | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1.一切为了优化要解决的问题：01.减少加载代码的大小；02.提取公共资源减少加载次数2.代码分割2-1.多页面应用提取公共依赖：把几个页面之中都用到的依赖给打包为一个单独的文件2-2.单页面应用减少文件体积，拆分应用：把需要异步加载的内容改成异步加载2-3.为了业务代码的纯净有时不希望业务代码里混入第三方代码，或webpack配置代码：把第三方代码和webpack配置代码拆分为单独文件当我们使用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网易微专业-webpack实战演练-3.2.4-代码分割-3.2.5-js代码大小控制">
+<meta property="og:url" content="http://yoursite.com/2020/03/13/网易微专业-webpack实战演练-3-2-4-代码分割-3-2-5-js代码大小控制/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="1.一切为了优化要解决的问题：01.减少加载代码的大小；02.提取公共资源减少加载次数2.代码分割2-1.多页面应用提取公共依赖：把几个页面之中都用到的依赖给打包为一个单独的文件2-2.单页面应用减少文件体积，拆分应用：把需要异步加载的内容改成异步加载2-3.为了业务代码的纯净有时不希望业务代码里混入第三方代码，或webpack配置代码：把第三方代码和webpack配置代码拆分为单独文件当我们使用">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/webpack/3.2.4_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/webpack/3.2.4_2.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/webpack/3.2.4_3.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/webpack/3.2.4_4.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/webpack/3.2.4_5.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/webpack/3.2.4_6.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/webpack/3.2.4_7.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/webpack/3.2.4_8.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/webpack/3.2.4_9.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/webpack/3.2.4_10.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/webpack/3.2.4_11.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/webpack/3.2.4_12.png">
+<meta property="og:updated_time" content="2020-03-15T03:45:54.714Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="网易微专业-webpack实战演练-3.2.4-代码分割-3.2.5-js代码大小控制">
+<meta name="twitter:description" content="1.一切为了优化要解决的问题：01.减少加载代码的大小；02.提取公共资源减少加载次数2.代码分割2-1.多页面应用提取公共依赖：把几个页面之中都用到的依赖给打包为一个单独的文件2-2.单页面应用减少文件体积，拆分应用：把需要异步加载的内容改成异步加载2-3.为了业务代码的纯净有时不希望业务代码里混入第三方代码，或webpack配置代码：把第三方代码和webpack配置代码拆分为单独文件当我们使用">
+<meta name="twitter:image" content="https://snakexu.github.io/images/wangyi/webpack/3.2.4_1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-网易微专业-webpack实战演练-3-2-4-代码分割-3-2-5-js代码大小控制" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/03/13/网易微专业-webpack实战演练-3-2-4-代码分割-3-2-5-js代码大小控制/" class="article-date">
+  <time datetime="2020-03-13T02:34:53.000Z" itemprop="datePublished">2020-03-13</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      网易微专业-webpack实战演练-3.2.4-代码分割-3.2.5-js代码大小控制
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.一切为了优化<br>要解决的问题：01.减少加载代码的大小；02.提取公共资源减少加载次数<br>2.代码分割<br>2-1.多页面应用<br>提取公共依赖：把几个页面之中都用到的依赖给打包为一个单独的文件<br>2-2.单页面应用<br>减少文件体积，拆分应用：把需要异步加载的内容改成异步加载<br>2-3.为了业务代码的纯净<br>有时不希望业务代码里混入第三方代码，或webpack配置代码：把第三方代码和webpack配置代码拆分为单独文件<br>当我们使用npm run build命令执行之后，发现会打包成三类文件：app.js——业务代码，vendor.js——第三方模块，manifest.js——webpack运行代码<br>2-4.所以一般这么打包<br>多页面应用：主业务代码+公共依赖+第三方包+webpack运行代码<br>单页面应用：主业务代码+异步模块+第三方包+webpack运行代码<br>3.如何进行代码分割<br><img src="https://snakexu.github.io/images/wangyi/webpack/3.2.4_1.png"><br>3-1.简单展示下webpack3的时候是如何处理的</p>
+<p><pre><br>new webpack.optimize.CommonsChunksPlugin({<br>    name:’vendor’,<br>    minChunks:’infinity’,<br>}),<br>new webpack.optimize.CommonsChunksPlugin({<br>    name:’manifest’,<br>    minChunks:’infinity’,<br>}),<br>new webpack.optimize.CommonsChunksPlugin({<br>    name:’app.js’,<br>    minChunks:2,<br>}),<br></pre><br>3-2.webpack4处理简介</p>
+<p><pre><br>var extractTextCss = require(‘extract-text-webpack-plugin’);<br>var htmlWebpackPlugin = require(‘html-webpack-plugin’);<br>const webpackSpriteSmith = require(‘webpack-spriteSmith’);<br>const webpack = require(‘webpack’);<br>const UglifyJs = require(‘uglifyjs-webpack-plugin’);<br>const { CleanWebpackPlugin } = require(‘clean-webpack-plugin’);<br>const path = require(‘path’);<br>module.exports={<br>    mode:’production’,<br>    entry:{<br>        app:’./src/app.js’,<br>        app2:’./src/app2.js’,//为了演示，我们做成了多页面入口<br>    },<br>    output:{<br>        path:__dirname+”/dist”,<br>        filename:”./[name].bundle.js”<br>    },<br>    module:{<br>        rules:[<br>            {<br>                test:/.css$/,<br>                use:extractTextCss.extract({<br>                    fallback:{<br>                           loader:’style-loader’,<br>                     },<br>                    use:[<br>                        {<br>                           loader:’css-loader’,<br>                        },<br>                    ]<br>                })<br>            },<br>            {<br>                test:/.(jpg|jpeg|gif|png)$/,<br>                use:{<br>                    loader:’file-loader’<br>                }<br>            }<br>        ]<br>    },<br>    plugin:[<br>        //如果是多页面入口应用，我们需要new多次htmlwebpackplugin，有几个入口就要new几个htmlwebpackplugin，但是不能重名<br>        new extractTextCss({<br>            filename:’[name].min.css’<br>        }),<br>        new htmlWebpackPlugin({<br>            filename:’index.html’,<br>            template:’./src/index.html’<br>        }),<br>        new htmlWebpackPlugin({<br>            filename:’index2.html’,<br>            template:’./src/index.html’<br>        })<br>    ]<br>}<br></pre><br>执行打包命令之后，我们可以看到<br><img src="https://snakexu.github.io/images/wangyi/webpack/3.2.4_2.png"><br>正常生成了我们想要的文件，但是我们发现在index2.html中我们引入了app和app2两个js，很明显我们不想要这样的结果<br><img src="https://snakexu.github.io/images/wangyi/webpack/3.2.4_3.png"></p>
+<p><pre><br>plugin:[<br>    new extractTextCss({<br>        filename:’[name].min.css’<br>    }),<br>    new htmlWebpackPlugin({<br>        filename:’index.html’,<br>        template:’./src/index.html’,<br>        chunks:[‘app’],//通过chunks指定html需要哪些内容<br>    }),<br>    new htmlWebpackPlugin({<br>        filename:’index2.html’,<br>        template:’./src/index.html’,<br>        chunks:[‘app2’]<br>    })<br>]<br></pre><br><img src="https://snakexu.github.io/images/wangyi/webpack/3.2.4_4.png"><br>现在我们看到，index2.html正确引入了需要的文件。<br>3-3.拆分公共模块<br>假设我们有以下内容(1)app.js</p>
+<p><pre><br>import ma from ‘./modulea.js’;<br>import mb from ‘./moduleb.js’;<br>import $ from ‘jquery’;<br>import _ from ‘loadsh’;<br>mb.a();<br></pre><br>(2)app2.js</p>
+<p><pre><br>import ma from ‘./modulea.js’;<br>import _ from ‘loadsh’;<br>console.log(23);<br></pre><br>这两个文件中，很明显modulea是公共模块，我们现在的目的是把modulea模块提取出来</p>
+<p><pre><br>module.exports={<br>    mode:’production’,<br>    entry:{<br>        app:’./src/app.js’,<br>        app2:’./src/app2.js’,<br>    },<br>    output:{<br>        path:__dirname+”/dist”,<br>        filename:”./[name].bundle.js”<br>    },<br>    optimization:{<br>        splitChunks:{<br>            //如何分割代码写在这里<br>            name:true,//拆分出来的包是怎么命名的，设置为true的意思是根据默认的方式去做，根据入口的名字<br>            chunks:’initial’,//initial-对所有的模块都进行公共提取，async-对异步模块进行公共提取，all-对所有入口模块进行公共提取<br>            minSize:5000,//对于大于多少的内容进行公共提取(如果很小的内容就进行公共提取，那么虽然可以对公共模块有了缓存，但是多了一次额外的http请求)，5000就是5kb<br>            automaticNameDelimiter:”.”,//打包生成文件名字的代码分割符<br>        }<br>    },<br>    ……<br>}<br></pre><br>打包之后能看到，文件命名分割符变成了我们规定的点分割符<br><img src="https://snakexu.github.io/images/wangyi/webpack/3.2.4_5.png"><br>如果我们想把包名改为具名命名，可以修改name选项</p>
+<p><pre><br>optimization:{<br>    splitChunks:{<br>        name:’common’,<br>        chunks:’initial’,<br>        minSize:5000,<br>        automaticNameDelimiter:”.”,<br>    }<br>},<br></pre><br><img src="https://snakexu.github.io/images/wangyi/webpack/3.2.4_6.png"></p>
+<p><pre><br>optimization:{<br>    splitChunks:{<br>        name:’common’,<br>        chunks:’initial’,<br>        minSize:5000,<br>        automaticNameDelimiter:”.”,<br>        cacheGroup:{<br>            jquery:{<br>                test:/jquery/,//指定匹配的正则<br>                name:’jquery’,//指定提取出来的文件也叫jquery<br>                /<em>priority:-20,//前面默认的优先级是-10，这里指定谁的优先级高，也就是如果和前面指定有冲突，那听谁的</em>/<br>            }<br>        },//进行指定分割，指定某个模块必须提取出来<br>    }<br>},<br></pre><br><img src="https://snakexu.github.io/images/wangyi/webpack/3.2.4_7.png"></p>
+<p><pre><br>optimization:{<br>    splitChunks:{<br>        name:’common’,<br>        chunks:’initial’,<br>        minSize:5000,<br>        automaticNameDelimiter:”.”,<br>        cacheGroup:{<br>            vendor:{//提取第三方模块<br>                test:/[\/]node_modules[\/]/,//node_modules目录下的都作为vendor来提取<br>                name:’vendor’,<br>                priority:-10,<br>            },<br>            jquery:{<br>                test:/jquery/,<br>                name:’jquery’,<br>            }<br>        },<br>    }<br>},<br></pre><br><img src="https://snakexu.github.io/images/wangyi/webpack/3.2.4_8.png"><br>下面我们就剩下运行代码没有提取了</p>
+<p><pre><br>optimization:{<br>    splitChunks:{<br>        //<br>    },<br>    runtimeChunk:{//拆分运行代码<br>        name:’runtim’,<br>    }<br>}<br></pre><br>3-4.单页面应用拆分(异步加载)<br>首先我们把刚才多页面应用改为单页面应用再做修改(纯粹是为了展示才这么改的，没有实际意义)</p>
+<p><pre><br>module.exports={<br>    mode:’production’,<br>    entry:{<br>        app:’./src/app.js’,<br>    },<br>    output:{<br>        path:__dirname+”/dist”,<br>        filename:”./[name].bundle.js”<br>    },<br>}<br></pre><br>然后我们修改app.js</p>
+<p><pre><br>import mb from ‘./moduleb.js’;<br>import $ from ‘jquery’;<br>import _ from ‘loadsh’;<br>import(‘./modulea.js’);//我们修改了modulea的引入<br>mb.a();<br></pre><br>执行webpack命令我们可以看到<br><img src="https://snakexu.github.io/images/wangyi/webpack/3.2.4_9.png"><br>生成的名字比较随机，我们怎么指定命名呢，用魔法注释</p>
+<p><pre><br>import(/<em>webpackChunkName:’modulea’</em>/“./modulea.js”);<br></pre><br><img src="https://snakexu.github.io/images/wangyi/webpack/3.2.4_10.png"></p>
+<p><pre><br>import(/<em>webpackChunkName:’modulea’</em>/“./modulea.js”).then(res=&gt;{<br>    //import返回一个promise，可以在then里进行一些想要的操作<br>    //res就是import ma中import过来的内容<br>    require(‘./modulea.js’)<br>})<br></pre><br>还有一种方式是</p>
+<p><pre><br>require.ensure([/<em>这里写要用到的依赖，就是回调里需要用到的模块，回调函数就会接收到这个模块</em>/],function(){<br>    //回调函数<br>})<br></pre><br><img src="https://snakexu.github.io/images/wangyi/webpack/3.2.4_11.png"><br>4.代码体积控制<br><img src="https://snakexu.github.io/images/wangyi/webpack/3.2.4_12.png"><br>或者webpack4中直接设置模式mode:’production’<br>4-1.关于tree-shaking(函数式编程更有利于tree-shaking)<br>moduleb.js</p>
+<p><pre><br>export const a=function(){<br>    console.log(‘i am a’)<br>}<br>export const b=function(){<br>    console.log(‘i am b’)<br>}<br></pre><br>app.js</p>
+<p><pre><br>import ma from ‘./modulea.js’;<br>import { a } from ‘./moduleb.js’;<br>import $ from ‘jquery’;<br>import _ from ‘loadsh’;<br>a();<br></pre><br>在moduleb.js里我们定义了两个方法，而在app.js中我们只使用了一个方法，那么tree-shaking会帮我们删除掉不用的方法，打包结果里不会包含mb.b，tree-shaking是基于export文档流，所以支持纯函数式(export const a = function(){})这样暴露出去和支持export default{a:function(){},b:function(){}}这样暴露出去。但是如果用面向对象的方式(比如挂载到class.prototype再export出去)这样的方式就不支持。webpack是支持AMD规范的，不支持CMD规范。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/03/13/网易微专业-webpack实战演练-3-2-4-代码分割-3-2-5-js代码大小控制/" data-id="ck910dtch002t2lxq7swrqvde" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/03/15/网易微专业-MV-组件化开发React专题-React生态-2-3-1-路由-React-Router-原理/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          网易微专业-MV-组件化开发React专题-React生态-2.3.1-路由(React-Router)原理
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/03/12/网易微专业-webpack实战演练-3-2-3-图片等资源的处理/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">网易微专业-webpack实战演练-3.2.3-图片等资源的处理</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/04/15/网易微专业-node-1-1-8-MySQL入门与应用/">网易微专业-node-1.1.8-MySQL入门与应用</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/14/网易微专业-node-1-1-7-MongoDB入门与应用/">网易微专业-node-1.1.7-MongoDB入门与应用</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/13/网易微专业-node-1-1-6-Redis入门及应用/">网易微专业-node-1.1.6-Redis入门及应用</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/12/网易微专业-node-1-1-5-Nginx反向代理-静态资源服务/">网易微专业-node-1.1.5-Nginx反向代理 静态资源服务</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/11/网易微专业-node-1-1-3-Linux快速上手玩转典型应用/">网易微专业-node-1.1.3-Linux快速上手玩转典型应用</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

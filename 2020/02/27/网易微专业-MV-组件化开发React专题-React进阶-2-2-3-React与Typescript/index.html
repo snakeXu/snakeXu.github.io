@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>网易微专业-MV*&amp;组件化开发React专题-React进阶-2.2.3-React与Typescript | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1.TS基础概念:Typescript是Javascript的一个超集，主要提供了类型系统和对ES6的支持，它由Microsoft开发，代码位于GitHub上使用场景:生命周期较长，较稳定的大型项目2.TS使用场景3.TS语法4.TS与React4-1.数据的传递index.tsx  import * as React from &apos;react&apos; import * as ReactDOM from">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网易微专业-MV*&amp;组件化开发React专题-React进阶-2.2.3-React与Typescript">
+<meta property="og:url" content="http://yoursite.com/2020/02/27/网易微专业-MV-组件化开发React专题-React进阶-2-2-3-React与Typescript/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="1.TS基础概念:Typescript是Javascript的一个超集，主要提供了类型系统和对ES6的支持，它由Microsoft开发，代码位于GitHub上使用场景:生命周期较长，较稳定的大型项目2.TS使用场景3.TS语法4.TS与React4-1.数据的传递index.tsx  import * as React from &apos;react&apos; import * as ReactDOM from">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/react/2.2.3_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/react/2.2.3_2.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/react/2.2.3_3.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/react/2.2.3_4.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/react/2.2.3_5.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/react/2.2.3_6.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/react/2.2.3_7.png">
+<meta property="og:updated_time" content="2020-02-29T04:33:57.673Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="网易微专业-MV*&amp;组件化开发React专题-React进阶-2.2.3-React与Typescript">
+<meta name="twitter:description" content="1.TS基础概念:Typescript是Javascript的一个超集，主要提供了类型系统和对ES6的支持，它由Microsoft开发，代码位于GitHub上使用场景:生命周期较长，较稳定的大型项目2.TS使用场景3.TS语法4.TS与React4-1.数据的传递index.tsx  import * as React from &apos;react&apos; import * as ReactDOM from">
+<meta name="twitter:image" content="https://snakexu.github.io/images/wangyi/react/2.2.3_1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-网易微专业-MV-组件化开发React专题-React进阶-2-2-3-React与Typescript" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/02/27/网易微专业-MV-组件化开发React专题-React进阶-2-2-3-React与Typescript/" class="article-date">
+  <time datetime="2020-02-27T10:33:33.000Z" itemprop="datePublished">2020-02-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      网易微专业-MV*&amp;组件化开发React专题-React进阶-2.2.3-React与Typescript
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.TS基础<br>概念:Typescript是Javascript的一个超集，主要提供了类型系统和对ES6的支持，它由Microsoft开发，代码位于GitHub上<br>使用场景:生命周期较长，较稳定的大型项目<br>2.TS使用场景<br>3.TS语法<br><img src="https://snakexu.github.io/images/wangyi/react/2.2.3_1.png"><br><img src="https://snakexu.github.io/images/wangyi/react/2.2.3_2.png"><br><img src="https://snakexu.github.io/images/wangyi/react/2.2.3_3.png"><br><img src="https://snakexu.github.io/images/wangyi/react/2.2.3_4.png"><br><img src="https://snakexu.github.io/images/wangyi/react/2.2.3_5.png"><br>4.TS与React<br><img src="https://snakexu.github.io/images/wangyi/react/2.2.3_6.png"><br>4-1.数据的传递<br>index.tsx</p>
+<pre>
+import * as React from 'react'
+import * as ReactDOM from 'react-dom';
+import registerServiceWorker from './registerServiceWorker';
+import App_11 from './App_11';
+ReactDOM.render(
+  < App_11 name={'hello'}/>,
+  document.getElementById('root') as HTMLElement
+);
+registerServiceWorker();
+</pre>
+App_11.jsx
+<pre>
+import * as React from 'react'
+import * as ReactDOM from 'react-dom';
+interface IProps{
+     name:string
+}
+interface IState{
+    value:number
+}
+class App_11 extends React.Component< IProps,IState >{
+    public constructor(props:IProps){
+        super(props)
+        this.state = {
+            value:10
+        }
+    }
+    render(){
+        const {
+            name
+        } = this.props
+        const {
+            value
+        } = this.state
+        return(
+            < div>
+                hello typescript{name}{value}
+            < /div>
+        )
+    }
+}
+export default App_11
+</pre>
+<img src="https://snakexu.github.io/images/wangyi/react/2.2.3_7.png">
+4-2.事件/生命周期
+<pre>
+import * as React from 'react'
+import * as ReactDOM from 'react-dom';
+interface IProps{
+    name:string
+}
+interface IState{
+    value:string
+}
+class App_11 extends React.Component< IProps,IState >{
+    public constructor(props:IProps){
+        super(props)
+        this.state = {
+            value:'a'
+        }
+    }
+    render(){
+        const {
+            name
+        } = this.props
+        const {
+            value
+        } = this.state
+        return(
+            < div>
+                hello typescript{name}{value}
+                < input value={value} onChange={(e:React.ChangeEvent< HTMLInputElement >)=>{
+                    this.setState({
+                        value:e.target.value
+                    })
+                }}/>
+                < button onClick={(e:React.MouseEvent< HTMLButtonElement >)=>{
+                    alert('hello')
+                }}>add< /button>
+            < /div>
+        )
+    }
+    public componentDidMount(){
+        console.log('hello')
+    }
+}
+export default App_11
+</pre>
+4-3.todolist
+App3.tsx
+<pre>
+import * as React from 'react';
+import List from './todolist/list'
+import Action from './todolist/action'
+import {
+  FriendItem
+} from './todolist/types'
+interface IState {
+  value: string,
+  list: Array< FriendItem >
+}
+class App extends React.Component< Object,IState > {
+  public constructor(props: Object){
+    super(props)
+    this.state = {
+      value:'a',
+      list: [
+        {
+          name: 'ryan',age:30,id:1
+        },
+        {
+          name: 'react',age:4,id:2
+        },
+        {
+          name: 'vue',age:3,id:3
+        }
+      ]
+    }
+  }
+  render() {
+    const {
+      value,
+      list
+    } = this.state
+    return (
+      < div>
+        < List list={list} onDel={(index:number) =>{
+          console.log(index)
+          list.splice(index,1)
+          this.setState({
+            list
+          })
+        }}/>
+        < Action value={value} onChange={(value: string) => {
+          this.setState({
+            value
+          })
+        }} onAdd={(value:string) => {
+          list.push({
+            name:value,
+            age:10,
+            id:4
+          })
+          this.setState({
+            list,
+            value:''
+          })
+        }}/>
+      < /div>
+    );
+  }
+  public componentDidMount() {
+    console.log('hello')
+  }
+}
+export default App;
+</pre>
+action/index.tsx
+<pre>
+import * as React from 'react';
+interface onAdd {
+  (index: string): void
+}
+interface onChange {
+  (index: string): void
+}
+interface IProps {
+  value: string,
+  onAdd: onAdd,
+  onChange: onChange
+}
+class Action extends React.Component< IProps >{
+  render() {
+    const {
+      value,
+      onAdd,
+      onChange
+    } = this.props
+    return (
+      < div>
+        < input value={value} onChange={(e: React.ChangeEvent< HTMLInputElement >)=> {
+          onChange(e.target.value)
+        }}/>
+        < button onClick={(e: React.MouseEvent< HTMLButtonElement >) => {
+          onAdd(value)
+        }}>add< /button>
+      < /div>
+    );
+  }
+}
+export default Action
+</pre>
+list/index.tsx
+<pre>
+import * as React from 'react';
+import {FriendItem} from "../types";
+interface onDel {
+  (index: number): void
+}
+interface IProps {
+  list: Array< FriendItem >,
+  onDel: onDel
+}
+class List extends React.Component< IProps >{
+  render() {
+    const {
+      list,
+      onDel
+    } = this.props
+    return (
+      < div>
+        {list.map((item: FriendItem,index: number) => < div>
+          {item.name} < button onClick={(e: React.MouseEvent< HTMLButtonElement>) => {
+          onDel(index)
+        }}>-< /button>
+        < /div>)}
+      < /div>
+    );
+  }
+}
+export default List
+</pre>
+types/index.jsx
+<pre>
+export interface FriendItem {
+  name: string,
+  age: number,
+  id: number
+}
+</pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/02/27/网易微专业-MV-组件化开发React专题-React进阶-2-2-3-React与Typescript/" data-id="ck910dtah000v2lxqp2zm7is4" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/02/29/网易微专业-MV-组件化开发React专题-VUE最佳实践-1-4-2-s数据层的高级封装之网易实践/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          网易微专业-MV*&amp;组件化开发React专题-VUE最佳实践-1.4.2-s数据层的高级封装之网易实践
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/02/27/网易微专业-MV-组件化开发React专题-React进阶-2-2-2-React-Hooks/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">网易微专业-MV*&amp;组件化开发React专题-React进阶-2.2.2-React Hooks</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/04/15/网易微专业-node-1-1-8-MySQL入门与应用/">网易微专业-node-1.1.8-MySQL入门与应用</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/14/网易微专业-node-1-1-7-MongoDB入门与应用/">网易微专业-node-1.1.7-MongoDB入门与应用</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/13/网易微专业-node-1-1-6-Redis入门及应用/">网易微专业-node-1.1.6-Redis入门及应用</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/12/网易微专业-node-1-1-5-Nginx反向代理-静态资源服务/">网易微专业-node-1.1.5-Nginx反向代理 静态资源服务</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/11/网易微专业-node-1-1-3-Linux快速上手玩转典型应用/">网易微专业-node-1.1.3-Linux快速上手玩转典型应用</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

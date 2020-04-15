@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>网易微专业福利期-异步编程-3.1-理解异步 | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1.同步与异步&amp;lt;!–+new Date() 会调用Date.prototype 上面的 valueOf方法，根据MDN：developer.mozilla.org/en-US/docs/… new Date().getTime() === new Date().valueOf() //true 下面的例子返回效果等同： +new Date();new Date().getTime();new">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网易微专业福利期-异步编程-3.1-理解异步">
+<meta property="og:url" content="http://yoursite.com/2020/03/26/网易微专业福利期-异步编程-3-1-理解异步/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="1.同步与异步&amp;lt;!–+new Date() 会调用Date.prototype 上面的 valueOf方法，根据MDN：developer.mozilla.org/en-US/docs/… new Date().getTime() === new Date().valueOf() //true 下面的例子返回效果等同： +new Date();new Date().getTime();new">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://snakexu.github.io/images/fuliqi/javascript/3.1_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/fuliqi/javascript/3.1_2.png">
+<meta property="og:image" content="https://snakexu.github.io/images/fuliqi/javascript/3.1_3.png">
+<meta property="og:image" content="https://snakexu.github.io/images/fuliqi/javascript/3.1_4.png">
+<meta property="og:image" content="https://snakexu.github.io/images/fuliqi/javascript/3.1_5.png">
+<meta property="og:image" content="https://snakexu.github.io/images/fuliqi/javascript/3.1_6.png">
+<meta property="og:image" content="https://snakexu.github.io/images/fuliqi/javascript/3.1_7.png">
+<meta property="og:image" content="https://snakexu.github.io/images/fuliqi/javascript/3.1_8.png">
+<meta property="og:image" content="https://snakexu.github.io/images/fuliqi/javascript/3.1_9.png">
+<meta property="og:image" content="https://snakexu.github.io/images/fuliqi/javascript/3.1_10.png">
+<meta property="og:image" content="https://snakexu.github.io/images/fuliqi/javascript/3.1_11.png">
+<meta property="og:image" content="https://snakexu.github.io/images/fuliqi/javascript/3.1_12.png">
+<meta property="og:updated_time" content="2020-03-27T03:46:42.693Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="网易微专业福利期-异步编程-3.1-理解异步">
+<meta name="twitter:description" content="1.同步与异步&amp;lt;!–+new Date() 会调用Date.prototype 上面的 valueOf方法，根据MDN：developer.mozilla.org/en-US/docs/… new Date().getTime() === new Date().valueOf() //true 下面的例子返回效果等同： +new Date();new Date().getTime();new">
+<meta name="twitter:image" content="https://snakexu.github.io/images/fuliqi/javascript/3.1_1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-网易微专业福利期-异步编程-3-1-理解异步" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/03/26/网易微专业福利期-异步编程-3-1-理解异步/" class="article-date">
+  <time datetime="2020-03-26T14:10:17.000Z" itemprop="datePublished">2020-03-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      网易微专业福利期-异步编程-3.1-理解异步
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.同步与异步<br>&lt;!–<br>+new Date() 会调用Date.prototype 上面的 valueOf方法，根据<br>MDN：developer.mozilla.org/en-US/docs/…</p>
+<p>new Date().getTime() === new Date().valueOf() //true</p>
+<p>下面的例子返回效果等同：</p>
+<p>+new Date();<br>new Date().getTime();<br>new Date().valueOf();<br>new Date()*1复制代码<br>转载于:<a href="https://juejin.im/post/5cd23b7bf265da03ab233f88" target="_blank" rel="noopener">https://juejin.im/post/5cd23b7bf265da03ab233f88</a><br>–&gt;<br>代码一：</p>
+<p><pre><br>const test = ()=&gt;{<br>    let t = +new Date();<br>    while(true){<br>        if(+new Date() - t &gt;=2000){<br>            console.log(4)<br>            break;<br>        }<br>    }<br>}<br>console.log(1);<br>test();<br>console.log(2);<br>console.log(3);<br></pre><br>执行结果为先打印1，两秒之后打印4，接着马上打印2 3<br><img src="https://snakexu.github.io/images/fuliqi/javascript/3.1_1.png"><br>代码二：</p>
+<p><pre><br>console.log(1);<br>setTimeout(()=&gt;{<br>    console.log(2);<br>},2000);<br>console.log(3);<br></pre><br>执行结果为先打印1 3，两秒后打印2<br><img src="https://snakexu.github.io/images/fuliqi/javascript/3.1_2.png"><br>代码一是我们所说的同步代码，代码二是我们所说的异步代码<br>同步：调用之后得到结果再做别的任务<br>异步：调用之后先不管结果继续做别的任务<br>我们先来了解一下进程与线程<br><img src="https://snakexu.github.io/images/fuliqi/javascript/3.1_3.png"><br>查看进程的常用命令，在Linux中为ps，是process status的缩写，可以查看进程的状态；还有一个命令是top，是top of processes的缩写，这个命令可以查看动态进程的变化<br>2.JavaScript单线程<br>js是单线程的，怎么实现异步？通过浏览器内核多线程实现异步<br><img src="https://snakexu.github.io/images/fuliqi/javascript/3.1_4.png"><br>下面这个图片简单描述了每个线程的作用<br>GUI线程：是渲染页面，html/css解析，构建DOM树/渲染树<br>js引擎线程：我们常听到的chrome V8就是一个js引擎，js引擎就是跑在js引擎线程，js引擎线程只有一个，也就是我们常说的js是单线程语言的原因。语言本身是没有单线程和多线程之说的，只是解释这个语言的线程是单线程还是多线程。js引擎也可以操作DOM，如果js引擎线程和GUI线程同时操作DOM会引起混乱，不知道以哪个线程为准。js引擎线程和GUI线程互斥，如果js操作的时间过长，页面的渲染就会受到影响，所以我们要控制js文件的大小，不要让js执行的时间过长。<br>定时触发器线程：在我们上面代码二中，为什么setTimeout没有阻塞console.log(3)，因为setTimeout是由定时触发线程完成的，不是js引擎线程完成的，所以是可以setTimeout和console是可以同时进行的。定时器触发线程会在定时任务完成后通知事件触发线程往任务队列中添加事件。<br>事件触发线程：将满足触发条件的事件放入任务队列，事件队列将会在event loop章节讲解，一些异步事件会放到任务队列中。<br>异步HTTP请求线程：用于处理ajax请求线程，当请求完成时如果有回调函数就会通知事件触发线程往任务队列中添加事件<br><img src="https://snakexu.github.io/images/fuliqi/javascript/3.1_5.png"><br>关于线程先讲到这里，下面是有哪些异步场景<br><img src="https://snakexu.github.io/images/fuliqi/javascript/3.1_6.png"><br>3.定时器<br><img src="https://snakexu.github.io/images/fuliqi/javascript/3.1_7.png"><br>(1).主线程有一个执行栈，代码是在执行栈中执行，首先是调用webAPI(webAPI可以理解为浏览器提供的一种能力，setTimeout就是一种webAPI)<br>(2).调用setTimeout定时器线程计数2s<br>(3).定时器线程计数2s这个任务结束之后，会通知事件触发线程。事件触发线程将定时器事件放入任务队列<br>(4).主线程通过EventLoop遍历任务队列(EventLoop是一个循环，主要是检查任务队列和主线程的调用栈)<br>下面通过一段代码来看一下定时器的执行过程<br><img src="https://snakexu.github.io/images/fuliqi/javascript/3.1_8.png"><br>定时器可能存在哪些问题：<br><img src="https://snakexu.github.io/images/fuliqi/javascript/3.1_9.png"></p>
+<p><pre><br>const test = ()=&gt;{<br>    let t = +new Date();<br>    while(true){<br>        if(+new Date() - t &gt;=5000){<br>            break;<br>        }<br>    }<br>}<br>setTimeout(()=&gt;{<br>    console.log(2)<br>},2000);<br>test();<br></pre><br>上面代码执行我们发现，5秒钟之后打印的2。经过前面内容的讲解我们知道，是因为在同步内容执行完成之后才执行的定时内容setTimeout，这就是定时器任务可能不会按时执行的一个例子了。<br>定时器应用场景：防抖/节流/倒计时/动画<br>这是一个经典的js执行问题，导致这个问题的原因是js没有块级作用域<br><img src="https://snakexu.github.io/images/fuliqi/javascript/3.1_10.png"><br>经过我们改造，打印了1到10<br><img src="https://snakexu.github.io/images/fuliqi/javascript/3.1_11.png"><br>还有一种达到我们预期的方法就是用es6的变量定义let，因为let是有块级作用域的<br><img src="https://snakexu.github.io/images/fuliqi/javascript/3.1_12.png"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/03/26/网易微专业福利期-异步编程-3-1-理解异步/" data-id="ck910dtbf002g2lxq7e0s0pps" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/03/29/网易微专业-MV-组件化开发React专题-React生态-2-4-2-实现React-下-so-diff/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          网易微专业-MV-组件化开发React专题-React生态-2.4.2-实现React(下)-so-diff
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/03/26/网易微专业-VuePress项目实战-4-1-2-基本配置/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">网易微专业-VuePress项目实战-4.1.2-基本配置</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/04/15/网易微专业-node-1-1-8-MySQL入门与应用/">网易微专业-node-1.1.8-MySQL入门与应用</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/14/网易微专业-node-1-1-7-MongoDB入门与应用/">网易微专业-node-1.1.7-MongoDB入门与应用</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/13/网易微专业-node-1-1-6-Redis入门及应用/">网易微专业-node-1.1.6-Redis入门及应用</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/12/网易微专业-node-1-1-5-Nginx反向代理-静态资源服务/">网易微专业-node-1.1.5-Nginx反向代理 静态资源服务</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/11/网易微专业-node-1-1-3-Linux快速上手玩转典型应用/">网易微专业-node-1.1.3-Linux快速上手玩转典型应用</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

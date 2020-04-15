@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>网易微专业-MV*&amp;组件化开发React专题-React进阶-2.2.2-React Hooks | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="ReactHooks就是用函数式组件把class组件的方方面面实现的过程。组件包括(1)props、state，也就是组件的数据；(2)组件的生命周期1.useState&amp;amp;useEffect简单例子:1-1.了解如何定义数据index.js  import React from &apos;react&apos;; import ReactDOM from &apos;react-dom&apos;; import App_10">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网易微专业-MV*&amp;组件化开发React专题-React进阶-2.2.2-React Hooks">
+<meta property="og:url" content="http://yoursite.com/2020/02/27/网易微专业-MV-组件化开发React专题-React进阶-2-2-2-React-Hooks/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="ReactHooks就是用函数式组件把class组件的方方面面实现的过程。组件包括(1)props、state，也就是组件的数据；(2)组件的生命周期1.useState&amp;amp;useEffect简单例子:1-1.了解如何定义数据index.js  import React from &apos;react&apos;; import ReactDOM from &apos;react-dom&apos;; import App_10">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/react/2.2.2_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/react/2.2.2_2.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/react/2.2.2_3.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/react/2.2.2_4.png">
+<meta property="og:updated_time" content="2020-03-02T08:18:21.411Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="网易微专业-MV*&amp;组件化开发React专题-React进阶-2.2.2-React Hooks">
+<meta name="twitter:description" content="ReactHooks就是用函数式组件把class组件的方方面面实现的过程。组件包括(1)props、state，也就是组件的数据；(2)组件的生命周期1.useState&amp;amp;useEffect简单例子:1-1.了解如何定义数据index.js  import React from &apos;react&apos;; import ReactDOM from &apos;react-dom&apos;; import App_10">
+<meta name="twitter:image" content="https://snakexu.github.io/images/wangyi/react/2.2.2_1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-网易微专业-MV-组件化开发React专题-React进阶-2-2-2-React-Hooks" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/02/27/网易微专业-MV-组件化开发React专题-React进阶-2-2-2-React-Hooks/" class="article-date">
+  <time datetime="2020-02-27T05:35:56.000Z" itemprop="datePublished">2020-02-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      网易微专业-MV*&amp;组件化开发React专题-React进阶-2.2.2-React Hooks
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>ReactHooks就是用函数式组件把class组件的方方面面实现的过程。组件包括(1)props、state，也就是组件的数据；(2)组件的生命周期<br>1.useState&amp;useEffect<br>简单例子:<br>1-1.了解如何定义数据<br>index.js</p>
+<pre>
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App_10 from './App_10';
+ReactDOM.render(
+  <app_10 name="func component">,
+  document.getElementById('root')
+);
+</app_10></pre>
+App_10.js
+<pre>
+import React,{useState,useEffect} from "react";
+const App_10 = (props)=>{
+    //下面两个变量相当于定义state，
+    //在这个定义过程中不允许if{}else{}的条件式定义，也就是每次执行的时候定义的变量数量不能变
+    let [time,setTime] = useState(0);//useState传入的是初始值，setTime是修改time事件
+    let [age,setAge] = useState(10);
+    return (
+        < div>
+            Hello World {props.name}< br/>
+            {time}
+            < button onClick={(e)=>{setTime(time+1)}}>add< /button>< br/>
+            {age}
+            < button onClick={(e)=>{setAge(age-1)}}>cut< /button>
+        < /div>
+    )
+}
+export default App_10
+<pre>
+<img src="https://snakexu.github.io/images/wangyi/react/2.2.2_1.png">
+<img src="https://snakexu.github.io/images/wangyi/react/2.2.2_2.png">
+1-2.了解如何定义生命周期
+<pre>
+import React,{useState,useEffect} from "react";
+const App_10 = (props)=>{
+    //下面两个变量相当于定义state，
+    //在这个定义过程中不允许if{}else{}的条件式定义，也就是每次执行的时候定义的变量数量不能变
+    let [time,setTime] = useState(0);//useState传入的是初始值，setTime是修改time事件
+    let [age,setAge] = useState(10);
+    //useEffect相当于componentDidMount和componentcomponentDidUpdate和在一起的作用
+    useEffect(()=>{
+        console.log('Hello')
+    })
+    return (
+        < div>
+            Hello World {props.name}< br/>
+            {time}
+            < button onClick={(e)=>{setTime(time+1)}}>add< /button>< br/>
+            {age}
+            < button onClick={(e)=>{setAge(age-1)}}>cut< /button>
+        < /div>
+    )
+}
+export default App_10
+</pre>
+当我们直接写入useEffect的时候我们发现，只要页面数据有变化useEffect函数就会执行
+<img src="https://snakexu.github.io/images/wangyi/react/2.2.2_3.png">
+因此我们给useEffect加入参数
+<pre>
+useEffect(()=>{
+    console.log('Hello')
+},[])//对，你没看错，就是加入了一个为空数组的参数
+</pre>
+<img src="https://snakexu.github.io/images/wangyi/react/2.2.2_4.png">
+<pre>
+useEffect(()=>{
+    console.log('Hello')
+},[age])
+</pre>
+如果我们给useEffect添加一个参数为我们之前定义的age，那么会发现，只有在age变化的时候useEffect才会执行，如果time变化useEffect没有执行
+<pre>
+useEffect(()=>{
+    console.log('Hello')
+    return ()=>{
+        console.log('status clear')
+    }
+},[age])
+</pre>
+老师说useEffect函数的return相当于componentWillUnMount，但是我发现还是在每次age变化的时候return里的函数就执行里，具体是怎么理解，我看接下来老师怎么讲吧
+1-3.todolist
+<pre>
+const Action = (props)=>{
+    const [value,setValue] = useState('js')
+    return (
+        < div>
+            < input value={value} onChange={(e)=>{setValue(e.target.value)}}/>
+            < button onClick={(e)=>{props.onAdd(value)}}>add< /button>
+        < /div>
+    )
+}
+const List = (props)=>{
+    return (
+        < div>
+            {props.data.map(item=>(
+                < div key={item.id}>< span>{item.name}< /span>< button>del< /button>< /div>
+            ))}
+        < /div>
+    )
+}
+const App_10 = (props)=>{
+    const [data,setData] = useState([
+        {name:'react',id:1},
+        {name:'vue',id:2},
+    ])
+    return (
+        < div>
+            < Action onAdd = {(name)=>{
+                data.push({name:name,id:Math.random()})
+                // setData(data)这样用不可以，js判断一个对象有没有变化的唯一依据和标准是他的内存地址有没有发生变化，
+                //push的时候改变的只是数据的值，并没有改变内存地址，所以js当作这个数据没有发生变化
+                setData([...data])
+            }}/>
+            < List data={data}/>
+        < /div>
+    )
+}
+export default App_10
+</pre>
+2.useReducer
+这个等学到redux的时候再讲解
+3.自定义hook
+自定义hook的主要用途就是实现组件的公共功能
+<pre>
+const useTitleHook = (title)=>{
+    useEffect(()=>{
+        document.title = title
+        return ()=>{
+            document.title = 'title'
+        }
+    })
+}
+const App_10 = (props)=>{
+    let [title,setTitle] = useState('hello');
+    useTitleHook(title);
+    return (
+        < div>
+            < input value={title} onChange={(e)=>{setTitle(e.target.value)}}/>
+        < /div>
+    )
+}
+export default App_10
+</pre></pre></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/02/27/网易微专业-MV-组件化开发React专题-React进阶-2-2-2-React-Hooks/" data-id="ck910dtag000u2lxqg84vv8fk" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/02/27/网易微专业-MV-组件化开发React专题-React进阶-2-2-3-React与Typescript/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          网易微专业-MV*&amp;组件化开发React专题-React进阶-2.2.3-React与Typescript
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/02/26/网易微专业-MV-组件化开发React专题-VUE最佳实践-1-4-1-项目全面深度优化及打包上线之网易实践/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">网易微专业-MV*&amp;组件化开发React专题-VUE最佳实践-1.4.1-项目全面深度优化及打包上线之网易实践</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/04/15/网易微专业-node-1-1-8-MySQL入门与应用/">网易微专业-node-1.1.8-MySQL入门与应用</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/14/网易微专业-node-1-1-7-MongoDB入门与应用/">网易微专业-node-1.1.7-MongoDB入门与应用</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/13/网易微专业-node-1-1-6-Redis入门及应用/">网易微专业-node-1.1.6-Redis入门及应用</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/12/网易微专业-node-1-1-5-Nginx反向代理-静态资源服务/">网易微专业-node-1.1.5-Nginx反向代理 静态资源服务</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/11/网易微专业-node-1-1-3-Linux快速上手玩转典型应用/">网易微专业-node-1.1.3-Linux快速上手玩转典型应用</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

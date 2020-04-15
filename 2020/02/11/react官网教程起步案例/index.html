@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>react官网教程起步案例 | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="报的培训课最近要学习react，因为之前的技术栈主要是vue，所以看了一下react官网粗略先看一下。这个案例是react官网教程的起步案例，里面简单的讲到了react的一些东西。因为教程是一点点对项目进行修改的，所以注释掉的部分可能是一开始的代码，留下来只是方便对比历史修改。要运行这个案例，需要新建一个react项目，然后在src文件夹下放入下面两个文件，npm start启动项目。如果安装了r">
+<meta property="og:type" content="article">
+<meta property="og:title" content="react官网教程起步案例">
+<meta property="og:url" content="http://yoursite.com/2020/02/11/react官网教程起步案例/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="报的培训课最近要学习react，因为之前的技术栈主要是vue，所以看了一下react官网粗略先看一下。这个案例是react官网教程的起步案例，里面简单的讲到了react的一些东西。因为教程是一点点对项目进行修改的，所以注释掉的部分可能是一开始的代码，留下来只是方便对比历史修改。要运行这个案例，需要新建一个react项目，然后在src文件夹下放入下面两个文件，npm start启动项目。如果安装了r">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-03-11T11:36:03.805Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="react官网教程起步案例">
+<meta name="twitter:description" content="报的培训课最近要学习react，因为之前的技术栈主要是vue，所以看了一下react官网粗略先看一下。这个案例是react官网教程的起步案例，里面简单的讲到了react的一些东西。因为教程是一点点对项目进行修改的，所以注释掉的部分可能是一开始的代码，留下来只是方便对比历史修改。要运行这个案例，需要新建一个react项目，然后在src文件夹下放入下面两个文件，npm start启动项目。如果安装了r">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-react官网教程起步案例" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/02/11/react官网教程起步案例/" class="article-date">
+  <time datetime="2020-02-11T04:08:09.000Z" itemprop="datePublished">2020-02-11</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      react官网教程起步案例
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>报的培训课最近要学习react，因为之前的技术栈主要是vue，所以看了一下react官网粗略先看一下。这个案例是react官网教程的起步案例，里面简单的讲到了react的一些东西。因为教程是一点点对项目进行修改的，所以注释掉的部分可能是一开始的代码，留下来只是方便对比历史修改。要运行这个案例，需要新建一个react项目，然后在src文件夹下放入下面两个文件，npm start启动项目。如果安装了react-devtools更方便查看并理解项目。<br>index.js</p>
+<pre>
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+// class Square extends React.Component {
+//   // constructor(props){
+//   //   super(props);
+//   //   this.state = {
+//   //     value:null
+//   //   };
+//   // }
+//   render() {
+//     return (
+//       < button 
+//       className="square" 
+//       onClick={()=>{this.props.onClick()}}
+//       >
+//         {this.props.value}
+//       < /button>
+//     );
+//   }
+// }
+function Square(props){
+  return (
+    < button className="square" onClick={props.onClick}>
+    {props.value}
+    < /button>
+  )
+}
+
+class Board extends React.Component {
+  renderSquare(i) {
+    return < Square 
+    value={this.props.squares[i]}
+    onClick = {()=>{this.props.onClick(i)}}
+    />;
+  }
+
+  render() {
+    // const winner = calculateWinner(this.state.squares);
+    // let status;
+    // if(winner){
+    //   status = 'Winner: ' + winner
+    // }else{
+    //   status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+    // }
+
+    return (
+      < div>
+        < div className="board-row">
+          {this.renderSquare(0)}
+          {this.renderSquare(1)}
+          {this.renderSquare(2)}
+        < /div>
+        < div className="board-row">
+          {this.renderSquare(3)}
+          {this.renderSquare(4)}
+          {this.renderSquare(5)}
+        < /div>
+        < div className="board-row">
+          {this.renderSquare(6)}
+          {this.renderSquare(7)}
+          {this.renderSquare(8)}
+        < /div>
+      < /div>
+    );
+  }
+}
+
+class Game extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      history:[{
+        squares:Array(9).fill(null)
+      }],
+      stepNumber:0,
+      xIsNext:true,
+    }
+  }
+  jumpTo(step) {
+    this.setState({
+      stepNumber: step,
+      xIsNext: (step % 2) === 0,
+    });
+  }
+  handleClick(i){
+    const history = this.state.history.slice(0, this.state.stepNumber + 1);
+    const current = history[history.length - 1];
+    const squares = current.squares.slice();
+    if (calculateWinner(squares) || squares[i]) {
+      return;
+    }
+    squares[i] = this.state.xIsNext ? 'X' : 'O';
+    // console.log(squares)
+    this.setState({
+      history: history.concat([{
+        squares: squares,
+      }]),
+      stepNumber: history.length,
+      xIsNext:!this.state.xIsNext,
+    })
+  }
+  render() {
+    const history = this.state.history;
+    const current = history[this.state.stepNumber];
+    const winner = calculateWinner(current.squares);
+
+    const moves = history.map((step,move)=>{
+      const desc = move ? 'Go to move #' + move : 'Go to game start';
+      return (
+        < li key = {move}>
+        < button onClick={() => this.jumpTo(move)}>{desc}< /button>
+        < /li>
+      )
+    })
+
+    let status;
+    if (winner) {
+      status = 'Winner: ' + winner;
+    } else {
+      status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+    }
+    return (
+      < div className="game">
+        < div className="game-board">
+          < Board 
+          squares = {current.squares}
+          onClick = {(i)=>{this.handleClick(i)}}
+          />
+        < /div>
+        < div className="game-info">
+          < div>{status}< /div>
+          < ol>{moves}< /ol>
+        < /div>
+      < /div>
+    );
+  }
+}
+
+function calculateWinner(squares){
+  const lines = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+  ];
+  for(let i=0;i < lines.length;i++){
+    const [a,b,c] = lines[i];
+    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+      return squares[a];
+    }
+  }
+  return null;
+}
+
+// ========================================
+
+ReactDOM.render(
+  < Game />,
+  document.getElementById('root')
+);
+</pre>
+index.css
+<pre>
+body {
+  font: 14px "Century Gothic", Futura, sans-serif;
+  margin: 20px;
+}
+
+ol, ul {
+  padding-left: 30px;
+}
+
+.board-row:after {
+  clear: both;
+  content: "";
+  display: table;
+}
+
+.status {
+  margin-bottom: 10px;
+}
+
+.square {
+  background: #fff;
+  border: 1px solid #999;
+  float: left;
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 34px;
+  height: 34px;
+  margin-right: -1px;
+  margin-top: -1px;
+  padding: 0;
+  text-align: center;
+  width: 34px;
+}
+
+.square:focus {
+  outline: none;
+}
+
+.kbd-navigation .square:focus {
+  background: #ddd;
+}
+
+.game {
+  display: flex;
+  flex-direction: row;
+}
+
+.game-info {
+  margin-left: 20px;
+}
+</pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/02/11/react官网教程起步案例/" data-id="ck910dta3000b2lxqtz5ygtk6" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/02/13/网易微专业-MV-组件化开发React专题-2-1-2-React基础-虚拟DOM和JSX/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          网易微专业-MV*&amp;组件化开发React专题-2.1.2-React基础-虚拟DOM和JSX
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/02/07/网易微专业-MV-组件化开发React专题-2-1-1-React介绍与React代码规范/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">网易微专业-MV*&amp;组件化开发React专题-2.1.1-React介绍与React代码规范</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/04/15/网易微专业-node-1-1-8-MySQL入门与应用/">网易微专业-node-1.1.8-MySQL入门与应用</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/14/网易微专业-node-1-1-7-MongoDB入门与应用/">网易微专业-node-1.1.7-MongoDB入门与应用</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/13/网易微专业-node-1-1-6-Redis入门及应用/">网易微专业-node-1.1.6-Redis入门及应用</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/12/网易微专业-node-1-1-5-Nginx反向代理-静态资源服务/">网易微专业-node-1.1.5-Nginx反向代理 静态资源服务</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/11/网易微专业-node-1-1-3-Linux快速上手玩转典型应用/">网易微专业-node-1.1.3-Linux快速上手玩转典型应用</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

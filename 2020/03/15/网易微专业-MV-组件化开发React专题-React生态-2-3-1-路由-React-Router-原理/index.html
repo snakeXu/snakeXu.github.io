@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>网易微专业-MV-组件化开发React专题-React生态-2.3.1-路由(React-Router)原理 | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1.hashhistory import React,{ Component } from ‘react’ class Router extends Component{    render(){        return (            &amp;lt; &amp;gt;            {this.props.children}            &amp;lt;/&amp;gt;        )">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网易微专业-MV-组件化开发React专题-React生态-2.3.1-路由(React-Router)原理">
+<meta property="og:url" content="http://yoursite.com/2020/03/15/网易微专业-MV-组件化开发React专题-React生态-2-3-1-路由-React-Router-原理/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="1.hashhistory import React,{ Component } from ‘react’ class Router extends Component{    render(){        return (            &amp;lt; &amp;gt;            {this.props.children}            &amp;lt;/&amp;gt;        )">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/react/2.3.1_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/react/2.3.1_2.png">
+<meta property="og:updated_time" content="2020-03-16T02:47:30.735Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="网易微专业-MV-组件化开发React专题-React生态-2.3.1-路由(React-Router)原理">
+<meta name="twitter:description" content="1.hashhistory import React,{ Component } from ‘react’ class Router extends Component{    render(){        return (            &amp;lt; &amp;gt;            {this.props.children}            &amp;lt;/&amp;gt;        )">
+<meta name="twitter:image" content="https://snakexu.github.io/images/wangyi/react/2.3.1_1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-网易微专业-MV-组件化开发React专题-React生态-2-3-1-路由-React-Router-原理" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/03/15/网易微专业-MV-组件化开发React专题-React生态-2-3-1-路由-React-Router-原理/" class="article-date">
+  <time datetime="2020-03-15T03:59:40.000Z" itemprop="datePublished">2020-03-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      网易微专业-MV-组件化开发React专题-React生态-2.3.1-路由(React-Router)原理
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.hashhistory</p>
+<p><pre><br>import React,{ Component } from ‘react’</pre></p>
+<p>class Router extends Component{<br>    render(){<br>        return (<br>            &lt; &gt;<br>            {this.props.children}<br>            &lt;/&gt;<br>        )<br>    }<br>}<br>class Route extends Component{<br>    render(){<br>        const {<br>            path,<br>            component<br>        } = this.props;<br>        let instance = null;<br>        let hash = window.location.hash.replace(‘#’,’’)<br>        if(path === hash){<br>            instance = component<br>        }<br>        return (<br>            &lt; &gt;<br>            {instance}<br>            &lt;/&gt;<br>        )<br>    }<br>}<br>const AA = ()=&gt;&lt; div&gt;aa&lt; /div&gt;<br>const BB = ()=&gt;&lt; div&gt;bb&lt; /div&gt;<br>function App(){<br>    return (<br>        &lt; div&gt;<br>            &lt; Router&gt;<br>                &lt; header&gt;<br>                    &lt; div&gt;header&lt; /div&gt;<br>                    &lt; Route path=”/aa” component={AA}/&gt;<br>                    &lt; Route path=”/bb” component={BB}/&gt;<br>                &lt; /header&gt;<br>            &lt; /Router&gt;<br>        &lt; /div&gt;<br>    )<br>}<br>export default App<br><br>开启服务之后我们在浏览器中看到，并没有像我们预想的在/aa页面中展示aa，在/bb页面中展示bb<br><img src="https://snakexu.github.io/images/wangyi/react/2.3.1_1.png"><br>这是为什么？因为我们&lt; Route path=”./aa” component={AA}/&gt;在这里 component={AA}传的是AA类本身，在调用的时候instance = component也是类本身，而不是实例；如果我们在调用的时候instance = <aa> 则是通过标签实例化了(常规实例化是通过new关键字，在虚拟DOM中是通过标签实例化的)，所以如果想页面按照我们预想的效果展示，我们需要做一些简单的修改</aa></p>
+<p><pre><br>if(path === hash){<br>    //React.createElement(component,{name:’a’,age:2},children)，即第二个可以传组件需要参数，第三个参数是子组件<br>    instance = React.createElement(component,null,null);<br>}<br></pre><br>能看出来我们对哪里进行了修改么？是class Route extends Component这个组件中的部分内容。<br>但是我们发现我们对页面路由进行修改的时候，并不是每次(即使是不存在的路由)都很好的反馈我们想要的结果，这是因为我们没有给hashhistory绑定事件。我们在页面添加一个事件</p>
+<p><pre><br>window.onhashchange = (e)=&gt;{<br>    console.log(e);<br>}<br></pre><br>控制台打印如下内容<br><img src="https://snakexu.github.io/images/wangyi/react/2.3.1_2.png"><br>从而我们知道，可以通过一个方式捕捉hash的变化，变化以后的hash是什么呢？我们可以通过loaction.hash来获取到。 每次浏览器内容发生变化，可以通过上下文(context)传递给子组件，子组件捕捉到hashhistory发生变化来控制自身的渲染与否</p>
+<p><pre><br>import React,{ Component } from ‘react’<br>import PropTypes from ‘prop-types’<br>class Router extends Component{<br>    render(){<br>        return (<br>            &lt; &gt;<br>            {this.props.children}<br>            &lt;/&gt;<br>        )<br>    }<br>}<br>class Route extends Component{<br>    constructor(props){<br>        super(props);<br>        this.state = {<br>            hash:window.location.hash<br>        }<br>    }<br>    static contextTypes = {<br>        hash: PropTypes.string<br>    }<br>    getHash(){<br>        let url = window.location.hash.replace(‘#’,’’)<br>        return url<br>    }<br>    getChildContext(){<br>        return {<br>            hash:this.getHash()<br>        }<br>    }<br>    componentDidMount(){<br>        window.onhashchange = ()=&gt;{<br>            this.setState({<br>                hash:this.getHash()<br>            })<br>        }<br>    }<br>    render(){<br>        const {<br>            path,<br>            component<br>        } = this.props;<br>        let instance = null;<br>        //let hash = window.location.hash.replace(‘#’,’’)<br>        const {<br>            hash<br>        } = this.context<br>        if(path === hash){<br>            //React.createElement(component,{name:’a’,age:2},children)，即第二个可以传组件需要参数，第三个参数是子组件<br>            instance = React.createElement(component,null,null);<br>        }<br>        return (<br>            &lt; &gt;<br>            {instance}<br>            &lt;/&gt;<br>        )<br>    }<br>}<br>const AA = ()=&gt;&lt; div&gt;aa&lt; /div&gt;<br>const BB = ()=&gt;&lt; div&gt;bb&lt; /div&gt;<br>function App(){<br>    return (<br>        &lt; div&gt;<br>            &lt; Router&gt;<br>                &lt; header&gt;<br>                    &lt; div&gt;header&lt; /div&gt;<br>                    &lt; Route path=”/aa” component={AA}/&gt;<br>                    &lt; Route path=”/bb” component={BB}/&gt;<br>                &lt; /header&gt;<br>            &lt; /Router&gt;<br>        &lt; /div&gt;<br>    )<br>}<br>export default App<br></pre><br>经过一番改造，页面内容在我们修改地址栏地址的时候发生了变化。但是如果地址栏后面加上类似于?a=1的参数，页面就不能按照我们预想的反馈了，老师在这里对我们的要求是，尽量自己去实现获取参数等功能<br>2.browserhistory</p>
+<p><pre><br>import React,{ Component } from ‘react’<br>import PropTypes from ‘prop-types’<br>class Router extends Component{<br>    constructor(props){<br>        super(props);<br>        this.state = {<br>            hash:this.getHash()<br>        }<br>        this.history = window.history<br>    }<br>    static childContextTypes = {<br>        hash: PropTypes.string,<br>    }<br>    getHash(){<br>        let url = window.location.pathname;<br>        return url<br>    }<br>    getChildContext(){<br>        return {<br>            hash:this.state.hash<br>        }<br>    }<br>    componentDidMount(){<br>        this.history.route = (name) =&gt;{<br>            this.setState({<br>                hash:<code>${name}</code><br>            })<br>            window.history.pushState(null,null,name);//只是改变页面状态，没有做任何请求<br>        }<br>    }<br>    render(){<br>        return (<br>            &lt; &gt;<br>            {this.props.children}<br>            &lt;/&gt;<br>        )<br>    }<br>}<br>class Route extends Component{<br>    static contextTypes = {<br>        hash: PropTypes.string<br>    }<br>    render(){<br>        const {<br>            path,<br>            component<br>        } = this.props;<br>        let instance = null;<br>        const {<br>            hash<br>        } =this.context<br>        if(path === hash){<br>            //React.createElement(component,{name:’a’,age:2},children)，即第二个可以传组件需要参数，第三个参数是子组件<br>            instance = React.createElement(component,null,null);<br>        }<br>        return (<br>            &lt; &gt;<br>            {instance}<br>            &lt;/&gt;<br>        )<br>    }<br>}</pre></p>
+<p>const AA = ()=&gt;&lt; div&gt;aa&lt; /div&gt;<br>const BB = ()=&gt;&lt; div&gt;bb&lt; /div&gt;</p>
+<p>function App(){<br>    return (<br>        &lt; div&gt;<br>            &lt; Router&gt;<br>                &lt; header&gt;<br>                    &lt; div&gt;header&lt; /div&gt;<br>                    &lt; Route path=”/aa” component={AA}/&gt;<br>                    &lt; Route path=”/bb” component={BB}/&gt;<br>                &lt; /header&gt;<br>            &lt; /Router&gt;<br>        &lt; /div&gt;<br>    )<br>}<br>export default App<br><br>这里我们基本了解了browserhistory的实现原理，在这里我们发现，即使在url输入参数?a=1页面也能正常显示，是因为location.pathname是获取的不带参数的<br>3.简单看一下reactrouter的API，这里看的是reactrouter4的版本 <a href="https://reacttraining.com/react-router/web/guides/quick-start" target="_blank" rel="noopener">https://reacttraining.com/react-router/web/guides/quick-start</a><br>4.服务端渲染<br>通过配合服务端代码了解如何区分前后端路由，了解为何browserhistory需要后端支持。<br>4-1.如何区分前后端路由<br>如果url中既包含前端路由又包含后端路由，我们通常看到node端路由会有app.use(express为例)等指定路由，那么app.use中指定的就是后端路由<br>4-2.为何browserhistory需要后端支持：如果在后端路由拦截中找不到确定的前端路由会造成页面404，这时候就需要后端配合指定页面前端路由，或者找不到页面的指定app.use(*)等。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/03/15/网易微专业-MV-组件化开发React专题-React生态-2-3-1-路由-React-Router-原理/" data-id="ck910dtab000n2lxqmj86yevj" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/03/16/网易微专业-MV-组件化开发React专题-React生态-2-3-2-React动画/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          网易微专业-MV-组件化开发React专题-React生态-2.3.2-React动画
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/03/13/网易微专业-webpack实战演练-3-2-4-代码分割-3-2-5-js代码大小控制/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">网易微专业-webpack实战演练-3.2.4-代码分割-3.2.5-js代码大小控制</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/04/15/网易微专业-node-1-1-8-MySQL入门与应用/">网易微专业-node-1.1.8-MySQL入门与应用</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/14/网易微专业-node-1-1-7-MongoDB入门与应用/">网易微专业-node-1.1.7-MongoDB入门与应用</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/13/网易微专业-node-1-1-6-Redis入门及应用/">网易微专业-node-1.1.6-Redis入门及应用</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/12/网易微专业-node-1-1-5-Nginx反向代理-静态资源服务/">网易微专业-node-1.1.5-Nginx反向代理 静态资源服务</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/11/网易微专业-node-1-1-3-Linux快速上手玩转典型应用/">网易微专业-node-1.1.3-Linux快速上手玩转典型应用</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

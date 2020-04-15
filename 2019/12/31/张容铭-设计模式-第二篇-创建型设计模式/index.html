@@ -14,7 +14,7 @@
 <meta property="og:site_name" content="喵小喵的窝">
 <meta property="og:description" content="一、简单工厂模式简单工厂模式：又叫静态工厂方法，由一个工厂对象决定创建某一种产品对象类的实例。主要用来创建同一类对象。如果我们写了这样一段代码，假设需求是登陆模块的处理  var LoginAlert = function (text){     this.content = text } LoginAlert.prototype.show = function(){     //显示警告框 }">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-01-08T14:02:30.477Z">
+<meta property="og:updated_time" content="2020-02-07T11:33:42.969Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="张容铭-设计模式-第二篇-创建型设计模式">
 <meta name="twitter:description" content="一、简单工厂模式简单工厂模式：又叫静态工厂方法，由一个工厂对象决定创建某一种产品对象类的实例。主要用来创建同一类对象。如果我们写了这样一段代码，假设需求是登陆模块的处理  var LoginAlert = function (text){     this.content = text } LoginAlert.prototype.show = function(){     //显示警告框 }">
@@ -545,7 +545,7 @@ var LoopImages = function(imgArr,container){
     this.imagesArray = imgArr;       //轮播图片数组
     this.container = container;      //轮播图片容器
 }
-LoopImages.prototyp = {
+LoopImages.prototype = {
     //创建轮播图片
     createImage :  function(){
         console.log('LoopImages createImage function');
@@ -650,7 +650,7 @@ var Ming = {
     //...
 }
 </pre>
-其实在JavaScript中单例模式除了定义明明空间外，还有一个作用你需要知道，就是通过单例模式来管理代码库的各个模块，比如早起百度tangram，雅虎的YUI都是通过单例模式来控制自己的每个功能模块的，比如tangram中定义命名空间为baidu，当添加设置元素class方法，插入一个元素方法时，他们会放到dom模块；当添加事件中阻止事件的冒泡方法，阻止事件的默认行为方法的时候，会放到event模块里；当添加去除字符串首尾空白自负方法，将字符串进行html编码时，会放到string模块中……
+其实在JavaScript中单例模式除了定义命明空间外，还有一个作用你需要知道，就是通过单例模式来管理代码库的各个模块，比如早期百度tangram，雅虎的YUI都是通过单例模式来控制自己的每个功能模块的，比如tangram中定义命名空间为baidu，当添加设置元素class方法，插入一个元素方法时，他们会放到dom模块；当添加事件中阻止事件的冒泡方法，阻止事件的默认行为方法的时候，会放到event模块里；当添加去除字符串首尾空白自负方法，将字符串进行html编码时，会放到string模块中……
 <pre>
 baidu.dom.addClass                 //添加元素类
 baidu.dom.append                   //插入元素
@@ -735,7 +735,7 @@ console.log(LazySingle().publicProperty);   //1.0
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/31/张容铭-设计模式-第二篇-创建型设计模式/" data-id="ck5iwofq7001ttjxqssa6glse" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/12/31/张容铭-设计模式-第二篇-创建型设计模式/" data-id="ck910dtdw002z2lxqwbd4z60q" class="article-share-link">Share</a>
       
       
     </footer>
@@ -780,7 +780,7 @@ console.log(LazySingle().publicProperty);   //1.0
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
     </div>
   </div>
 
@@ -793,23 +793,23 @@ console.log(LazySingle().publicProperty);   //1.0
       <ul>
         
           <li>
-            <a href="/2020/01/18/js运算符优先级/">js运算符优先级</a>
+            <a href="/2020/04/15/网易微专业-node-1-1-8-MySQL入门与应用/">网易微专业-node-1.1.8-MySQL入门与应用</a>
           </li>
         
           <li>
-            <a href="/2020/01/17/网易微专业-单页应用-1-3-2-VUE编译器原理探秘二/">网易微专业-单页应用-1.3.2-VUE编译器原理探秘二</a>
+            <a href="/2020/04/14/网易微专业-node-1-1-7-MongoDB入门与应用/">网易微专业-node-1.1.7-MongoDB入门与应用</a>
           </li>
         
           <li>
-            <a href="/2020/01/14/网易微专业-单页应用-1-3-1-VUE编译器原理探秘一/">网易微专业-单页应用-1.3.1-VUE编译器原理探秘一</a>
+            <a href="/2020/04/13/网易微专业-node-1-1-6-Redis入门及应用/">网易微专业-node-1.1.6-Redis入门及应用</a>
           </li>
         
           <li>
-            <a href="/2020/01/11/网易微专业福利期-2-2-如何保证你的代码质量/">网易微专业福利期-2.2-如何保证你的代码质量</a>
+            <a href="/2020/04/12/网易微专业-node-1-1-5-Nginx反向代理-静态资源服务/">网易微专业-node-1.1.5-Nginx反向代理 静态资源服务</a>
           </li>
         
           <li>
-            <a href="/2020/01/10/网易微专业福利期-2-1-JavaScript内存管理/">网易微专业福利期-2.1-JavaScript内存管理</a>
+            <a href="/2020/04/11/网易微专业-node-1-1-3-Linux快速上手玩转典型应用/">网易微专业-node-1.1.3-Linux快速上手玩转典型应用</a>
           </li>
         
       </ul>

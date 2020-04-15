@@ -62,10 +62,10 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-网易微专业-模块化编程-4-2-3-依赖解析-依赖管理处理方案" class="article article-type-post" itemscope="" itemprop="blogPost">
+    <article id="post-网易微专业-webpack实战演练-3-2-3-图片等资源的处理" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2019/12/20/网易微专业-模块化编程-4-2-3-依赖解析-依赖管理处理方案/" class="article-date">
-  <time datetime="2019-12-20T03:16:54.000Z" itemprop="datePublished">2019-12-20</time>
+    <a href="/2020/03/12/网易微专业-webpack实战演练-3-2-3-图片等资源的处理/" class="article-date">
+  <time datetime="2020-03-12T07:23:28.000Z" itemprop="datePublished">2020-03-12</time>
 </a>
     
   </div>
@@ -76,7 +76,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/12/20/网易微专业-模块化编程-4-2-3-依赖解析-依赖管理处理方案/">网易微专业-模块化编程-4.2.3-依赖解析-依赖管理处理方案</a>
+      <a class="article-title" href="/2020/03/12/网易微专业-webpack实战演练-3-2-3-图片等资源的处理/">网易微专业-webpack实战演练-3.2.3-图片等资源的处理</a>
     </h1>
   
 
@@ -84,938 +84,260 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <!--https://www.cnblogs.com/beyonds/p/8992619.html-->
-<p>1.源码<br><br>startUp.js</p>
-<p><pre><br>(function(global) {<br>    var startUp = global.startUp = {<br>        version: “1.0.1”,<br>    }<br>    var data = {};<br>    var cache = {};<br>    var anonymousMeta = {};<br>    //模块的生命周期<br>    var status = {<br>        FETCHED: 1,<br>        SAVED: 2,<br>        LOADING: 3,<br>        LOADED: 4,<br>        EXECUTING: 5,<br>        EXECUTED: 6,<br>    }</pre></p>
-<pre><code>var isArray = function(obj) {
-    return toString.call(obj) === &quot;[object Array]&quot;;
-}
-
-var isFunction = function(obj) {
-    return toString.call(obj) === &quot;[object Function]&quot;;
-}
-
-//是否使用了别名
-function parseAlias(id) { //a  b
-    var alias = data.alias; //配置
-    return alias &amp;&amp; isString(alias[id]) ? alias[id] : id;
-}
-
-//不能以&quot;/&quot; &quot;:&quot;开头  结尾必须是一个&quot;/&quot; 后面跟随任意字符至少一个
-var PATHS_RE = /^([^\/:]+)(\/.+)$/; //([^\/:]+)   路径的短名称配置
-
-// 检测是否 书写路径短名称
-function parsePaths(id) {
-    var paths = data.paths; //配置
-    if (paths &amp;&amp; (m = id.match(PATHS_RE)) &amp;&amp; isString(paths[m[1]])) {
-        id = paths[m[1]] + m[2]
-    }
-    return id;
-}
-
-//检测是否添加后缀
-function normalize(path) {
-    var last = path.length - 1;
-    var lastC = path.charAt(last);
-    return (lastC === &quot;/&quot; || path.substring(last - 2) === &quot;.js&quot;) ? path : path + &quot;.js&quot;;
-
-}
-
-//添加根目录
-function addBase(id, uri) {
-    var result;
-    if (id.charAt(0) === &quot;.&quot;) {
-        result = relapath((uri ? uri.match(/[^?]*\//)[0] : data.cwd) + id);
-    } else {
-        result = data.cwd + id;
-    }
-    return result;
-}
-
-var DOT_RE = /\/.\//g; // 规范路径  &quot;/./&quot; =&gt; &quot;/&quot;   
-function relapath(path) {
-    path = path.replace(DOT_RE, &quot;/&quot;);
-    return path;
-}
-
-//生成绝对路径  parent child
-startUp.resolve = function(child, parent) {
-    if (!child) return &quot;&quot;;
-    child = parseAlias(child); //检测是否有别名
-    child = parsePaths(child); // 检测是否有路径别名 依赖模块中引包的模块路径地址 require(&quot;app/c&quot;);
-    child = normalize(child); //检测是否添加后缀
-    return addBase(child, parent); //添加根目录
-}
-
-startUp.request = function(url, callback) {
-    var node = document.createElement(&quot;script&quot;);
-    node.src = url;
-    document.body.appendChild(node);
-    node.onload = function() {
-        //node.onload = null;
-        //document.body.removeChild(node); 
-        callback();
-    }
-}
-
-//构造函数  模块初始化数据
-function Module(uri, deps) {
-    this.uri = uri;
-    this.deps = deps || [];
-    this.exports = null;
-    this.status = 0;
-    this._waitings = {};
-    this._remain = 0;
-}
-
-//分析主干 (左子树 | 右子树) 上的依赖项
-Module.prototype.load = function() {
-    var module = this;
-    module.status = status.LOADING;
-    var uris = module.resolve(); //获取主干上的依赖项
-    var len = module._remain = uris.length;
-    //console.log(uris)
-    //加载主干上的依赖项(模块)
-    var m;
-    for (var i = 0; i &lt; len; i++) {
-        m = Module.get(uris[i]); //  创建缓存信息
-        if (m.status &lt; status.LOADED) {
-            m._waitings[module.uri] = m._waitings[module.uri] || 1;
-        } else {
-            module._remain--;
-        }
-    }
-    //如果依赖列表模块全都加载完毕
-    if (module._remain == 0) {//考虑不全面，并没有考虑比如主模块依赖的a.js/b.js是否加载完毕
-        module.onload();
-    };
-
-    //准备执行根目录下的依赖列表中的模块
-    var requestCache = {};
-    for (var i = 0; i &lt; len; i++) {
-        m = Module.get(uris[i]);
-        if (m.status &lt; status.FETCHED) {
-            m.fetch(requestCache);
-        }
-    }
-
-    for (uri in requestCache) {
-        requestCache[uri]();
-    }
-}
-
-//加载依赖列表中的模块
-Module.prototype.fetch = function(requestCache) {
-    var module = this;
-    console.log(module)
-    module.status = status.FETCHED;
-    var uri = module.uri;
-    requestCache[uri] = sendRequest; //Document.createElement(&quot;script&quot;) 
-
-    function sendRequest() {
-        startUp.request(uri, onRequest);
-    }
-
-    function onRequest() {
-        if (anonymousMeta) {
-            module.save(uri, anonymousMeta);
-        }
-        module.load(); //递归 模块加载策略
-    }
-}
-
-Module.prototype.onload = function() {
-    var mod = this;
-    mod.status = status.LOADED;
-    if (mod.callback) {
-        mod.callback();
-    }
-    //伪递归
-    _waitings = mod._waitings;
-    var uri, m;
-    for (uri in _waitings) {
-        //console.log(uri);   //根目录对应的Module实例对象
-        m = cache[uri];
-        m._remain -= _waitings[uri];
-        if (m._remain == 0) {
-            m.onload()
-        };
-    }
-
-}
-
-//更改初始化数据 
-Module.prototype.save = function(uri, meta) {
-    var module = Module.get(uri); //是否在缓存
-    module.id = uri;
-    module.deps = meta.deps || [];
-    module.factory = meta.factory;
-    module.status = status.SAVED;
-}
-
-//获取模块对外的接口对象
-Module.prototype.exec = function() {
-    var module = this;
-    //防止重复执行
-    if (module.status &gt;= status.EXECUTING) {
-        return module.exports;
-    }
-    module.status = status.EXECUTING; //5
-    var uri = module.uri;
-
-    function require(id) {
-        //console.log(require.resolve(id));   //更新过后的数据
-        return Module.get(require.resolve(id)).exec(); //获取接口对象
-    }
-
-    require.resolve = function(id) {
-        return startUp.resolve(id, uri); 
-    }
-
-    var factory = module.factory;
-    var exports = isFunction(factory) ? factory(require, module.exports = {}, module) : factory;
-
-    if (exports === undefined) {
-        exports = module.exports;
-    }
-    module.exports = exports;
-    module.status = status.EXECUTED; 
-    return exports;
-}
-
-//资源定位 解析依赖项生成绝对路径
-Module.prototype.resolve = function() {
-    var mod = this;
-    var ids = mod.deps; //[&quot;./a&quot;,&quot;./b&quot;]
-    var uris = [];
-    for (var i = 0; i &lt; ids.length; i++) {
-        uris[i] = startUp.resolve(ids[i], mod.uri); //依赖项   (主干| 子树)
-    }
-    //console.log(uris)
-    return uris;
-}
-
-//定义一个模块
-Module.define = function(factory) {
-    var deps;
-    if (isFunction(factory)) {
-        //正则解析依赖项
-        deps = parseDependencies(factory.toString());
-    }
-    //存储当前模块的信息
-    var meta = {
-        id: &quot;&quot;,
-        uri: &quot;&quot;,
-        deps: deps,
-        factory: factory
-    }
-    anonymousMeta = meta;
-}
-
-//检测缓存对象上是否有当前模块信息
-Module.get = function(uri, deps) {
-    return cache[uri] || (cache[uri] = new Module(uri, deps));
-}
-
-Module.use = function(deps, callback, uri) {
-    var module = Module.get(uri, isArray(deps) ? deps : [deps]);
-    //所有模块都加载完毕
-    module.callback = function() {
-        var exports = []; //所以依赖项模块的接口对象
-        var uris = module.resolve();
-        for (var i = 0; i &lt; uris.length; i++) {
-            exports[i] = cache[uris[i]].exec(); //获取模块对外定义的接口对象
-        }
-        if (callback) {
-            callback.apply(global, exports);
-        }
-    }
-    module.load();
-}
-
-var _cid = 0;
-
-function cid() {
-    return _cid++;
-};
-
-data.preload = [];
-//获取当前项目文档的URL
-data.cwd = document.URL.match(/[^?]*\//)[0];
-Module.preload = function(callback) {
-    var length = data.preload.length;
-    if (!length) callback();
-    //length !== 0 先加载预先设定模块
-};
-
-startUp.use = function(list, callback) {
-    //检测有没有预先加载的模块  
-    Module.preload(function() {
-        Module.use(list, callback, data.cwd + &quot;_use_&quot; + cid()); //虚拟的根目录
-    });
-}
-
-var REQUIRE_RE = /\brequire\s*\(\s*([&quot;&apos;])(.+?)\1\s*\)/g
-
-function parseDependencies(code) {
-    var ret = []
-    code.replace(REQUIRE_RE, function(m, m1, m2) {
-        if (m2) ret.push(m2);
-    });
-    return ret
-};
-
-global.define = Module.define;
-</code></pre><p>})(this);<br><br>a.js</p>
-<p><pre><br>define(function( require, exports, module){<br>    var age = “30”;<br>    var b = require(“b.js”);<br>    console.log(b.sex);<br>    exports.age = age;<br>});<br></pre><br>b.js</p>
-<p><pre><br>define(function( require, exports, module){<br>    var sex = “男”;<br>    return {<br>        sex:sex,<br>    }<br>});<br></pre><br>html</p>
-<p><pre><br>startUp.use([“a.js”, “b.js”], function(a, b) {<br>    console.log(a);<br>    console.log(b);<br>    console.log(“startUp…”);<br>});<br></pre><br>2.回顾<br><img src="https://snakexu.github.io/images/wangyi/module/4.2.3_1.png"><br><img src="https://snakexu.github.io/images/wangyi/module/4.2.3_2.png"></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/20/网易微专业-模块化编程-4-2-3-依赖解析-依赖管理处理方案/" data-id="ck5iwofnr0017tjxqvnw9t4t0" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-模块化编程-4-2-2-模块资源定位-异步加载" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/12/13/网易微专业-模块化编程-4-2-2-模块资源定位-异步加载/" class="article-date">
-  <time datetime="2019-12-13T09:30:50.000Z" itemprop="datePublished">2019-12-13</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/12/13/网易微专业-模块化编程-4-2-2-模块资源定位-异步加载/">网易微专业-模块化编程-4.2.2-模块资源定位-异步加载</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.资源定位-动态加载<br><img src="https://snakexu.github.io/images/wangyi/module/4.2.2_1.png"><br>2.源码<br>startUp.js</p>
+        <p>1.需要用到哪些loader<br>file-loader:webpack识别除js之外的资源(不用这个loader的时候也是识别js资源的)<br>url-loader:url-loader包含了file-loader<br>img-loader:对图片进行压缩处理等需要这个loader<br>1-1.file-loader<br>在没有安装这些loader的时候，webpack打包不能正确识别图片资源，示例代码初步了解<br>webpack.config.js(简单的示例文件，不包含webpack在项目中的完整配置)</p>
 <pre>
-(function(global) {
-    var startUp = global.startUp = {
-        version: "1.0.1",
-    }
-    var data = {};
-    var cache = {};
-    var anonymousMeta  = {};
-    //模块的生命周期
-    var status = {
-        FETCHED: 1,
-        SAVED: 2,
-        LOADING: 3,
-        LOADED: 4,
-        EXECUTING: 5,
-        EXECUTED: 6,
-    }
-
-    var isArray = function(obj) {
-        return toString.call(obj) === "[object Array]";
-    }
-
-    //是否使用了别名
-    function parseAlias(id) { //a  b
-        var alias = data.alias; //配置
-        return alias && isString(alias[id]) ? alias[id] : id;
-    }
-
-    //不能以"/" ":"开头  结尾必须是一个"/" 后面跟随任意字符至少一个
-    var PATHS_RE = /^([^\/:]+)(\/.+)$/; //([^\/:]+)   路径的短名称配置
-
-    // 检测是否 书写路径短名称
-    function parsePaths(id) {
-        var paths = data.paths; //配置
-        if (paths && (m = id.match(PATHS_RE)) && isString(paths[m[1]])) {
-            id = paths[m[1]] + m[2]
-        }
-        return id;
-    }
-
-    //检测是否添加后缀
-    function normalize(path) {
-        var last = path.length - 1;
-        var lastC = path.charAt(last);
-        return (lastC === "/" || path.substring(last - 2) === ".js") ? path : path + ".js";
-
-    }
-
-    //添加根目录
-    function addBase(id, uri) {
-        var result;
-        if (id.charAt(0) === ".") {
-            result = relapath((uri ? uri.match(/[^?]*\//)[0] : data.cwd) + id);
-        } else {
-            result = data.cwd + id;
-        }
-        return result;
-    }
-
-    var DOT_RE = /\/.\//g; // 规范路径  "/./" => "/"   
-    function relapath(path) {
-        path = path.replace(DOT_RE, "/");
-        return path;
-    }
-
-    //生成绝对路径  parent child
-    startUp.resolve = function(child, parent) {
-        if (!child) return "";
-        child = parseAlias(child); //检测是否有别名
-        child = parsePaths(child); // 检测是否有路径别名 依赖模块中引包的模块路径地址 require("app/c");
-        child = normalize(child); //检测是否添加后缀
-        return addBase(child, parent); //添加根目录
-    }
-
-    startUp.request = function(url, callback) {
-        var node = document.createElement("script");
-        node.src = url;
-        document.body.appendChild(node);
-        node.onload = function() {
-            //node.onload = null;
-            //document.body.removeChild(node); 
-            callback();
-        }
-    }
-
-    //构造函数  模块初始化数据
-    function Module(uri, deps) {
-        this.uri = uri;
-        this.deps = deps || [];
-        this.exports = null;
-        this.status = 0;
-        this._waitings = {};
-        this._remain = 0;
-    }
-
-    //分析主干 (左子树 | 右子树) 上的依赖项
-    Module.prototype.load = function() {
-        var module = this;
-        module.status = status.LOADING;
-        var uris = module.resolve(); //获取主干上的依赖项
-        var len = module._remain = uris.length;
-        console.log(uris)
-        //加载主干上的依赖项(模块)
-        var m;
-        for (var i = 0; i < len; i++) {
-            m = Module.get(uris[i]); //  创建缓存信息
-            if (m.status < status.LOADED) {
-                m._waitings[module.uri] = m._waitings[module.uri] || 1;
-            } else {
-                module._remain--;
+module:{
+    rules:[
+        {
+            test:/\.css$/,
+            use:extractTextCss.extract({
+                fallback:{
+                       loader:'style-loader',
+                 },
+                use:[
+                    {
+                       loader:'css-loader',
+                    },
+                ]
+            })
+        },
+        {
+            test:/\.(jpg|jpeg|gif|png)$/,
+            use:{
+                loader:'file-loader'
             }
         }
-        //如果依赖列表模块全都加载完毕
-        if (module._remain == 0) {
-            module.onload();
-        };
-
-        //准备执行根目录下的依赖列表中的模块
-        var requestCache = {};
-        for (var i = 0; i < len; i++) {
-            m = Module.get(uris[i]);
-            if (m.status < status.FETCHED) {
-                m.fetch(requestCache);
+    ]
+}
+</pre>
+file-loader的配置项简单示例
+<pre>
+{
+    test:/\.(jpg|jpeg|gif|png)$/,
+    use:{
+        loader:'file-loader',
+        options:{
+            name:'[name].[hash:4].[ext]',//打包的文件名中包含4位hash值
+            outputPath:'assets/img',//打包该资源输出的文件夹
+        }
+    }
+}
+</pre>
+常见的坑:
+(1).路径问题：
+<pre>
+{
+    test:/\.(jpg|jpeg|gif|png)$/,
+    use:{
+        loader:'file-loader',
+        options:{
+            name:'[name].[hash:4].[ext]',
+            outputPath:'assets/img',//打包该资源输出的文件夹
+            publicPath:'aaa',//如果定义了该选项，那么引入文件的路径都会以它为路径
+        }
+    }
+}
+</pre>
+如果我们按照上面的设置了publicPath，那么打包出来的文件路径就变成了background:url(aaa/img.39e0.jpg)，一般会把outputPath和publicPath设置成一样的
+(2).命名问题：
+1-2.url-loader
+在file-loader的基础上增加了可以将资源转换为base64的功能，默认可以将小于30kb的资源转换为base64
+<pre>
+{
+    test:/\.(jpg|jpeg|gif|png)$/,
+    use:{
+        loader:'url-loader',
+        options:{
+            name:'[name].[hash:4].[ext]',
+            outputPath:'assets/img',
+            publicPath:'aaa',
+            //我们为什么不把所有东西都转换为base64？
+            //虽然我们将资源转换为base64减少了我们的请求，但是资源转换为base64的字符串和资源本身的大小是一样的，
+            //比如我们需要的图片是5kb，那么转换为base64之后这5kb会加载到css文件中，css文件变大造成该文件加载变慢
+            limit:5000,//控制将多大的资源转换为base64，一般设置为5kb
+        }
+    }
+}
+</pre>
+1-3.img-loader
+可以压缩图片。loader是从后往前执行的，img-loader只是处理图片，所以我们把img-loader放在url-loader下面。这里要明白img-loader本身不做任何事情，所以并不是写上img-loader就完事儿的，需要配置一系列插件
+<pre>
+{
+    test:/\.(jpg|jpeg|gif|png)$/,
+    use:[
+        {
+            loader:'url-loader',
+            options:{
+                name:'[name].[hash:4].[ext]',
+                outputPath:'assets/img',
+                publicPath:'aaa',
+                limit:5000,
+            }
+        },
+        //压缩图片的插件imagemin系列，对于不同的图片类型有不同的包
+        //处理png图片：imagemin-pngquant 处理jpeg图片：imagemin-mozjpeg 处理gif图片：imagemin-gifsicle
+        //imagemin系列包都是要通过npm下载安装的
+        {
+            loader:'img-loader',
+            options:{
+                plugins:[
+                    require('imagemin-pngquant')({
+                        speed:2,//控制压缩质量，值越大，对图片压缩程度越小，取值范围为1~11
+                    }),
+                    require('imagemin-mozjpeg')({
+                        quality:2,//控制压缩质量，值越大，对图片压缩程度越小，取值范围为1~100
+                    }),
+                    require('imagemin-gifsicle')({
+                        optimizationLevel:2,//取值范围为1,2,3，推荐设置为1，设置为3极有可能失真
+                    }),
+                ]
             }
         }
-
-        for (uri in requestCache) {
-            requestCache[uri]();
+    ]
+}
+</pre>
+图片优化总结
+<img src="https://snakexu.github.io/images/wangyi/webpack/3.2.3_1.png">
+1-4.html-loader
+如果我们直接在页面写入img标签的src属性的相对路径，可能引起很多问题(比如路径不识别等)，解决这个问题有两种方法，第一种是在html页面使用模版引擎
+<pre>
+< img src="${require('./assets/img/imgname.jpg')}"/> //这里是模版引擎语法
+</pre>
+第二种方法是用html-loader解决
+<pre>
+{
+    test:/\.html$/,
+    use:{
+        loader:'html-loader',
+        options:{
+            attr:["img:src"],//对什么标签下的什么属性进行解析
         }
     }
-
-    //加载依赖列表中的模块
-    Module.prototype.fetch = function(requestCache) {
-        var module = this;
-        console.log(module)
-        module.status = status.FETCHED;
-        var uri = module.uri;
-        requestCache[uri] = sendRequest; //Document.createElement("script") 
-        //document.cretaE
-
-        function sendRequest() {
-            startUp.request(uri, onRequest);
-        }
-
-        function onRequest() {
-            if (anonymousMeta) {
-                module.save(uri, anonymousMeta); 
+}
+</pre>
+2.雪碧图
+<img src="https://snakexu.github.io/images/wangyi/webpack/3.2.3_2.png">
+处理雪碧图的插件问题在于会根据原图大小调节background-position，更适合于定制化的图片
+2-1.postcss-sprites
+<pre>
+{
+    test:/\.css$/,
+    use:extractTextCss.extract({
+        fallback:{
+               loader:'style-loader',
+         },
+        use:[
+            {
+               loader:'css-loader',
+            },
+            {
+                loader:'postcss-loader',
+                options:{
+                    plugin:[
+                        require('postcss-sprites')({
+                            spirtePath:'./dist/assets/sprite',//指定输出路径
+                        })
+                    ]
+                }
             }
-            module.load(); //递归 模块加载策略
+        ]
+    })
+},
+</pre>
+<img src="https://snakexu.github.io/images/wangyi/webpack/3.2.3_3.png">
+上图是为了说明postcss-sprites的执行效果，自动生成css并且修改了background-size等
+2-2.webpack-spritesmith
+<pre>
+const webpackSpriteSmith = require('webpack-spritesmith')//只是为了说明需要引入，并不代表实际位置
+plugins:[
+    new extractTextCss({
+        filename:'[name].min.css'
+    }),
+    new htmlWebpackPlugin({
+        filename:'index.html',
+        template:'./src/index.html',
+        aa:123,
+    }),
+    new webpackSpriteSmith({
+        src:{
+            //说明我们要处理的文件的位置
+            cwd:path.join(__dirname,"src/assets/img"),//这里一定要是绝对路径
+            glob:"*.jpg",//我们要处理cwd指定文件夹下什么类型的文件，比如我们这里指定处理所有jpg文件，也可以具名处理
+        },
+        target:{
+            //这里定义输出
+            image:path.join(__dirname,'dist/sprites/sprit.png'),//这里也是需要绝对路径，定义图片输出
+            css:path.join(__dirname,'dist/sprites/sprit.css'),//这里定义css输出
+        },
+        apoOptions:{//这里定义引用地址
+            cssImageRef:'dist/sprites/sprit.png'
+        }
+    })
+]
+</pre>
+需要注意的是，生成的css文件需要自己确定如何用，css文件的图片路径是绝对路径 
+3.其他资源文件的处理
+如果我们现在需要处理mp4文件加载到video标签上
+<pre>
+{
+    test:/\.html$/,
+    use:{
+        loader:'html-loader',
+        options:{
+            attr:["img:src","video:src"],//请注意这里我们加上了"video:src"
         }
     }
-
-    //更改初始化数据 
-    Module.prototype.save = function(uri, meta){
-
+},
+{
+    test:/\.mp4$/,
+    use:{
+        loader:url-loader,
     }
-
-    //资源定位 解析依赖项生成绝对路径
-    Module.prototype.resolve = function() {
-        var mod = this;
-        var ids = mod.deps; //["./a","./b"]
-        var uris = [];
-        for (var i = 0; i < ids.length; i++) {
-            uris[i] = startUp.resolve(ids[i], mod.uri); //依赖项   (主干| 子树)
-        }
-        //console.log(uris)
-        return uris;
-    }
-
-    //定义一个模块
-    Module.define = function(factory) {
-
-    }
-
-    //检测缓存对象上是否有当前模块信息
-    Module.get = function(uri, deps) {
-        return cache[uri] || (cache[uri] = new Module(uri, deps));
-    }
-
-    Module.use = function(deps, callback, uri) {
-        var module = Module.get(uri, isArray(deps) ? deps : [deps]);
-        //所有模块都加载完毕
-        module.callback = function() {
-
-        }
-        module.load();
-    }
-
-    var _cid = 0;
-
-    function cid() {
-        return _cid++;
-    };
-
-    data.preload = [];
-    //获取当前项目文档的URL
-    data.cwd = document.URL.match(/[^?]*\//)[0];
-    Module.preload = function(callback) {
-        var length = data.preload.length;
-        if (!length) callback();
-        //length !== 0 先加载预先设定模块
-    };
-
-    startUp.use = function(list, callback) {
-        //检测有没有预先加载的模块  
-        Module.preload(function() {
-            Module.use(list, callback, data.cwd + "_use_" + cid()); //虚拟的根目录
-        });
-    }
-
-    global.define = Module.define;
-})(this);
-</pre>
-a.js
-<pre>
-define(function( require, exports, module){
-    var age = "30";
-    exports.age = age;
-});
-</pre>
-b.js
-<pre>
-define(function( require, exports, module){
-    var sex = "男";
-    return {
-        sex:sex,
-    }
-});
-</pre>
-html
-<pre>
-startUp.use(["a.js","b.js"], function(){
-    console.log("startUp...");
-});
-</pre>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/13/网易微专业-模块化编程-4-2-2-模块资源定位-异步加载/" data-id="ck5iwofnj000ztjxqq9bgcuid" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-模块化编程-4-2-1-Module构造器设计-模块数据初始化" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/12/13/网易微专业-模块化编程-4-2-1-Module构造器设计-模块数据初始化/" class="article-date">
-  <time datetime="2019-12-13T07:02:59.000Z" itemprop="datePublished">2019-12-13</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/12/13/网易微专业-模块化编程-4-2-1-Module构造器设计-模块数据初始化/">网易微专业-模块化编程-4.2.1-Module构造器设计 模块数据初始化</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.依赖加载策略<br><img src="https://snakexu.github.io/images/wangyi/module/4.2.1_1.png"><br>2.模块数据初始化<br><img src="https://snakexu.github.io/images/wangyi/module/4.2.1_2.png"><br><img src="https://snakexu.github.io/images/wangyi/module/4.2.1_3.png"><br>模块生命周期里的状态码存在的意义？<br>比如我们有个需求，a.js需要加载b.js，b.js又需要加载a.js，这时候会存在循环无限加载的问题么？不会的，因为我们有状态码，根据状态码决定是否要加载当前模块。比如我们当前模块状态码为6，那么我们是不会重复加载相同模块的。<br>3.源码<br>(1)startUp.js</p>
-<pre>
-(function(global){
-    var startUp = global.startUp = {
-        version = 1.0.1
-    }
-    var data = {}
-    var cache = {}
-    var status = {
-        FETCHED : 1,
-        SAVED : 2,
-        LOADING : 3,
-        LOADED : 4,
-        EXECUTING : 5,
-        EXECUTED : 6
-    }
-    var isArray = function(obj) {
-        return toString.call(obj) === "[object Array]";
-    }
-    //构造函数  模块初始化数据
-    function Module(uri, deps){
-        this.uri = uri;
-        this.deps = deps || [];
-        this.exports = null;
-        this.status = 0;
-        this._waitings = {};
-        this._remain = 0;
-    }
-    //分析主干 (左子树 | 右子树) 上的依赖项
-    Module.prototype.load = function(){
-        var module = this;
-        module.status = status.loading;
-        //var uris = module.resolve(); //获取主干上的依赖项
-        //var len = module._remain = uris.length;  
-        //加载主干上的依赖项(模块)
-    }
-    //资源定位
-    Module.prototype.resolve = function(){
-
-    }
-    //定义一个模块
-    Module.define = function(factory) {
-
-    }
-    //检测缓存对象上是否有当前模块信息
-    Module.get = function(uri, deps){
-        return cache[uri] || (cache[uri] = new Module(uri, deps));
-    }
-    Module.use = function(deps, callback, uri){
-        var module = Module.get(uri, isArray(deps) ? deps : [deps]);
-        //所有模块都加载完毕
-        module.callback = function() {
-
-        }
-        module.load();
-    }
-    var _cid = 0;
-    function cid(){
-        return _cid++
-    }
-    data.preload = [];
-    //获取当前项目文档的URL
-    data.cwd = document.URL.match(/[^?]*\//)[0];
-    Module.preload = funcrtion(callback){
-        var length = data.preload.length;
-        if(!length) calllback();
-        //length !== 0 先加载预先设定模块
-    }
-    startUp.use = function(list, callback){
-        //检测有没有预先加载的模块 
-        Module.preload(function(){
-            Module.use(list, callback, data.cwd + "_use" + cid())//虚拟根目录
-        })
-    }
-    global.define = Module.define
-})(this)
-</pre>
-a.js
-<pre>
-define(function( require, exports, module){
-    var age = "30";
-    exports.age = age;
-});
-</pre>
-b.js
-<pre>
-define(function( require, exports, module){
-    var sex = "男";
-    return {
-        sex:sex,
-    }
-});
-</pre>
-demo.html
-<pre>
-startUp.use(["a.js","b.js"], function(){
-    console.log("startUp...");
-});
-</pre>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/13/网易微专业-模块化编程-4-2-1-Module构造器设计-模块数据初始化/" data-id="ck5iwofnk0011tjxqug993ied" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-js算法简单了解-堆排序" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/12/13/js算法简单了解-堆排序/" class="article-date">
-  <time datetime="2019-12-13T04:11:16.000Z" itemprop="datePublished">2019-12-13</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/12/13/js算法简单了解-堆排序/">js算法简单了解-堆排序</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/13/js算法简单了解-堆排序/" data-id="ck5iwofmh0003tjxqaukrepwa" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-js算法简单了解-快速排序" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/12/12/js算法简单了解-快速排序/" class="article-date">
-  <time datetime="2019-12-12T02:28:59.000Z" itemprop="datePublished">2019-12-12</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/12/12/js算法简单了解-快速排序/">js算法简单了解-快速排序</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.描述<br>（1）从数列中选择一个数作为key值；<br>（2）将比这个数小的数全部放在它的左边，大于或等于它的数全部放在它的右边；<br>（3）对左右两个小数列重复第二步，直至各区间只有1个数。<br>2.代码</p>
-<p><pre><br><!--function partition(arr,low,high){
-    //var low = 0, high = arr.length, i = 0, j = high;
-    var i = 0, j = high;
-    var cm = arr[low];
-    var temp;
-    while(true){
-        while(arr[i] < cm && i < j){
-            i++
-        }
-        while(arr[j] > cm && i < j){
-            j--
-        }
-        if(i >= j)
-            break;
-        temp = arr[i];
-        arr[i] = arr[j];
-        arr[j] = temp;
-    }
-    temp = arr[low];
-    arr[low] = arr[j]
-    arr[j] = tem;
 }
-function quicksort(arr,low,high){
-    if(low > high)
-        return
-    var j = partition(arr,low,high);
-    quicksort(arr,low,j-1);
-    quicksort(arr,j,high)
-}
-console.log(quicksort([42,20,17,13,28,14,23,15],0,8))--><br>function quickSort(a,l,r){<br>    if(l &gt;= r)<br>        return;<br>    var i = l;<br>    var j = r;<br>    var key = a[l];//选择第一个数为key<br>    while(i &lt; j){<br>        while(i &lt; j &amp;&amp; a[j] &gt;= key){//从右向左找第一个小于key的值<br>            j–;<br>        }<br>        if(i &lt; j){<br>            a[i] = a[j];<br>            i++;<br>        }<br>        while(i &lt; j &amp;&amp; a[i] &lt; key){//从左向右找第一个大于key的值<br>            i++;<br>        }<br>        if(i &lt; j){<br>            a[j] = a[i];<br>            j–;<br>        }<br>    }<br>    //i == j<br>    a[i] = key;<br>    quickSort(a, l, i-1);//递归调用<br>    quickSort(a, i+1, r);//递归调用<br>    return a;<br> }<br> console.log(quickSort([42,20,17,13,28,14,23,15],0,7))<br></pre><br>3.平均-O(NlogN)，最好-O(NlogN)，最坏-O(N^2)；空间复杂度：O(longN).不稳定<br>4.额外<br>快速排序是一种优秀的排序算法，但是程序细节还是会对算法性能产生一些影响。算法第四版有一些相关阐述。<!--我还没看，阿哈哈哈哈--></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/12/js算法简单了解-快速排序/" data-id="ck5iwofmp0008tjxqruni8lib" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-js算法简单了解-归并排序" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/12/11/js算法简单了解-归并排序/" class="article-date">
-  <time datetime="2019-12-11T01:51:58.000Z" itemprop="datePublished">2019-12-11</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/12/11/js算法简单了解-归并排序/">js算法简单了解-归并排序</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.描述<br>先递归的分解数列，再合并数列（分治思想的典型应用）<br>（1）将一个数组拆成A、B两个小组，两个小组继续拆，直到每个小组只有一个元素为止。<br>（2）按照拆分过程逐步合并小组，由于各小组初始只有一个元素，可以看做小组内部是有序的，合并小组可以被看做是合并两个有序数组的过程。<br>（3）对左右两个小数列重复第二步，直至各区间只有1个数。<br>下面对数组[42,20,17,13,28,14,23,15]进行归并排序，模拟排序过程如下：<br>第一步：拆分数组，一共需要拆分三次（logN）;<br>第一次拆成[42,20,17,13]，[28,14,23,15];<br>第二次拆成[42,20]，[17,13]，[28,14]，[23,15];<br>第三次拆成[42]，[20]，[17]，[13]，[28]，[14]，[23]，[15];<br>第二步：逐步归并数组，采用合并两个有序数组的方法，每一步其算法复杂度基本接近于O(N);<br>第一次归并为[20,42]，[13,17]，[14,28]，[15,23];<br>第二次归并为[13,17,20,42]，[14,15,23,28];<br>第三次归并为[13, 14, 15, 17, 20, 23, 28, 42];<br>2.代码</p>
-<pre>
-function mergearr(arr1,arr2){
-    console.log('arr1:',arr1)
-    console.log('arr2:',arr2)
-    var arr3 = new Array()
-    var len1 = arr1.length;
-    var len2 = arr2.length;
-    var i=0,j=0,k=0;
-    while(i < len1 && j < len2){
-        if(arr1[i] < arr2[j]){
-            arr3[k++] = arr1[i++]
-        }else{
-            arr3[k++] = arr2[j++]
-        }
-    }
-    while(i < len1){
-        arr3[k++] = arr1[i++]
-    }
-    while(j < len2){
-        arr3[k++] = arr2[j++]
-    }
-    return arr3
-}
-function mergesort(arr){
-    var len = arr && arr.length;
-    if(len < = 1){
-        return arr;
-    }
-    var mid = Math.floor(len/2);
-    var left = arr.slice(0,mid);
-    var right = arr.slice(mid,len);
-    return mergearr(mergesor(left),mergesort(right));
-}
-var sortresult = mergesort([42,20,17,13,28,14,23,15])
-console.log('sortresult:',sortresult)
 </pre>
-上面代码的执行结果：
-<img src="https://snakexu.github.io/images/algorithm/mergesort_1.png">
-3.时间复杂度O(NlogN)  空间复杂度O(N) 稳定排序
-4.额外的
-上面是用递归的方法实现归并排序，但是算法(第四版)给我们提供了另外一种思路
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/03/12/网易微专业-webpack实战演练-3-2-3-图片等资源的处理/" data-id="ck910dtb1001w2lxqyab0p2jb" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-慕课网-node-js从入门到企业web开发中的应用-5-1-项目初始化" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/03/11/慕课网-node-js从入门到企业web开发中的应用-5-1-项目初始化/" class="article-date">
+  <time datetime="2020-03-11T10:50:28.000Z" itemprop="datePublished">2020-03-11</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/03/11/慕课网-node-js从入门到企业web开发中的应用-5-1-项目初始化/">慕课网-node.js从入门到企业web开发中的应用-5-1-项目初始化</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>静态资源服务器实战<br>期待效果:在任意目录下执行命令，就可以把当前命令变成静态资源服务器的根目录，通过url可以访问到里面的文件夹，访问到里面的文件。<br>在github下创建一个新项目anydoor<br>关于.gitignore:(1)匹配模式前/代表项目根目录(2)匹配模式最后加/代表是目录(3)匹配模式前加!代表取反(比如某个文件夹下除了一个文件都被忽略)(4)*代表任意个字符(5)?匹配任意一个字符(6)**匹配多级目录<br>另外还有.npmignore，基本规则与.gitignore相似，但是有些内容即使写入.npmignore也不会被忽略，比如license、readme等文件，具体可以看官网<br>editorConfig可以配置代码规则，比如是用四个空格还是用tab，可以帮助开发者定义/保持持续的代码风格在不同的编辑器/IDE之间。在团队合作的时候，不会因为项目规约的不同而频繁切换代码规则，即使同一个项目也可以配置不同的代码规约</p>
 <pre>
-function mergearr(arr1,arr2){
-    //console.log('arr1:',arr1)
-    //console.log('arr2:',arr2)
-    var arr3 = new Array()
-    var len1 = arr1.length;
-    var len2 = arr2.length;
-    var i=0,j=0,k=0;
-    while(i < len1 && j < len2){
-        if(arr1[i] < arr2[j]){
-            arr3[k++] = arr1[i++]
-        }else{
-            arr3[k++] = arr2[j++]
-        }
-    }
-    while(i < len1){
-        arr3[k++] = arr1[i++]
-    }
-    while(j < len2){
-        arr3[k++] = arr2[j++]
-    }
-    return arr3
-}
-function mergesort(arr){
-    var len = arr && arr.length; 
-    var arrresult;
-    if(len< =1)return arr;
-    var sz = 1,i,arrresult;
-    for( ; sz < len; sz+=sz){
-        arrresult = []
-        for(i=0; i < = len - sz; i+= sz + sz){
-            var mid = i+sz
-            var left = arr.slice(mid-sz,mid)
-            var right = arr.slice(mid,Math.min(mid+sz,len))
-            var midarr = mergearr(left,right)
-            arrresult = arrresult.concat(midarr)
-        }
-        arr = arrresult
-    }
-    return arr
-}
-var sortresult = mergesort([42,20,17,13,28,14,23,15])
-console.log('sortresult:',sortresult)
+
 </pre>
-
-
-
-
-
-
-
-
-
-
-
-
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/11/js算法简单了解-归并排序/" data-id="ck5iwofml0005tjxqom8l3825" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/03/11/慕课网-node-js从入门到企业web开发中的应用-5-1-项目初始化/" data-id="ck910dta5000d2lxqh04nnu73" class="article-share-link">Share</a>
       
       
     </footer>
@@ -1025,10 +347,10 @@ console.log('sortresult:',sortresult)
 
 
   
-    <article id="post-js算法简单了解-希尔排序" class="article article-type-post" itemscope="" itemprop="blogPost">
+    <article id="post-网易微专业-MV-组件化开发React专题-React进阶-2-2-6-常用组件库ant-d" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2019/12/10/js算法简单了解-希尔排序/" class="article-date">
-  <time datetime="2019-12-10T09:18:20.000Z" itemprop="datePublished">2019-12-10</time>
+    <a href="/2020/03/04/网易微专业-MV-组件化开发React专题-React进阶-2-2-6-常用组件库ant-d/" class="article-date">
+  <time datetime="2020-03-04T03:58:46.000Z" itemprop="datePublished">2020-03-04</time>
 </a>
     
   </div>
@@ -1039,7 +361,7 @@ console.log('sortresult:',sortresult)
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/12/10/js算法简单了解-希尔排序/">js算法简单了解-希尔排序</a>
+      <a class="article-title" href="/2020/03/04/网易微专业-MV-组件化开发React专题-React进阶-2-2-6-常用组件库ant-d/">网易微专业-MV*&amp;组件化开发React专题-React进阶-2.2.6-常用组件库ant-d</a>
     </h1>
   
 
@@ -1047,13 +369,11 @@ console.log('sortresult:',sortresult)
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>1.描述<br>插入排序对于大规模乱序数组排序很慢，希尔排序为了加快速度简单的改进了插入排序，交换不相邻元素以对数组的局部进行片排序，并最终用插入排序将局部有序数组排序。<br>（1）按照某一增量，将数组分为若干子序列，对子序列分别进行插入排序。<br>（2）逐渐减小增量，并重复此过程，直到增量为1，此时序列基本有序，最后进行插入排序。<br>2.代码</p>
-<p><pre><br>function shellsort(arr){<br>    var len = arr &amp;&amp; arr.length;<br>    var h = 1;<br>    while(h &lt; len/3){ h = 3 * h + 1}//理论上这里h可以取任意大于0的正整数<br>    while(h &gt;= 1){<br>        for(var i = h; i &lt; len; i++){<br>            //这个for循环很有意思，相当于从当前第i个元素开始，再与它之前应属于同组的元素比较<br>            //也就是说，当循环到这个元素的时候，它之前的同组元素已经做好了插入排序<br>            for(var j = i; j &gt;= h &amp;&amp; arr[j] &lt; arr[j-h]; j -= h){<br>                var temp = arr[j];<br>                arr[j] = arr[j-h];<br>                arr[j-h] = temp;<br>            }<br>        }<br>        //console.log(arr)<br>        h = parseInt(h / 3)<br>    }<br>}<br>var arr = [49,38,65,101,76,13,27,49,55,1]<br>shellsort(arr)<br></pre><br>3.时间复杂度O(N^1.5)   空间复杂度O(1)</p>
-
+        
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/10/js算法简单了解-希尔排序/" data-id="ck5iwofmj0004tjxqb02iy7ib" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/03/04/网易微专业-MV-组件化开发React专题-React进阶-2-2-6-常用组件库ant-d/" data-id="ck910dtai000x2lxq54okipqc" class="article-share-link">Share</a>
       
       
     </footer>
@@ -1063,10 +383,10 @@ console.log('sortresult:',sortresult)
 
 
   
-    <article id="post-js算法简单了解-插入排序" class="article article-type-post" itemscope="" itemprop="blogPost">
+    <article id="post-网易微专业-MV-组件化开发React专题-React进阶-2-2-5-数据管理Mobx" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2019/12/10/js算法简单了解-插入排序/" class="article-date">
-  <time datetime="2019-12-10T06:37:09.000Z" itemprop="datePublished">2019-12-10</time>
+    <a href="/2020/03/02/网易微专业-MV-组件化开发React专题-React进阶-2-2-5-数据管理Mobx/" class="article-date">
+  <time datetime="2020-03-02T08:25:14.000Z" itemprop="datePublished">2020-03-02</time>
 </a>
     
   </div>
@@ -1077,7 +397,7 @@ console.log('sortresult:',sortresult)
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/12/10/js算法简单了解-插入排序/">js算法简单了解-插入排序</a>
+      <a class="article-title" href="/2020/03/02/网易微专业-MV-组件化开发React专题-React进阶-2-2-5-数据管理Mobx/">网易微专业-MV*&amp;组件化开发React专题-React进阶-2.2.5-数据管理Mobx</a>
     </h1>
   
 
@@ -1085,13 +405,12 @@ console.log('sortresult:',sortresult)
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>1.描述<br>插入排序的工作原理就是将未排序数据，对已排序数据序列从后向前扫描，找到对应的位置并插入。插入排序通常采用占位的形式，空间复杂度为O(1),因此，在从后向前扫描的过程中，需要反复的把已排序的元素逐步向后挪位，为新插入元素提供插入的位置。<br>(1）从第一个元素开始，该元素可以被认为已经被排序<br>(2）取出下一个元素，在已经排好序的序列中从后往前扫描<br>(3）直到找到小于或者等于该元素的位置<br>(4）将该位置后面的所有已排序的元素从后往前依次移一位<br>(5)将该元素插入到该位置<br>(6)重复步骤2-5<br>另外，插入排序所需的时间取决于输入中元素的初始顺序。<br>2.代码</p>
-<p><pre><br>function insertsort(arr){<br>    var len = arr &amp;&amp; arr.length,i=1,j;<br>    for( ; i &lt; len; i++){<br>        for(j = i; j &gt; 0 &amp;&amp; arr[j] &lt; arr[j-1]; j–){<br>            var temp = arr[j];<br>            arr[j] = arr[j-1]<br>            arr[j-1] = temp;<br>        }<br>        //console.log(arr)这里是为了打印每轮比较的结果<br>    }<br>    return arr<br>}<br>var arr = [49,38,65,101,76,13,27,49,55,1]<br>insertsort(arr)<br></pre><br>结果打印<br><img src="https://snakexu.github.io/images/algorithm/insertsort_1.png"><br>3.时间复杂度最好为O(N) 最坏为(N^2) 平均为O(N^2)   空间复杂度为O(1) 稳定<br>4.额外<br>4.1数组是部分有序的：数组中倒置的数量小于数组大小的某个倍数，那么我们说这个数组是部分有序的。下面是几种典型的部分有序的数组：<br>(1)数组中每个元素距离它最终位置都不远<br>(2)一个有序的大数组接一个小数组<br>(3)数组中只有几个元素的位置不正确<br>——以上来自：算法(第四版)<br><br>插入排序对这样的数组很有效。<br><br>4.2要大幅提高插入排序的速度并不难，只需要在内循环中将较大的元素都向右移动而不总是交换两个元素(这样访问数组的次数就能减半)</p>
+        <p>1.Mobx<br><img src="https://snakexu.github.io/images/wangyi/react/2.2.5_1.png"></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/10/js算法简单了解-插入排序/" data-id="ck5iwofmm0006tjxqob3cqmr5" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/03/02/网易微专业-MV-组件化开发React专题-React进阶-2-2-5-数据管理Mobx/" data-id="ck910dtah000w2lxqs4vt46xb" class="article-share-link">Share</a>
       
       
     </footer>
@@ -1101,10 +420,10 @@ console.log('sortresult:',sortresult)
 
 
   
-    <article id="post-js算法简单了解-选择排序" class="article article-type-post" itemscope="" itemprop="blogPost">
+    <article id="post-网易微专业-MV-组件化开发React专题-React进阶-2-2-4-数据管理Redux" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2019/12/10/js算法简单了解-选择排序/" class="article-date">
-  <time datetime="2019-12-10T03:50:51.000Z" itemprop="datePublished">2019-12-10</time>
+    <a href="/2020/03/01/网易微专业-MV-组件化开发React专题-React进阶-2-2-4-数据管理Redux/" class="article-date">
+  <time datetime="2020-03-01T05:38:25.000Z" itemprop="datePublished">2020-03-01</time>
 </a>
     
   </div>
@@ -1115,7 +434,7 @@ console.log('sortresult:',sortresult)
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/12/10/js算法简单了解-选择排序/">js算法简单了解-选择排序</a>
+      <a class="article-title" href="/2020/03/01/网易微专业-MV-组件化开发React专题-React进阶-2-2-4-数据管理Redux/">网易微专业-MV*&amp;组件化开发React专题-React进阶-2.2.4-数据管理Redux</a>
     </h1>
   
 
@@ -1123,13 +442,12 @@ console.log('sortresult:',sortresult)
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>1.描述<br>在长度为N的无序数组中，第一次遍历n-1个数，找到最小的数值与第一个元素交换；第二次遍历n-2个数，找到最小的数值与第二个元素交换；。。。第n-1次遍历，找到最小的数值与第n-1个元素交换，排序完成。相较其他算法，选择排序的运行时间与数据初始状态无关，总会进行大约N2/2(N的平方除以2)次比较，而其他算法更善于利用数据初始状态<br>2.代码实现</p>
-<p><pre><br>function selectsort(arr){<br>    var len = arr &amp;&amp; arr.length,i=0,j,min;<br>    for( ; i &lt; len - 1; i++){<br>        min = i;<br>        for(j = i+1; j &lt; len; j++){<br>            if(a[j] &lt; a[min])<br>                min = j;<br>        }<br>        if(min != i){<br>            var temp = a[i];<br>            a[i] = a[min];<br>            a[min] = temp;<br>        }<br>    }<br>    return arr<br>}<br></pre><br>3.时间复杂度均为O(N^2)    空间复杂度为O(1)  不稳定(不稳定的意思就是，如果有个数组arr = [4,5,2,3,3,1],在排序之后，a[3]依然在a[4]前边)</p>
+        <p>1.Redux简介<br><img src="https://snakexu.github.io/images/wangyi/react/2.2.4_1.png"><br><img src="https://snakexu.github.io/images/wangyi/react/2.2.4_2.png"><br>课程里老师一直是在用例子说明，等我梳理一下再将例子贴上来</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/10/js算法简单了解-选择排序/" data-id="ck5iwofmo0007tjxqk6jiliz6" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/03/01/网易微专业-MV-组件化开发React专题-React进阶-2-2-4-数据管理Redux/" data-id="ck910dtai000y2lxqv5f6kymr" class="article-share-link">Share</a>
       
       
     </footer>
@@ -1139,10 +457,10 @@ console.log('sortresult:',sortresult)
 
 
   
-    <article id="post-js算法简单了解-冒泡算法" class="article article-type-post" itemscope="" itemprop="blogPost">
+    <article id="post-网易微专业-MV-组件化开发React专题-VUE最佳实践-1-4-2-s数据层的高级封装之网易实践" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2019/12/10/js算法简单了解-冒泡算法/" class="article-date">
-  <time datetime="2019-12-10T02:02:50.000Z" itemprop="datePublished">2019-12-10</time>
+    <a href="/2020/02/29/网易微专业-MV-组件化开发React专题-VUE最佳实践-1-4-2-s数据层的高级封装之网易实践/" class="article-date">
+  <time datetime="2020-02-29T04:35:44.000Z" itemprop="datePublished">2020-02-29</time>
 </a>
     
   </div>
@@ -1153,7 +471,7 @@ console.log('sortresult:',sortresult)
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/12/10/js算法简单了解-冒泡算法/">js算法简单了解-冒泡算法</a>
+      <a class="article-title" href="/2020/02/29/网易微专业-MV-组件化开发React专题-VUE最佳实践-1-4-2-s数据层的高级封装之网易实践/">网易微专业-MV*&amp;组件化开发React专题-VUE最佳实践-1.4.2-s数据层的高级封装之网易实践</a>
     </h1>
   
 
@@ -1161,14 +479,911 @@ console.log('sortresult:',sortresult)
     
     <div class="article-entry" itemprop="articleBody">
       
-        <!--为了补回算法了解，我也是real认真了，拿出了上学时候的教材——数据结构(C语言版)，清华大学出版社，还是很怀念上学做米虫的日子的，言归正传-->
-<p>1.其实就是把数组中相邻元素一个个比较，按照排序的条件进行互换，毫无技巧简单粗暴直接有效。不过这个算法在我看来是最容易学习的。<br>2.代码实现，例子里排序得到的结果是从小到大的，可以按照自己的需要更改比较条件</p>
-<p><pre><br>function BubbleSort(arr){<br>    var temp;//临时变量<br>    for(var i=0; i &lt; arr.length-1; i++){   //表示趟数，一共arr.length-1次。<br>        var count = 0; //打印用的参数<br>        for(var j=arr.length-1; j&gt;i; j–){<br>            if(arr[j] &lt; arr[j-1]){<br>                temp = arr[j];<br>                arr[j] = arr[j-1];<br>                arr[j-1] = temp;<br>                count++;<br>            }<br>        }<br>        console.log(‘第’+i+’轮的比较次数为’+count);<br>    }<br>    return arr;<br>}<br>var arr = [93,72,35,48,42,37,15,2];<br>BubbleSort(arr)<br></pre><br>执行结果如图所示：<br><img src="https://snakexu.github.io/images/algorithm/bubble_1.png"><br>3.时间复杂度:O(N^2)(N的平方)</p>
+        <p>1.数据层封装<br><img src="https://snakexu.github.io/images/wangyi/vue/1.4.2_1.png"><br>课程演示项目/src/views/modules.js里面有这样一段代码</p>
+<p><pre><br>export default getModules(<br>    require.context(‘./‘, true, /.\/([^/]*?)\/index.js$/),<br>    modulesOrder,<br>);<br></pre><br>这里用require.context主要是容易实现模块的热插拔，也就是说随时增加/删除模块非常方便，当然还有别的好处，慢慢发觉吧<br>1-1.直接在页面组件中请求<br>1-2.封装service层<br>1-3.JSON配置的方式<br>小结：<br><img src="https://snakexu.github.io/images/wangyi/vue/1.4.2_2.png"><br>emmm，这部分老师都是讲的代码，其实看一下项目大概也能了解了，就不再详细讲述了，项目地址 <a href="https://vusion-templates.github.io/cloud-admin-site/" target="_blank" rel="noopener">https://vusion-templates.github.io/cloud-admin-site/</a> 不过项目中可能没有数据，需要自己实现一下<br>2.路由相关<br>2-1.路由懒加载<br><img src="https://snakexu.github.io/images/wangyi/vue/1.4.2_3.png"></p>
+<p><pre><br>{ path: ‘detail’, component: () =&gt; import(/<em> webpackChunkName: ‘ingress’ </em>/ ‘./views/detail/index.vue’), meta: { title: ‘负载均衡详情’ }, children: [<br>    { path: ‘’, redirect: ‘info’ },<br>    { path: ‘info’, component: () =&gt; import(/<em> webpackChunkName: ‘ingress’ </em>/ ‘./views/detail/info.vue’) },<br>    { path: ‘securityGroups’, component: () =&gt; import(/<em> webpackChunkName: ‘ingress’ </em>/ ‘./views/detail/monitor.vue’) },<br>    { path: ‘monitor’, component: () =&gt; import(/<em> webpackChunkName: ‘ingress’ </em>/ ‘./views/detail/monitor.vue’) },<br>    { path: ‘logs’, component: () =&gt; import(/<em> webpackChunkName: ‘ingress’ </em>/ ‘./views/detail/monitor.vue’) },<br>] },<br></pre><br>上面代码中/<em> webpackChunkName: ‘ingress’ </em>/ 这部分是分组，可以看webpack或者vue-router了解<br>2-2.路由权限<br>一般从后台获取权限，路由有一个meta，我们可以做如下配置</p>
+<p><pre><br>meta: {<br>    title: ‘负载均衡’,<br>    crumb: ‘负载均衡’,<br>    auth(to, from, next) {<br>         if (!window.auth.ingress) {<br>             next(‘/‘);<br>         }<br>    },<br>    locks: [{<br>        params: [‘teamId’],<br>    }],<br>},<br></pre><br>在各个路由做了上述配置之后，还需要做如下更改</p>
+<p><pre><br>// 权限验证<br>router.beforeEach((to, from, next) =&gt; {<br>    let called = false;<br>    const _next = function (…args) {<br>        if (called) {<br>            return;<br>        }<br>        called = true;<br>        next(…args);<br>    };<br>    to.matched.every((item) =&gt; {<br>        item.meta &amp;&amp; item.meta.auth &amp;&amp; item.meta.auth(to, from, _next);<br>        return !called;<br>    });<br>    _next();<br>});<br></pre><br>2-3.把参数固定在路由上-路由锁<br>下面事件是一个select的触发事件</p>
+<p><pre><br>onTeamChange($event) {<br>    this.$routerLock({<br>        teamId: $event.value,<br>    });<br>}<br></pre><br>在页面路由加上locks</p>
+<p><pre><br>meta: {<br>    title: ‘负载均衡’,<br>    crumb: ‘负载均衡’,<br>    auth(to, from, next) {<br>        // if (!window.auth.ingress) {<br>        //     next(‘/‘);<br>        // }<br>    },<br>    locks: [{<br>        params: [‘teamId’],<br>    }],<br>},<br></pre><br>上面代码能如此实现，并不是vue原生的，而是因为</p>
+<p><pre><br>const routerLock = {<br>    beforeEach(to, from, next) {<br>        const matched = to.matched || [];<br>        const locks = [];<br>        matched.forEach((item) =&gt; {<br>            if (item.meta &amp;&amp; item.meta.locks) {<br>                const itemLocks = item.meta.locks;<br>                itemLocks.forEach((lock) =&gt; {<br>                    if (lock.params &amp;&amp; lock.params.length) {<br>                        locks.push(lock);<br>                    }<br>                });<br>            }<br>        });<br>        if (!locks.length) {<br>            next();<br>            return;<br>        }<br>        const includePath = function (path) {<br>            if (typeof path === ‘string’) {<br>                return path === to.name || path === to.path;<br>            }<br>            if (path instanceof RegExp) {<br>                return path.test(to.name) || path.test(to.path);<br>            }<br>            return false;<br>        };<br>        const fromQuery = from.query;<br>        const toQuery = to.query;<br>        let isChanged = false;<br>        locks.forEach((lock) =&gt; {<br>            // 没有 include 时全通过<br>            if (lock.include &amp;&amp; !lock.include.some(includePath))<br>                return;<br>            if (lock.exclude &amp;&amp; lock.exclude.some(includePath))<br>                return;<br>            lock.params.forEach((param) =&gt; {<br>                if (!(param in toQuery)) {<br>                    isChanged = true;<br>                    toQuery[param] = fromQuery[param];<br>                }<br>                if (toQuery[param] === ‘’) {<br>                    toQuery[param] = undefined;<br>                } // 美化路由<br>            });<br>        });<br>        if (isChanged) {<br>            next({<br>                path: to.path,<br>                query: toQuery,<br>            });<br>        } else {<br>            next();<br>        }<br>    },<br>    update(query, route, router) {<br>        if (Object.keys(query).some((key) =&gt; query[key] !== route.query[key])) {<br>            router.push({<br>                path: route.path,<br>                query: {<br>                    …route.query,<br>                    …query,<br>                },<br>            });<br>        }<br>    },<br>    install(Vue) {<br>        Vue.prototype.$routerLock = function (query) {<br>            return routerLock.update(query, this.$route, this.$router);<br>        };<br>    },<br>};<br>export default routerLock;<br></pre><br>3.数据管理和通信<br><img src="https://snakexu.github.io/images/wangyi/vue/1.4.2_4.png"><br>课程里老师项目封装了一种基于eventbus的组件 <a href="https://vusion.github.io/cloud-ui/components/m-pub-sub/examples" target="_blank" rel="noopener">https://vusion.github.io/cloud-ui/components/m-pub-sub/examples</a></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/10/js算法简单了解-冒泡算法/" data-id="ck5iwofmb0001tjxqneo81t7u" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/02/29/网易微专业-MV-组件化开发React专题-VUE最佳实践-1-4-2-s数据层的高级封装之网易实践/" data-id="ck910dtaj000z2lxqve1ubo3n" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-MV-组件化开发React专题-React进阶-2-2-3-React与Typescript" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/02/27/网易微专业-MV-组件化开发React专题-React进阶-2-2-3-React与Typescript/" class="article-date">
+  <time datetime="2020-02-27T10:33:33.000Z" itemprop="datePublished">2020-02-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/02/27/网易微专业-MV-组件化开发React专题-React进阶-2-2-3-React与Typescript/">网易微专业-MV*&amp;组件化开发React专题-React进阶-2.2.3-React与Typescript</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.TS基础<br>概念:Typescript是Javascript的一个超集，主要提供了类型系统和对ES6的支持，它由Microsoft开发，代码位于GitHub上<br>使用场景:生命周期较长，较稳定的大型项目<br>2.TS使用场景<br>3.TS语法<br><img src="https://snakexu.github.io/images/wangyi/react/2.2.3_1.png"><br><img src="https://snakexu.github.io/images/wangyi/react/2.2.3_2.png"><br><img src="https://snakexu.github.io/images/wangyi/react/2.2.3_3.png"><br><img src="https://snakexu.github.io/images/wangyi/react/2.2.3_4.png"><br><img src="https://snakexu.github.io/images/wangyi/react/2.2.3_5.png"><br>4.TS与React<br><img src="https://snakexu.github.io/images/wangyi/react/2.2.3_6.png"><br>4-1.数据的传递<br>index.tsx</p>
+<pre>
+import * as React from 'react'
+import * as ReactDOM from 'react-dom';
+import registerServiceWorker from './registerServiceWorker';
+import App_11 from './App_11';
+ReactDOM.render(
+  < App_11 name={'hello'}/>,
+  document.getElementById('root') as HTMLElement
+);
+registerServiceWorker();
+</pre>
+App_11.jsx
+<pre>
+import * as React from 'react'
+import * as ReactDOM from 'react-dom';
+interface IProps{
+     name:string
+}
+interface IState{
+    value:number
+}
+class App_11 extends React.Component< IProps,IState >{
+    public constructor(props:IProps){
+        super(props)
+        this.state = {
+            value:10
+        }
+    }
+    render(){
+        const {
+            name
+        } = this.props
+        const {
+            value
+        } = this.state
+        return(
+            < div>
+                hello typescript{name}{value}
+            < /div>
+        )
+    }
+}
+export default App_11
+</pre>
+<img src="https://snakexu.github.io/images/wangyi/react/2.2.3_7.png">
+4-2.事件/生命周期
+<pre>
+import * as React from 'react'
+import * as ReactDOM from 'react-dom';
+interface IProps{
+    name:string
+}
+interface IState{
+    value:string
+}
+class App_11 extends React.Component< IProps,IState >{
+    public constructor(props:IProps){
+        super(props)
+        this.state = {
+            value:'a'
+        }
+    }
+    render(){
+        const {
+            name
+        } = this.props
+        const {
+            value
+        } = this.state
+        return(
+            < div>
+                hello typescript{name}{value}
+                < input value={value} onChange={(e:React.ChangeEvent< HTMLInputElement >)=>{
+                    this.setState({
+                        value:e.target.value
+                    })
+                }}/>
+                < button onClick={(e:React.MouseEvent< HTMLButtonElement >)=>{
+                    alert('hello')
+                }}>add< /button>
+            < /div>
+        )
+    }
+    public componentDidMount(){
+        console.log('hello')
+    }
+}
+export default App_11
+</pre>
+4-3.todolist
+App3.tsx
+<pre>
+import * as React from 'react';
+import List from './todolist/list'
+import Action from './todolist/action'
+import {
+  FriendItem
+} from './todolist/types'
+interface IState {
+  value: string,
+  list: Array< FriendItem >
+}
+class App extends React.Component< Object,IState > {
+  public constructor(props: Object){
+    super(props)
+    this.state = {
+      value:'a',
+      list: [
+        {
+          name: 'ryan',age:30,id:1
+        },
+        {
+          name: 'react',age:4,id:2
+        },
+        {
+          name: 'vue',age:3,id:3
+        }
+      ]
+    }
+  }
+  render() {
+    const {
+      value,
+      list
+    } = this.state
+    return (
+      < div>
+        < List list={list} onDel={(index:number) =>{
+          console.log(index)
+          list.splice(index,1)
+          this.setState({
+            list
+          })
+        }}/>
+        < Action value={value} onChange={(value: string) => {
+          this.setState({
+            value
+          })
+        }} onAdd={(value:string) => {
+          list.push({
+            name:value,
+            age:10,
+            id:4
+          })
+          this.setState({
+            list,
+            value:''
+          })
+        }}/>
+      < /div>
+    );
+  }
+  public componentDidMount() {
+    console.log('hello')
+  }
+}
+export default App;
+</pre>
+action/index.tsx
+<pre>
+import * as React from 'react';
+interface onAdd {
+  (index: string): void
+}
+interface onChange {
+  (index: string): void
+}
+interface IProps {
+  value: string,
+  onAdd: onAdd,
+  onChange: onChange
+}
+class Action extends React.Component< IProps >{
+  render() {
+    const {
+      value,
+      onAdd,
+      onChange
+    } = this.props
+    return (
+      < div>
+        < input value={value} onChange={(e: React.ChangeEvent< HTMLInputElement >)=> {
+          onChange(e.target.value)
+        }}/>
+        < button onClick={(e: React.MouseEvent< HTMLButtonElement >) => {
+          onAdd(value)
+        }}>add< /button>
+      < /div>
+    );
+  }
+}
+export default Action
+</pre>
+list/index.tsx
+<pre>
+import * as React from 'react';
+import {FriendItem} from "../types";
+interface onDel {
+  (index: number): void
+}
+interface IProps {
+  list: Array< FriendItem >,
+  onDel: onDel
+}
+class List extends React.Component< IProps >{
+  render() {
+    const {
+      list,
+      onDel
+    } = this.props
+    return (
+      < div>
+        {list.map((item: FriendItem,index: number) => < div>
+          {item.name} < button onClick={(e: React.MouseEvent< HTMLButtonElement>) => {
+          onDel(index)
+        }}>-< /button>
+        < /div>)}
+      < /div>
+    );
+  }
+}
+export default List
+</pre>
+types/index.jsx
+<pre>
+export interface FriendItem {
+  name: string,
+  age: number,
+  id: number
+}
+</pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/02/27/网易微专业-MV-组件化开发React专题-React进阶-2-2-3-React与Typescript/" data-id="ck910dtah000v2lxqp2zm7is4" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-MV-组件化开发React专题-React进阶-2-2-2-React-Hooks" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/02/27/网易微专业-MV-组件化开发React专题-React进阶-2-2-2-React-Hooks/" class="article-date">
+  <time datetime="2020-02-27T05:35:56.000Z" itemprop="datePublished">2020-02-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/02/27/网易微专业-MV-组件化开发React专题-React进阶-2-2-2-React-Hooks/">网易微专业-MV*&amp;组件化开发React专题-React进阶-2.2.2-React Hooks</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>ReactHooks就是用函数式组件把class组件的方方面面实现的过程。组件包括(1)props、state，也就是组件的数据；(2)组件的生命周期<br>1.useState&amp;useEffect<br>简单例子:<br>1-1.了解如何定义数据<br>index.js</p>
+<pre>
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App_10 from './App_10';
+ReactDOM.render(
+  <app_10 name="func component">,
+  document.getElementById('root')
+);
+</app_10></pre>
+App_10.js
+<pre>
+import React,{useState,useEffect} from "react";
+const App_10 = (props)=>{
+    //下面两个变量相当于定义state，
+    //在这个定义过程中不允许if{}else{}的条件式定义，也就是每次执行的时候定义的变量数量不能变
+    let [time,setTime] = useState(0);//useState传入的是初始值，setTime是修改time事件
+    let [age,setAge] = useState(10);
+    return (
+        < div>
+            Hello World {props.name}< br/>
+            {time}
+            < button onClick={(e)=>{setTime(time+1)}}>add< /button>< br/>
+            {age}
+            < button onClick={(e)=>{setAge(age-1)}}>cut< /button>
+        < /div>
+    )
+}
+export default App_10
+<pre>
+<img src="https://snakexu.github.io/images/wangyi/react/2.2.2_1.png">
+<img src="https://snakexu.github.io/images/wangyi/react/2.2.2_2.png">
+1-2.了解如何定义生命周期
+<pre>
+import React,{useState,useEffect} from "react";
+const App_10 = (props)=>{
+    //下面两个变量相当于定义state，
+    //在这个定义过程中不允许if{}else{}的条件式定义，也就是每次执行的时候定义的变量数量不能变
+    let [time,setTime] = useState(0);//useState传入的是初始值，setTime是修改time事件
+    let [age,setAge] = useState(10);
+    //useEffect相当于componentDidMount和componentcomponentDidUpdate和在一起的作用
+    useEffect(()=>{
+        console.log('Hello')
+    })
+    return (
+        < div>
+            Hello World {props.name}< br/>
+            {time}
+            < button onClick={(e)=>{setTime(time+1)}}>add< /button>< br/>
+            {age}
+            < button onClick={(e)=>{setAge(age-1)}}>cut< /button>
+        < /div>
+    )
+}
+export default App_10
+</pre>
+当我们直接写入useEffect的时候我们发现，只要页面数据有变化useEffect函数就会执行
+<img src="https://snakexu.github.io/images/wangyi/react/2.2.2_3.png">
+因此我们给useEffect加入参数
+<pre>
+useEffect(()=>{
+    console.log('Hello')
+},[])//对，你没看错，就是加入了一个为空数组的参数
+</pre>
+<img src="https://snakexu.github.io/images/wangyi/react/2.2.2_4.png">
+<pre>
+useEffect(()=>{
+    console.log('Hello')
+},[age])
+</pre>
+如果我们给useEffect添加一个参数为我们之前定义的age，那么会发现，只有在age变化的时候useEffect才会执行，如果time变化useEffect没有执行
+<pre>
+useEffect(()=>{
+    console.log('Hello')
+    return ()=>{
+        console.log('status clear')
+    }
+},[age])
+</pre>
+老师说useEffect函数的return相当于componentWillUnMount，但是我发现还是在每次age变化的时候return里的函数就执行里，具体是怎么理解，我看接下来老师怎么讲吧
+1-3.todolist
+<pre>
+const Action = (props)=>{
+    const [value,setValue] = useState('js')
+    return (
+        < div>
+            < input value={value} onChange={(e)=>{setValue(e.target.value)}}/>
+            < button onClick={(e)=>{props.onAdd(value)}}>add< /button>
+        < /div>
+    )
+}
+const List = (props)=>{
+    return (
+        < div>
+            {props.data.map(item=>(
+                < div key={item.id}>< span>{item.name}< /span>< button>del< /button>< /div>
+            ))}
+        < /div>
+    )
+}
+const App_10 = (props)=>{
+    const [data,setData] = useState([
+        {name:'react',id:1},
+        {name:'vue',id:2},
+    ])
+    return (
+        < div>
+            < Action onAdd = {(name)=>{
+                data.push({name:name,id:Math.random()})
+                // setData(data)这样用不可以，js判断一个对象有没有变化的唯一依据和标准是他的内存地址有没有发生变化，
+                //push的时候改变的只是数据的值，并没有改变内存地址，所以js当作这个数据没有发生变化
+                setData([...data])
+            }}/>
+            < List data={data}/>
+        < /div>
+    )
+}
+export default App_10
+</pre>
+2.useReducer
+这个等学到redux的时候再讲解
+3.自定义hook
+自定义hook的主要用途就是实现组件的公共功能
+<pre>
+const useTitleHook = (title)=>{
+    useEffect(()=>{
+        document.title = title
+        return ()=>{
+            document.title = 'title'
+        }
+    })
+}
+const App_10 = (props)=>{
+    let [title,setTitle] = useState('hello');
+    useTitleHook(title);
+    return (
+        < div>
+            < input value={title} onChange={(e)=>{setTitle(e.target.value)}}/>
+        < /div>
+    )
+}
+export default App_10
+</pre></pre></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/02/27/网易微专业-MV-组件化开发React专题-React进阶-2-2-2-React-Hooks/" data-id="ck910dtag000u2lxqg84vv8fk" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-MV-组件化开发React专题-VUE最佳实践-1-4-1-项目全面深度优化及打包上线之网易实践" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/02/26/网易微专业-MV-组件化开发React专题-VUE最佳实践-1-4-1-项目全面深度优化及打包上线之网易实践/" class="article-date">
+  <time datetime="2020-02-26T06:09:01.000Z" itemprop="datePublished">2020-02-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/02/26/网易微专业-MV-组件化开发React专题-VUE最佳实践-1-4-1-项目全面深度优化及打包上线之网易实践/">网易微专业-MV*&amp;组件化开发React专题-VUE最佳实践-1.4.1-项目全面深度优化及打包上线之网易实践</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>总述——优化方向<br>·效率<br>-开发效率(组件、指令、工具函数的优化和积累)<br>-部署效率(打包优化)<br>-协作效率(协作方式的优化)<br>·质量<br>-性能监控<br>-自动化测试(单元测试、端到端测试等)<br>·性能体验<br>-首屏性能<br>-页面加载性能、图片性能<br>1.工程优化<br>1-1.应用eslint团队统一代码格式<br>1-2.工程优化-其他Loader的演示<br>(1)@vusion/md-vue-loader<br>(2)css-sprite-loader<br>(3)icon-font-loader<br>1-3.工程优化-vue-cli-plugin的实现<br>在项目目录下新建一个文件夹(假设我们当前的项目目录名为my-app)，取名vue-cli-plugin-demo，新建文件index.js</p>
+<p><pre><br>const CSSSpritePlugin = require(‘css-sprite-loader’).Plugin;<br>function chainCSSOneOfs(config, chainOneOf) {<br>    // ‘postcss’ 留给用户自定义吧<br>    [‘css’, ‘scss’, ‘sass’, ‘less’, ‘stylus’].forEach((rule) =&gt; {<br>        const ruleCSS = config.module.rule(rule);<br>        chainOneOf(ruleCSS.oneOf(‘vue-modules’), true);<br>        chainOneOf(ruleCSS.oneOf(‘vue’), false);<br>        chainOneOf(ruleCSS.oneOf(‘normal-modules’), true);<br>        chainOneOf(ruleCSS.oneOf(‘normal’), false);<br>    });<br>}<br>module.exports = function (api)  {<br>    api.chainWebpack(config =&gt; {<br>        config.plugin(‘css-sprite’).use(CSSSpritePlugin, [])<br>        chainCSSOneOfs(config, (oneOf) =&gt; {<br>            oneOf.use(‘css-sprite-loader’)<br>                .loader(‘css-sprite-loader’)<br>                .end();<br>        });<br>    })<br>}<br></pre><br>这个文件的可以取代vue.config.js，在vue-cli-plugin-demo文件夹下建一个package.json文件，和平时package.json文件内容一样，在我们新建的package.json的devDependencies加入一项vue-cli-plugin-demo:’^0.1.0’，其实可以用npm publish发布包(npm publish的具体用法可以用这个命令为关键字进行百度)，这里我们为了方便调试包，使用另外一种方法<br>然后我们在命令行进入当前my-app项目的node_modules文件夹，输入命令ln -s ../vue-cli-plugin-demo，在输入ls命令我们看到vue-cli-plugin-demo与其他目录名称颜色不同，这是一个软链。通过命令ls -al vue-cli-plugin-demo可以看到指向上一级目录，这个命令和npm unlink功能差不多但是用软链的效果快一些，返回项目根目录，npm run serve启动项目，这个时候项目应该是没有报错的<br>2.部署优化<br>很多同学会遇到一个问题就是随着项目变大，项目打包速度越来越慢<br>首先我们了解一下发包的过程:如果想发包，要有一个npm账号，在npmjs.com网站注册一个账号，然后在命令行输入npm login登陆，进入需要发包的目录(目录中需要有package.json文件)，在命令行输入npm publish<br>2-1.部署流程<br><img src="https://snakexu.github.io/images/wangyi/vue/1.4.1_1.png"><br><img src="https://snakexu.github.io/images/wangyi/vue/1.4.1_2.png"><br>通过课程我们了解到可以通过jenkins(<a href="https://jenkins.io/zh/)/docker写脚本完成打包部署等工作" target="_blank" rel="noopener">https://jenkins.io/zh/)/docker写脚本完成打包部署等工作</a></p>
+<p><pre><br>const fs = require(‘fs’);<br>const path = require(‘path’);<br>const shell = require(‘shelljs’);<br>const crypto = require(‘crypto’);<br>const md5 = function (str, len = 16) {<br>    const md5 = crypto.createHash(‘md5’);<br>    return md5.update(str).digest(‘hex’).substr(0, len);<br>};<br>const cachePath = path.join(<strong>dirname, ‘./node_modules/.cache/package-lock.log’);<br>if (!fs.existsSync(path.join(cachePath, ‘../..’))) {<br>    fs.mkdirSync(path.join(cachePath, ‘../..’), {<br>        recursive: true,<br>    });<br>}<br>const lockHash = md5(fs.readFileSync(path.join(</strong>dirname, ‘./package-lock.json’)).toString());<br>let cache = false;<br>if (fs.existsSync(cachePath)) {<br>    if (lockHash === fs.readFileSync(cachePath).toString()) {<br>        cache = true;<br>        console.log(‘Installed from cache.’);<br>    }<br>}<br>if (!cache) {<br>    /**</pre></p>
+<pre><code> * Install npm packages
+ */
+console.time(&apos;npm install&apos;);
+console.log(&apos;Installing npm packages ...&apos;);
+const result = shell.exec(&apos;npm --no-audit --progress=false --registry=https://registry.npm.taobao.org install&apos;);
+if (result.code)
+    throw new Error(String(result.stderr));
+/**
+ * Log Versions
+ */
+const nodeVersion = shell.exec(&apos;node -v&apos;, { silent: true }).stdout.trim();
+console.log(&apos;node version:&apos;, nodeVersion);
+const npmVersion = shell.exec(&apos;npm -v&apos;, { silent: true }).stdout.trim();
+console.log(&apos;npm version:&apos;, npmVersion);
+console.timeEnd(&apos;npm install&apos;);
+fs.writeFileSync(cachePath, lockHash);
+</code></pre><p>}<br><br>上面代码我们可以起名为npm.js，放在项目的根目录下，比如我们的my-app项目的根目录下。每次安装项目都会按照package-lock.json重新安装项目依赖，导致资源浪费，有了npm.js，我们执行node npm命令，此后每次安装项目，如果package.json文件没有变化，不会重新安装。<br>2-2.webpack.dll优化<br>这里主要利用webpack两个相关的plugin，一个是DllPlugin，另一个是DllReferencePlugin。我们可以在项目中配webpack.dll.config.js文件，然后通过配置把不经常需要更换的第三方依赖/库等打包，然后在vue.config.js中通过DllReferencePlugin引入，另外还需要一个AddAssetHtmlPlugin把我们通过dll打包的文件加入到html页面<br>用这个优化会比用commonschunks或者splitchunks某种程度上更节省时间，因为用dll优化不会每次都打包指定内容，但是用commonschunk或者是splitchunk其实每次还是打包的，所以对于一些极少更新的依赖，比如babel-polyfill等还是用dll优化<br>另外可以看一些别的打包优化方式，比如提取公共库等<br>3.组件优化<br>3-1.虚拟列表<br>vue文件，这里只写了页面代码，项目可以自己创建一个</p>
+<p><pre><br>&lt; template&gt;<br>&lt; div :class=”$style.list” ref=”list” @scroll=”onScroll”&gt;<br>    &lt; div :class=”$style.scroll” :style=”{ paddingTop: paddingTop + ‘px’, paddingBottom: paddingBottom + ‘px’ }”&gt;<br>        &lt; div :class=”$style.item” v-for=”item in viewItems” :key=”item.id” :even=”!!(item.id%2)”&gt;<br>            &lt; div v-for=”cnt in item.content” :key=”cnt”&gt;{ { cnt } }&lt; /div&gt;<br>        &lt; /div&gt;<br>    &lt; /div&gt;<br>&lt; /div&gt;<br>&lt; /template&gt;<br>&lt; script&gt;<br>export default {<br>    props: {<br>        list: Array,<br>        viewCount: { type: Number, default: 100 },<br>    },<br>    data() {<br>        return {<br>            minHeight: 20,<br>            viewIndex: 0,<br>            paddingTop: 0,<br>            paddingBottom: 0,<br>        }<br>    },<br>    computed: {<br>        viewItems() {<br>            return this.list.slice(this.viewIndex, this.viewIndex + this.viewCount);<br>        },<br>    },<br>    methods: {<br>        onScroll(e) {<br>            const listEl = e.target;<br>            // 记录当前 DOM 节点的高度<br>            const children = Array.from(listEl.children[0].children);<br>            children.forEach((childVM, index) =&gt; {<br>                if (this.list[this.viewIndex + index])<br>                    this.list[this.viewIndex + index].height = childVM.offsetHeight;<br>            });<br>            /<em> eslint-disable </em>/<br>            const scrollTop = listEl.scrollTop;<br>            let accHeight = 0;<br>            let viewIndex = this.viewIndex;<br>            for (let i = 0; i &lt; this.list.length; i++) {<br>                const item = this.list[i];<br>                accHeight += item.height || this.minHeight;<br>                if (accHeight &gt; scrollTop) {<br>                    viewIndex = i;<br>                    break;<br>                }<br>            }<br>            if (viewIndex - this.viewIndex &gt;= 0 &amp;&amp; viewIndex - this.viewIndex &lt; this.viewCount / 2)<br>                return;<br>            let paddingTop = 0;<br>            let paddingBottom = 0;<br>            for (let i = 0; i &lt; this.list.length; i++) {<br>                const item = this.list[i];<br>                if (i &lt; viewIndex) {<br>                    paddingTop += item.height || this.minHeight;<br>                } else if (i &gt;= viewIndex + this.viewCount) {<br>                    paddingBottom += item.height || this.minHeight;<br>                }<br>            }<br>            this.viewIndex = viewIndex;<br>            this.paddingTop = paddingTop;<br>            this.paddingBottom = paddingBottom;<br>        },<br>    },<br>}<br>&lt; /script&gt;<br>&lt; style module&gt;<br>.list {<br>    overflow: auto;<br>    width: 100%;<br>    height: 100%;<br>}<br>.item[even] {<br>    background: #c3c9d3;<br>}<br>&lt; /style&gt;<br></pre><br>3-2.mixins<br>3-3.指令</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/02/26/网易微专业-MV-组件化开发React专题-VUE最佳实践-1-4-1-项目全面深度优化及打包上线之网易实践/" data-id="ck910dtcf002p2lxqkjeykwv8" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-MV-组件化开发React专题-React进阶-2-2-1-高阶组件" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/02/24/网易微专业-MV-组件化开发React专题-React进阶-2-2-1-高阶组件/" class="article-date">
+  <time datetime="2020-02-24T08:46:12.000Z" itemprop="datePublished">2020-02-24</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/02/24/网易微专业-MV-组件化开发React专题-React进阶-2-2-1-高阶组件/">网易微专业-MV*&amp;组件化开发React专题-React进阶-2.2.1-高阶组件</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.渲染属性</p>
+<pre>
+import React from 'react';
+import ReactDOM from 'react-dom';
+class Provider extends React.Component{
+  render(){
+    return (
+      < div>
+        provider
+      < /div>
+    )
+  }
+}
+class User extends React.Component{
+  render(){
+    return (
+      < div>
+        user
+      < /div>
+    )
+  }
+}
+class App_8 extends React.Component{
+  render(){
+    return (
+      < Provider render={ (data)=>< User data={data}/>}>< /Provider>
+    )
+  }
+}
+export default App_8;
+</pre>
+上面就是用代码描述渲染属性，解决有状态组件的可复用问题
+<pre>
+import React from 'react';
+import ReactDOM from 'react-dom';
+class Provider extends React.Component{
+  constructor(props){
+    super(props)
+    this.state = {
+      name : 'provider-user'
+    }
+  }
+  render(){
+    return this.props.render(this.state.name)
+  }
+}
+class User extends React.Component{
+  render(){
+    return (
+      < div>
+        {this.props.data}
+      < /div>
+    )
+  }
+}
+class App_8 extends React.Component{
+  render(){
+    return (
+      < Provider render={(data)=>< User data={data}/>}/>
+    )
+  }
+}
+export default App_8;
+</pre>
+最后页面显示结果:provider-user
+从上面代码，我们注意到，User组件的数据是Provider组件提供的，这个数据并不是App_8组件的数据。
+<pre>
+import React from 'react';
+import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
+class Provider extends React.Component{
+  //定义上下文数据
+  getChildContext(){
+    return this.props.store
+  }
+  static childContextTypes={
+    name:PropTypes.string,
+    age : PropTypes.number
+  }
+  constructor(props){
+    super(props)
+    this.state = {
+      name : 'provider-user'
+    }
+  }
+  render(){
+    console.log(this.props)
+    return this.props.children
+  }
+}
+class BaseUser extends React.Component{
+  static contextTypes = {
+    name:PropTypes.string
+  }
+  render(){
+    return (
+      < div>
+        {this.context.name}
+      < /div>
+    )
+  }
+}
+class BasePost extends React.Component{
+  static contextTypes = {
+    age:PropTypes.number
+  }
+  render(){
+    return (
+      < div>
+        {this.context.age}
+      < /div>
+    )
+  }
+}
+const connect = ()=>{
+  //
+}
+const User = connect(BaseUser)
+const Post = connect(BasePost)
+const store = {
+  name : 'ryan',
+  age : 10,
+}
+class App_8 extends React.Component{
+  render(){
+    return (
+      < Provider store={store}>
+        < div>
+          < BaseUser/>
+          < BasePost/>
+        < /div>
+      < /Provider>
+    )
+  }
+}
+export default App_8;
+</pre>
+观察上面代码，我们发现static contextTypes是具有重复性的，我们抽离这段代码，也就是修改connect函数
+<pre>
+// import React from 'react';
+// import ReactDOM from 'react-dom';
+// class Provider extends React.Component{
+//   constructor(props){
+//     super(props)
+//     this.state = {
+//       name : 'provider-user'
+//     }
+//   }
+//   render(){
+//     // return (
+//     //   < div>
+//     //     provider
+//     //   < /div>
+//     // )
+//     return this.props.render(this.state.name)
+//   }
+// }
+// class User extends React.Component{
+//   render(){
+//     return (
+//       < div>
+//         {this.props.data}
+//       < /div>
+//     )
+//   }
+// }
+// class App_8 extends React.Component{
+//   render(){
+//     return (
+//       <provider render="{(data)="><user data="{data}/">}>< /Provider>
+//     )
+//   }
+// }
+// export default App_8;
+import React from 'react';
+import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
+class Provider extends React.Component{
+  //定义上下文数据
+  getChildContext(){
+    return this.props.store
+  }
+  static childContextTypes={
+    name:PropTypes.string,
+    age : PropTypes.number
+  }
+  constructor(props){
+    super(props)
+    this.state = {
+      name : 'provider-user'
+    }
+  }
+  render(){
+    return this.props.children
+  }
+}
+class BaseUser extends React.Component{
+  render(){
+    return (
+      < div>
+        {this.props.name}
+      < /div>
+    )
+  }
+}
+class BasePost extends React.Component{
+  render(){
+    return (
+      < div>
+        {this.props.age}
+      < /div>
+    )
+  }
+}
+const connect = (Com) => (types) => {
+  class ConnectComponent extends React.Component{
+    static contextTypes = types
+    displayName = Com.displayName
+    render(){
+      return(
+        < Com name = {this.context.name}/>
+      );
+    }
+  }
+  return ConnectComponent
+}
+const User = connect(BaseUser)({
+  name:PropTypes.string
+})
+const Post = connect(BasePost)({
+  age:PropTypes.number
+})
+const store = {
+  name : 'ryan',
+  age : 10,
+}
+class App_8 extends React.Component{
+  render(){
+    return (
+      < Provider store={store}>
+        < div>
+          < User/>
+          < Post/>
+        < /div>
+      < /Provider>
+    )
+  }
+}
+export default App_8;
+</user></provider></pre>
+运行后发现只显示了ryan，因为我们在connect函数中只给Com传递了name，并没有传递age，所以我们需要对代码进行一些修改，下面只写了需要修改的部分
+<pre>
+const connect = (Com) => {
+  class ConnectComponent extends React.Component{
+    static contextTypes = Provider.childContextTypes
+    displayName = Com.displayName
+    render(){
+      return(
+        < Com {...this.context}/>
+      );
+    }
+  }
+  return ConnectComponent
+}
+const User = connect(BaseUser)
+const Post = connect(BasePost)
+</pre>
+其实这些都是属性代理的范围，我们接着看下一个例子
+<pre>
+import React,{Component} from "react";
+import PropTypes from 'prop-types'
+// 用于预先 将业务组件，进行数据的封装，便于我们 方便获取数据
+// 反向继承
+const connect = key => Com  => {
+    class connectComponent extends Component {
+        constructor(props){
+            super(props)
+            this.state = {
+                [key]: store[key]
+            }
+        }
+        render() {
+            return < Com {...this.state}/>
+        }
+        componentDidMount() {
+            let that = this
+            window.store = new Proxy(store, {
+                get: function (target, key, receiver) {
+                    return Reflect.get(target, key, receiver);
+                },
+                set: function (target, key, value, receiver) {
+                    that.setState({
+                        [key]:value
+                    })
+                    return Reflect.set(target, key, value, receiver);
+                }
+            })
+        }
+    }
+    return connectComponent
+}
+let store = {
+    name: 'ryan',
+    age: 10
+}
+@connect('age')
+class User extends Component{
+    render() {
+        return < div>{this.props.age}< /div>
+    }
+}
+class App_9 extends Component{
+    render() {
+        return < User/>
+    }
+}
+export default App_9
+</pre>
+上面代码在浏览器中执行
+<img src="https://snakexu.github.io/images/wangyi/react/2.2.1_1.png">
+我们注意到两个点，第一：如何传递/注入age的；第二：为什么通过修改window.test.age=11就可以导致页面上的数据进行修改。通过上面代码我们分析User = connect(User)(age),connect函数相当于一个闭包函数:(Com)=>{},(types)=>{},在这里，connect函数就是高阶组件的属性代理
+<pre>
+import React,{Component} from "react";
+import PropTypes from 'prop-types'
+// 用于预先 将业务组件，进行数据的封装，便于我们 方便获取数据
+// 反向继承 交互的封装，
+const loading = Com  => {
+    class LoadingComponent extends Com { //注意这里，是extends Com，而不是extends React.Component
+        showLoading(){
+            console.log('loading')
+        }
+        hideLoading(){
+            console.log('hide')
+        }
+    }
+    return LoadingComponent
+}
+@loading
+class User extends Component{
+    render() {
+        return < div>user< /div>
+    }
+    componentDidMount() {
+        this.showLoading()
+        //http
+        this.hideLoading()
+    }
+}
+class App extends Component{
+    render() {
+        return <user>
+    }
+}
+export default App
+</user></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/02/24/网易微专业-MV-组件化开发React专题-React进阶-2-2-1-高阶组件/" data-id="ck910dtaf000t2lxqezdu8lpe" class="article-share-link">Share</a>
       
       
     </footer>
@@ -1182,7 +1397,7 @@ console.log('sortresult:',sortresult)
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/4/">Next &raquo;</a>
+    <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/4/">Next &raquo;</a>
   </nav>
 
 </section>
@@ -1201,7 +1416,7 @@ console.log('sortresult:',sortresult)
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
     </div>
   </div>
 
@@ -1214,23 +1429,23 @@ console.log('sortresult:',sortresult)
       <ul>
         
           <li>
-            <a href="/2020/01/18/js运算符优先级/">js运算符优先级</a>
+            <a href="/2020/04/15/网易微专业-node-1-1-8-MySQL入门与应用/">网易微专业-node-1.1.8-MySQL入门与应用</a>
           </li>
         
           <li>
-            <a href="/2020/01/17/网易微专业-单页应用-1-3-2-VUE编译器原理探秘二/">网易微专业-单页应用-1.3.2-VUE编译器原理探秘二</a>
+            <a href="/2020/04/14/网易微专业-node-1-1-7-MongoDB入门与应用/">网易微专业-node-1.1.7-MongoDB入门与应用</a>
           </li>
         
           <li>
-            <a href="/2020/01/14/网易微专业-单页应用-1-3-1-VUE编译器原理探秘一/">网易微专业-单页应用-1.3.1-VUE编译器原理探秘一</a>
+            <a href="/2020/04/13/网易微专业-node-1-1-6-Redis入门及应用/">网易微专业-node-1.1.6-Redis入门及应用</a>
           </li>
         
           <li>
-            <a href="/2020/01/11/网易微专业福利期-2-2-如何保证你的代码质量/">网易微专业福利期-2.2-如何保证你的代码质量</a>
+            <a href="/2020/04/12/网易微专业-node-1-1-5-Nginx反向代理-静态资源服务/">网易微专业-node-1.1.5-Nginx反向代理 静态资源服务</a>
           </li>
         
           <li>
-            <a href="/2020/01/10/网易微专业福利期-2-1-JavaScript内存管理/">网易微专业福利期-2.1-JavaScript内存管理</a>
+            <a href="/2020/04/11/网易微专业-node-1-1-3-Linux快速上手玩转典型应用/">网易微专业-node-1.1.3-Linux快速上手玩转典型应用</a>
           </li>
         
       </ul>

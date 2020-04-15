@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>网易微专业-MV*&amp;组件化开发React专题-2.1.5-React基础-ReactDOM与表单 | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1.ReactDOM.render()&amp;amp;ReactDOM.unmountComponentAtNode()ReactDOM.render():简单的说，就是挂载ReactDOM.unmountComponentAtNode():简单的说就是卸载2.例子App.js import React from ‘react’;import ReactDOM from ‘react-dom’;impo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网易微专业-MV*&amp;组件化开发React专题-2.1.5-React基础-ReactDOM与表单">
+<meta property="og:url" content="http://yoursite.com/2020/02/16/网易微专业-MV-组件化开发React专题-2-1-2-React基础-ReactDOM与表单/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="1.ReactDOM.render()&amp;amp;ReactDOM.unmountComponentAtNode()ReactDOM.render():简单的说，就是挂载ReactDOM.unmountComponentAtNode():简单的说就是卸载2.例子App.js import React from ‘react’;import ReactDOM from ‘react-dom’;impo">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/react/2.1.5_1.png">
+<meta property="og:updated_time" content="2020-02-19T03:42:07.880Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="网易微专业-MV*&amp;组件化开发React专题-2.1.5-React基础-ReactDOM与表单">
+<meta name="twitter:description" content="1.ReactDOM.render()&amp;amp;ReactDOM.unmountComponentAtNode()ReactDOM.render():简单的说，就是挂载ReactDOM.unmountComponentAtNode():简单的说就是卸载2.例子App.js import React from ‘react’;import ReactDOM from ‘react-dom’;impo">
+<meta name="twitter:image" content="https://snakexu.github.io/images/wangyi/react/2.1.5_1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-网易微专业-MV-组件化开发React专题-2-1-2-React基础-ReactDOM与表单" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/02/16/网易微专业-MV-组件化开发React专题-2-1-2-React基础-ReactDOM与表单/" class="article-date">
+  <time datetime="2020-02-16T09:15:51.000Z" itemprop="datePublished">2020-02-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      网易微专业-MV*&amp;组件化开发React专题-2.1.5-React基础-ReactDOM与表单
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.ReactDOM.render()&amp;ReactDOM.unmountComponentAtNode()<br>ReactDOM.render():简单的说，就是挂载<br>ReactDOM.unmountComponentAtNode():简单的说就是卸载<br>2.例子<br>App.js</p>
+<p><pre><br>import React from ‘react’;<br>import ReactDOM from ‘react-dom’;<br>import Loading from ‘./Loading’<br>class App extends React.Component{<br>  constructor(props){<br>    super(props)<br>    this.state = {<br>      data:[],<br>      loading:false,<br>    }<br>  }<br>  render(){<br>    return (<br>      &lt; div&gt;<br>        App<br>        {this.state.data.map((item)=&gt;&lt; p key={item.id}&gt;{item.name}&lt; /p&gt;)}<br>        {this.state.loading &amp;&amp; &lt; Loading&gt;&lt; /Loading&gt;}<br>      &lt; /div&gt;<br>    )<br>  }<br>  componentDidMount(){<br>    //loading show<br>    this.setState({<br>      loading:true<br>    })<br>    setTimeout(()=&gt;{<br>      this.setState({<br>        data:[{name:’a’,id:’a’},{name:’b’,id:’b’},{name:’c’,id:’c’}],<br>        loading:false<br>      })<br>    },3000)<br>    //loading hide<br>  }<br>}<br>export default App;<br></pre><br>Loading.js</p>
+<p><pre><br>import React from ‘react’;<br>import ReactDOM from ‘react-dom’;<br>class Loading extends React.Component{<br>  constructor(props){<br>    super(props)<br>    this.state = {<br>    }<br>  }<br>  render(){<br>    return (<br>      &lt; div&gt;<br>        loading<br>      &lt; /div&gt;<br>    )<br>  }<br>  componentDidMount(){<br>  }<br>}<br>export default Loading;<br></pre><br>index.js</p>
+<p><pre><br>import React from ‘react’;<br>import ReactDOM from ‘react-dom’;<br>import App from ‘./App’;<br>ReactDOM.render(<br>  &lt; App&gt;&lt; /App&gt;,<br>  document.getElementById(‘root’)<br>);<br></pre><br>上面代码我们看到用到loading一个功能，我们分别在app.js的render和componentDidMount两个地方写了代码，代码耦合度比较高，显然对于代码来说，并不是最优解，我们对loading.js和app.js略作修改<br>loading.js</p>
+<p><pre><br>import React from ‘react’;<br>import ReactDOM from ‘react-dom’;<br>class Loading extends React.Component{<br>  constructor(props){<br>    super(props)<br>    this.state = {<br>    }<br>  }<br>  render(){<br>    return (<br>      &lt; div&gt;<br>        loading<br>      &lt; /div&gt;<br>    )<br>  }<br>  componentDidMount(){<br>  }<br>}<br>//下面是修改对地方<br>let node = null<br>const loading={<br>  show(){<br>    node = document.createElement(‘div’)<br>    document.body.appendChild(node)<br>    ReactDOM.render(&lt; Loading&gt;&lt; /Loading&gt;,node)<br>  },<br>  hide(){<br>    if(node){<br>      ReactDOM.unmountComponentAtNode(node)<br>      document.body.removeChild(node)<br>    }<br>  }<br>}<br>export default loading;<br></pre><br>app.js</p>
+<p><pre><br>import React from ‘react’;<br>import ReactDOM from ‘react-dom’;<br>import Loading from ‘./Loading’<br>class App extends React.Component{<br>  constructor(props){<br>    super(props)<br>    this.state = {<br>      data:[],<br>    }<br>  }<br>  render(){<br>    return (<br>      &lt; div&gt;<br>        App<br>        {this.state.data.map((item)=&gt;&lt; p key={item.id}&gt;{item.name}&lt; /p&gt;)}<br>        {/<em> {this.state.loading &amp;&amp; &lt; Loading&gt;&lt; /Loading&gt;} </em>/}<br>      &lt; /div&gt;<br>    )<br>  }<br>  //修改了loading组件，显示和隐藏loading的方法变了<br>  componentDidMount(){<br>    Loading.show()<br>    setTimeout(()=&gt;{<br>      this.setState({<br>        data:[{name:’a’,id:’a’},{name:’b’,id:’b’},{name:’c’,id:’c’}],<br>      })<br>      Loading.hide()<br>    },3000)<br>  }<br>}<br>export default App;<br></pre><br>我们可以把修改后的loading组件叫做方法组件，当然这个方法组件的名字，是教程老师自己起的，所以试图百度这个关键词怕是找不到想要的答案，但是我们要的是理解和应用。下面例子是结合了input组件的<br>App.js</p>
+<p><pre><br>import React from ‘react’;<br>import ReactDOM from ‘react-dom’;<br>import Loading from ‘./Loading’<br>import input from ‘./Input’<br>class App extends React.Component{<br>  constructor(props){<br>    super(props)<br>    this.state = {<br>      data:[],<br>    }<br>  }<br>  render(){<br>    return (<br>      &lt; div&gt;<br>        App<br>        {this.state.data.map((item)=&gt;&lt; p key={item.id}&gt;{item.name}&lt; /p&gt;)}<br>      &lt; /div&gt;<br>    )<br>  }<br>  componentDidMount(){<br>    input.show({<br>      onOk:(value)=&gt;{<br>        alert(value)<br>      }<br>    })<br>  }<br>}<br>export default App;<br></pre><br>Input.js</p>
+<p><pre><br>import React from ‘react’;<br>import ReactDOM from ‘react-dom’;<br>let node = null;<br>class Input extends React.Component{<br>  constructor(props){<br>    super(props)<br>    this.state = {<br>      value:’’<br>    }<br>  }<br>  render(){<br>    const {onOk} = this.props<br>    return (<br>      &lt; div&gt;<br>        &lt; input value={this.state.value} onChange={(e)=&gt;this.setState({value:e.target.value})}/&gt;<br>        &lt; button onClick={(e)=&gt;{<br>          onOk(this.state.value)<br>          this.setState({value:’’})<br>          hide()<br>        }}&gt;确定&lt; /button&gt;<br>      &lt; /div&gt;<br>    )<br>  }<br>  componentDidMount(){<br>  }<br>}<br>export const show = (obj)=&gt;{<br>  node = document.createElement(‘div’)<br>  document.body.appendChild(node)<br>  ReactDOM.render(&lt; Input onOk={obj.onOk}&gt;&lt; /Input&gt;,node)<br>}<br>export const hide = ()=&gt;{<br>  if(node){<br>    ReactDOM.unmountComponentAtNode(node)<br>    document.body.removeChild(node)<br>  }<br>}<br>export default {<br>  show,<br>  hide<br>}<br></pre><br>2.组件的挂载与卸载<br>需求:页面的初始化<br>根据用户信息-&gt;查询系统公告-&gt;查询文章列表-&gt;渲染公告和文章<br><img src="https://snakexu.github.io/images/wangyi/react/2.1.5_1.png"><br>3.todo list的部分实现<br>index.js</p>
+<p><pre><br>import React from ‘react’;<br>import ReactDOM from ‘react-dom’;<br>import App from ‘./App’;<br>ReactDOM.render(<br>  &lt; App/&gt;,<br>  document.getElementById(‘root’)<br>);<br></pre><br>App.js</p>
+<p><pre><br>import React from ‘react’;<br>import ReactDOM from ‘react-dom’;<br>import Todolist from ‘./Todolist’<br>import Action from ‘./Action’<br>class App extends React.Component{<br>  constructor(props){<br>    super(props)<br>    this.state = {<br>      data:[]<br>    }<br>  }<br>  render(){<br>    return (<br>      &lt; div&gt;<br>        &lt; Action onAdd={(name)=&gt;{<br>          let data = this.state.data<br>          data.push(name)<br>          this.setState({data})<br>        }}/&gt;<br>        &lt; Todolist data={this.state.data}<br>        onDelete={(index)=&gt;{<br>          let data = this.state.data<br>          data.splice(index,1)<br>          this.setState({data})<br>        }}<br>        /&gt;<br>      &lt; /div&gt;<br>    )<br>  }<br>  componentDidMount(){<br>  }<br>}<br>export default App;<br></pre><br>Todolist.js</p>
+<p><pre><br>import React from ‘react’;<br>import ReactDOM from ‘react-dom’;<br>class App extends React.Component{<br>  constructor(props){<br>    super(props)<br>    this.state = {<br>    }<br>  }<br>  render(){<br>    const {data,onDelete} = this.props<br>    return (<br>      &lt; div&gt;<br>        {data.map((item,index)=&gt;(<br>          &lt; ol&gt;<br>            &lt; li&gt;<br>              &lt; p&gt;{item}&lt; /p&gt;<br>              &lt; button onClick={(e)=&gt;{<br>                onDelete(index)<br>              }}&gt;删除&lt; /button&gt;<br>            &lt; /li&gt;<br>          &lt; /ol&gt;<br>        ))}<br>      &lt; /div&gt;<br>    )<br>  }<br>  componentDidMount(){<br>  }<br>}<br>export default App;<br></pre><br>Action.js</p>
+<p><pre><br>import React from ‘react’;<br>import ReactDOM from ‘react-dom’;<br>class Action extends React.Component{<br>  constructor(props){<br>    super(props)<br>    this.state = {<br>      value:’’<br>    }<br>  }<br>  render(){<br>    const {onAdd} = this.props<br>    return (<br>      &lt; div&gt;<br>        &lt; input value={this.state.value} onChange={(e)=&gt;{<br>          this.setState({value:e.target.value})<br>        }}/&gt;<br>        &lt; button onClick={(e)=&gt;{onAdd(this.state.value)}}&gt;提交&lt; /button&gt;<br>      &lt; /div&gt;<br>    )<br>  }<br>  componentDidMount(){<br>  }<br>}<br>export default Action;<br></pre><br>4.作业<br>有随堂作业哦，开不开心<br>(1)方法组件:confirm/tooltip/message<br>(2)todolist的编辑功能<br>大概看了下，react相关内容还有二十多节课，作业是3月8号要提交的，所以要加油啊，不然跟不上呢</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/02/16/网易微专业-MV-组件化开发React专题-2-1-2-React基础-ReactDOM与表单/" data-id="ck910dta8000h2lxqpysji8n3" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/02/16/张容铭-设计模式-第四篇-行为设计模式/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          张容铭-设计模式-第四篇-行为设计模式
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/02/16/网易微专业-MV-组件化开发React专题-2-1-2-React基础-组件通信/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">网易微专业-MV*&amp;组件化开发React专题-2.1.2-React基础-组件通信</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/04/15/网易微专业-node-1-1-8-MySQL入门与应用/">网易微专业-node-1.1.8-MySQL入门与应用</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/14/网易微专业-node-1-1-7-MongoDB入门与应用/">网易微专业-node-1.1.7-MongoDB入门与应用</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/13/网易微专业-node-1-1-6-Redis入门及应用/">网易微专业-node-1.1.6-Redis入门及应用</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/12/网易微专业-node-1-1-5-Nginx反向代理-静态资源服务/">网易微专业-node-1.1.5-Nginx反向代理 静态资源服务</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/11/网易微专业-node-1-1-3-Linux快速上手玩转典型应用/">网易微专业-node-1.1.3-Linux快速上手玩转典型应用</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

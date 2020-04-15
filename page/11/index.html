@@ -1,0 +1,1561 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="喵小喵的窝">
+<meta property="og:url" content="http://yoursite.com/page/11/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:locale" content="default">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="喵小喵的窝">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-网易微专业-jq源码解析-1107直播课deferred相关" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/11/09/网易微专业-jq源码解析-1107直播课deferred相关/" class="article-date">
+  <time datetime="2019-11-09T07:53:26.000Z" itemprop="datePublished">2019-11-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/11/09/网易微专业-jq源码解析-1107直播课deferred相关/">网易微专业-jq源码解析-1107直播课deferred相关</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1、Callbacks设计<br><img src="https://snakexu.github.io/images/wangyi/jq/1107_1.png"><br>2、Deferred对象设计<br><img src="https://snakexu.github.io/images/wangyi/jq/1107_2.png"><br><img src="https://snakexu.github.io/images/wangyi/jq/1107_3.png"><br>究其本质，就是在不同执行状态，调用$.Callbacks.add()添加不同函数，在事件状态改变的时候调用不同的函数<br><br>3、我在之前笔记里有个问题<br><br><img src="https://snakexu.github.io/images/wangyi/jq/1107_4.png"><br>这里为什么要在promise的上下文中执行<br><br>这个问题老师讲解了，这个涉及到对象状态的改变与凝固：一个对象在状态改变之后，我们首先会返回一个deferred.promise()去凝固状态(究其本质就是为了在事件状态改变之后，不再有改变其状态的可能)，而这里promise的没有修改状态的权限(deferred有修改状态的权限)<br>4、关于jQuery.extend({},obj1,obj2)<br><br>对这个要有一个认知：这个是为jQuery架构服务的，并非是单独的功能；还有一个特点：以默认配置为优先，以用户配置为覆盖<br>5、关于deferred的章节里，有个when调用的方法，这里进行升级修改<br><br>首先，我们回顾下，deferred.promise()有done()/fail()/proress()/promise()/state()/then()方法<br><br>然后，相信大多数人对es6的promise已经有一个了解，Promise.prototype.then()方法的第一个参数是resolved状态的回调函数，第二个参数(可选)是rejected状态的回调函数,另外就是promise的链式回调的思路</p>
+<p><pre><br>// 异步回调解决方案<br>Deferred: function(func) {<br>    var tuples = [<br>            [“resolve”, “done”, jQuery.callbacks(“once memory”), “resolved”],<br>            [“reject”, “fail”, jQuery.callbacks(“once memory”), “rejected”],<br>            [“notify”, “progress”, jQuery.callbacks(“memory”)]<br>        ],<br>        state = “pending”,<br>        //promise   权限分配  add   添加callback<br>        promise = {<br>            state: function() {<br>                return state;<br>            },<br>            then: function( /<em> fnDone, fnFail, fnProgress </em>/ ) {<br>                var fns = [].slice.call(arguments); //真正数组对象<br>                //创建一个Deferred 延迟对象  返回一个promise对象<br>                return jQuery.Deferred(function(newdefer) {<br>                    tuples.forEach(function(tuple, i) {<br>                        var fn = jQuery.isFunction(fns[i]) &amp;&amp; fns[i];<br>                        /<em><br>                        deferred   通过闭包去访问  此处链接式调用时指向的deferred对象<br>                        newdefer   通过参数传递    指向新创建的deferred对象
+                        </em>/<br>                        //resolve  队列中的 callback<br>                        deferred<a href="function(">tuple[1]</a> {<br>                            var returndefer = fn &amp;&amp; fn.apply(this, arguments);<br>                            //这个判断里面的内容就是链式回调的重点了<br>                            if (returndefer &amp;&amp; jQuery.isFunction(returndefer.promise)) {<br>                                 //console.log(newdefer)<br>                                 returndefer.done(newdefer.resolve)<br>                                            .fail(newdefer.reject)<br>                                            .progress(newdefer.notify);<br>                            }<br>                        });</pre></p>
+<pre><code>                })
+            }).promise();
+        },
+        promise: function(obj) {
+            return obj != null ? jQuery.extend(obj, promise) : promise;
+        }
+    },
+    deferred = {};
+
+tuples.forEach(function(tuple, i) {
+    var list = tuple[2],
+        stateString = tuple[3];
+
+    // promise[ done | fail | progress ] = list.add
+    promise[tuple[1]] = list.add;
+
+    // Handle state
+    if (stateString) {
+        list.add(function() {
+            // state = [ resolved | rejected ]
+            state = stateString;
+        });
+    }
+
+    // deferred[ resolve | reject | notify ]  der.resolve(&quot;加载成功&quot;);    
+    deferred[tuple[0]] = function() {
+        deferred[tuple[0] + &quot;With&quot;](this === deferred ? promise : this, arguments);
+        return this;
+    };
+    deferred[tuple[0] + &quot;With&quot;] = list.fireWith;
+});
+
+// Make the deferred a promise
+promise.promise(deferred);
+
+//新创建的deferred 对象
+if (func) {
+    func.call(deferred, deferred);
+}
+return deferred;
+</code></pre><p>},<br><br>这节内容，我也将源码单独作为一篇文章写出了，其中有部分内容是老师在上课的是对链式回调思路的解释，而链式回调这部分内容的思路个人认为可以说是非常经典了。我们要理解，链式回调，每一个then都是对之前调用这个then而返回的deferred的的反馈，代码中非常巧妙的通过闭包和传参的方式保留了每次deferred和then的callbacks队列</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/11/09/网易微专业-jq源码解析-1107直播课deferred相关/" data-id="ck910dtar001e2lxql17ab0ah" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-jq源码解析-2-4-1-延时对象-Deferred概念-源码剖析" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/11/08/网易微专业-jq源码解析-2-4-1-延时对象-Deferred概念-源码剖析/" class="article-date">
+  <time datetime="2019-11-08T14:06:59.000Z" itemprop="datePublished">2019-11-08</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/11/08/网易微专业-jq源码解析-2-4-1-延时对象-Deferred概念-源码剖析/">网易微专业-jq源码解析-2.4.1-延时对象-Deferred概念 &amp; 源码剖析</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>一、promise/A+规范<br>1、Promise作为一个模型，提供了一个在软件工程中描述延时（或将来）概念的解决方案:<br>(1)、表示一个异步操作的最终结果;<br>(2)、与Promise最主要的交互方法是，通过将函数传入它的then方法，从而获得Promise最终的值或者Promise最终拒绝(reject)的原因<br>(3)、一个Promise必须处于以下三种状态之一：pending，resolved或rejected；<br>(4)、一个Promise必须提供一个then方法来获取其成功（resolve）的值或者错误（reject）原因。<br>而Deferred是这种规范的具体实现<br><img src="https://snakexu.github.io/images/wangyi/jq/deferred_1.png"><br>2、Deferred API<br>jQuery.Deferred():一个构造函数，返回一个链式实用对象方法来注册多个回调，回调队列，调用回调队列，并转达任何同步或异步函数的成功或失败状态<br>deferred.done():当Deferred(延迟)对象解决时，调用添加处理程序<br>deferred.fail():当Deferred(延迟)对象拒绝时，调用添加处理程序<br>deferred.proress():当Deferred(延迟)对象生成进度通知时，调用(已)添加的处理程序<br>jQuery.when():提供一种方法来执行一个或多个对象的回调函数，Deferred(延迟)对象通常表示异步事件<br>.promise():返回一个Promise对象用来观察当某种类型的所有行动绑定到集合，排队与否还是已经完成<br>二、源码<br>1、DEMO</p>
+<pre>
+var wait = function() {
+    var der = $.Deferred();     //延迟对象    deferred 
+    var test = function() {
+        console.log("老司机开车了");
+        der.resolve("max");     //成功     队列中的处理函数  调用成功这个队列中的处理函数
+    }
+    setTimeout(test, 2000);   
+    return der;    //延迟对象 
+}       
+//延迟对象的状态 决定调用那个队列中的处理函数
+$.when(wait())     //promise对象promise.done()   self.add
+    .done(function(name) {
+        console.log(name)
+        console.log("执行成功");
+    })
+    .fail(function() {
+        console.log("执行失败");
+    });
+</pre>
+表急，我怎么会只给demo不给源码呢<br>
+2、源码
+<pre>
+(function(root) {
+    var testExp = /^\s*(<[\w\w]+>)[^>]*$/;
+    var rejectExp = /^<(\w+)\s*\ ?="">(?:<\ \1="">|)$/;
+    var version = "1.0.1";
+    var optionsCache = {};
+    var jQuery = function(selector, context) {
+        return new jQuery.prototype.init(selector, context);
+    }
+
+    jQuery.fn = jQuery.prototype = { //原型对象
+        length: 0,
+        jquery: version,
+        selector: "",
+        init: function(selector, context) {
+            context = context || document;
+            var match, elem, index = 0;
+            //$()  $(undefined)  $(null) $(false)  
+            if (!selector) {
+                return this;
+            }
+
+            if (typeof selector === "string") {
+                if (selector.charAt(0) === "<" &&="" selector.charat(selector.length="" -="" 1)="==" "="">" && selector.length >= 3) {
+                    match = [selector]
+                }
+                //创建DOM
+                if (match) {
+                    //this  
+                    jQuery.merge(this, jQuery.parseHTML(selector, context));
+                    //查询DOM节点
+                } else {
+                    elem = document.querySelectorAll(selector);
+                    var elems = Array.prototype.slice.call(elem);
+                    this.length = elems.length;
+                    for (; index < elems.length; index++) {
+                        this[index] = elems[index];
+                    }
+                    this.context = context;
+                    this.selector = selector;
+                }
+            } else if (selector.nodeType) {
+                this.context = this[0] = selector;
+                this.length = 1;
+                return this;
+            }
+
+        },
+        css: function() {
+            console.log("di~~didi~~")
+        },
+        //....
+    }
+
+    jQuery.fn.init.prototype = jQuery.fn;
+
+
+    jQuery.extend = jQuery.prototype.extend = function() {
+        var target = arguments[0] || {};
+        var length = arguments.length;
+        var i = 1;
+        var deep = false; //默认为浅拷贝 
+        var option;
+        var name;
+        var copy;
+        var src;
+        var copyIsArray;
+        var clone;
+
+        if (typeof target === "boolean") {
+            deep = target;
+            target = arguments[1];
+            i = 2;
+        }
+
+        if (typeof target !== "object") {
+            target = {};
+        }
+
+        if (length == i) {
+            target = this;
+            i--; //0   
+        }
+
+        for (; i < length; i++) {
+            if ((option = arguments[i]) !== null) {
+                for (name in option) {
+                    src = target[name];
+                    copy = option[name];
+                    if (deep && (jQuery.isPlainObject(copy) || (copyIsArray = jQuery.isArray(copy)))) {
+                        if (copyIsArray) {
+                            copyIsArray = false;
+                            clone = src && jQuery.isArray(src) ? src : [];
+                        } else {
+                            clone = src && jQuery.isPlainObject(src) ? src : {};
+                        }
+                        target[name] = jQuery.extend(deep, clone, copy);
+                    } else if (copy !== undefined) {
+                        target[name] = copy;
+                    }
+                }
+            }
+        }
+        return target;
+    }
+
+
+    jQuery.extend({
+        //类型检测     
+        isPlainObject: function(obj) {
+            return typeof obj === "object";
+        },
+
+        isArray: function(obj) {
+            return toString.call(obj) === "[object Array]";
+        },
+
+        isFunction: function(fn) {
+            return toString.call(fn) === "[object Function]";
+        },
+        //类数组转化成正真的数组  
+        markArray: function(arr, results) {
+            var ret = results || [];
+            if (arr != null) {
+                jQuery.merge(ret, typeof arr === "string" ? [arr] : arr);
+            }
+            return ret;
+        },
+
+        //合并数组
+        merge: function(first, second) {
+            var l = second.length,
+                i = first.length,
+                j = 0;
+
+            if (typeof l === "number") {
+                for (; j < l; j++) {
+                    first[i++] = second[j];
+                }
+            } else {
+                while (second[j] !== undefined) {
+                    first[i++] = second[j++];
+                }
+            }
+
+            first.length = i;
+
+            return first;
+        },
+
+        parseHTML: function(data, context) {
+            if (!data || typeof data !== "string") {
+                return null;
+            }
+            //过滤掉< a >   < a >   => a 
+            var parse = rejectExp.exec(data);
+            console.log(parse)
+            return [context.createElement(parse[1])];
+        },
+
+        //$.Callbacks用于管理函数队列
+        callbacks: function(options) {
+            options = typeof options === "string" ? (optionsCache[options] || createOptions(options)) : {};
+            var list = [];
+            var index, length, testting, memory, start, starts;
+            var fire = function(data) {
+                memory = options.memory && data;
+                index = starts || 0;
+                start = 0;
+                testting = true;
+                length = list.length;
+                for (; index < length; index++) {
+                    if (list[index].apply(data[0], data[1]) === false && options.stopOnfalse) {
+                        break;
+                    }
+                }
+            }
+            var self = {
+                add: function() {
+                    var args = Array.prototype.slice.call(arguments);
+                    start = list.length;
+                    args.forEach(function(fn) {
+                        if (toString.call(fn) === "[object Function]") {
+                            list.push(fn);
+                        }
+                    });
+                    if (memory) {
+                        starts = start;
+                        fire(memory);
+                    }
+                    return this;
+                },
+                //指定上下文对象
+                fireWith: function(context, arguments) {
+                    var args = [context, arguments];
+                    if (!options.once || !testting) {
+                        fire(args);
+                    }
+
+                },
+                //参数传递
+                fire: function() {
+                    self.fireWith(this, arguments);
+                }
+            }
+            return self;
+        },
+
+        // 异步回调解决方案
+        Deferred: function(func) {
+            //延迟对象三种不同状态信息的描述
+            //状态，往队列里添加处理函数 tuples[i][2]创建队列（创建对象副本的引用）
+            //tuples[i][3] 最终状态信息描述
+            var tuples = [
+                    ["resolve", "done", jQuery.callbacks("once memory"), "resolved"],
+                    ["reject", "fail", jQuery.callbacks("once memory"), "rejected"],
+                    ["notify", "progress", jQuery.callbacks("memory")]
+                ],
+                state = "pending",
+                promise = {
+                    state: function() {
+                        return state;
+                    },
+                    then: function( /* fnDone, fnFail, fnProgress */ ) {
+                    },
+                    promise: function(obj) {
+                        return obj != null ? jQuery.extend(obj, promise) : promise;
+                    }
+                },
+                //延迟对象 属性 方法 
+                deferred = {}; //resolve | reject | notify | state | then | promise
+
+            tuples.forEach(function(tuple, i) {
+                //即tuple[i][2]jQuery.callbacks("")
+                //创建一个队列 callbacks里self对象的引用
+                var list = tuple[2],
+                    stateString = tuple[3];//最终状态信息的描述
+
+                // promise[ done | fail | progress ] = list.add 添加处理函数
+                promise[tuple[1]] = list.add;
+
+                // Handle state
+                if (stateString) { //只有在成功或者失败的情况下，添加第一个处理程序
+                    list.add(function() {
+                        // state = [ resolved | rejected ]
+                        state = stateString;
+                    });
+                }
+
+                // deferred[ resolve | reject | notify ] 延迟对象的状态
+                deferred[tuple[0]] = function() {
+                    //promise[tuple[1]] = list.add; 
+                    deferred[tuple[0] + "With"](this === deferred ? promise : this, arguments);
+                    return this;
+                };
+                //list.fireWith 执行队列，调用队列中的处理函数并且传参，绑定执行时上下文对象
+                deferred[tuple[0] + "With"] = list.fireWith;
+            });
+
+            // Make the deferred a promise
+            promise.promise(deferred);
+
+            return deferred;
+        },
+        //执行一个或多个对象的延迟对象的回调函数
+        when: function(subordinate) {
+            return subordinate.promise();
+        },
+
+    });
+
+    function createOptions(options) {
+        var object = optionsCache[options] = {};
+        options.split(/\s+/).forEach(function(value) {
+            object[value] = true;
+        });
+        return object;
+    }
+
+    root.$ = root.jQuery = jQuery;
+})(this);
+</"></\></(\w+)\s*\></[\w\w]+></pre>
+其中有些部分，是之前课程的内容，这里主要从Deferred开始介绍。另外需要注意的是，本章内容基于上节课程$.Callbacks。Deferred实际上就是基于$.Callbacks,对于不同状态(resolve/reject/done)调用$.Callbacks.add()添加不同函数,可以如图理解：
+<img src="https://snakexu.github.io/images/wangyi/jq/1107_2.png">
+<img src="https://snakexu.github.io/images/wangyi/jq/1107_3.png">
+在源码里，个人认为非常值得关注的点：<br>
+1、定义了tuples数组，数组里包含了Deferred相关的状态，添加状态相关的函数的操作，整个编程过程其实是巧妙的运用了这个数组<br>
+2、创建的promise对象<br>
+    (1)扩展done、fail、progress三个方法，分别对应成功、失败、进行中的三个队列，并指向队列中的add方法，用于向队列中添加执行函数；<br>
+    (2)扩展了state、then和promise三个方法<br>
+    (2-1)其中state是用于记录状态<br>
+    (2-2)then是用于往成功或失败的队列添加执行函数，并在成功或失败时调用。<br>
+    (2-3)promise是用于扩展deferred对象或者返回其本身。<br>
+3、创建一个deferred对象：<br>
+    (1)扩展了resolve方法，对应成功队列，当被执行时，会往deferred对象上扩展并resolveWith函数，该resolveWith指向的是队列的fireWith函数，也即是执行函数。同时，还可以在执行过程中传参，将参数传递到最终的执行函数内部。<br>
+    (2)还扩展了reject和notify，其逻辑和resolve一致，只是分别指向了失败和进行中两个队列。<br>
+4、创建一个状态state。在成功或者失败的队列中，我们首先会添加第一条处理函数，改变state的状态为成功或者失败。<br>
+5、创建一个与Deferred函数平级的when函数，接收一个延迟对象，然后去调用该延迟对象的promise方法，也就是第二点。<br>
+
+其实关于这节课程，我还是有疑问的，不是特别理解promise和deferred对象为啥这么定义和应用过程中这两个对象的内在逻辑，还有比如<br>
+deferred[tuple[0] + "With"](this === deferred ? promise : this, arguments);<br>
+这个地方，为什么要在promise的上下文中执行。其实还是缺乏对这段内容的深刻理解。后续还会继续学习这段内容的
+<br>
+最后，我在jQuery3.4.1的源码种找到了相关的一段内容，还没有好好研究，先放在这里，待日后细细琢磨
+<pre>
+jQuery.extend( {
+
+    Deferred: function( func ) {
+        var tuples = [
+
+                // action, add listener, callbacks,
+                // ... .then handlers, argument index, [final state]
+                [ "notify", "progress", jQuery.Callbacks( "memory" ),
+                    jQuery.Callbacks( "memory" ), 2 ],
+                [ "resolve", "done", jQuery.Callbacks( "once memory" ),
+                    jQuery.Callbacks( "once memory" ), 0, "resolved" ],
+                [ "reject", "fail", jQuery.Callbacks( "once memory" ),
+                    jQuery.Callbacks( "once memory" ), 1, "rejected" ]
+            ],
+            state = "pending",
+            promise = {
+                state: function() {
+                    return state;
+                },
+                always: function() {
+                    deferred.done( arguments ).fail( arguments );
+                    return this;
+                },
+                "catch": function( fn ) {
+                    return promise.then( null, fn );
+                },
+
+                // Keep pipe for back-compat
+                pipe: function( /* fnDone, fnFail, fnProgress */ ) {
+                    var fns = arguments;
+
+                    return jQuery.Deferred( function( newDefer ) {
+                        jQuery.each( tuples, function( i, tuple ) {
+
+                            // Map tuples (progress, done, fail) to arguments (done, fail, progress)
+                            var fn = isFunction( fns[ tuple[ 4 ] ] ) && fns[ tuple[ 4 ] ];
+
+                            // deferred.progress(function() { bind to newDefer or newDefer.notify })
+                            // deferred.done(function() { bind to newDefer or newDefer.resolve })
+                            // deferred.fail(function() { bind to newDefer or newDefer.reject })
+                            deferred[ tuple[ 1 ] ]( function() {
+                                var returned = fn && fn.apply( this, arguments );
+                                if ( returned && isFunction( returned.promise ) ) {
+                                    returned.promise()
+                                        .progress( newDefer.notify )
+                                        .done( newDefer.resolve )
+                                        .fail( newDefer.reject );
+                                } else {
+                                    newDefer[ tuple[ 0 ] + "With" ](
+                                        this,
+                                        fn ? [ returned ] : arguments
+                                    );
+                                }
+                            } );
+                        } );
+                        fns = null;
+                    } ).promise();
+                },
+                then: function( onFulfilled, onRejected, onProgress ) {
+                    var maxDepth = 0;
+                    function resolve( depth, deferred, handler, special ) {
+                        return function() {
+                            var that = this,
+                                args = arguments,
+                                mightThrow = function() {
+                                    var returned, then;
+
+                                    // Support: Promises/A+ section 2.3.3.3.3
+                                    // https://promisesaplus.com/#point-59
+                                    // Ignore double-resolution attempts
+                                    if ( depth < maxDepth ) {
+                                        return;
+                                    }
+
+                                    returned = handler.apply( that, args );
+
+                                    // Support: Promises/A+ section 2.3.1
+                                    // https://promisesaplus.com/#point-48
+                                    if ( returned === deferred.promise() ) {
+                                        throw new TypeError( "Thenable self-resolution" );
+                                    }
+
+                                    // Support: Promises/A+ sections 2.3.3.1, 3.5
+                                    // https://promisesaplus.com/#point-54
+                                    // https://promisesaplus.com/#point-75
+                                    // Retrieve `then` only once
+                                    then = returned &&
+
+                                        // Support: Promises/A+ section 2.3.4
+                                        // https://promisesaplus.com/#point-64
+                                        // Only check objects and functions for thenability
+                                        ( typeof returned === "object" ||
+                                            typeof returned === "function" ) &&
+                                        returned.then;
+
+                                    // Handle a returned thenable
+                                    if ( isFunction( then ) ) {
+
+                                        // Special processors (notify) just wait for resolution
+                                        if ( special ) {
+                                            then.call(
+                                                returned,
+                                                resolve( maxDepth, deferred, Identity, special ),
+                                                resolve( maxDepth, deferred, Thrower, special )
+                                            );
+
+                                        // Normal processors (resolve) also hook into progress
+                                        } else {
+
+                                            // ...and disregard older resolution values
+                                            maxDepth++;
+
+                                            then.call(
+                                                returned,
+                                                resolve( maxDepth, deferred, Identity, special ),
+                                                resolve( maxDepth, deferred, Thrower, special ),
+                                                resolve( maxDepth, deferred, Identity,
+                                                    deferred.notifyWith )
+                                            );
+                                        }
+
+                                    // Handle all other returned values
+                                    } else {
+
+                                        // Only substitute handlers pass on context
+                                        // and multiple values (non-spec behavior)
+                                        if ( handler !== Identity ) {
+                                            that = undefined;
+                                            args = [ returned ];
+                                        }
+
+                                        // Process the value(s)
+                                        // Default process is resolve
+                                        ( special || deferred.resolveWith )( that, args );
+                                    }
+                                },
+
+                                // Only normal processors (resolve) catch and reject exceptions
+                                process = special ?
+                                    mightThrow :
+                                    function() {
+                                        try {
+                                            mightThrow();
+                                        } catch ( e ) {
+
+                                            if ( jQuery.Deferred.exceptionHook ) {
+                                                jQuery.Deferred.exceptionHook( e,
+                                                    process.stackTrace );
+                                            }
+
+                                            // Support: Promises/A+ section 2.3.3.3.4.1
+                                            // https://promisesaplus.com/#point-61
+                                            // Ignore post-resolution exceptions
+                                            if ( depth + 1 >= maxDepth ) {
+
+                                                // Only substitute handlers pass on context
+                                                // and multiple values (non-spec behavior)
+                                                if ( handler !== Thrower ) {
+                                                    that = undefined;
+                                                    args = [ e ];
+                                                }
+
+                                                deferred.rejectWith( that, args );
+                                            }
+                                        }
+                                    };
+
+                            // Support: Promises/A+ section 2.3.3.3.1
+                            // https://promisesaplus.com/#point-57
+                            // Re-resolve promises immediately to dodge false rejection from
+                            // subsequent errors
+                            if ( depth ) {
+                                process();
+                            } else {
+
+                                // Call an optional hook to record the stack, in case of exception
+                                // since it's otherwise lost when execution goes async
+                                if ( jQuery.Deferred.getStackHook ) {
+                                    process.stackTrace = jQuery.Deferred.getStackHook();
+                                }
+                                window.setTimeout( process );
+                            }
+                        };
+                    }
+
+                    return jQuery.Deferred( function( newDefer ) {
+
+                        // progress_handlers.add( ... )
+                        tuples[ 0 ][ 3 ].add(
+                            resolve(
+                                0,
+                                newDefer,
+                                isFunction( onProgress ) ?
+                                    onProgress :
+                                    Identity,
+                                newDefer.notifyWith
+                            )
+                        );
+
+                        // fulfilled_handlers.add( ... )
+                        tuples[ 1 ][ 3 ].add(
+                            resolve(
+                                0,
+                                newDefer,
+                                isFunction( onFulfilled ) ?
+                                    onFulfilled :
+                                    Identity
+                            )
+                        );
+
+                        // rejected_handlers.add( ... )
+                        tuples[ 2 ][ 3 ].add(
+                            resolve(
+                                0,
+                                newDefer,
+                                isFunction( onRejected ) ?
+                                    onRejected :
+                                    Thrower
+                            )
+                        );
+                    } ).promise();
+                },
+
+                // Get a promise for this deferred
+                // If obj is provided, the promise aspect is added to the object
+                promise: function( obj ) {
+                    return obj != null ? jQuery.extend( obj, promise ) : promise;
+                }
+            },
+            deferred = {};
+
+        // Add list-specific methods
+        jQuery.each( tuples, function( i, tuple ) {
+            var list = tuple[ 2 ],
+                stateString = tuple[ 5 ];
+
+            // promise.progress = list.add
+            // promise.done = list.add
+            // promise.fail = list.add
+            promise[ tuple[ 1 ] ] = list.add;
+
+            // Handle state
+            if ( stateString ) {
+                list.add(
+                    function() {
+
+                        // state = "resolved" (i.e., fulfilled)
+                        // state = "rejected"
+                        state = stateString;
+                    },
+
+                    // rejected_callbacks.disable
+                    // fulfilled_callbacks.disable
+                    tuples[ 3 - i ][ 2 ].disable,
+
+                    // rejected_handlers.disable
+                    // fulfilled_handlers.disable
+                    tuples[ 3 - i ][ 3 ].disable,
+
+                    // progress_callbacks.lock
+                    tuples[ 0 ][ 2 ].lock,
+
+                    // progress_handlers.lock
+                    tuples[ 0 ][ 3 ].lock
+                );
+            }
+
+            // progress_handlers.fire
+            // fulfilled_handlers.fire
+            // rejected_handlers.fire
+            list.add( tuple[ 3 ].fire );
+
+            // deferred.notify = function() { deferred.notifyWith(...) }
+            // deferred.resolve = function() { deferred.resolveWith(...) }
+            // deferred.reject = function() { deferred.rejectWith(...) }
+            deferred[ tuple[ 0 ] ] = function() {
+                deferred[ tuple[ 0 ] + "With" ]( this === deferred ? undefined : this, arguments );
+                return this;
+            };
+
+            // deferred.notifyWith = list.fireWith
+            // deferred.resolveWith = list.fireWith
+            // deferred.rejectWith = list.fireWith
+            deferred[ tuple[ 0 ] + "With" ] = list.fireWith;
+        } );
+
+        // Make the deferred a promise
+        promise.promise( deferred );
+
+        // Call given func if any
+        if ( func ) {
+            func.call( deferred, deferred );
+        }
+
+        // All done!
+        return deferred;
+    },
+
+    // Deferred helper
+    when: function( singleValue ) {
+        var
+
+            // count of uncompleted subordinates
+            remaining = arguments.length,
+
+            // count of unprocessed arguments
+            i = remaining,
+
+            // subordinate fulfillment data
+            resolveContexts = Array( i ),
+            resolveValues = slice.call( arguments ),
+
+            // the master Deferred
+            master = jQuery.Deferred(),
+
+            // subordinate callback factory
+            updateFunc = function( i ) {
+                return function( value ) {
+                    resolveContexts[ i ] = this;
+                    resolveValues[ i ] = arguments.length > 1 ? slice.call( arguments ) : value;
+                    if ( !( --remaining ) ) {
+                        master.resolveWith( resolveContexts, resolveValues );
+                    }
+                };
+            };
+
+        // Single- and empty arguments are adopted like Promise.resolve
+        if ( remaining <= 1="" )="" {="" adoptvalue(="" singlevalue,="" master.done(="" updatefunc(="" i="" ).resolve,="" master.reject,="" !remaining="" );="" use="" .then()="" to="" unwrap="" secondary="" thenables="" (cf.="" gh-3000)="" if="" (="" master.state()="==" "pending"="" ||="" isfunction(="" resolvevalues[="" ]="" &&="" ].then="" return="" master.then();="" }="" multiple arguments="" are="" aggregated="" like="" promise.all="" array="" elements="" while="" i--="" ],="" ),="" master.reject="" master.promise();="" <="" pre=""></=></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/11/08/网易微专业-jq源码解析-2-4-1-延时对象-Deferred概念-源码剖析/" data-id="ck910dtda002x2lxqtsjkqwe0" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-js正则表达式基础总结" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/11/07/js正则表达式基础总结/" class="article-date">
+  <time datetime="2019-11-07T11:04:59.000Z" itemprop="datePublished">2019-11-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/11/07/js正则表达式基础总结/">js正则表达式基础总结</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>第一部分 基础知识<br>一、正则申明方式<br>1、构造函数方式<br>var reg = new RegExp(‘\d’, ‘gi’);<br>● 通过 new 构造一个正则表达式对象，其中第一个参数 ‘\d’ 是正则内容，第二个参数 ‘gi’ 是修饰符。两个参数皆为字符串类型</p>
+<p>● 修饰符的作用是对匹配过程进行限定</p>
+<p>● 修饰符有三种：i, g, m，可以同时出现，没有顺序（即 gi 与 ig 一样），请参考下方说明</p>
+<p>修饰符    说明<br>i    忽略大小写匹配<br>g    全局匹配，即是匹配一个后继续匹配，直到结束<br>m    多行匹配，即是遇到换行后不停止匹配，直到结束<br>说明：<br>● [a-z] 表示从小写字母a到小写字母z之间的任意字符(含a和z)，下文会有详细说明<br>● + 表示至少出现一次<br>● \n 在js中表示换行<br>● ^[a-z] 表示以任意小写字母开头的行</p>
+<p>‘aBcd efg’.match(/[a-z]+/);<br>// [“a”]</p>
+<p>‘aBcd efg’.match(/[a-z]+/i);<br>// [“aBcd”]</p>
+<p>‘aBcd efg’.match(/[a-z]+/g);<br>// [“a”, “cd”, “efg”]</p>
+<p>‘aBcd efg’.match(/[a-z]+/gi);<br>// [“aBcd”, “efg”]</p>
+<p>‘aB\ncd\n efg’.match(/^[a-z]+/m);<br>// [“a”]</p>
+<p>‘aB\ncd\n efg’.match(/^[a-z]+/g);<br>// [“a”]</p>
+<p>‘aB\ncd\n efg’.match(/^[a-z]+/gm);<br>// [“a”, “cd”]<br>// 注意不是 [“a”, “cd”, “efg”]<br>2、字面量方式<br>相比较上一种方式，这一种更为常见，上面示例也都使用了这种方式</p>
+<p>var reg = /\d/gi;<br>两个斜线内为正则的内容，后面可以跟修饰符，与第一种构造函数方式相比更简洁，缺点是正则内容不能拼接，对于大多数场景俩说足够了</p>
+<p>二、正则相关符号<br>1、方括号 [] 用法<br>用于查找方括号内的任意字符：</p>
+<p>在这里插入图片描述</p>
+<p>注意：<br>1）^ 在 [] 内开始位置及正则双斜线开始位置有特殊含义，其他位置表示 ^ 字符本身<br>● // 正则开头位置表示以某某开头的字符串，如下表示以大写或小写字母开头的且连续为字母的字符串：</p>
+<p>‘adobe 2016’.match(/^[a-zA-Z]+/);<br>// [“adobe”]<br>● 在正则 或 匹配中(即 | 匹配)，表示 或者以某某字符开始的字符串，如下表示匹配 连续数字 或 以小写字母开头且连续为小写字母的字符串，所以返回结果包含2016 和 adobe，注意返回结果不是 [“2016”, “adobe”]</p>
+<p>‘adobe2016ps’.match(/\d+|^[a-z]+/g);<br>// [“adobe”, “2016”]<br>● 在 [] 内开始位置时，表示不匹配 [] 内除 ^ 以外的所有字符：</p>
+<p>‘adobe’.match(/[^abc]/g);<br>// [“d”, “o”, “e”]<br>注： $ 与 ^ 的前两个用法相似，只不过匹配的是以某某字符结尾的字符串，举例：</p>
+<p>‘adobe 2016’.match(/\d+|[a-z]+$/g);<br>// [“2016”]<br>‘adobe’.match(/\d+|[a-z]+$/g);<br>// [“adobe”]<br>2）- (连字符)表示左边字符的 ASCII 值到右边字符 ASCII 编码值之间及左右字符自身的所有字符</p>
+<p>‘adobe PS 2016’.match(/[a-g]/g);<br>// [“a”, “d”, “b”, “e”]<br>3）- 连字符左侧的字符对应的 ASCII 值一定要小于或等于右侧的字符，否则会报语法错误</p>
+<p>‘adobe’.match(/[z-a]/);<br>// Uncaught SyntaxError: Invalid regular expression: /[z-a]/: Range out of order in character class…<br>4）如果希望对连字符 - 本身进行匹配，需要用反斜线转义</p>
+<p>‘adobe-2016’.match(/[a-g-]/g);<br>// [“a”, “d”, “b”, “e”, “-“]<br>5）查看 ASCII 表就会发现，大写字母的 ASCII 值是小于小写字母的，因此下面用法会报语法错误</p>
+<p>‘adobe-2016’.match(/[a-Z]/g);<br>// Uncaught SyntaxError: Invalid regular expression: /[a-Z]/: Range out of order in character …<br>那么问题来了，如果要表示所有字母，不区分大小写怎么办呢？其实有两种方式：<br>A、第一种是使用修饰符 i，前面提到过。举例：</p>
+<p>‘adobe-PS’.match(/[a-z]/gi);<br>// [“a”, “d”, “o”, “b”, “e”, “P”, “S”]<br>B、第二种是在正则中明确指明大小写字母，举例：</p>
+<p>‘adobe-PS’.match(/[a-zA-Z]/g);<br>// [“a”, “d”, “o”, “b”, “e”, “P”, “S”]<br>返回结果跟第一种一样。当然这个例子有些特殊：匹配了所有大小写字母。当只匹配部分大小写字母的时候只能使用第二种方式，在此就不做示例了，读者可以自己测试</p>
+<p>6）匹配大小字母不能写成 [A-z]，虽然不会报语法错误，但隐式的放大了匹配范围，查看 ASCII 会发现，在大写字母 Z 到小写字母 a 之间还有 [、 \、 ]、 ^、 _、 ` 这6个字符，因此不能这么写。</p>
+<p>7）想必有同学会问， \w 不也可以匹配字母么？是的，\w 确实可以匹配字母，但跟上面说的一样,也隐式的放大了匹配范围，\w 除了匹配大小字母外还匹配了数字和下划线，即 \w 与 [A-Za-z0-9_] 等价，当然 A-Z、a-z、0-9(等价于\d)、_这四组没顺序之分</p>
+<p>2、特殊含义字符<br>● . 匹配任意单个字符，除换行和结束符</p>
+<p>‘1+0.2<em>2=1.4’.match(/.{2}/g);<br>// [“1+”, “0.”, “2</em>“, “2=”, “1.”]<br>● \w 匹配任意单词字符（数字、字母、下划线），等价于[A-Za-z0-9_]</p>
+<p>‘ad34~!@$ps’.match(/\w/g);<br>// [“a”, “d”, “3”, “4”, “p”, “s”]<br>● \W 匹配任意单词字符，与\w相反，等价于[^A-Za-z0-9_]</p>
+<p>‘ad34~!@$ps’.match(/\W/g);<br>// [“~”, “!”, “@”, “$”]<br>● \d 匹配数字，等价于 [0-9]</p>
+<p>‘ps6’.match(/\d/g);<br>// [“6”]<br>● \D 匹配非数字，等价于 [0-9]</p>
+<p>‘ps6’.match(/\D/g);<br>// [“p”, “s”]<br>● \s 匹配空白字符，主要有(\n、\f、\r、\t、\v)，注意’a\sb’中的\s依然是字符s，所以’a\sb’.match(/\s/g)返回 null</p>
+<p>‘adobe ps’.match(/\s/g);<br>// [“ “]<br>● \S 匹配非空白字符，与\s相反</p>
+<p>‘adobe ps’.match(/\S/g);<br>// [“a”, “d”, “o”, “b”, “e”, “p”, “s”]<br>● \b 匹配单词边界，注意连续的数字、字母或下划线组成的字符串会认为一个单词</p>
+<p>‘adobe(2016) ps6.4’.match(/\b(\w+)/g);<br>// [“adobe”, “2016”, “ps6”, “4”]<br>● \B 匹配非单词边界，仔细体会下面的示例与\b的结果</p>
+<p>‘adobe(2016) ps6.4’.match(/\B(\w+)/g);<br>// [“dobe”, “016”, “s6”]<br>● \0 匹配NUL字符</p>
+<p>‘\0’.match(/\0/);<br>// [“NUL”]<br>● \n 匹配换行符（编码：10，newline）</p>
+<p>‘adobe\nps’.match(/\n/).index;<br>// 5<br>● \f 匹配换页符</p>
+<p>‘adobe\fps’.match(/\f/).index;<br>// 5<br>● \r 匹配回车符（编码：13，return）</p>
+<p>‘adobe\rps’.match(/\r/).index;<br>// 5<br>● \t 匹配制表符，键盘tab对应的字符</p>
+<p>‘adobe\tps’.match(/\t/).index;<br>// 5<br>● \v 匹配垂直制表符</p>
+<p>‘adobe\vps’.match(/\v/).index;<br>// 5<br>● \xxx 匹配以八进制数xxx规定的字符</p>
+<p>‘a’.charCodeAt(0).toString(8);<br>// “141”<br>‘adobe ps’.match(/\141/g);<br>// [“a”]<br>● \xdd 匹配以十六进制数dd规定的字符</p>
+<p>‘a’.charCodeAt(0).toString(16);<br>// “61”<br>‘adobe ps’.match(/\x61/g);<br>// [“a”]<br>● \uxxxx 匹配以十六进制数xxxx规定的 Unicode字符，注意位数不够需要补0</p>
+<p>‘a’.charCodeAt(0).toString(16);<br>// “61”<br>‘adobe ps’.match(/\u0061/g);<br>// [“a”]<br>注意：<br>window系统回车换行符为\r\n，linux系统下没有\r，linux系统通过vi编辑器打开window系统的文本文件时候，经常在行尾出现^M符号，也就是\r的原因，解析文本的时候需要注意相关判断。</p>
+<p>3、量词说明<br>● n+ 匹配包含至少一个n的字符串</p>
+<p>‘adobe paas’.match(/a+\w+/g);<br>// [“adobe”, “aas”]<br>● n* 匹配包含零个或多个n的字符串</p>
+<p>‘ab3 aa12bb’.match(/a*\d+/g);<br>// [“3”, “aa12”]<br>● n? 匹配包含零个或一个n的字符串</p>
+<p>‘ab3 aa12bb’.match(/a?\d+/g);<br>// [“3”, “a12”]<br>● n{x} 匹配包含连续x个n的字符串</p>
+<p>‘ab3 aa12bb aaa34’.match(/a{2}\d+/g);<br>// [“aa12”, “aa34”]<br>● n{x,y} 匹配包含至少连续x个且最多连续y个n的字符串</p>
+<p>‘a3 aaa12bb aaaaaaa34’.match(/a{2,4}\d+/g);<br>// [“aaa12”, “aaaa34”]<br>● n{x,} 匹配包含至少连续x个n的字符串</p>
+<p>‘a3 aaa12bbaa4’.match(/a{2,}\d+/g);<br>// [“aaa12”, “aa4”]<br>由上可知，以下 表达式1 与 表达式2 等价</p>
+<p>表达式1    表达式2<br>n+    n{1,}<br>n<em>    n{0,}<br>n？    n{0,1}<br>4、符号说明<br>符号 {}、、$、</em>、+、?、[]、[]、- 已经在前面介绍过，接下来看下其他特殊字符<br>● a|b 匹配包含a或b的字符串</p>
+<p>‘adobe ps13’.match(/([a-g]+l\d+)/g);<br>// [“ad”, “be”, “13”]<br>● / 字面量方式申明正则时的界定符</p>
+<p>‘adobe’.match(/\w+/);<br>// [“adobe”]<br>● \ 普通反斜线字符</p>
+<p>‘a\dobe’.match(/\/);<br>// [“\”]<br>5、小括号 () 用法<br>正则在非全局(g)模式下，通过match方式，返回的数组第一个值整体匹配的字符串，其他值为通过括号分组匹配到的<br>1）捕获用法<br>● 表示对匹配的字符串进行分组</p>
+<p>‘adobe cs9cs10, adobe cs11’.match(/([a-z]+\d+)+/);<br>// [“cs9cs10”, “cs10”]<br>// 注意{2,}是对 括弧内的匹配 的描述<br>● 与|一起使用表示选择性</p>
+<p>“he is 12. she is 13. it’s box”.match(/(it|she|he)\s+is/g);<br>// [“he is”, “she is”]<br>● 表示对匹配的字符串捕获</p>
+<p>‘adobe cs9’.match(/[a-z]+\d+/);<br>// [“cs9”]<br>‘adobe cs9’.match(/[a-z]+(\d+)/);<br>// [“cs9”, “9”]<br>● 表示对匹配的字符串反向引用，引用从 \1 开始，从正则左侧第一个左括号（当然要是闭合的括号才行）开始计算，每多一对括号，引用数加一，在非捕获情况下不会加一。但正则比较复杂时，减少引用可以提升匹配性能，关于 非捕获 下方会详细介绍<br>引用的结果可以通过 构造函数 RegExp 获取，即 RegExp.9</p>
+<p>‘Can you can a can as a canner can can a can?’.match(/([cC]an+)\s+\1/g);<br>// [“can can”]<br>// 注意 <code>\1</code> 等价于正则里的 <code>([a-z]+)</code>，即与下面示例相同<br>‘Can you can a can as a canner can can a can?’.match(/[cC]an+\s+[cC]an+/g);<br>// [“can can”]</p>
+<p>// 如果把括弧去掉可以看下结果<br>‘Can you can a can as a canner can can a can?’.match(/[cC]an+\s+\1/g);<br>// null<br>2）非捕获用法，以(?)形式出现<br>● (?:n ) 表示非捕获组</p>
+<p>// 不使用括号时<br>‘adobe12ps15test’.match(/[a-z]+\d+[a-z]+/);<br>// [“adobe12ps”]<br>// 使用括号分组</p>
+<p>‘adobe12ps15test’.match(/[a-z]+(\d+)([a-z]+)/);<br>// [“adobe12ps”, “12”, “ps”]</p>
+<p>‘adobe12ps15test’.match(/[a-z]+(?:\d+)([a-z]+)/);<br>// [“adobe12ps”, “ps”]<br>// 看起来上面语句不用(?:)也可以得到相同结果，即：</p>
+<p>‘adobe12ps15test’.match(/[a-z]+\d+([a-z]+)/);<br>// [“adobe12ps”, “ps”]<br>// 注意，但需求希望匹配字母之间的规则复杂时，如希望匹配字母，且字母之间可以为1或3时，但不需要1和3</p>
+<p>‘adobe11ps15test’.match(/[a-z]+(1|3)+([a-z]+)/);<br>// [“adobe11ps”, “1”, “ps”]<br>// 返回中不希望包含数字怎么办，可以使用非捕获</p>
+<p>‘adobe11ps15test’.match(/[a-z]+(?:1|3)+([a-z]+)/);<br>// [“adobe11ps”, “ps”]<br>● (?=n ) 匹配任何其后紧跟字符n的字符串，但返回中不包含n</p>
+<p>‘adobe12ps15test’.match(/[a-z]+(?=\d)/g);<br>// [“adobe”, “ps”]<br>● (?!n ) 匹配任何其后没有紧跟字符n的字符串，返回中不包含n</p>
+<p>‘adobe12ps15test’.match(/[a-z]+(?!\d)/g);<br>// [“adob”, “p”, “test”]<br>● (?&lt;=n ) 匹配任何其前紧跟字符n的字符串，返回中不包含n</p>
+<p>‘adobe12ps15test’.match(/(?&lt;=\d)[a-z]+/g);<br>// [“ps”, “test”]<br>● (?&lt;!n ) 匹配任何其前紧跟字符n的字符串，返回中不包含n</p>
+<p>‘adobe12ps15test’.match(/(?&lt;!\d)[a-z]+/g);<br>// [“adobe”, “s”, “est”]<br>3）注意<br>● A、如果希望对上面特殊字符本身进行匹配，需要在其前面添加\进行转移</p>
+<p>‘11+2=13’.match(/\d++/g);<br>// [“11+”]<br>‘(11+2)*2=26’.match(/(\d++\d+)/g);<br>// [“(11+2)”]<br>● B、\举例</p>
+<p>// 注意下面两个表达式返回的结果<br>‘path C:\Windows\System32’.match(/([a-zA-Z]:\\w+)/g);<br>// null<br>‘path C:\Windows\System32’.match(/([a-zA-Z]:\\w+)/g);<br>// [“C:\Windows”]<br>说明: 在申明字符串 ‘path C:\Windows\System32’ 时，其中的 ‘’ 就已经被当做转移符，既是 ‘\W’ ===<br>‘W’,所以如果希望申明的字符串中包含反斜线，需要在加一个反斜线转义，即 \</p>
+<p>6、正则相关方法<br>1） RegExp对象相关方法</p>
+<p>在这里插入图片描述<br>2）String对象相关方法</p>
+<p>在这里插入图片描述<br>3）replace 具体用法<br>顾名思义，是字符串替换方法，但用法比较广泛，相信读者已经非常熟悉了。在此就当复习了<br>A、 基本用法<br>直接传入字符串进行替换，找到子串后只替换一次，举例：</p>
+<p>‘adobe abc’.replace(‘b’, ‘_’)<br>// “ado_e abc”<br>// 注意 第二个 b 没有被替换<br>如果希望全部替换，可以使用正则表达式并用全局修饰符 g 方式，举例：</p>
+<p>‘adobe abc’.replace(/b/g, ‘_’)<br>// “ado_e a_c”<br>B、 高级用法<br>第二个参数可以使用 function，其中有三个参数，分别为 匹配的字符串、当前匹配的字符串index值、匹配的源字符串，最终结果根据每次匹配结果进行相应的替换<br>举例：</p>
+<p>‘adobe aacc bbaa’.replace(/a+/g, function(str, index, source){<br>    if(index &gt; 0){<br>        return str.toUpperCase();<br>    } else {<br>        return str;<br>    }<br>});<br>// “adobe AAcc bbAA”<br>第二部分 案例分析<br>一、常见匹配<br>在写正则之前，需要注意以下几点：</p>
+<p>一定要清楚期望的规则是什么，不然无从匹配<br>有些正则不只一种写法，要注意简短干练，复杂的正则表达式不仅难懂，而且容易出BUG，性能也不是很好<br>正则虽好，可要适度奥。有些字符串处理不一定适合用正则<br>1、手机号<br>规则：以1开头第二位为3、5、7、8且长度为11位的数字组合</p>
+<p>/^1[3578]\d{9}$/.test(13600001111);<br>// true<br>2、 字符串提取<br>举例：提取字符串中的数字<br>分析：<br>根据对数字的理解，可能为负数，即-?，如果是负数，其后需要是数字且至少一位，即 -?\d+，小数部分可能有也可能没有，所以需要对小数部分括弧起来用 ? 或 {0, 1}限定，因为.是特殊字符需要转义，于是表达式为：-?\d+(.\d+)?</p>
+<p>‘(12.3 - 32.3)*2 = -40’.match(/-?\d+(.\d+)?/g);<br>// [“12.3”, “32.3”, “2”, “-40”]<br>二、jQuery中的正则片段<br>1、表达式<br>在jQuery 3.1.2-pre中找到一个解析单标签的正则，如下：</p>
+<p>/^&lt;([a-z][^\/\0&gt;:\x20\t\r\n\f]<em>)[\x20\t\r\n\f]</em>\/?&gt;(?:&lt;\/\1&gt;|)$/i<br>2、分解<br>乍一看有点懵，其实拆解之后就容易理解了，注意拆解的步骤，通常来说：<br>1） 第一步可以先看括号 () ，可以将各个小括号及非括号的分成不同部分，如</p>
+<p>/^&lt;  ([a-z][^\/\0&gt;:\x20\t\r\n\f]<em>)  [\x20\t\r\n\f]</em>\/?&gt;  (?:&lt;\/\1&gt;|)  $/i<br>2） 第二步可以将中括号分开</p>
+<p>/^&lt;  (  [a-z]  [^\/\0&gt;:\x20\t\r\n\f]<em>  )  [\x20\t\r\n\f]</em>  \/?&gt;  (?:&lt;\/\1&gt;|)  $/i<br>现在是不是已经很清楚了，接下来分解下，就很容易理解了<br>3、详解<br>● 1）^&lt; 很明显在匹配标签左尖括号括号，且以其开始</p>
+<p>● 2）( [a-z] [^\/\0&gt;:\x20\t\r\n\f]<em> ) 这个括号有两部分，第一个 [a-z] 没什么好解释，即标签&lt;紧跟的必须为字母，因为全局加了 i(忽略大小写) 修饰符，所以大小写字母都可以；[^\/\0&gt;:\x20\t\r\n\f]</em>，及限制标签名必须以字母开始，且第二个字母不能为/ \0 &gt; : \20 t \r \n \f的任意多个字符（思考为什么），() 表示对标签的分组，方便取到标签名</p>
+<p>● 3）[\x20\t\r\n\f]<em> 表示可能含有 [\x20\t\r\n\f] 这些特殊字符，与前面的 [^\/\0&gt;:\x20\t\r\n\f]</em> 相似却不一样，通过这里可以看出&lt;br之后进行回车也能匹配到<br>● 4）/?&gt; 能匹配<br>或</p>
+<p>● 5）(?:&lt;\/\1&gt;|) 这里不捕获，并用\1去反向引用第一个括号的表达式 ([a-z][^\/\0&gt;:\x20\t\r\n\f]*)。这里的|表示 &lt;/\1&gt; 可有可无，即：(?:&lt;\/\1&gt;|) 与 (?:&lt;\/\1&gt;)?匹配结果一样</p>
+<p>作者：_双眸<br>链接：<a href="https://www.jianshu.com/p/488d60349325" target="_blank" rel="noopener">https://www.jianshu.com/p/488d60349325</a><br>来源：简书<br>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</p>
+<p>另外，下面有两个关于正则的链接：<br>1.<a href="https://zhuanlan.zhihu.com/p/92573380" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/92573380</a> (老师总结的关于正则)<br>2.<a href="https://www.runoob.com/regexp/regexp-syntax.html" target="_blank" rel="noopener">https://www.runoob.com/regexp/regexp-syntax.html</a> (老师文章里的正则基础)</p>
+<p>刚又看到一个总结的比较全的链接：<a href="https://blog.csdn.net/h610443955/article/details/81079439" target="_blank" rel="noopener">https://blog.csdn.net/h610443955/article/details/81079439</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/11/07/js正则表达式基础总结/" data-id="ck910dtcc002j2lxqup62t4vc" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-jq源码解析-2-3-1-jq的Callbacks入门-原理分析" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/11/02/网易微专业-jq源码解析-2-3-1-jq的Callbacks入门-原理分析/" class="article-date">
+  <time datetime="2019-11-02T08:54:09.000Z" itemprop="datePublished">2019-11-02</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/11/02/网易微专业-jq源码解析-2-3-1-jq的Callbacks入门-原理分析/">网易微专业-jq源码解析-2.3.1-jq的Callbacks入门&amp;原理分析</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>一、关于$.Callbacks<br>1、callbacks介绍<br>·$.Callbacks用于管理函数队列<br>·通过add添加处理函数到队列当中，通过fire去执行这些处理函数<br>另:$.Callbacks是在jQuery内部使用的，如为 .ajax，$.Deferred等组件提供基础功能的函数。它也可以用在类似功能的一些组件中，如自己开发的插件。<br>API例子：<br>var cb = $.Callbacks();<br>cb.add(function(){console.log(‘add one’)});//add() 添加处理函数<br>cb.fire();//add one //fire()按照添加函数的顺序依次执行处理函数<br>2、参数<br>$.Callbacks通过字符串参数的形式，支持4种特定功能：<br>once:函数队列只执行一次<br><img src="https://snakexu.github.io/images/wangyi/jq/callback_2.png"><br>unique:往内部队列添加的函数保持唯一，不能重复添加<br><img src="https://snakexu.github.io/images/wangyi/jq/callback_3.png"><br>stopOnFalse:内部队列里的函数是依次执行的，当某个函数的返回值是false时，停止继续执行剩下的函数<br><img src="https://snakexu.github.io/images/wangyi/jq/callback_4.png"><br>memory:当函数队列fire一次过后，内部函数会记录当前fire的参数。当下次调用add的时候，会把记录的参数传递给新添加的函数并立即执行这个新添加的函数<br><img src="https://snakexu.github.io/images/wangyi/jq/callback_5.png"><br>3、从事件函数了解callbacks<br>事件通常与函数配合使用，这样就可以通过发生的事件来驱动函数的执行。<br>原则：<br>(1)一个事件对应一个事件函数<br>(2)在一个事件对应多个事件函数的情况下，后者会覆盖前者<br>例：<br>Element.onclick = function() {<br>  console.log(code);<br>}<br>Element.onclick = function() {<br>  console.log(code1);<br>}<br>我们往DOM元素上绑定两次onclick事件，当我们触发该点击事件时，只触发打印code1。<br>如果我们想要改变这种一对一的原则，那可以按照下列栗子对事件驱动方案进行改造。<br>var callbacks = [function(){}, function(){}, function(){}];<br>Element.onclick = function() {<br>  var _this = this;<br>  callbacks.forEach(function(fn) {<br>    fn.call(_this);<br>  })<br>}<br>首先，可以先将函数存储在callbacks数组中，在元素绑定的onclick函数上去遍历并依次执行处理函数。这样就建立起一对多的事件模型。<br>这时候的callbacks是一个数组。但我们其实更想callbacks它不仅是一个数组，更是一个容器，能比数组赋予更多的功能。<br>callbacks作为数组时，虽然可以通过push添加元素，通过循环执行函数。但我们如果想通过参数去在添加元素时控制数组的形成，在执行的之后通过参数去控制哪些执行哪些不执行，这时候callbacks就应运而生。jQuery的callbacks中对外提供add和fire两个方法，该两个方法的功能与数组的push和遍历执行功能类似，但可以根据传入的参数去控制执行函数的执行。<br>二、源码实现</p>
+<p><pre><br>(function(root){<br>    var optionsCache = {};<br>    var _ = {<br>        //options参数,接收once、unique、stopOnFalse、memory这四个参数之一<br>        callbacks:function(options){<br>            options = typeof options === ‘string’ ? (optionsCache[options] || createOptions(options)) : {};<br>            var list = [];//执行队列<br>            //这里定义的变量基本都是用于记录队列执行进度，根据各种不同的参数记录不同的数值<br>            var index, length, testting, memory, starts, start;<br>            //执行方法，执行队列<br>            var fire = function(data){<br>                memory = options.memory &amp;&amp; data;<br>                //如果有参数memory，则需要从上次队列执行到的地方开始执行，否则从list队列里下标为0的地方开始执行<br>                index = starts || 0;<br>                start = 0;<br>                testting = true;<br>                length = list.length;<br>                for(; index &lt; length ; index++){<br>                    //data[0]绑定上下文执行环境对象,options.stopOnFalse调用$.Callbacks是否传递参数stopOnFalse<br>                    if(list[index].apply(data[0], data[1]) === false &amp;&amp; options.stopOnFalse){<br>                        break;<br>                    }<br>                }<br>            }<br>            //这里函数颗粒度的划分的思路add/fire/fireWith然后再去fire()执行<br>            var self = {<br>                //添加<br>                add:function(){<br>                    var args = Array.prototype.slice.call(arguments);<br>                    start = list.length;<br>                    args.forEach(function(fn){<br>                        if(toString.call(fn) === ‘[object Function]’){<br>                            list.push(fn);<br>                        }<br>                    });<br>                    if(memory){<br>                        starts = start;<br>                        fire(memory)<br>                    }<br>                },<br>                //函数执行过程中上下文的绑定<br>                fireWith:function(context, arguments){<br>                    var args = [context, arguments];<br>                    if(!options.once || !testting){<br>                        fire(args)<br>                    }<br>                },<br>                //与callbacks的执行方法fire不同<br>                fire:function(){<br>                    //this-&gt;self,传递上下文执行环境<br>                    self.fireWith(this, arguments);<br>                }<br>            }<br>            //个人认为第一个需要注意的思路<br>            return self;//每次调用callbacks都返回一个队列，队列里对应有add和fire的操作<br>        }<br>    }<br>    function createOptions(options){<br>        var object = optionsCache[options] = {};<br>        //如果参数为一个以上，如$.Callbacks(“once memory”)<br>        options.split(/\s+/).forEach(function(value){<br>            object[value] = true;<br>        })<br>        retrun object;<br>    }<br>    root._ = _;<br>})(this);<br></pre><br><!--线性队列处理提供了很好的思路--><br>add方法的核心，其实就是把参数这种类数组转换为数组，并循环push到定义的list数组中，这个list数组也称之为队列。<br>fire方法的调用比较复杂，之所以要拆开为self.fire、self.fireWith、fire三个函数，是为了后续的参数控制做准备。self.fire是用于调用时进行传参，fire是通过call方法去执行队列list中的执行函数，其上下文是self.fireWith进行绑定的。当然，self.fireWith的作用远不止如此，后续我们会继续说到。<br>注意：最后一行代码，callbacks最后会返回self，这是一个很核心的设计。那我们就要思考，这里为什么不将add、fire方法直接返回呢？原因是，我们想要每次调用self，最终返回出去的是一个队列，这样每次调用所得到的队列都是不同的，彼此之之间不会相互影响。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/11/02/网易微专业-jq源码解析-2-3-1-jq的Callbacks入门-原理分析/" data-id="ck910dtat001k2lxq248ay786" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-jq源码解析-2-2-1-jq选择器" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/11/01/网易微专业-jq源码解析-2-2-1-jq选择器/" class="article-date">
+  <time datetime="2019-11-01T09:28:04.000Z" itemprop="datePublished">2019-11-01</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/11/01/网易微专业-jq源码解析-2-2-1-jq选择器/">网易微专业-jq源码解析-2.2.1:jq选择器</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p></p><h4>一、常用就jQuery选择器接口</h4><br>1.jQuery对象和DOM对象的区别<br><img src="https://snakexu.github.io/images/wangyi/jq/xuanzeqi_1.png"><br>2.常用jQuery选择器接口<br><img src="https://snakexu.github.io/images/wangyi/jq/xuanzeqi_2.png"><p></p>
+<p></p><h4>二、选择器源码解析</h4><br>问题：<br>(1)如何把创建的DOM节点包装成jQuery对象?<br>(2)jQuery实例对象length属性的作用?<br>(3)merge方法的应用场景有哪些?<br>(4)$(document).ready()与$(function(){})的关系?<br>关于：sizzle与querySelector<br><img src="https://snakexu.github.io/images/wangyi/jq/selector_1.png"><br>本课程选用querySelector替换jQuery的Sizzle减轻大家对源码理解的难度<p></p>
+<p>$(“&lt; a &gt;”)//创建DOM节点<br>$(“#a”)//查询DOM节点<br>还可以$(对象，函数)</p>
+<p>源码:</p>
+<p><pre><br>(function(root){<br>    var testExp = /^\s<em>(&lt;[\w\W]+&gt;)[^&gt;]</em>$/;<br>    var rejectExp = /^&lt;(\w+)\s*\/?&gt;(?:&lt;\/\1&gt;)|)$/;<br>    var version = “1.0.1”;<br>    var jQuery = function(selector, context){<br>        return new jQuery.prototype.init(selector, context)<br>    }<br>    jQuery.fn = jQuery.prototype = {//原型对象<br>        length: 0,<br>        jquery: version,<br>        selector: “”,<br>        init: function(selector, context){<br>            context = context || document;<br>            var match,elem,index = 0;<br>            //$() $(undefined) $null $false<br>            if(!selector){<br>                return this;<br>            }<br>            if(typeof selector === “string”){<br>                if(selector.charAt(0) === “&lt;” &amp;&amp; selector.charAt(selector.length-1)==”&gt;” &amp;&amp; selector.length &gt;= 3){<br>                    match = [selector]<br>                }<br>                //创建DOM<br>                if(match){<br>                    //合并数组object array2<br>                    //$.parseHTML() 函数用于将HTML字符串解析为对应的DOM节点数组<br>                    //$.parseHTML( htmlString [, context ] [, keepScripts ] )<br>                    //<a href="https://www.runoob.com/jquery/misc-parsehtml.html相关介绍" target="_blank" rel="noopener">https://www.runoob.com/jquery/misc-parsehtml.html相关介绍</a><br>                    jQuery.merge(this, jQuery.parseHTML(selector, context))<br>                }else{<br>                    //querySelector&amp;querySelectorAll的区别:<br>                    //querySelector从上到下筛选出第一个存在于筛选器中的标签<br>                    //querySelectorAll筛选出所有符合条件的标签。生成一个    NodeList (节点列表) , 我们可以懒惰的通过下标进行访问<br>                    elem = document.querySelectorAll(selector)<br>                    var elems = Array.prototype.slice.call(elem);<br>                    this.length = elems.length;<br>                    for(;index &lt; elems.length;index++){<br>                        this[index] = elems[index];<br>                    }<br>                    this.context = context;<br>                    this.selector = selector;<br>                }<br>            }else if(selector.nodeType){<br>                //如果传入的是document/window等<br>                this.context = this[0] = selector;<br>                this.length = 1;<br>                return this;<br>            }else if(isFunction( selector )){<br>                return root.ready !== undefined ? root.ready(selector) : selector( jQuery );<br>            }<br>        }<br>    }<br>    jQuery.fn.init.prototype = jQuery.fn;<br>    jQuery.fn.ready = function( fn ) {<br>        readyList //关于此处，需要了解更多，请查看源码<br>            .then( fn )<br>            // Wrap jQuery.readyException in a function so that the lookup<br>            // happens at the time of error handling instead of callback<br>            // registration.<br>            .catch( function( error ) {<br>                jQuery.readyException( error );<br>            } );</pre></p>
+<pre><code>    return this;
+};
+jQuery.extend = jQuery.prototype.extend = function() {
+    var target = arguments[0] || {}; 
+    var length = arguments.length;
+    var i = 1;
+    var deep = false; //默认为浅拷贝 
+    var option;
+    var name;
+    var copy;
+    var src;
+    var copyIsArray;
+    var clone;
+    if (typeof target === &quot;boolean&quot;) { 
+        deep = target;
+        target = arguments[1]; 
+        i = 2;
+    }
+    if (typeof target !== &quot;object&quot;) {
+        target = {};
+    }
+    if (length == i) {
+        target = this;
+        i--; //0   
+    }
+    for (; i &lt; length; i++) {
+        if ((option = arguments[i]) !== null) {
+            for (name in option) {
+                src = target[name]; 
+                copy = option[name];
+                if (deep &amp;&amp; (jQuery.isPlainObject(copy) || (copyIsArray = jQuery.isArray(copy)))) {
+                    if (copyIsArray) { 
+                        copyIsArray = false;
+                        clone = src &amp;&amp; jQuery.isArray(src) ? src : [];
+                    } else { 
+                        clone = src &amp;&amp; jQuery.isPlainObject(src) ? src : {};
+                    }
+                    target[name] = jQuery.extend(deep, clone, copy);
+                } else if (copy !== undefined) {
+                    target[name] = copy; 
+                }
+            }
+        }
+    }
+    return target;
+}
+jQuery.extend = ({
+    //类型检测     
+    isPlainObject: function(obj) {
+        return typeof obj === &quot;object&quot;;
+    },
+    isArray: function(obj) { 
+        return toString.call(obj) === &quot;[object Array]&quot;;
+    },
+    isFunction: function(fn) {
+       return toString.call(fn) === &quot;[object Function]&quot;;
+    },
+    isFunction: function(obj) {
+        // Support: Chrome &lt;=57, Firefox &lt;=52
+        // In some browsers, typeof returns &quot;function&quot; for HTML &lt; object &gt; elements
+        // (i.e., `typeof document.createElement( &quot;object&quot; ) === &quot;function&quot;`).
+        // We don&apos;t want to classify *any* DOM node as a function.
+        return typeof obj === &quot;function&quot; &amp;&amp; typeof obj.nodeType !== &quot;number&quot;;
+    };
+    //类数组转化成正真的数组  
+    markArray: function(arr, results) {
+        var ret = results || [];
+        if (arr != null) {
+            jQuery.merge(ret, typeof arr === &quot;string&quot; ? [arr] : arr);
+        }
+        return ret;
+    },
+    //合并数组
+    merge:function(first,second){
+        var l = second.length,
+            i = first.length,//jQuery.fn = jQuery.prototype的时候定义length为0;
+            //一般情况下Function.length中的是函数对象的一个属性值，指该函数有多少个必须要传入的参数，即形参的个数。
+            //(接上一行)形参的数量不包括剩余参数个数，仅包括第一个具有默认值之前的参数个数。
+            //(接上一行)与之对比的是，  arguments.length 是函数被调用时实际传参的个数。
+            //Function.prototype  对象的 length 属性值为 0 。
+            j = 0;
+        if(typeof l === &apos;number&apos;){
+            for(;j &lt; l;j++){
+                first[i++] = second[j]
+            }
+        }else{
+            while(second[j] !== undefined){
+                first[i++] = second[j++]
+            }
+            first.length = i;
+            return first;
+        }
+    },
+    parseHTML: function(data, context){
+        if(!data || typeof data !== &quot;string&quot;){
+            return null;
+        }
+        var parse = rejectExp.exec(data);
+        return [context.createElement(parse[1])];
+    },
+})
+root.$ = root.jQuery = jQuery;
+</code></pre><p>})(this)<br><br>插播一条，max老师在知乎的专栏：<a href="https://zhuanlan.zhihu.com/c_1162017153112363008" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/c_1162017153112363008</a><br>jquery3.4.1源码：<a href="https://code.jquery.com/jquery-3.4.1.js" target="_blank" rel="noopener">https://code.jquery.com/jquery-3.4.1.js</a><br>关于正则表达式的总结，我找到了一篇个人认为比较全面的文章：<a href="https://www.jianshu.com/p/488d60349325" target="_blank" rel="noopener">https://www.jianshu.com/p/488d60349325</a></p>
+<p>关于本篇用到的正则var rejectExp = /^&lt;(\w+)\s<em>\/?&gt;(?:&lt;\/\1&gt;|)$/;<br>解释如下:<br>1、^:必须以 “ &lt; “ 开头<br>2、(\w+)：匹配一个单字字符（字母、数字或者下划线）一次或多次<br>3、\s</em>：匹配 0 次或多次空白字符<br>4、\/：’\’转义字符，此处将’/‘转义为’/‘,<br>5、第一个?:匹配前面/斜杠 0 次或者 1 次。<br>6、第一个?后的&gt;:匹配&gt;<br>7、(?:&lt;\/\1&gt;|) 这里不捕获，并用\1去反向引用前面表达式&lt;(\w+)\s*\/?&gt;的结果</p>
+<p><img src="https://snakexu.github.io/images/wangyi/jq/selector_2.png"><br>如何把创建的DOM节点包装成jquery对象，例子：jQuery.merge(this, jQuery.parseHTML(selector, context))<br><img src="https://snakexu.github.io/images/wangyi/jq/selector_3.png"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/11/01/网易微专业-jq源码解析-2-2-1-jq选择器/" data-id="ck910dtat001j2lxq4yfkciw2" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-jq源码解析-2-1-1-jq整体架构-核心函数功能" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/10/31/网易微专业-jq源码解析-2-1-1-jq整体架构-核心函数功能/" class="article-date">
+  <time datetime="2019-10-31T07:45:47.000Z" itemprop="datePublished">2019-10-31</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/10/31/网易微专业-jq源码解析-2-1-1-jq整体架构-核心函数功能/">网易微专业-jq源码解析-2.1.1:jq整体架构,核心函数功能</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4>一、juqery无new构建实例</h4><br>1.$就是jquery的别称，$()就是在创建jquery的实例对象<br><br><pre>(function(root) {<br>    var jQuery = function() {<br>      console.log(‘生成一个实例对象’);<br>      return new jQuery(); //想让$()就是创建实例对象?wrong！每次调用$()就执行该function,然后就死循环了<br>    };<br><br>    root.$ = root.jQuery = jQuery; //成功使$成为别称^_^<br>})(this)</pre><br><br>·顺便复习一下new操作符调用构造函数会经历的4步：<br>(1)创建一个新对象<br>(2)将构造函数的作用域赋给新对象(因此this就指向了这个新对象)<br>(3)执行构造函数中的代码(为这个新对象添加属性)<br>(4)返回新对象<br><br>·then，我找到了阮一峰ECMAScript6入门里的一段话：<br>ES5 的继承，实质是先创造子类的实例对象this，然后再将父类的方法添加到this上面（Parent.apply(this)）。ES6 的继承机制完全不同，实质是先将父类实例对象的属性和方法，加到this上面（所以必须先调用super方法），然后再用子类的构造函数修改this。<br><br>now，是时候祭出共享原型设计了<br><img src="https://snakexu.github.io/images/wangyi/jq/gongxiang.png"><br><!-- <img src="http://localhost:4000/images/wangyi/jq/gongxiang.png"> --><br>代码来了：<br><pre>(function(root) {<br>    var jQuery = function() {<br>      return new jQuery.prototype.init();<br>    };<br>    jQuery.prototype = {<br>        init:function(){<br>            //<br>        }<br>    }<br>    jQuery.prototype.init.prototype = jQuery.prototype//共享原型对象<br>    root.$ = root.jQuery = jQuery;<br>})(this)</pre><br>这样我们打印console.log($())，就可以看到jquery原型对象的init方法了<br><img src="https://snakexu.github.io/images/wangyi/jq/console_1.png"><br>这时候的$()实际指向的是jQuery原型上的init方法，而init的原型和jQuery本身的原型共享一个原型对象，这样往jQuery上扩展的方法就可以通过$()获取。<br><br><h4>二、extend</h4>
+
+<p><pre><br>(function(root) {<br>    var jQuery = function() {<br>      return new jQuery.prototype.init();<br>    };<br>    jQuery.fn = jQuery.prototype = {//与上面代码不同之处<br>        init:function(){<br>            //<br>        }<br>    }<br>    jQuery.fn.init.prototype = jQuery.fn //与上面代码不同之处<br>    root.$ = root.jQuery = jQuery;<br>})(this)<br></pre><br>从而可以使$.fn.extend和$.extend达到同样效果，于是我们开始使用<br>//jQuery本身扩展<br><br>$.extend({<br>    work:function(){}<br>})<br><br>或者<br><br>//jQuery实例对象扩展,此时this === jQuery实例对象<br><br>$.fn.extend({<br>  sex: ‘男’<br>})<br><br>或者<br><br>$.extend({}, { name: ‘arbor’});<br><br>对任意对象进行扩展,于是我们可以使用<br>jQuery.work();<br>$().sex;</p>
+<p>那么，源码是怎么实现这个功能的呢？先来实现浅拷贝</p>
+<p><pre><br>(function(root) {<br>    var jQuery = function() {<br>      return new jQuery.prototype.init();<br>    };<br>    jQuery.fn = jQuery.prototype = {<br>        init:function(){<br>            //<br>        }<br>    }<br>    jQuery.fn.extend = jQuery.extend = function(){<br>        var target = arguments[0]||{};//arguments[0]一定是一个object<br>        var length = arguments.length;<br>        var i=1;<br>        var option, name;<br>        if(typeof arguments[0] !== ‘object’){<br>            target = {}<br>        }<br>        //参数个数<br>        if(length === i){<br>            target = this;<br>        }<br>        //浅拷贝<br>        for (; i &lt; length; i++) {<br>            if((option = arguments[i]) != null){<br>                for(name in option){<br>                    target[name] = option[name]<br>                }<br>            }<br>        }<br>        return target;<br>    }<br>    jQuery.fn.init.prototype = jQuery.fn<br>    root.$ = root.jQuery = jQuery;<br>})(this)<br></pre><br>如果需要同时能实现深拷贝，就要对代码做一些变动了</p>
+<p><pre><br>(function(root) {<br>    var jQuery = function() {<br>        return new jQuery.prototype.init();<br>    }<br>    jQuery.fn = jQuery.prototype = {<br>        init: function() {</pre></p>
+<pre><code>    },
+    css: function() {
+
+    }
+}
+
+//extend
+jQuery.fn.extend = jQuery.extend = function() {
+    var target = arguments[0] || {};
+    var length = arguments.length;
+    var i = 1;
+    var deep = false;
+    var option, name,copy,src,copyIsArray,clone;
+    if (typeof target === &quot;boolean&quot;) {
+        deep = target;
+        target = arguments[1];
+        i = 2;
+    }
+    if (typeof target !== &quot;object&quot;) {
+        target = {};
+    }
+    //参数的个数 1
+    if (length === i) {
+        target = this;
+        i--;
+    }
+
+    //浅拷贝  深拷贝
+    for (; i &lt; length; i++) {
+        if ((option = arguments[i]) != null) {
+            for (name in option) {
+                copy = option[name];
+                src = target[name];
+                if(deep &amp;&amp; (jQuery.isPlainObject(copy) || (copyIsArray = jQuery.isArray(copy)))){
+                    if(copyIsArray){
+                        copyIsArray = false;
+                        clone = src &amp;&amp; jQuery.isArray(src) ? src : [];
+                    } else {
+                        clone = src &amp;&amp; jQuery.isPlainObject(src) ? src : {};
+                    }
+                    target[name] = jQuery.extend(deep, clone, copy);//灵魂
+                } else if(copy != undefined){
+                    target[name] = copy;
+                }
+            }
+        }
+    }
+    return target;
+}
+
+//共享原型对象
+jQuery.fn.init.prototype = jQuery.fn;
+jQuery.extend({
+    //类型检测
+    isPlainObject: function(obj){
+        return toString.call(obj) === &quot;[object Object]&quot;;
+    },
+    isArray: function(obj){
+        return toString.call(obj) === &quot;[object Array]&quot;;
+    }
+});
+root.$ = root.jQuery = jQuery;
+</code></pre><p>})(this);<br><br>测试：<br><br>var ret = {name:”max”,list:{age:”30”}};<br><br>var res = {list:{sex:”女”}};<br><br>//任意对象扩展<br><br>var obj = $.extend(true,{}, ret, res);       //=&gt;  name  age<br><br>console.log(obj);<br></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/10/31/网易微专业-jq源码解析-2-1-1-jq整体架构-核心函数功能/" data-id="ck910dtas001i2lxqyhipekae" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-hello-world" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/11/12/hello-world/" class="article-date">
+  <time datetime="2018-11-12T09:44:31.069Z" itemprop="datePublished">2018-11-12</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/11/12/hello-world/">Hello World</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/11/12/hello-world/" data-id="ck910dt9n00002lxq900zyv4u" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-js参数按值传递" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/11/12/js参数按值传递/" class="article-date">
+  <time datetime="2018-11-12T09:44:31.069Z" itemprop="datePublished">2018-11-12</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/11/12/js参数按值传递/">js传递参数</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>ECMAScript中所有函数的参数都是按值传递的。也就是说，把函数外部的值复制给函数内部的参数，就和把值从一个变量复制到另一个变量一样。基本类型值的传递如果基本类型变量的复制一样，而引用类型值的传递，则如同引用类型变量的复制一样。下面是例子：<br>1.基本类型<br>funciton addTen(num){<br>    num+=10;<br>    return num;<br>}<br>var count = 20;<br>var result = addTen(count);<br>alert(count);//20 没有变化<br>alett(result);//30<br>2.引用类型<br>function setName(obj){<br>    obj.name = “snakeXu”;<br>}<br>var person = new Object();<br>setName(person);<br>alert(person.name);//snakeXu<br>3.如果你还不相信是传值<br>function setName(obj){<br>    obj.name = “snakeXu”;<br>    obj = new Object();<br>    obj.name = “handsomeXu”;<br>}<br>var person = new Object();<br>setName(person);<br>alert(person.name);//snakeXu<br>解释一下:再把person传递给setName()后，其name属性被设置为”snakeXu”。然后又将一个新对象赋给变量obj，同时将其name属性设置为”handsomeXu”。如果person是按引用传递的，那么person就会自动被修改为指向其name属性值为”handsomeXu”的新对象。但是，当接下来再访问person.name时，显示的值仍然是”snakeXu”。这说明即使再在函数内部修改了参数的值，但原始的引用仍然保持未变。实际上，在当函数内部重写obj时，这个变量引用的就是一个局部对象了。而这个局部对象会在函数执行完毕后立即被销毁。<br>注:可以把js函数的参数想象成局部变量</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/11/12/js参数按值传递/" data-id="ck910dt9s00012lxqntwnl4qs" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-一些网址" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/11/12/一些网址/" class="article-date">
+  <time datetime="2018-11-12T09:44:31.069Z" itemprop="datePublished">2018-11-12</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <hr>
+<h2 id="title-一些网址"><a href="#title-一些网址" class="headerlink" title="title:一些网址"></a>title:一些网址</h2><p><a href="https://blog.csdn.net/mccand1234/article/details/54577413" target="_blank" rel="noopener">https://blog.csdn.net/mccand1234/article/details/54577413</a>  关于http的request&amp;response<br><a href="https://tech.upyun.com/article/242/%E4%BB%8E%20HTTP%20%E5%88%B0%20HTTPS%20%E5%86%8D%E5%88%B0%20HSTS.html" target="_blank" rel="noopener">https://tech.upyun.com/article/242/%E4%BB%8E%20HTTP%20%E5%88%B0%20HTTPS%20%E5%86%8D%E5%88%B0%20HSTS.html</a> 从 HTTP 到 HTTPS 再到 HSTS<br><a href="https://blog.csdn.net/weixin_36811791/article/details/80756654" target="_blank" rel="noopener">https://blog.csdn.net/weixin_36811791/article/details/80756654</a> HTTPS 到底加密了什么？<br><a href="http://www.cnblogs.com/zhangshitong/p/6478721.html" target="_blank" rel="noopener">http://www.cnblogs.com/zhangshitong/p/6478721.html</a> https原理通俗理解<br><a href="http://www.cnblogs.com/TankXiao/archive/2012/12/12/2794160.html#whats" target="_blank" rel="noopener">http://www.cnblogs.com/TankXiao/archive/2012/12/12/2794160.html#whats</a> HTTP协议 (五) 代理<br>要去理解关于Referer<br><a href="https://snakexu.github.io/" target="_blank" rel="noopener">https://snakexu.github.io/</a>  我的博客，sshkey有问题，要重新配置,但是不能耽误工作git</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/11/12/一些网址/" data-id="ck910dta5000c2lxqw8fl29v2" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-解构赋值" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/11/12/解构赋值/" class="article-date">
+  <time datetime="2018-11-12T09:44:31.069Z" itemprop="datePublished">2018-11-12</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/11/12/解构赋值/">es6解构赋值</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>解构赋值的模型 patterns<br>在解构中，有下面两部分参与：</p>
+<p>Destructuring source: 解构的源，将要被解构的数据，比如解构赋值表达式的右边部分。</p>
+<p>Destructuring target: 解构的目标，比如解构复制表达式的左边部分。</p>
+<p>解构的目标可以是下面三个的任意一个：</p>
+<p>赋值对象，Assigment Patterns。例如 x</p>
+<p>赋值对象通常来说是一个变量。但是在解构赋值中，你有更多的选择，稍后会讲到。</p>
+<p>对象模型，Object Patterns。比如：{ first: «pattern», last: «pattern» }</p>
+<p>数组模型，Object Patterns。比如：[ «pattern», «pattern» ]</p>
+<p>可以任意嵌套模型，而且是可以非常任性的嵌套。</p>
+<p>const obj = { a: [{ foo: 123, bar: ‘abc’ }, {}], b: true };<br>const { a: [{foo: f}] } = obj; // f = 123<br>解构的 patterns 如何访问到值的内部结构？<br>在一个表达式pattern = someValue中，pattern是如何访问someValue的呢？</p>
+<p>Object patterns 将 value 转换成 Object<br>在访问属性之前，object pattern 将解构的源数据（destructuing source）转换成对象。</p>
+<p>const {length : len} = ‘abc’; // len = 3<br>const {toString: s} = 123; // s = Number.prototype.toString<br>使用“对象解构”的缺点<br>在这个过程中，强制转换成对象的过程不是通过Object()方法，而是通过内置的操作方法toObject()。这两个操作处理undefined和null的方式不太一样。</p>
+<p>Object()方法将原始类型值转换成包装类型对象（wrapper object），原来的值原封不动。</p>
+<blockquote>
+<p>typeof Object(‘abc’)<br>‘object’</p>
+</blockquote>
+<blockquote>
+<p>var obj = {};<br>Object(obj) === obj<br>true<br>也会将undefined 和 null 转换成一个空的对象。</p>
+</blockquote>
+<blockquote>
+<p>Object(undefined)<br>{}<br>Object(null)<br>{}<br>对比之下，当遇到undefined和null的时候，toObject()方法则会抛出一个错误。所以下面的解构是失败的：</p>
+</blockquote>
+<p>const { prop: x } = undefined; // TypeError<br>const { prop: y } = null; // TypeError<br>因此，你可以使用空对象模型{}来检查一个值是否被强制转换成了一个对象。正如前面提到的规则，undefined和null将会抛出错误</p>
+<p>({} = [true, false]); // OK, Arrays are coercible to objects<br>({} = ‘abc’); // OK, strings are coercible to objects</p>
+<p>({} = undefined); // TypeError<br>({} = null); // TypeError<br>表达式两边的括号是必须的，因为在 JavaScript 中，声明不能以花括号开始。</p>
+<p>在可遍历的量中使用数组模型<br>数组解构使用一个迭代器来获取数据源中的元素。因此，你可以对任何可以遍历的值使用数组解构。</p>
+<p>字符串是可遍历的：</p>
+<p>const [x, …y] = ‘abc’; // x=’a’; y=[‘b’, ‘c’]<br>我们无法通过索引访问 Set中的元素，但是可以通过迭代器。所以，数组解构能够在 Sets上工作：</p>
+<p>const [x,y] = new Set([‘a’, ‘b’]); // x=’a’; y=’b’;<br>Set的迭代器总是按照元素插入的顺序将元素返回，所以上述的解构返回的结果总是相同的。</p>
+<p>使用“数组解构”的缺点<br>如果一个值有一个 key 为Symbol.iterator的方法，这个方法返回的是一个对象，那么这个值是可以遍历的。如果被解构的值不能遍历的，那么“数组解构”会抛出一个TypeError错误。</p>
+<p>let x;<br>[x] = [true, false]; // OK, Arrays are iterable<br>[x] = ‘abc’; // OK, strings are iterable<br>[x] = { * <a href="">Symbol.iterator</a> { yield 1 } }; // OK, iterable</p>
+<p>[x] = {}; // TypeError, empty objects are not iterable<br>[x] = undefined; // TypeError, not iterable<br>[x] = null; // TypeError, not iterable<br>可以用一个空的数组模型[]来检查值是不是可遍历的:</p>
+<p>[] = {}; // TypeError, empty objects are not iterable<br>[] = undefined; // TypeError, not iterable<br>[] = null; // TypeError, not iterable<br>默认值<br>默认值是可选的，在数据源中找不到对应的值时，如果设置了默认值，则匹配这个默认值作为匹配结果，否则返回 undefined。</p>
+<p>const [x=3, y] = []; // x = 3; y = undefined。<br>const {foo: x=3, bar: y} = {}; // x = 3; y = undefined<br>undefined 也会触发默认值<br>当解构模式有匹配结果，且匹配结果是 undefined 时，也会使用默认值作为返回结果：</p>
+<p>const [x=1] = [undefined]; // x = 1<br>const {prop: y=2} = {prop: undefined}; // y = 2<br>默认值是根据需要计算出来的<br>也就是说下面的解构：</p>
+<p>const {prop: y=someFunc()} = someValue;<br>相当于：</p>
+<p>let y;<br>if (someValue.prop === undefined) {<br>    y = someFunc();<br>} else {<br>    y = someValue.prop;<br>}<br>使用console.log()可以观察到：</p>
+<blockquote>
+<p>function log(x) { console.log(x); return ‘YES’ }<br>const [a=log(‘hello’)] = [];<br>a<br>‘YES’<br>const [b=log(‘hello’)] = [123];<br>b<br>123<br>在第二个解构中，默认值没有触发，并且log()没有被调用。</p>
+</blockquote>
+<p>默认值可以引用模式中的其他变量<br>默认值可以引用模式中的任何变量，包括相同模式中的其他变量：</p>
+<p>const [x=3, y=x] = [];     // x=3; y=3<br>const [x=3, y=x] = [7];    // x=7; y=7<br>const [x=3, y=x] = [7, 2]; // x=7; y=2<br>但是，变量的顺序很关键，从左到右，先声明的变量不能引用后声明的变量，也就是左边的不能引用右边的。</p>
+<p>const [x=y, y=3] = []; // ReferenceError<br>patterns 的默认值<br>到目前为止，我们所看到的都是模式中变量的默认值，我们也可以为模式设置默认值。</p>
+<p>const [{prop: x} = {}] = [];<br>如果整个模式没有匹配结果，则使用{}作为数据源来匹配。</p>
+<p>const { prop: x } = {}; // x = undefined<br>上面的例子中，x 为 undefined 可能还是不够直观。看下面这个例子：</p>
+<p>const [{prop: x} = {props: ‘abc’}] = []; // x=abc<br>对象解构的更多特性<br>属性，属性值的简写<br>如果属性值是一个变量，和属性的 key相同，就可以忽略这个 key:</p>
+<p>const { x, y } = { x: 11, y: 8 }; // x = 11; y = 8</p>
+<p>// 等价于<br>const { x: x, y: y } = { x: 11, y: 8 };<br>计算后的属性的键<br>如果把表达式放入方括号中，可以用这个表达式声明属性的键：</p>
+<p>const FOO = ‘foo’;<br>const { [FOO]: f} = {fooL 123}; // f = 123<br>这也使得可以使用 symbols 来做属性的键：</p>
+<p>// Create and destructure a property whose key is a symbol<br>const KEY = Symbol();<br>const obj = { [KEY]: ‘abc’ };<br>const { [KEY]: x } = obj; // x = ‘abc’</p>
+<p>// Extract Array.prototype[Symbol.iterator]<br>const { [Symbol.iterator]: func } = [];<br>console.log(typeof func); // function<br>数组解构的更多特性<br>省略<br>在解构的过程中可以跳过一些元素：</p>
+<p>const [,,x,y] = [1,2,3,4]; // x= 3 y = 4;<br>剩余运算符 Rest operator (…)<br>剩余运算符可以将一个可遍历对象中剩余的元素提取到一个数组中。如果这个运算符在数组模式中使用，运算符必须放在最后：</p>
+<p>const [x, …y] = [1,2,3,4]; // x=1; y=[2,3,4];<br>要注意的时，拓展运算符（spread operator）与剩余操作符有着相同的语法-三个点。但是它们之间有区别：前者将数组变成多个元素；后者则用来解构和提取数据，多个元素压缩成一个元素。</p>
+<p>如果运算符找不到任何元素，将会匹配一个空的数组，永远不会返回undefined 或者 null。例如：</p>
+<p>const [x, y, …z] = [‘a’]; // x=’a’; y=undefined; z<br>操作符不一定非要是一个变量，也可以使用模式：</p>
+<p>const [x, …[y, z]] = [‘a’, ‘b’, ‘c’]; // x = ‘a’; y = ‘b’; z = ‘c’<br>解构的陷阱<br>在使用解构的时候，有两点要考虑清楚：</p>
+<p>不能使用大括号作为声明语句的开头；</p>
+<p>在解构的过程中，可以申明变量或者分配给变量，但是不能同时这么做；</p>
+<p>解构的几个例子<br>在 for-of 中使用解构：</p>
+<p>const map = new Map().set(false, ‘no’).set(true, ‘yes’);<br>for (const [key, value] of map) {<br>  console.log(key + ‘ is ‘ + value);<br>}<br>使用解构交换两个变量的值：</p>
+<p>[a, b] = [b, a];<br>或者：</p>
+<p>[a, b, c] = [c, a, b];<br>还可以分割数据：</p>
+<p>const [first, …rest] = [‘a’, ‘b’, ‘c’]; // first = ‘a’; rest = [‘b’, ‘c’]<br>处理方法返回的数组更加方便：</p>
+<p>const [all, year, month, day] = /^(\d\d\d\d)-(\d\d)-(\d\d)$/.exec(‘2999-12-31’);</p>
+<p>const cells = ‘Jane\tDoe\tCTO’<br>const [firstName, lastName, title] = cells.split(‘\t’);<br>console.log(firstName, lastName, title);<br>要注意的一点是：exec等一些方法可能会返回 null，导致程序抛出错误TypeError，此时需要添加一个默认值：</p>
+<p>const [, year, month, day] = /^(\d\d\d\d)-(\d\d)-(\d\d)$/.exec(someStr) || [];</p>
+<p>重点:对iterable的理解</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/11/12/解构赋值/" data-id="ck910dtci002v2lxqj4j6evzq" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/page/10/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/04/15/网易微专业-node-1-1-8-MySQL入门与应用/">网易微专业-node-1.1.8-MySQL入门与应用</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/14/网易微专业-node-1-1-7-MongoDB入门与应用/">网易微专业-node-1.1.7-MongoDB入门与应用</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/13/网易微专业-node-1-1-6-Redis入门及应用/">网易微专业-node-1.1.6-Redis入门及应用</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/12/网易微专业-node-1-1-5-Nginx反向代理-静态资源服务/">网易微专业-node-1.1.5-Nginx反向代理 静态资源服务</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/11/网易微专业-node-1-1-3-Linux快速上手玩转典型应用/">网易微专业-node-1.1.3-Linux快速上手玩转典型应用</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

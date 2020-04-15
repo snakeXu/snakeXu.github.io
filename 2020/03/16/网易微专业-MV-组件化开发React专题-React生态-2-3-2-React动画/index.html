@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>网易微专业-MV-组件化开发React专题-React生态-2.3.2-React动画 | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="这是一个非常不好的例子，在setInterval中每执行一次this.setState，render函数都要重新执行一次，componentDidUpdate/componentWillUpdate等都会被执行，这时候性能是非常糟糕的。如果在一些无关紧要的状态在更新的时候触发了子组件的重绘，组件的性能会更加糟糕。如果我们真的需要div的宽度变化的时候，我们也不要把div的宽度设置为一个状态，我们要">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网易微专业-MV-组件化开发React专题-React生态-2.3.2-React动画">
+<meta property="og:url" content="http://yoursite.com/2020/03/16/网易微专业-MV-组件化开发React专题-React生态-2-3-2-React动画/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="这是一个非常不好的例子，在setInterval中每执行一次this.setState，render函数都要重新执行一次，componentDidUpdate/componentWillUpdate等都会被执行，这时候性能是非常糟糕的。如果在一些无关紧要的状态在更新的时候触发了子组件的重绘，组件的性能会更加糟糕。如果我们真的需要div的宽度变化的时候，我们也不要把div的宽度设置为一个状态，我们要">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/react/2.3.1_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/react/2.3.1_2.png">
+<meta property="og:updated_time" content="2020-03-17T09:13:02.686Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="网易微专业-MV-组件化开发React专题-React生态-2.3.2-React动画">
+<meta name="twitter:description" content="这是一个非常不好的例子，在setInterval中每执行一次this.setState，render函数都要重新执行一次，componentDidUpdate/componentWillUpdate等都会被执行，这时候性能是非常糟糕的。如果在一些无关紧要的状态在更新的时候触发了子组件的重绘，组件的性能会更加糟糕。如果我们真的需要div的宽度变化的时候，我们也不要把div的宽度设置为一个状态，我们要">
+<meta name="twitter:image" content="https://snakexu.github.io/images/wangyi/react/2.3.1_1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-网易微专业-MV-组件化开发React专题-React生态-2-3-2-React动画" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/03/16/网易微专业-MV-组件化开发React专题-React生态-2-3-2-React动画/" class="article-date">
+  <time datetime="2020-03-16T02:58:55.000Z" itemprop="datePublished">2020-03-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      网易微专业-MV-组件化开发React专题-React生态-2.3.2-React动画
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><img src="https://snakexu.github.io/images/wangyi/react/2.3.1_1.png"><br>这是一个非常不好的例子，在setInterval中每执行一次this.setState，render函数都要重新执行一次，componentDidUpdate/componentWillUpdate等都会被执行，这时候性能是非常糟糕的。如果在一些无关紧要的状态在更新的时候触发了子组件的重绘，组件的性能会更加糟糕。如果我们真的需要div的宽度变化的时候，我们也不要把div的宽度设置为一个状态，我们要真实的拿到这个dom元素，可以对代码进行一些修改<br><img src="https://snakexu.github.io/images/wangyi/react/2.3.1_2.png"><br>虽然这样我们是直接在操作DOM，并没有那么遵循React的风格，但是这种方式是老师推荐的<br>1.列表动画<br>ani.js</p>
+<p><pre><br>import React,{ Component } from ‘react’<br>import ReactDOM from ‘react-dom’<br>import PropTypes from ‘prop-types’<br>export class AnimateList extends Component{<br>    mounted = false<br>    static childContextTypes={<br>        mountStyle:PropTypes.object,<br>        unMountStyle:PropTypes.object,<br>        parent:PropTypes.object,<br>        remove:PropTypes.object,<br>    }<br>    getChildContext(){<br>        return {<br>            mountStyle:this.props.mountStyle,<br>            unMountStyle:this.props.unMountStyle,<br>            parent:this,<br>            remove:this.props.remove,<br>        }<br>    }<br>    render(){<br>        return (<br>            &lt; &gt;<br>                {this.props.children}<br>            &lt; /&gt;<br>        )<br>    }<br>}<br>export class AnimateItem extends Component{<br>    static contextTypes={<br>        mountStyle:PropTypes.object,<br>        unMountStyle:PropTypes.object,<br>        parent:PropTypes.object,<br>        remove:PropTypes.object,<br>    }<br>    unMountAnimation = ()=&gt;{<br>    }<br>    remove = (index)=&gt;{<br>        const {<br>            unMountStyle<br>        } = this.context<br>        let dom = ReactDOM.findDOMNode(this)<br>        let move = ()=&gt;{<br>            this.context.remove(index)<br>        }<br>        dom.addEventListener(‘transitionend’,move,false)<br>        for(let key in unMountStyle){<br>            dom.style[key] = unMountStyle[key]<br>        }<br>    }<br>    render(){<br>        let {<br>            render<br>        } = this.props<br>        return (<br>            &lt; &gt;<br>                {render(this.remove)}<br>                {/<em> {this.props.children} </em>/}<br>            &lt; /&gt;<br>        )<br>    }<br>    run(index){<br>        const {<br>            mountStyle,<br>            parent<br>        } = this.context<br>        let dom = ReactDOM.findDOMNode(this)<br>        // dom.style.transition = <code>0.5s ${index * 0.2}s</code><br>        dom.style.transition = parent.mounted?’0.5s’:<code>0.5s ${index * 0.2}s</code><br>        parent.mounted = parent.props.children.length === index<br>        setTimeout(()=&gt;{<br>            for(let key in mountStyle){<br>                dom.style[key] = mountStyle[key]<br>            }<br>        },0)<br>    }<br>    componentDidMount(){<br>        const {<br>            index<br>        } = this.props<br>        this.run(index)<br>    }<br>}<br></pre><br>aniIndex.js</p>
+<p><pre><br>import React from ‘react’;<br>import {<br>  AnimateItem,<br>  AnimateList<br>} from ‘./ani’<br>class App extends React.Component{<br>  constructor(props) {<br>    super(props);<br>    this.state = {<br>      list :[<br>        ‘a’,<br>        ‘b’,<br>        ‘c’,<br>        ‘d’<br>      ],<br>      value: ‘’<br>    }<br>  }<br>  render() {<br>    const {<br>      list,<br>      value<br>    } = this.state<br>    return (<br>      &lt; div&gt;<br>        &lt; input value={value} onChange={e =&gt; this.setState({value: e.target.value})}/&gt;&lt; button onClick={e =&gt; {<br>          list.push(value)<br>          this.setState({<br>            list<br>          })<br>        }}&gt;add&lt; /button&gt;<br>      &lt; AnimateList<br>        delayTime=’0.2’<br>        runTime=’0.2’<br>        mountStyle={ {<br>          marginLeft: ‘15px’<br>        } }<br>        unMountStyle={ {<br>          marginLeft: 0<br>        } }<br>        remove={(index)=&gt;{<br>            list.splice(index,1)<br>                  this.setState({<br>                    list<br>                  })<br>        }}<br>      &gt;<br>        {<br>          this.state.list.map((item,index) =&gt; &lt; AnimateItem index={index+1} key={item} render={(remove)=&gt;(<br>            &lt; p&gt;hello {item} &lt; button onClick={e =&gt; {<br>                remove(index)<br>              }}&gt;delete&lt; /button&gt; &lt; /p&gt;<br>          )}&gt;<br>          &lt; /AnimateItem&gt;)<br>        }<br>      &lt; /AnimateList&gt;<br>      &lt; /div&gt;<br>    );<br>  }<br>}<br>export default App;<br></pre><br>2.<br>2-1.推荐一个animate的css框架<br><a href="https://github.com/daneden/animate.css" target="_blank" rel="noopener">https://github.com/daneden/animate.css</a></p>
+<p><pre><br>import React,{ Component } from ‘react’<br>import ReactDOM from ‘react-dom’<br>import ‘animate.css’<br>class Animate extends Component{<br>    render(){<br>        return (<br>            &lt; div&gt;<br>                {this.props.children }<br>            &lt; /div&gt;<br>        )<br>    }<br>    componentDidMount(){<br>        const element = ReactDOM.findDOMNode(this)<br>        element.classList.add(‘animated’,’bounceOutLeft’)<br>    }<br>}<br>class App extends Component{<br>    render(){<br>        return (<br>            &lt; div&gt;<br>                &lt; Animate in=’bounceInLeft’ out=’bounceOutDown’&gt;<br>                    &lt; p&gt;hello world&lt; /p&gt;<br>                &lt; /Animate&gt;<br>            &lt; /div&gt;<br>        )<br>    }<br>}<br>export default App<br></pre><br>这里我们注意到并没有把animate的classname写在组件内部的div标签上，写在div标签上不是不可以，但是不建议这么做，因为如果我们中间需要修改类名可能会触发生命周期的一些方法，引起性能下降<br>2-2.基于react的动画框架react-spring<br><a href="https://www.react-spring.io/docs/hooks/basics" target="_blank" rel="noopener">https://www.react-spring.io/docs/hooks/basics</a></p>
+<p><pre><br>import React,{ Component } from ‘react’<br>import ReactDOM from ‘react-dom’<br>import {useSpring,animated} from ‘react-spring’<br>function App(){<br>    const props = useSpring({<br>        to:async(next,cancel)=&gt;{<br>            await next({opacity:1,color:’#ffaaee’})<br>            await next({opacity:0.5,color:’rgb(14,26,19)’})<br>            await next({marginLeft:500,color:’rgb(14,26,19)’})<br>        },<br>        from:{opacity:0,color:’red’,marginLeft:0}<br>    })<br>    return &lt; animated.div style={props}&gt;hello world&lt; /animated.div&gt;<br>}<br>export default App<br></pre><br>后面陆续讲了这个框架的不同用法，这里我没有记录，这里已经有一个开头了，希望自己可以动脑思考。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/03/16/网易微专业-MV-组件化开发React专题-React生态-2-3-2-React动画/" data-id="ck910dtac000o2lxqql0c1oo2" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/03/17/网易微专业-MV-组件化开发React专题-React生态-2-3-5-工程化与webpack/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          网易微专业-MV-组件化开发React专题-React生态-2.3.5-工程化与webpack
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/03/15/网易微专业-MV-组件化开发React专题-React生态-2-3-1-路由-React-Router-原理/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">网易微专业-MV-组件化开发React专题-React生态-2.3.1-路由(React-Router)原理</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/04/15/网易微专业-node-1-1-8-MySQL入门与应用/">网易微专业-node-1.1.8-MySQL入门与应用</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/14/网易微专业-node-1-1-7-MongoDB入门与应用/">网易微专业-node-1.1.7-MongoDB入门与应用</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/13/网易微专业-node-1-1-6-Redis入门及应用/">网易微专业-node-1.1.6-Redis入门及应用</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/12/网易微专业-node-1-1-5-Nginx反向代理-静态资源服务/">网易微专业-node-1.1.5-Nginx反向代理 静态资源服务</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/11/网易微专业-node-1-1-3-Linux快速上手玩转典型应用/">网易微专业-node-1.1.3-Linux快速上手玩转典型应用</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

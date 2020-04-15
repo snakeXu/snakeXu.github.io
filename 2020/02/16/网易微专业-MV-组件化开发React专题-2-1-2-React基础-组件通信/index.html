@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>网易微专业-MV*&amp;组件化开发React专题-2.1.2-React基础-组件通信 | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1.兄弟组件一般都有共同的父组件，兄弟组件之间的通信，可以通过获取父组件信息通信。2.如何实现一个完整有功能的组件例如：闹钟组件——9:00通知我们起床，21:00通知我们休息  important React,{Component} from &apos;react&apos; class Clock extends Component{     render(){         let {onWakeup,on">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网易微专业-MV*&amp;组件化开发React专题-2.1.2-React基础-组件通信">
+<meta property="og:url" content="http://yoursite.com/2020/02/16/网易微专业-MV-组件化开发React专题-2-1-2-React基础-组件通信/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="1.兄弟组件一般都有共同的父组件，兄弟组件之间的通信，可以通过获取父组件信息通信。2.如何实现一个完整有功能的组件例如：闹钟组件——9:00通知我们起床，21:00通知我们休息  important React,{Component} from &apos;react&apos; class Clock extends Component{     render(){         let {onWakeup,on">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/react/2.1.4_1.png">
+<meta property="og:updated_time" content="2020-03-11T11:33:29.052Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="网易微专业-MV*&amp;组件化开发React专题-2.1.2-React基础-组件通信">
+<meta name="twitter:description" content="1.兄弟组件一般都有共同的父组件，兄弟组件之间的通信，可以通过获取父组件信息通信。2.如何实现一个完整有功能的组件例如：闹钟组件——9:00通知我们起床，21:00通知我们休息  important React,{Component} from &apos;react&apos; class Clock extends Component{     render(){         let {onWakeup,on">
+<meta name="twitter:image" content="https://snakexu.github.io/images/wangyi/react/2.1.4_1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-网易微专业-MV-组件化开发React专题-2-1-2-React基础-组件通信" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/02/16/网易微专业-MV-组件化开发React专题-2-1-2-React基础-组件通信/" class="article-date">
+  <time datetime="2020-02-16T05:10:53.000Z" itemprop="datePublished">2020-02-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      网易微专业-MV*&amp;组件化开发React专题-2.1.2-React基础-组件通信
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.<br><img src="https://snakexu.github.io/images/wangyi/react/2.1.4_1.png"><br>兄弟组件一般都有共同的父组件，兄弟组件之间的通信，可以通过获取父组件信息通信。<br>2.如何实现一个完整有功能的组件<br>例如：闹钟组件——9:00通知我们起床，21:00通知我们休息</p>
+<pre>
+important React,{Component} from 'react'
+class Clock extends Component{
+    render(){
+        let {onWakeup,onSleep,time} = this.props   
+        if(time === 9){
+            onWakeup()
+        }
+        if(time === 21){
+            onSleep()
+        }
+        return (
+            < div>clock< /div>
+        )
+    }
+}
+class App extends Component{
+    render(){
+        return (
+            < div>
+                < Clock time = {12} onWakeup = {()=>{alert('wake up')} onSleep = {()=>{alert('sleep')}} />
+            < /div>
+        )
+    }
+}
+</pre>
+另外一个实例，帮助我们更多的了解组件之间的关系
+<pre>
+important React,{Component} from 'react'
+class Action extends Component{
+    constructor(props){
+        super(props);
+        this.state = {
+            value:''
+        }
+    }
+    render(){
+        return (
+            < div>
+                < input value={this.state.value} onChange={(e)=>this.setState({e.target.value})}/>
+                < button onClick={()=>{
+                    this.props.onAdd(this.state.value)
+                    this.setState({value:''})
+                }}>提交< /button>
+            < /div>
+        )
+    }
+}
+class List extends Component{
+    render(){
+        return (
+            < div>
+               {this.props.data.map((item)=>{
+                   < p key={item.id}>{item.name}< /p>
+               })}
+            < /div>
+        )
+    }
+}
+class App extends Component{
+    render(){
+        constructor(props){
+            super(props);
+            this.state = {
+                data:[
+                    {name:'a',id:0},
+                    {name:'b',id:1},
+                    {name:'c',id:2}
+                ]
+            }
+        }
+        return (
+            < div>
+                < Action
+                onAdd = {(name)=>{
+                    let {data} = {this.state}
+                    data.push({name,id:name})
+                    this.setState({data})
+                }}
+                />
+                < List data={this.state.data}/>
+            < /div>
+        )
+    }
+}
+</pre>
+上面例子的实现效果是在输入框中输入内容，点击添加之后，在list中加入新添加的内容 
+3.组件之间的关系
+父组件向子组件通信:面向对象的风格，父组件拿到子组件的实例 ，调用子组件的方法
+子组件向父组件通信:函数式风格，父组件把调用的方法传过去，子组件在合适的地方调用
+兄弟组件之间的通信:
+观察者模式:看下面的代码
+<pre>
+import React,{Component} from 'react';
+class EventComponent extends Component{
+    cb = {}
+    on(name,cb) {
+        this.cb[name] = cb
+    }
+    off(name) {
+        delete this.cb[name]
+    }
+    trigger(name,arg) {
+        this.cb[name](arg)
+    }
+}
+class List extends EventComponent{
+    constructor(props) {
+        super(props);
+        this.state = {
+            data: [
+                {name: 'a',id:0},
+                {name: 'b',id:1},
+                {name: 'c',id:2}
+            ],
+        }
+    }
+    render() {
+        return (
+            < div>
+                {this.state.data.map(item => < p key={item.id}>{item.name}< /p>)}
+            < /div>
+        );
+    }
+
+    clear() {
+        this.setState({
+            data: []
+        })
+    }
+
+    add(name) {
+        let {
+            data
+        } = this.state
+        data.push({
+            name,
+            id:name
+        })
+        this.setState({data})
+    }
+}
+class Action extends EventComponent{
+    constructor(props) {
+        super(props);
+        this.state = {
+            value: ''
+        }
+    }
+
+    render() {
+        return (
+            < div>
+                < input value={this.state.value} onChange={(e) => this.setState({value: e.target.value })}/>
+                < button onClick={(e) =>{
+                    this.trigger('add', this.state.value)
+                }}>add< /button>
+            < /div>
+        );
+    }
+}
+class App extends EventComponent{
+    render() {
+        return (
+            < div>
+                 < List ref='list' />
+                < Action ref='action'/>
+            < /div>
+        );
+    }
+
+    componentDidMount() {
+        let listInstance = this.refs.list
+        let actionInstance = this.refs.action
+        actionInstance.on('add',(name) => {
+            listInstance.add(name)
+        })
+        window.app = this
+
+        // this.refs.list.clear()
+    }
+
+}
+export default App;
+</pre>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/02/16/网易微专业-MV-组件化开发React专题-2-1-2-React基础-组件通信/" data-id="ck910dta9000j2lxqttj1blcz" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/02/16/网易微专业-MV-组件化开发React专题-2-1-2-React基础-ReactDOM与表单/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          网易微专业-MV*&amp;组件化开发React专题-2.1.5-React基础-ReactDOM与表单
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/02/14/网易微专业-MV-组件化开发React专题-2-1-2-React基础-生命周期与数据操作/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">网易微专业-MV*&amp;组件化开发React专题-2.1.3-React基础-生命周期与数据操作</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/04/15/网易微专业-node-1-1-8-MySQL入门与应用/">网易微专业-node-1.1.8-MySQL入门与应用</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/14/网易微专业-node-1-1-7-MongoDB入门与应用/">网易微专业-node-1.1.7-MongoDB入门与应用</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/13/网易微专业-node-1-1-6-Redis入门及应用/">网易微专业-node-1.1.6-Redis入门及应用</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/12/网易微专业-node-1-1-5-Nginx反向代理-静态资源服务/">网易微专业-node-1.1.5-Nginx反向代理 静态资源服务</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/11/网易微专业-node-1-1-3-Linux快速上手玩转典型应用/">网易微专业-node-1.1.3-Linux快速上手玩转典型应用</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

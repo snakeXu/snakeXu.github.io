@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>网易微专业-node-Koa源码分析-2.2.1-Koa类构造函数设计 | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1.集成Emitter我们找到node_modules文件夹下的koa文件夹，找到package.json文件，看到main中的入口文件是lib/application.js，打开application.js // 判断是否为 genterator 方法(koa是基于async/await，而async/await是基于generator函数的)const isGeneratorFunction">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网易微专业-node-Koa源码分析-2.2.1-Koa类构造函数设计">
+<meta property="og:url" content="http://yoursite.com/2020/05/07/网易微专业-node-Koa源码分析-2-2-1-Koa类构造函数设计/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="1.集成Emitter我们找到node_modules文件夹下的koa文件夹，找到package.json文件，看到main中的入口文件是lib/application.js，打开application.js // 判断是否为 genterator 方法(koa是基于async/await，而async/await是基于generator函数的)const isGeneratorFunction">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-05-07T08:58:57.351Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="网易微专业-node-Koa源码分析-2.2.1-Koa类构造函数设计">
+<meta name="twitter:description" content="1.集成Emitter我们找到node_modules文件夹下的koa文件夹，找到package.json文件，看到main中的入口文件是lib/application.js，打开application.js // 判断是否为 genterator 方法(koa是基于async/await，而async/await是基于generator函数的)const isGeneratorFunction">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-网易微专业-node-Koa源码分析-2-2-1-Koa类构造函数设计" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/05/07/网易微专业-node-Koa源码分析-2-2-1-Koa类构造函数设计/" class="article-date">
+  <time datetime="2020-05-07T07:09:50.000Z" itemprop="datePublished">2020-05-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      网易微专业-node-Koa源码分析-2.2.1-Koa类构造函数设计
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.集成Emitter<br>我们找到node_modules文件夹下的koa文件夹，找到package.json文件，看到main中的入口文件是lib/application.js，打开application.js</p>
+<p><pre><br>// 判断是否为 genterator 方法(koa是基于async/await，而async/await是基于generator函数的)<br>const isGeneratorFunction = require(‘is-generator-function’);<br>// 设置debug的命明空间<br>const debug = require(‘debug’)(‘koa:application’);<br>// 当请求完成时执行的一个回调<br>const onFinished = require(‘on-finished’);<br>// 引入 response<br>const response = require(‘./response’);<br>// 中间件机制、剥洋葱模型<br>const compose = require(‘koa-compose’);<br>// 引入 context<br>const context = require(‘./context’);<br>// 引入 request<br>const request = require(‘./request’);<br>// 用于判断http状态的工具包<br>const statuses = require(‘statuses’);<br>// Node 原生事件驱动模块<br>const Emitter = require(‘events’);<br>// Node 原生工具包模块<br>const util = require(‘util’);<br>// Node 原生Stream模块<br>const Stream = require(‘stream’);<br>// Node 原生http模块<br>const http = require(‘http’);<br>// 用于返回对象指定的属性<br>const only = require(‘only’);<br>// 将基于koa生成器中间件转换成基于Promise的中间件<br>const convert = require(‘koa-convert’);<br>// 给出一些信息<br>const deprecate = require(‘depd’)(‘koa’);<br>// 用处创建Http Error的模块<br>const { HttpError } = require(‘http-errors’);<br></pre><br>2.构造函数<br>我们看到，application.js里边有这样的代码<br>module.exports = class Application extends Emitter<br>node是基于事件处理的，这里继承了node的event模块，在构造函数中看到<br>constructor(options) {<br>    // 调用父类进行构造<br>    super();<br>    // 设置一些初始值<br>    options = options || {};<br>    this.proxy = options.proxy || false;<br>    this.subdomainOffset = options.subdomainOffset || 2;<br>    this.proxyIpHeader = options.proxyIpHeader || ‘X-Forwarded-For’;<br>    this.maxIpsCount = options.maxIpsCount || 0;<br>    // 区分开发环境还是生产环境<br>    this.env = options.env || process.env.NODE_ENV || ‘development’;<br>    if (options.keys) this.keys = options.keys;<br>    // 将中间件保存到数组中<br>    this.middleware = [];<br>    this.context = Object.create(context);<br>    this.request = Object.create(request);<br>    this.response = Object.create(response);<br>    if (util.inspect.custom) {<br>      this[util.inspect.custom] = this.inspect;<br>    }<br> }<br><br>也就是说我们new Koa()的时候是可以根据需要传递参数的，在这里老师讲了一下每个参数的意义，部分写了注释<br>3.初始化功能<br>继续看application.js文件的Application的listen</p>
+<p><pre><br>//监听端口，启动服务<br>listen(…args) {<br>    debug(‘listen’);<br>    //利用http模块创建服务，传入回调函数，以及监听端口<br>    const server = http.createServer(this.callback());<br>    return server.listen(…args);<br>}<br>//app.callback()<br>//执行后，返回一个(req,res)=&gt;{}<br>//构建了ctx<br>callback() {<br>    const fn = compose(this.middleware);</pre></p>
+<pre><code>if (!this.listenerCount(&apos;error&apos;)) this.on(&apos;error&apos;, this.onerror);
+
+const handleRequest = (req, res) =&gt; {
+  const ctx = this.createContext(req, res);
+  return this.handleRequest(ctx, fn);
+};
+
+return handleRequest;
+</code></pre><p>}<br>//用于构建上下文对象<br>createContext(req, res) {<br>    const context = Object.create(this.context);<br>    const request = context.request = Object.create(this.request);<br>    const response = context.response = Object.create(this.response);<br>    context.app = request.app = response.app = this;<br>    context.req = request.req = response.req = req;<br>    context.res = request.res = response.res = res;<br>    request.ctx = response.ctx = context;<br>    request.response = response;<br>    response.request = request;<br>    context.originalUrl = request.originalUrl = req.url;<br>    context.state = {};<br>    return context;<br>}<br><br>4.简单模拟本节课内容<br>新建一个项目simple-koa，建立文件夹lib，然后touch application.js</p>
+<p><pre><br>const http = require(‘http’);</pre></p>
+<p>class Application {<br>    constructor() {<br>        this.callbackFunc;<br>    }</p>
+<pre><code>listen(...args) {
+    let server = http.createServer(this.callback());
+    server.listen(...args);
+}
+
+use(fn) {
+    this.callbackFunc = fn;
+}
+
+callback() {
+    return (req, res) =&gt; {
+        this.callbackFunc(req, res);
+    };
+}
+</code></pre><p>}</p>
+<p>module.exports = Application;<br><br>在根文件夹下touch demo.js</p>
+<p><pre><br>const Koa = require(‘./lib/application’);<br>const app = new Koa();</pre></p>
+<p>app.use((req, res) =&gt; {<br>    res.writeHeader(500);<br>    res.end(‘Server Error’);<br>});</p>
+<p>app.listen(3000, () =&gt; {<br>    console.log(‘hello Simple Koa’);<br>});<br><br>初步模拟了koa的初始化。另外这里老师介绍了nodemon，这个插件就是node的热重启，安装在开发环境就好</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/05/07/网易微专业-node-Koa源码分析-2-2-1-Koa类构造函数设计/" data-id="cka5080ei0029hyxq39gi9h8f" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/05/08/vue-cli了解/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          vue-cli了解
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/05/06/网易微专业-node-Koa源码分析-2-1-1-Koa整体结构/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">网易微专业-node-Koa源码分析-2.1.1-Koa整体结构</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端路由/">前端路由</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/正则/">正则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/前端路由/" style="font-size: 10px;">前端路由</a> <a href="/tags/数据结构/" style="font-size: 13.33px;">数据结构</a> <a href="/tags/正则/" style="font-size: 10px;">正则</a> <a href="/tags/算法/" style="font-size: 20px;">算法</a> <a href="/tags/设计模式/" style="font-size: 16.67px;">设计模式</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/05/13/es6-class-extends/">es6 class extends</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/12/网易微专业-node-Koa源码分析-2-2-3-中间件机制剖析/">网易微专业-node-Koa源码分析-2.2.3-中间件机制剖析</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/09/Web-前端路由原理解析和实现/">Web 前端路由原理解析和实现</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/08/网易微专业-node-Koa源码分析-2-2-2-请求处理流程解读/">网易微专业-node-Koa源码分析-2.2.2-请求处理流程解读</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/08/vue-cli了解/">vue-cli了解</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>数据结构-线性表 | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="为了复习数据结构，把大学时候的数据结构课本找出来了，希望能达到理想的效果吧。废话不多说，从线性结构开始。线性结构的特点是:在数据元素的非空有限集合中，(1)存在唯一的一个被称作“第一个”的数据元素(2)存在唯一的一个被称作“最后一个”的数据元素(3)除第一个之外，集合中的每个数据元素均只有一个前驱(4)除最后一个之外，集合中每个数据元素均只有一个后续 线性表线性表是最常用且最简单的一种数据结构。简">
+<meta name="keywords" content="数据结构">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据结构-线性表">
+<meta property="og:url" content="http://yoursite.com/2020/04/24/数据结构-线性表/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="为了复习数据结构，把大学时候的数据结构课本找出来了，希望能达到理想的效果吧。废话不多说，从线性结构开始。线性结构的特点是:在数据元素的非空有限集合中，(1)存在唯一的一个被称作“第一个”的数据元素(2)存在唯一的一个被称作“最后一个”的数据元素(3)除第一个之外，集合中的每个数据元素均只有一个前驱(4)除最后一个之外，集合中每个数据元素均只有一个后续 线性表线性表是最常用且最简单的一种数据结构。简">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://snakexu.github.io/images/others/linear_1.jpeg">
+<meta property="og:updated_time" content="2020-04-29T08:18:22.603Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数据结构-线性表">
+<meta name="twitter:description" content="为了复习数据结构，把大学时候的数据结构课本找出来了，希望能达到理想的效果吧。废话不多说，从线性结构开始。线性结构的特点是:在数据元素的非空有限集合中，(1)存在唯一的一个被称作“第一个”的数据元素(2)存在唯一的一个被称作“最后一个”的数据元素(3)除第一个之外，集合中的每个数据元素均只有一个前驱(4)除最后一个之外，集合中每个数据元素均只有一个后续 线性表线性表是最常用且最简单的一种数据结构。简">
+<meta name="twitter:image" content="https://snakexu.github.io/images/others/linear_1.jpeg">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-数据结构-线性表" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/04/24/数据结构-线性表/" class="article-date">
+  <time datetime="2020-04-24T02:34:18.000Z" itemprop="datePublished">2020-04-24</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      数据结构-线性表
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>为了复习数据结构，把大学时候的数据结构课本找出来了，希望能达到理想的效果吧。废话不多说，从线性结构开始。<br>线性结构的特点是:在数据元素的非空有限集合中，(1)存在唯一的一个被称作“第一个”的数据元素(2)存在唯一的一个被称作“最后一个”的数据元素(3)除第一个之外，集合中的每个数据元素均只有一个前驱(4)除最后一个之外，集合中每个数据元素均只有一个后续</p>
+<p></p><h2>线性表</h2><br>线性表是最常用且最简单的一种数据结构。简而言之，一个线性表是N个数据元素的有限序列。<br>在稍复杂的线性表中，一个数据元素可以由若干个<b>数据项</b>组成。在这种情况下，常把数据元素称为<b>记录</b>，含有带昂记录的线性表又称为<b>文件</b>。<br>线性表中的数据元素可以是各种各样的，可以是26个英文字母(A,B,···，Z)，也可以是数字(1,2,3,···，100)，也可以是学生成绩的记录<br><!-- |姓名|学号|性别|年龄|数学|语文|
+|张三|001|男  |15 |98 |95 |
+|李四|002|男  |15 |99 |92 | --><br>  
+<table>
+	<thead>
+		<th>
+			</th></thead><td>姓名</td>
+			<td>学号</td>
+			<td>性别</td>
+			<td>年龄</td>
+			<td>数学</td>
+			<td>语文</td>
+		
+	
+	<tbody>
+		<tr>
+			<td>张三</td>
+			<td>001</td>
+			<td>男</td>
+			<td>15</td>
+			<td>98</td>
+			<td>95</td>
+		</tr>
+		<tr>
+			<td>李四</td>
+			<td>002</td>
+			<td>男</td>
+			<td>15</td>
+			<td>99</td>
+			<td>92</td>
+		</tr>
+	</tbody>
+</table>
+<br>但是同一线性表中的元素必定具有相同特性，即属于同一数据对象，相邻数据元素之间存在着序偶关系。若将线性表记为<br>(a<sub>1</sub>,···,a<sub>i-1</sub>,a<sub>i</sub>,a<sub>i+1</sub>,···,a<sub>n</sub>)<br>则表中a<sub>i-1</sub>领先于a<sub>i</sub>，a<sub>i</sub>领先于a<sub>i+1</sub>，称a<sub>i-1</sub>是a<sub>i</sub>的直接前驱元素，a<sub>i+1</sub>是a<sub>i</sub>的直接后继元素。当i=1,2,···,n-1时，a<sub>i</sub>有且仅有一个直接后继，当i=2,3,···,n时，a<sub>i</sub>有且仅有一个直接前驱。<br>线性表中元素的个数n(n&gt;=0)定义为线性表的长度，n=0时称为控表。在非空表中的每个数据元素都有一个确定的位置，如a<sub>i</sub>是第一个数据元素，a<sub>n</sub>是最后一个数据元素，a<sub>i</sub>是第i个数据元素，称i为数据元素a<sub>i</sub>在线性表中的位序。<br>线性表是一个相当灵活的数据结构，它的长度可根据需要增长或缩短，即对线性表的数据元素不仅可以进行访问，还可进行插入和删除等。<p></p>
+<p></p><h3>线性表的顺序表示和实现</h3><br>线性表的顺序表示指的是用一组连续的存储单元依次存储线性表的数据元素。<br>假设线性表的每个元素需占用l个存储单元，并以所占的第一个单元的存储地址作为数据元素的存储位置。则线性表中第i+1个数据元素的存储位置LOC(a<sub>i+1</sub>)和第i个数据元素的存储位置LOC(a<sub>i</sub>)之间满足下列关系:<br>LOC(a<sub>i+1</sub>) = LOC(a<sub>i</sub>) + l<br>一般来说，线性表的第i个数据元素a<sub>i</sub>的存储位置为<br>LOC(a<sub>i</sub>) = LOC(a<sub>1</sub>) + (i-1) * l<br>上面LOC(a<sub>1</sub>)是线性表中的第一个数据元素a<sub>1</sub>的存储位置，通常称作线性表的起始位置或者基地址<br>线性表的这种机内表示称作线性表的顺序存储结构或顺序映像，通常，称这种存储结构的线性表为顺序表。它的特点是，为表中相邻的元素a<sub>i</sub>和a<sub>i+1</sub>赋以相邻的存储位置LOC(a<sub>i</sub>)和LOC(a<sub>i+1</sub>)。换句话说，以元素在计算机内“物理位置相邻”来表示线性表中数据元素之间的逻辑关系。每一个数据元素的存储位置都和线性表的起始位置相差一个和数据元素在线性表中的位序成正比的常数。由此，只要确定了存储线性表的起始位置，线性表中任一数据元素都可随机存取，所以线性表的顺序存储结构是一种随机存取的存储结构。<p></p>
+<p></p><h3>线性表的链式表示和实现</h3><br>线性表的顺序存储结构的特点是逻辑关系上相邻的两个元素在物理位置上也相邻，因此可以随机存取表中任一元素，它的存储位置可用一个简单、直观的公式来表示。然而，从另一方面来讲，这个特点也铸成了这种存储结构的弱点：在作插入或删除操作时，需要移动大量元素。本节我们将讨论线性表的另一种表示方法——链式存储结构，由于它不要求逻辑上相邻的元素在物理位置上也相邻，因此它没有顺序存储所具有的弱点，但同时也失去了顺序表可随机存取的优点。<p></p>
+<p></p><h4>线性链表</h4><br>线性表的链式存储结构的特点是用一组任意的存储单元存储线性表的数据元素(这组存储单元可以是连续的，也可以是不连续的)。因此，为了表示每个数据元素a<sub>i</sub>与其直接后继数据元素a<sub>i+1</sub>之间的逻辑关系，对数据元素a<sub>i</sub>来说除了存储其本身的信息之外，还需要存储一个指示其直接后继的信息(即直接后继的存储位置)。这两部分信息组成数据元素a<sub>i</sub>的存储映像，称为<b>结点</b>。它包括连个域：其中存储数据元素信息的域称为<b>数据域</b>，存储直接后继存储位置的域称为<b>指针域</b>。指针域中存储的信息称作<b>指针</b>或<b>链</b>。n个节点(a<sub>i</sub>(1&lt;=1&lt;=n)的存储映像)链结成一个<b>链表</b>，即为线性表<br>(a<sub>1</sub>,a<sub>2</sub>,…,a<sub>n</sub>)<br>的链式存储结构。又由于此链表的每个结点中只包含一个指针域，故又称<b>线性链表</b>或<b>单链表</b>。<br>例如：<br>(ZHAO,QIAN,SUN,LI,ZHOU,WU,ZHENG,WANG)<br>的线性链表存储结构，整个链表的存取必须从<b>头指针</b>开始进行，头指针指示链表中第一个结点(即第一个数据元素的存储映像)的存储位置。同时，由于最后一个数据元素没有直接后继，则线性链表中最后一个结点的指针为”空”(NULL)。<br> 
+<table>
+	<thead>
+		<th>
+			</th></thead><td></td>
+			<td>存储地址</td>
+			<td>数据域</td>
+			<td>指针域</td>
+		
+	
+	<tbody>
+		<tr>
+			<td rowspan="8" align="center">头指针H<br>31</td>
+			<td>1</td>
+			<td>LI</td>
+			<td>43</td>
+		</tr>
+		<tr>
+			<td>7</td>
+			<td>QIAN</td>
+			<td>13</td>
+		</tr>
+		<tr>
+			<td>13</td>
+			<td>SUN</td>
+			<td>1</td>
+		</tr>
+		<tr>
+			<td>19</td>
+			<td>WANG</td>
+			<td>NULL</td>
+		</tr>
+		<tr>
+			<td>25</td>
+			<td>WU</td>
+			<td>37</td>
+		</tr>
+		<tr>
+			<td>31</td>
+			<td>ZHAO</td>
+			<td>7</td>
+		</tr>
+		<tr>
+			<td>37</td>
+			<td>ZHENG</td>
+			<td>19</td>
+		</tr>
+		<tr>
+			<td>43</td>
+			<td>ZHOU</td>
+			<td>25</td>
+		</tr>
+	</tbody>
+</table>
+<br>用线性链表表示线性表时，数据元素之间的逻辑关系是由结点中的指针指示的。换句话说，指针为数据元素之间的逻辑关系的映像，则逻辑上相邻的两个数据元素其存储的物理位置不要求紧邻，由此，这种存储结构为非顺序映像或链式映像。<br>假设L是LinkList型的变量，则L为单链表的头指针，它指向表中第一个结点。若L为”空”(L=NULL)，则所表示的线性表为”空”表，其长度为”零”。有时我们在单链表的第一个结点之前附设一个结点，称之为<b>头结点</b>。头结点的数据域可以不存储任何信息，也可以存储如线性表的长度等类的附加信息，头结点的指针域存储指向第一个结点的指针(即第一个元素结点的存储位置)。<br>在单链表中，任何两个元素的存储位置之间没有固定的联系。然而，每个元素的存储位置都包含在其直接前驱结点的信息之中。假设p是指向线性表中第i个数据元素(结点a<sub>i</sub>)的指针，则p-&gt;next是指向第i+1个数据元素(结点a<sub>i+1</sub>)的指针。换句话说，若p-&gt;data=a<sub>i</sub>，则p-&gt;next-&gt;data=a<sub>i+1</sub>。由此，在单链表中，取得第i个数据元素必须从头指针出发寻找，因此，单链表是非随机存取的存储结构。<p></p>
+<pre>
+/*
+* 单向链表的基本操作 增、删、查
+* param data 结点的值
+* param index 
+* reverse 逆转链表
+*/
+class Node{
+    constructor(data,next) {
+        this.data = data
+        this.next = next
+    }
+}
+class LinkList{
+    constructor(){
+        this.head = new Node(0,null);//头结点
+        this.length = 0;
+    }
+    createNode(data,next) {
+        return new Node(data,next);
+    }
+    insertNode(index,data){
+        if(index < 1) return new Error('请正确填写要插入数据的位置')
+        let j = 1;
+        let p = this.head;
+        while(p.next && j < index){
+            j++
+            p = p.next
+        }
+        let newNode = this.createNode(data,p.next)
+        p.next = newNode
+        this.length++
+    }
+    deleteNode(index){
+        if(typeof index !== 'number' || index < 0){
+            return new Error('请正确选择要删除的项')
+        }
+        if(this.length === 0){
+            return new Error('结点不存在')
+        }
+        let p = this.head,j=1;
+        while(p.next && j < index){
+            j++
+            p = p.next
+        }
+        let item = p.next
+        p.next = item.next
+        item = null
+        this.length -= 1;
+    }
+    find(index){
+        let p = this.head,j=1;
+        while(p.next && j < index){
+            j++
+            p = p.next
+        }
+        return p.next
+    }
+    getList(){
+        let arr = []
+        let p = this.head,i=0
+        while(p.next){
+            p=p.next
+            arr[i++] = p.data
+        }
+        return arr
+    }
+    //getLength(){
+        //return this.length
+    //}
+    reverse(){
+        let p = this.head,s = p.next,t;
+        while(s.next){
+            t = s.next;
+            s.next = p;
+            p = s;
+            s = t;
+        }
+        s.next = p;
+        this.head.next.next = null
+        this.head.next = s
+    }
+}
+let list = new LinkList();
+list.insertNode(1,'a')
+list.insertNode(2,'b')
+list.insertNode(3,'c')
+list.deleteNode(1)
+console.log(list.find(1))
+console.log(list.getList())
+console.log(list.getLength())
+</pre>
+<h3>循环链表</h3>
+循环链表是另一种形式的链式存储结构。它的特点是表中最后一个结点的指针指向头结点，整个链表形成一个环。由此，从表中任一结点出发均可找到表中其它结点。
+循环链表的操作和线性链表基本一致，差别仅在于算法中的循环条件是不是p或p->next是否为空，而是它们是否等于头指针。但有的时候，若在循环链表中设立尾指针而不设立头指针，可使某些操作简化。例如将两个线性表合并成一个表时，仅需将一个表的表尾和另一个表的表头相接。
+<h3>双向链表</h3>
+双向链表的结点中有两个指针域，其一指向直接后继，另一指向直接前趋。和单链的循环链表类似，双向链表也可以有循环链表。
+<img src="https://snakexu.github.io/images/others/linear_1.jpeg">
+上图中(c)，链表中存有两个环，(b)所示为只有一个表头结点的空表。在双向链表中，若d为指向表中某一结点的指针(即d为DuLinkList型变量)，则显然有
+d -> next -> prior = d -> prior -> next = d
+这个表示式恰当地反应了这种结构的特性。
+在双向链表中，有些操作如:ListLength、GetElem和LocateElem等仅需涉及一个方向的指针，则它们的算法描述和线性链表的操作相同，但在插入、删除时有很大的不同，在双向链表中需同时修改两个方向上的指针。
+<pre>
+/*
+* 双向链表的基本操作
+* param data 结点的值
+* param index 结点索引
+* param prev 前驱指针
+* param next 后继指针
+*/
+class Node{
+    constructor(data,prev,next){
+        this.data = data;
+        this.next = next;
+        this.prev = prev
+    }
+}
+class DoubleList{
+    //
+}
+</pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/04/24/数据结构-线性表/" data-id="cka5080gi003hhyxqoqcg9ciw" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据结构/">数据结构</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/04/29/数据结构-树和二叉树/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          数据结构-树和二叉树
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/04/23/网易微专业-node-1-2-3-ES6-异步编程解决方案/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">网易微专业-node-1.2.3-ES6+异步编程解决方案</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端路由/">前端路由</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/正则/">正则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/前端路由/" style="font-size: 10px;">前端路由</a> <a href="/tags/数据结构/" style="font-size: 13.33px;">数据结构</a> <a href="/tags/正则/" style="font-size: 10px;">正则</a> <a href="/tags/算法/" style="font-size: 20px;">算法</a> <a href="/tags/设计模式/" style="font-size: 16.67px;">设计模式</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/05/13/es6-class-extends/">es6 class extends</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/12/网易微专业-node-Koa源码分析-2-2-3-中间件机制剖析/">网易微专业-node-Koa源码分析-2.2.3-中间件机制剖析</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/09/Web-前端路由原理解析和实现/">Web 前端路由原理解析和实现</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/08/网易微专业-node-Koa源码分析-2-2-2-请求处理流程解读/">网易微专业-node-Koa源码分析-2.2.2-请求处理流程解读</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/08/vue-cli了解/">vue-cli了解</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

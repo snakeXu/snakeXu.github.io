@@ -62,10 +62,10 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-网易微专业-单页应用-1-1-2-vue模块语法，常用指令，事件绑定" class="article article-type-post" itemscope="" itemprop="blogPost">
+    <article id="post-网易微专业-jq源码解析-2-7-1-动画队列-动画设计-动画实现" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2019/12/23/网易微专业-单页应用-1-1-2-vue模块语法，常用指令，事件绑定/" class="article-date">
-  <time datetime="2019-12-23T07:30:40.000Z" itemprop="datePublished">2019-12-23</time>
+    <a href="/2020/01/18/网易微专业-jq源码解析-2-7-1-动画队列-动画设计-动画实现/" class="article-date">
+  <time datetime="2020-01-18T02:49:12.000Z" itemprop="datePublished">2020-01-18</time>
 </a>
     
   </div>
@@ -76,7 +76,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/12/23/网易微专业-单页应用-1-1-2-vue模块语法，常用指令，事件绑定/">网易微专业-单页应用-1.1.2-vue模块语法，常用指令，事件绑定</a>
+      <a class="article-title" href="/2020/01/18/网易微专业-jq源码解析-2-7-1-动画队列-动画设计-动画实现/">网易微专业-jq源码解析-2.7.1-动画队列/动画设计/动画实现</a>
     </h1>
   
 
@@ -84,11 +84,12 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <p>1.尽量不要在DOM元素添加自定义属性和过多的数据可能会引起内存泄露，尽量避免这样做，因为只要DOM元素存在就会常驻于内存当中进行页面渲染，自定义属性和数据就会存在常驻于内存中，除非页面被关闭/销毁，当页面数据越来越多内存损耗也就越来越大，造成内存泄漏(内存泄漏:长期持有一块内存得不到释放，造成不必要的内存损耗 )<br>2.数据缓存接口.data()<br><img src="https://snakexu.github.io/images/wangyi/jq/2.7.1_1.png"><br>3.数据缓存&amp;队列&amp;动画<br><img src="https://snakexu.github.io/images/wangyi/jq/2.7.1_2.png"><br>4.出列-入列<br><img src="https://snakexu.github.io/images/wangyi/jq/2.7.1_3.png"></p>
+
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/23/网易微专业-单页应用-1-1-2-vue模块语法，常用指令，事件绑定/" data-id="ck9115991001x6yxqynlhk1pr" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/01/18/网易微专业-jq源码解析-2-7-1-动画队列-动画设计-动画实现/" data-id="cka5080e3001whyxqb65ajqo7" class="article-share-link">Share</a>
       
       
     </footer>
@@ -98,10 +99,10 @@
 
 
   
-    <article id="post-网易微专业-单页应用-1-1-1-初识VUE" class="article article-type-post" itemscope="" itemprop="blogPost">
+    <article id="post-js运算符优先级" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2019/12/23/网易微专业-单页应用-1-1-1-初识VUE/" class="article-date">
-  <time datetime="2019-12-23T03:05:00.000Z" itemprop="datePublished">2019-12-23</time>
+    <a href="/2020/01/18/js运算符优先级/" class="article-date">
+  <time datetime="2020-01-18T01:20:15.000Z" itemprop="datePublished">2020-01-18</time>
 </a>
     
   </div>
@@ -112,7 +113,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/12/23/网易微专业-单页应用-1-1-1-初识VUE/">网易微专业-单页应用-1.1.1-初识VUE</a>
+      <a class="article-title" href="/2020/01/18/js运算符优先级/">js运算符优先级</a>
     </h1>
   
 
@@ -120,13 +121,12 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>1.什么是Vue<br>参照官方文档的解释，Vue是一个构建数据驱动的web界面的渐进式框架<br>1-1.Vue开发与传统开发对比<br>一个简单的需求：我们在指定DOM(id为app)插入一个元素，并给它绑定一个点击事件<br><img src="https://snakexu.github.io/images/wangyi/vue/1.1.1_1.png"><br><img src="https://snakexu.github.io/images/wangyi/vue/1.1.1_2.png"><br>两种开发方式得出结论<br><img src="https://snakexu.github.io/images/wangyi/vue/1.1.1_3.png"><br>2.vue的引入<br><img src="https://snakexu.github.io/images/wangyi/vue/1.1.1_4.png"><br>3.搭建第一个vue应用，这里我们先采用引入script标签的方式进行搭建。<br>需求：实现列表(feBooks)渲染在ul的li中；实现对输入框的双向数据绑定<br>(以下代码需要放在html文件中)</p>
-<p><pre><br>&lt; script src=”<a href="https://cdn.bootcss.com/vue/2.6.10/vue.min.js&quot;&gt;" target="_blank" rel="noopener">https://cdn.bootcss.com/vue/2.6.10/vue.min.js&quot;&gt;</a>&lt; /script&gt;<br>&lt; div id=”app”&gt;<br>    &lt; ul&gt;<br>        &lt; li v-for=”item in feBooks”&gt;{ {item.name} }&lt; /li&gt;<br>    &lt; /ul&gt;<br>    &lt; input type=”text” v-model=”title”&gt;<br>    &lt; p&gt;{ {title} }&lt; /p&gt;<br>&lt; /div&gt;<br>&lt; script type=”text/javascript”&gt;<br>    new Vue({<br>        el:”#app”,<br>        data:{<br>            title:”欢迎来到网易云课堂”,<br>            feBooks:[<br>            {name: ‘vue基础课程’},<br>            {name: ‘vue进阶课程’},<br>            {name: ‘vue核心源码课程’},<br>            {name: ‘vue实战课程’},<br>            {name: ‘webpack课程’}<br>            ]<br>        }<br>    })<br>&lt; /script&gt;<br></pre><br>应用小结<br><img src="https://snakexu.github.io/images/wangyi/vue/1.1.1_5.png"><br>4.课程小结<br><img src="https://snakexu.github.io/images/wangyi/vue/1.1.1_6.png"></p>
+        <p><img src="https://snakexu.github.io/images/others/operator_1.png"><br><img src="https://snakexu.github.io/images/others/operator_2.png"><br><img src="https://snakexu.github.io/images/others/operator_3.png"><br>以上截图自<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Operator_Precedence" target="_blank" rel="noopener">https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Operator_Precedence</a></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/23/网易微专业-单页应用-1-1-1-初识VUE/" data-id="ck9115991001y6yxq2vuqz54i" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/01/18/js运算符优先级/" data-id="cka5080ct000ihyxqmukcatmb" class="article-share-link">Share</a>
       
       
     </footer>
@@ -136,10 +136,10 @@
 
 
   
-    <article id="post-基于Websocket的火拼俄罗斯-基础" class="article article-type-post" itemscope="" itemprop="blogPost">
+    <article id="post-网易微专业-单页应用-1-3-2-VUE编译器原理探秘二" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2019/12/21/基于Websocket的火拼俄罗斯-基础/" class="article-date">
-  <time datetime="2019-12-21T08:26:03.000Z" itemprop="datePublished">2019-12-21</time>
+    <a href="/2020/01/17/网易微专业-单页应用-1-3-2-VUE编译器原理探秘二/" class="article-date">
+  <time datetime="2020-01-17T03:25:13.000Z" itemprop="datePublished">2020-01-17</time>
 </a>
     
   </div>
@@ -150,7 +150,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/12/21/基于Websocket的火拼俄罗斯-基础/">基于Websocket的火拼俄罗斯(基础)</a>
+      <a class="article-title" href="/2020/01/17/网易微专业-单页应用-1-3-2-VUE编译器原理探秘二/">网易微专业-单页应用-1.3.2-VUE编译器原理探秘二</a>
     </h1>
   
 
@@ -158,626 +158,214 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>1.关于websocket的简单介绍<br>我之前有过一篇相关记录：<a href="https://snakexu.github.io/2019/11/15/%E8%BD%AE%E8%AF%A2/" target="_blank" rel="noopener">https://snakexu.github.io/2019/11/15/%E8%BD%AE%E8%AF%A2/</a><br>2.首先我们需要搭建一个基于nodejs的websocket server,这里需要用到一个模块，叫做nodejs-websocket(<a href="https://github.com/sitegui/nodejs-websocket" target="_blank" rel="noopener">https://github.com/sitegui/nodejs-websocket</a> )，我们知道了通过npm install nodejs-websocket来安装该模块<br>3.我们简单了解下github上给出的例子</p>
+        <p>这节课主要是分析了vue解析模版的过程，如何把页面的HTML字符串，例如&lt; div id=”app” &gt;{ {message} }&lt; /div &gt;内容解析成AST抽象语法树，还是先奉上老师的专栏链接<a href="https://zhuanlan.zhihu.com/p/88363312" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/88363312</a><br>解析出来的AST对象例子如下</p>
 <pre>
-var ws = require("nodejs-websocket")
-// Scream server example: "hi" -> "HI!!!"
-var server = ws.createServer(function (conn) {
-    //conn代表这个连接
-    console.log("New connection")
-    //下面是当客户端有消息发过来会回调的一个函数
-    conn.on("text", function (str) {
-        console.log("Received "+str)
-        //客户端将收到的消息进行处理之后发回
-        conn.sendText(str.toUpperCase()+"!!!")
-    })
-    //连接关闭的时候
-    conn.on("close", function (code, reason) {
-        console.log("Connection closed")
-    })
-}).listen(8001)
-</pre>
-结合我们的index.html我们进行一些修改
-index.html
-<pre>
-< input id="sendText" type="text" name="">
-< button id="sendBtn">发送
-< div id="recv">
-< script type="text/javascript">
-  var websocket = new WebSocket("ws://localhost:3000");
-  websocket.onopen = function(){
-    console.log("websocket open");
-    document.getElementById("recv").innerHTML = "Connected";
-  }
-  websocket.onclose = function() {
-     console.log('websocket close')
-  }
-  websocket.onmessage = function(e){
-    console.log(e.data);
-    document.getElementById("recv").innerHTML = e.data;
-  }
-  document.getElementById("sendBtn").onclick = function(){
-    var txt = document.getElementById("sendText").value;
-    websocket.send(txt);
-  }
-< /script>
-</pre>
-wsServer.js(在上面给定例子的基础上做了简单的修改，将端口号设置为一个变量)
-<pre>
-var ws = require("nodejs-websocket")
-var PORT = 3000
-// Scream server example: "hi" -> "HI!!!"
-var server = ws.createServer(function (conn) {
-    console.log("New connection")
-    conn.on("text", function (str) {
-        console.log("Received "+str)
-        conn.sendText(str.toUpperCase()+"!!!")
-    })
-    conn.on("close", function (code, reason) {
-        console.log("Connection closed")
-    })
-    //这里是为了解决如果直接关掉index.html页面而报错的问题
-    conn.on("error", function(){
-        console.log("handle err");
-        console.log(err);
-    })
-}).listen(PORT)
-console.log("websocket server listening on port" + PORT)
-</pre>
-注意，运行上面程序需要在命令行输入node wsServer.js启动node程序
-4.我们在上面程序的基础上，做一个简单的聊天室程序
-index.html
-<pre>
-< input id="sendText" type="text" name="">
-< button id="sendBtn">发送< /button>
-< script type="text/javascript">
-  var websocket = new WebSocket("ws://localhost:3000");
-  function showMessage(str){
-    var div = document.createElement("div");
-    div.innerHTML = str;
-    document.body.appendChild(div)
-  }
-  websocket.onopen = function(){
-    console.log("websocket open");
-    document.getElementById("sendBtn").onclick = function(){
-      var txt = document.getElementById("sendText").value;
-      if(txt){
-        websocket.send(txt);
-      }
-    }
-  }
-  websocket.onclose = function() {
-     console.log('websocket close')
-  }
-  websocket.onmessage = function(e){
-    console.log(e.data);
-    showMessage(e.data);
-  }
-< /script>
-</pre>
-wsServer.js
-<pre>
-var ws = require("nodejs-websocket")
-var PORT = 3000
-var clientCount = 0;
-// Scream server example: "hi" -> "HI!!!"
-var server = ws.createServer(function (conn) {
-    console.log("New connection")
-    clientCount++;
-    conn.nickname = 'user' +  clientCount;
-    broadcast(conn.nickname + 'comes in')//通知客户端
-    conn.on("text", function (str) {
-        console.log("Received "+str)
-        //conn.sendText(str)
-        broadcast(str)
-    })
-    conn.on("close", function (code, reason) {
-        console.log("Connection closed")
-        broadcast(conn.nickname + 'left')
-    })
-    conn.on("error", function(){
-        console.log("handle err");
-        console.log(err);
-    })
-}).listen(PORT)
-console.log("websocket server listening on port" + PORT)
-function broadcast(str){
-    //server.connections取到server的所有连接
-    server.connections.forEach(function(connection){
-        connection.sendText(str)
-    })
-}
-</pre>
-经过上面的修改，我们重启服务，在浏览器中打开index.html会发现
-<img src="https://snakexu.github.io/images/mooc/websocket_5.png">
-再在浏览器中打开一个index.html，然后在这个页面的input中输入hello everyone点击发送，我们可以看到
-<img src="https://snakexu.github.io/images/mooc/websocket_2.png">
-<img src="https://snakexu.github.io/images/mooc/websocket_3.png">
-在第一次打开的index.html页面中我们看到user2上线的时候有通知，user2发送的消息user1页能够收到，然后我们关闭第一次打开的html页面，也就是user1的页面，可以看到
-<img src="https://snakexu.github.io/images/mooc/websocket_4.png">
-也就是说，user1的离开通知了user2
-简单的聊天室也就完成了，但是这个聊天室也确实过于简单了些，接下来的课程，将对这个聊天室进行一些优化
-5.进行了一些简单的修改，使进入/离开/聊天内容的颜色有了区分，并且能显示是谁发送了消息
-wsServer.js
-<pre>
-var ws = require("nodejs-websocket")
-var PORT = 3000
-var clientCount = 0;
-// Scream server example: "hi" -> "HI!!!"
-var server = ws.createServer(function (conn) {
-    console.log("New connection")
-    clientCount++;
-    conn.nickname = 'user' +  clientCount;
-    var mes = {};
-    mes.type = "enter";
-    mes.data = conn.nickname + ' comes in'
-    broadcast(JSON.stringify(mes))//通知客户端
-    conn.on("text", function (str) {
-        console.log("Received "+str)
-        //conn.sendText(str)
-        var mes = {};
-        mes.type = "message";
-        mes.data = conn.nickname + 'says: ' + str
-        broadcast(JSON.stringify(mes))
-    })
-    conn.on("close", function (code, reason) {
-        console.log("Connection closed")
-        var mes = {};
-        mes.type = "leave";
-        mes.data = conn.nickname + ' left'
-        broadcast(JSON.stringify(mes))
-    })
-    conn.on("error", function(){
-        console.log("handle err");
-        console.log(err);
-    })
-}).listen(PORT)
-console.log("websocket server listening on port" + PORT)
-function broadcast(str){
-    //server.connections取到server的所有连接
-    server.connections.forEach(function(connection){
-        connection.sendText(str)
-    })
-}
-</pre>
-index.html修改的内容比较少，我们只贴上需要修改的地方的代码
-<pre>
-function showMessage(str, type){
-    var div = document.createElement("div");
-    div.innerHTML = str;
-    if(type == "enter"){
-          div.style.color = "blue"
-    }else if(type == "leave"){
-          div.style.color = "red"
-    }
-    document.body.appendChild(div)
-}
-websocket.onmessage = function(e){
-    console.log(e.data);
-    var mes = JSON.parse(e.data)
-    showMessage(mes.data, mes.type);
-}
-</pre>
-<img src="https://snakexu.github.io/images/mooc/websocket_7.png">
-<img src="https://snakexu.github.io/images/mooc/websocket_8.png">
-
-6.终于进入正题，开始准备火拼俄罗斯的制作了，不过这里还是要先了解一下socket.io，官网：https://www.imooc.com/video/15322<br>
-首先安装了socket.io之后，将我们之前的聊天室改为用socket.io编写<br>
-index.html
-<pre>
-//客户端需要引入socket.io，我没有直接下载，用了官网的cdn
-< script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js">< /script>
-< input id="sendText" type="text" name="">
-< button id="sendBtn">发送< /button>
-< script type="text/javascript">
-  var socket = io("ws://localhost:3000");
-  function showMessage(str, type){
-    var div = document.createElement("div");
-    div.innerHTML = str;
-    if(type == "enter"){
-      div.style.color = "blue"
-    }else if(type == "leave"){
-      div.style.color = "red"
-    }
-    document.body.appendChild(div)
-  }
-  document.getElementById("sendBtn").onclick = function(){
-    var txt = document.getElementById("sendText").value;
-    if(txt){
-      socket.emit('message',txt);
-    }
-  }
-  socket.on("enter",function(data){
-    showMessage(data,"enter")
-  })
-  socket.on("message",function(data){
-    showMessage(data,"message")
-  })
-  socket.on("leave",function(data){
-    showMessage(data,"leave")
-  })
-< /script>
-</pre>
-wsServer.js
-<pre>
-var app = require("http").createServer()
-var io = require("socket.io")(app)
-var PORT = 3000
-var clientCount = 0;
-app.listen(PORT);
-io.on('connection',function(socket){
-    clientCount++;
-    socket.nickname = 'user' +  clientCount;
-    io.emit("enter",socket.nickname + ' comes in');
-    socket.on("message",function(str){
-        io.emit("message",socket.nickname + 'says: ' + str)
-    })
-    socket.on("disconnect",function() {
-        io.emit("leave",socket.nickname + ' left')
-    })
-})
-console.log("websocket server listening on port" + PORT)
-</pre>
-很明显看到wsServer.js的代码精简了很多。<br>
-socket.io官方网站是英文网站，我找到了别人博客里翻译的一些：
-socket.io官方文档翻译1 https://www.jianshu.com/p/b30bbf448e57<br>
-socket.io官方文档翻译2 https://www.jianshu.com/p/d1a6c1f46a9a<br>
-socket.io官方文档翻译3 https://www.jianshu.com/p/6395be36cc45<br>
-socket.io官方文档翻译4 https://www.jianshu.com/p/a0d8f7e8609c<br>
-一下子看完确实不太可能，不过还是希望能多看一下。毕竟我们知其然也要知道其所以然。<br>
-另外因为对于基础的，比如var app = require("http").createServer();var io = require("socket.io")(app);这些有疑问，简单的看了一下API。
-(1)由require('socket.io')暴露
-<pre>
-new Server(httpServer[, options])
-httpServer (http.Server) 服务器绑定.
-options (Object)
-用或者不用new实现：
-const io = require('socket.io')();
-// or
-const Server = require('socket.io');
-const io = new Server();
-</pre>
-(2)socket.emit(eventName[, …args][, ack])
-<pre>
-eventName (String)
-args
-ack (Function)
-Returns Socket
-通过字符串名称向socketio发出确定事件，可以包含其他任何参数，支持所有可序列化的数据结构，包括buffer。ack参数可选，并且与客户端返回内容一起调用
-</pre>
-(3)socket.on(eventName, callback)
-<pre>
-eventName (String)
-callback (Function)
-Returns Socket
-为给定事件注册一个新的处理程序。
-</pre>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/21/基于Websocket的火拼俄罗斯-基础/" data-id="ck91159a0002k6yxqkeb2w62z" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-模块化编程-4-2-3-依赖解析-依赖管理处理方案" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/12/20/网易微专业-模块化编程-4-2-3-依赖解析-依赖管理处理方案/" class="article-date">
-  <time datetime="2019-12-20T03:16:54.000Z" itemprop="datePublished">2019-12-20</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/12/20/网易微专业-模块化编程-4-2-3-依赖解析-依赖管理处理方案/">网易微专业-模块化编程-4.2.3-依赖解析-依赖管理处理方案</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <!--https://www.cnblogs.com/beyonds/p/8992619.html-->
-<p>1.源码<br><br>startUp.js</p>
-<p><pre><br>(function(global) {<br>    var startUp = global.startUp = {<br>        version: “1.0.1”,<br>    }<br>    var data = {};<br>    var cache = {};<br>    var anonymousMeta = {};<br>    //模块的生命周期<br>    var status = {<br>        FETCHED: 1,<br>        SAVED: 2,<br>        LOADING: 3,<br>        LOADED: 4,<br>        EXECUTING: 5,<br>        EXECUTED: 6,<br>    }</pre></p>
-<pre><code>var isArray = function(obj) {
-    return toString.call(obj) === &quot;[object Array]&quot;;
-}
-
-var isFunction = function(obj) {
-    return toString.call(obj) === &quot;[object Function]&quot;;
-}
-
-//是否使用了别名
-function parseAlias(id) { //a  b
-    var alias = data.alias; //配置
-    return alias &amp;&amp; isString(alias[id]) ? alias[id] : id;
-}
-
-//不能以&quot;/&quot; &quot;:&quot;开头  结尾必须是一个&quot;/&quot; 后面跟随任意字符至少一个
-var PATHS_RE = /^([^\/:]+)(\/.+)$/; //([^\/:]+)   路径的短名称配置
-
-// 检测是否 书写路径短名称
-function parsePaths(id) {
-    var paths = data.paths; //配置
-    if (paths &amp;&amp; (m = id.match(PATHS_RE)) &amp;&amp; isString(paths[m[1]])) {
-        id = paths[m[1]] + m[2]
-    }
-    return id;
-}
-
-//检测是否添加后缀
-function normalize(path) {
-    var last = path.length - 1;
-    var lastC = path.charAt(last);
-    return (lastC === &quot;/&quot; || path.substring(last - 2) === &quot;.js&quot;) ? path : path + &quot;.js&quot;;
-
-}
-
-//添加根目录
-function addBase(id, uri) {
-    var result;
-    if (id.charAt(0) === &quot;.&quot;) {
-        result = relapath((uri ? uri.match(/[^?]*\//)[0] : data.cwd) + id);
-    } else {
-        result = data.cwd + id;
-    }
-    return result;
-}
-
-var DOT_RE = /\/.\//g; // 规范路径  &quot;/./&quot; =&gt; &quot;/&quot;   
-function relapath(path) {
-    path = path.replace(DOT_RE, &quot;/&quot;);
-    return path;
-}
-
-//生成绝对路径  parent child
-startUp.resolve = function(child, parent) {
-    if (!child) return &quot;&quot;;
-    child = parseAlias(child); //检测是否有别名
-    child = parsePaths(child); // 检测是否有路径别名 依赖模块中引包的模块路径地址 require(&quot;app/c&quot;);
-    child = normalize(child); //检测是否添加后缀
-    return addBase(child, parent); //添加根目录
-}
-
-startUp.request = function(url, callback) {
-    var node = document.createElement(&quot;script&quot;);
-    node.src = url;
-    document.body.appendChild(node);
-    node.onload = function() {
-        //node.onload = null;
-        //document.body.removeChild(node); 
-        callback();
-    }
-}
-
-//构造函数  模块初始化数据
-function Module(uri, deps) {
-    this.uri = uri;
-    this.deps = deps || [];
-    this.exports = null;
-    this.status = 0;
-    this._waitings = {};
-    this._remain = 0;
-}
-
-//分析主干 (左子树 | 右子树) 上的依赖项
-Module.prototype.load = function() {
-    var module = this;
-    module.status = status.LOADING;
-    var uris = module.resolve(); //获取主干上的依赖项
-    var len = module._remain = uris.length;
-    //console.log(uris)
-    //加载主干上的依赖项(模块)
-    var m;
-    for (var i = 0; i &lt; len; i++) {
-        m = Module.get(uris[i]); //  创建缓存信息
-        if (m.status &lt; status.LOADED) {
-            m._waitings[module.uri] = m._waitings[module.uri] || 1;
-        } else {
-            module._remain--;
+var template = "< div id='app' >{ {message} }< span >< /span >< /div >";
+//解析单个标签
+var initAst = {
+    type: 1,
+    tag: "div",
+    attrs: [{
+        name: "id",
+        value: "app",
+    }],
+    attrsList: [{
+        name: "id",
+        value: "app"
+    }],
+    attrsMap: {
+        id: "app"
+    },
+    parent: undefined,
+    plain: false,
+    static: false,
+    staticRoot: false
+} 
+//完整的模板抽象描述对象(AST)
+var AST = {
+    type: 1,
+    tag: "div",
+    attrs: [{
+        name: "id",
+        value: "app",
+    }],
+    attrsList: [{
+        name: "id",
+        value: "app"
+    }],
+    attrsMap: {
+        id: "app"
+    },
+    children: [{
+            type: 2,
+            expression: "_s(message)",
+            token: [{
+                "@binding": "message"
+            }],
+            text: "{ {message} }",
+            static: false
+        },
+        {
+            type: 1,
+            tag: "span",
+            attrsList: [],
+            attrsMap: {},
+            parent: {type: 1,tag: "div",attrsList: [{name: "id",value: "app"}] …},
+            children: [],
+            plain: true,
+            static: true
+            staticInFor: false
+            staticRoot: false
+            pre: undefined
         }
-    }
-    //如果依赖列表模块全都加载完毕
-    if (module._remain == 0) {//考虑不全面，并没有考虑比如主模块依赖的a.js/b.js是否加载完毕
-        module.onload();
-    };
-
-    //准备执行根目录下的依赖列表中的模块
-    var requestCache = {};
-    for (var i = 0; i &lt; len; i++) {
-        m = Module.get(uris[i]);
-        if (m.status &lt; status.FETCHED) {
-            m.fetch(requestCache);
-        }
-    }
-
-    for (uri in requestCache) {
-        requestCache[uri]();
-    }
+    ],
+    parent: undefined,
+    plain: false,
+    static: false,
+    staticRoot: false
 }
-
-//加载依赖列表中的模块
-Module.prototype.fetch = function(requestCache) {
-    var module = this;
-    console.log(module)
-    module.status = status.FETCHED;
-    var uri = module.uri;
-    requestCache[uri] = sendRequest; //Document.createElement(&quot;script&quot;) 
-
-    function sendRequest() {
-        startUp.request(uri, onRequest);
-    }
-
-    function onRequest() {
-        if (anonymousMeta) {
-            module.save(uri, anonymousMeta);
-        }
-        module.load(); //递归 模块加载策略
-    }
-}
-
-Module.prototype.onload = function() {
-    var mod = this;
-    mod.status = status.LOADED;
-    if (mod.callback) {
-        mod.callback();
-    }
-    //伪递归
-    _waitings = mod._waitings;
-    var uri, m;
-    for (uri in _waitings) {
-        //console.log(uri);   //根目录对应的Module实例对象
-        m = cache[uri];
-        m._remain -= _waitings[uri];
-        if (m._remain == 0) {
-            m.onload()
-        };
-    }
-
-}
-
-//更改初始化数据 
-Module.prototype.save = function(uri, meta) {
-    var module = Module.get(uri); //是否在缓存
-    module.id = uri;
-    module.deps = meta.deps || [];
-    module.factory = meta.factory;
-    module.status = status.SAVED;
-}
-
-//获取模块对外的接口对象
-Module.prototype.exec = function() {
-    var module = this;
-    //防止重复执行
-    if (module.status &gt;= status.EXECUTING) {
-        return module.exports;
-    }
-    module.status = status.EXECUTING; //5
-    var uri = module.uri;
-
-    function require(id) {
-        //console.log(require.resolve(id));   //更新过后的数据
-        return Module.get(require.resolve(id)).exec(); //获取接口对象
-    }
-
-    require.resolve = function(id) {
-        return startUp.resolve(id, uri); 
-    }
-
-    var factory = module.factory;
-    var exports = isFunction(factory) ? factory(require, module.exports = {}, module) : factory;
-
-    if (exports === undefined) {
-        exports = module.exports;
-    }
-    module.exports = exports;
-    module.status = status.EXECUTED; 
-    return exports;
-}
-
-//资源定位 解析依赖项生成绝对路径
-Module.prototype.resolve = function() {
-    var mod = this;
-    var ids = mod.deps; //[&quot;./a&quot;,&quot;./b&quot;]
-    var uris = [];
-    for (var i = 0; i &lt; ids.length; i++) {
-        uris[i] = startUp.resolve(ids[i], mod.uri); //依赖项   (主干| 子树)
-    }
-    //console.log(uris)
-    return uris;
-}
-
-//定义一个模块
-Module.define = function(factory) {
-    var deps;
-    if (isFunction(factory)) {
-        //正则解析依赖项
-        deps = parseDependencies(factory.toString());
-    }
-    //存储当前模块的信息
-    var meta = {
-        id: &quot;&quot;,
-        uri: &quot;&quot;,
-        deps: deps,
-        factory: factory
-    }
-    anonymousMeta = meta;
-}
-
-//检测缓存对象上是否有当前模块信息
-Module.get = function(uri, deps) {
-    return cache[uri] || (cache[uri] = new Module(uri, deps));
-}
-
-Module.use = function(deps, callback, uri) {
-    var module = Module.get(uri, isArray(deps) ? deps : [deps]);
-    //所有模块都加载完毕
-    module.callback = function() {
-        var exports = []; //所以依赖项模块的接口对象
-        var uris = module.resolve();
-        for (var i = 0; i &lt; uris.length; i++) {
-            exports[i] = cache[uris[i]].exec(); //获取模块对外定义的接口对象
-        }
-        if (callback) {
-            callback.apply(global, exports);
-        }
-    }
-    module.load();
-}
-
-var _cid = 0;
-
-function cid() {
-    return _cid++;
-};
-
-data.preload = [];
-//获取当前项目文档的URL
-data.cwd = document.URL.match(/[^?]*\//)[0];
-Module.preload = function(callback) {
-    var length = data.preload.length;
-    if (!length) callback();
-    //length !== 0 先加载预先设定模块
-};
-
-startUp.use = function(list, callback) {
-    //检测有没有预先加载的模块  
-    Module.preload(function() {
-        Module.use(list, callback, data.cwd + &quot;_use_&quot; + cid()); //虚拟的根目录
+</pre>
+这里主要是为了明确parseHTML的参数start/end/chars/comment的含义，comment是注释
+<pre>
+function parse(template, options) {
+    warn$2 = options.warn || baseWarn;
+    parseHTML(template, {
+        start: function() {
+            console.log("开始标签的钩子函数")
+        },
+        end: function() {},
+        chars: function() {
+            console.log("纯文本的钩子函数")
+        },
+        comment: function() {}
     });
 }
+</pre>
+<pre>
+function parseHTML(html, options) {
+    var stack = [];//检测非一元标签是否缺少闭合标签，比如< div >< span > < a href="" >< /a >< /span > < /div >
+                   //stack数组内依次为['div','span','a']
+    var expectHTML = options.expectHTML; //布尔值 默认为false
+    var isUnaryTag$$1 = options.isUnaryTag || no; //是不是单标签
+    var canBeLeftOpenTag$$1 = options.canBeLeftOpenTag || no; //是不是可以省略闭合标签的双标签
+    var index = 0; //解析过程字符流读入的位置
+    var last, lastTag; //last 剩余为解析的html字符串   lastTag 始终存储 stack 栈顶的元素名称
 
-var REQUIRE_RE = /\brequire\s*\(\s*([&quot;&apos;])(.+?)\1\s*\)/g
+    //while (html){   //< /div > 
+    //其实这里的while是有用的，至于while循环的判断html是在循环中html陆续被解析token操作(通过正则文法)，最终会为空结束循环
+    if (!lastTag || !isPlainTextElement(lastTag)) {//第一次进入循环lastTag为undefined,第二次进入循环，存储的是stack栈顶的元素，会有值
+    //isPlainTextElement限定不能为script/style/textarea标签
+        var textEnd = html.indexOf('<'); 考虑很多边界情况，比如各种注释方式="" <="" !----=""> <![]> 或者<!doctype>
+        if (textEnd === 0) {
+            // Start tag:
+            var startTagMatch = parseStartTag();
+            console.log(startTagMatch)
+            if (startTagMatch) {
+                handleStartTag(startTagMatch);
+                //忽略< pre > 标签 < textarea > 标签的内容中第一个换行符
+                if (shouldIgnoreFirstNewline(startTagMatch.tagName, html)) {
+                    advance(1);
+                }
+            }
 
-function parseDependencies(code) {
-    var ret = []
-    code.replace(REQUIRE_RE, function(m, m1, m2) {
-        if (m2) ret.push(m2);
-    });
-    return ret
-};
+            //continue
+        }
+        var text = (void 0),
+            rest = (void 0),
+            next = (void 0);
+        if (textEnd >= 0) { //解析纯文本
+            rest = html.slice(textEnd);
+            while (
+                !endTag.test(rest) &&
+                !startTagOpen.test(rest) &&
+                !comment.test(rest) &&
+                !conditionalComment.test(rest)
+            ) {
+                // < in plain text, be forgiving and treat it as text
+                next = rest.indexOf('<', 1);="" if="" (next="" <="" 0)="" {="" break="" }="" textend="" +="next;" 重置字符流解析的位置="" rest="html.slice(textEnd);" 纯文本后面的内容="" div="">
+            }
+            text = html.substring(0, textEnd);
+            advance(textEnd);
+        }
+        //调用处理纯文本的钩子函数
+        if (options.chars && text) {
+            options.chars(text);
+        }
+    }
+    //}
 
-global.define = Module.define;
-</code></pre><p>})(this);<br><br>a.js</p>
-<p><pre><br>define(function( require, exports, module){<br>    var age = “30”;<br>    var b = require(“b.js”);<br>    console.log(b.sex);<br>    exports.age = age;<br>});<br></pre><br>b.js</p>
-<p><pre><br>define(function( require, exports, module){<br>    var sex = “男”;<br>    return {<br>        sex:sex,<br>    }<br>});<br></pre><br>html</p>
-<p><pre><br>startUp.use([“a.js”, “b.js”], function(a, b) {<br>    console.log(a);<br>    console.log(b);<br>    console.log(“startUp…”);<br>});<br></pre><br>2.回顾<br><img src="https://snakexu.github.io/images/wangyi/module/4.2.3_1.png"><br><img src="https://snakexu.github.io/images/wangyi/module/4.2.3_2.png"></p>
+    function advance(n) {
+        index += n;
+        html = html.substring(n);
+    }
 
+    function parseStartTag() {
+        var start = html.match(startTagOpen); //startTagOpen  正则文法   token
+        if (start) {
+            var match = {
+                tagName: start[1],
+                attrs: [],
+                start: index,//解析开始标签字符流起始位置
+            };
+            advance(start[0].length);
+            var end, attr;//end 分析当前标签是否一元标签 id="value" v-pre ... >  />
+            //startTagClose  检测标签是否是一个完整的开始标签   "/> || >"
+            while (!(end = html.match(startTagClose)) && (attr = html.match(attribute))) {
+                advance(attr[0].length);
+                match.attrs.push(attr);
+            }
+            if (end) {
+                match.unarySlash = end[1]; //unarySlash 属性 是否有值  判断元素是否为一元标签
+                advance(end[0].length);
+                match.end = index;
+                return match
+            }
+
+        }
+    }
+
+    //handleStartTag 处理开始标签的解析结果
+    function handleStartTag(match) {
+        var tagName = match.tagName; //开始标签的名称
+        var unarySlash = match.unarySlash; // 一元或非一元标签
+
+        var unary = isUnaryTag$$1(tagName) || !!unarySlash; //非一元标签
+        console.log(match.attrs)
+        var l = match.attrs.length; //数组 [" id='app'", "id", "=", undefined, "app", undefined, index: 0]
+        var attrs = new Array(l);
+        for (var i = 0; i < l; i++) {
+            var args = match.attrs[i];
+            var value = args[3] || args[4] || args[5] || ''; //value
+            //
+            var shouldDecodeNewlines = tagName === 'a' && args[1] === 'href' ?
+                options.shouldDecodeNewlinesForHref :
+                options.shouldDecodeNewlines;
+            attrs[i] = {
+                name: args[1],
+                value: value //decodeAttr(value, shouldDecodeNewlines)
+            };
+        }
+
+        if (!unary) { //true
+            stack.push({
+                tag: tagName,
+                lowerCasedTag: tagName.toLowerCase(),
+                attrs: attrs
+            });
+            lastTag = tagName;
+        }
+        //调用开始标签的钩子函数
+        if (options.start) {
+            options.start(tagName, attrs, unary, match.start, match.end);
+        }
+    }
+
+}
+</',></');></pre>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/20/网易微专业-模块化编程-4-2-3-依赖解析-依赖管理处理方案/" data-id="ck911599400256yxq7g2uh046" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/01/17/网易微专业-单页应用-1-3-2-VUE编译器原理探秘二/" data-id="cka5080en002ihyxqwtbvm1g1" class="article-share-link">Share</a>
       
       
     </footer>
@@ -787,10 +375,10 @@ global.define = Module.define;
 
 
   
-    <article id="post-网易微专业-模块化编程-4-2-2-模块资源定位-异步加载" class="article article-type-post" itemscope="" itemprop="blogPost">
+    <article id="post-网易微专业-单页应用-1-3-1-VUE编译器原理探秘一" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2019/12/13/网易微专业-模块化编程-4-2-2-模块资源定位-异步加载/" class="article-date">
-  <time datetime="2019-12-13T09:30:50.000Z" itemprop="datePublished">2019-12-13</time>
+    <a href="/2020/01/14/网易微专业-单页应用-1-3-1-VUE编译器原理探秘一/" class="article-date">
+  <time datetime="2020-01-14T03:03:42.000Z" itemprop="datePublished">2020-01-14</time>
 </a>
     
   </div>
@@ -801,7 +389,7 @@ global.define = Module.define;
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/12/13/网易微专业-模块化编程-4-2-2-模块资源定位-异步加载/">网易微专业-模块化编程-4.2.2-模块资源定位-异步加载</a>
+      <a class="article-title" href="/2020/01/14/网易微专业-单页应用-1-3-1-VUE编译器原理探秘一/">网易微专业-单页应用-1.3.1-VUE编译器原理探秘一</a>
     </h1>
   
 
@@ -809,246 +397,216 @@ global.define = Module.define;
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>1.资源定位-动态加载<br><img src="https://snakexu.github.io/images/wangyi/module/4.2.2_1.png"><br>2.源码<br>startUp.js</p>
+        <p>1.由一个思维导图开始<br><img src="https://snakexu.github.io/images/wangyi/vue/0113_1.png"><br>思维导图源地址<a href="https://www.processon.com/view/link/5cb4b6dce4b02a2858ed34a3" target="_blank" rel="noopener">https://www.processon.com/view/link/5cb4b6dce4b02a2858ed34a3</a><br>max老师专栏地址<a href="https://www.zhihu.com/people/li-qiang-5-3-60/posts" target="_blank" rel="noopener">https://www.zhihu.com/people/li-qiang-5-3-60/posts</a><br>这个思维导图大概讲述了我们在一个vue项目里，是如何一步步把我们写的代码编译为浏览器语言的过程(我这么说应该是没有问题)，并不是我们在项目代码里写了一个div标签，就能在浏览器里看到一个div标签，这其中经过了编译过程。<br>首先我们看一下官网中的生命周期图示<a href="https://cn.vuejs.org/v2/guide/instance.html" target="_blank" rel="noopener">https://cn.vuejs.org/v2/guide/instance.html</a><br>我们主要看这一部分<br><img src="https://snakexu.github.io/images/wangyi/vue/0113_2.png"><br>这一部分对应思维导图的template模版部分。<br>max老师关于这部分的描述<a href="https://zhuanlan.zhihu.com/p/84827482" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/84827482</a><br>非常感谢max老师抽丝剥茧的分析了代码，但是说实话，真是看了四五遍才理清一部分脉络，只想说代码写的真是太优秀了，环环相扣。在我目前看来，这是把vue编译的主脉络剥离出来，分析编译的过程的主脉络代码。</p>
 <pre>
-(function(global) {
-    var startUp = global.startUp = {
-        version: "1.0.1",
-    }
-    var data = {};
-    var cache = {};
-    var anonymousMeta  = {};
-    //模块的生命周期
-    var status = {
-        FETCHED: 1,
-        SAVED: 2,
-        LOADING: 3,
-        LOADED: 4,
-        EXECUTING: 5,
-        EXECUTED: 6,
-    }
-
-    var isArray = function(obj) {
-        return toString.call(obj) === "[object Array]";
-    }
-
-    //是否使用了别名
-    function parseAlias(id) { //a  b
-        var alias = data.alias; //配置
-        return alias && isString(alias[id]) ? alias[id] : id;
-    }
-
-    //不能以"/" ":"开头  结尾必须是一个"/" 后面跟随任意字符至少一个
-    var PATHS_RE = /^([^\/:]+)(\/.+)$/; //([^\/:]+)   路径的短名称配置
-
-    // 检测是否 书写路径短名称
-    function parsePaths(id) {
-        var paths = data.paths; //配置
-        if (paths && (m = id.match(PATHS_RE)) && isString(paths[m[1]])) {
-            id = paths[m[1]] + m[2]
-        }
-        return id;
-    }
-
-    //检测是否添加后缀
-    function normalize(path) {
-        var last = path.length - 1;
-        var lastC = path.charAt(last);
-        return (lastC === "/" || path.substring(last - 2) === ".js") ? path : path + ".js";
-
-    }
-
-    //添加根目录
-    function addBase(id, uri) {
-        var result;
-        if (id.charAt(0) === ".") {
-            result = relapath((uri ? uri.match(/[^?]*\//)[0] : data.cwd) + id);
-        } else {
-            result = data.cwd + id;
-        }
-        return result;
-    }
-
-    var DOT_RE = /\/.\//g; // 规范路径  "/./" => "/"   
-    function relapath(path) {
-        path = path.replace(DOT_RE, "/");
-        return path;
-    }
-
-    //生成绝对路径  parent child
-    startUp.resolve = function(child, parent) {
-        if (!child) return "";
-        child = parseAlias(child); //检测是否有别名
-        child = parsePaths(child); // 检测是否有路径别名 依赖模块中引包的模块路径地址 require("app/c");
-        child = normalize(child); //检测是否添加后缀
-        return addBase(child, parent); //添加根目录
-    }
-
-    startUp.request = function(url, callback) {
-        var node = document.createElement("script");
-        node.src = url;
-        document.body.appendChild(node);
-        node.onload = function() {
-            //node.onload = null;
-            //document.body.removeChild(node); 
-            callback();
-        }
-    }
-
-    //构造函数  模块初始化数据
-    function Module(uri, deps) {
-        this.uri = uri;
-        this.deps = deps || [];
-        this.exports = null;
-        this.status = 0;
-        this._waitings = {};
-        this._remain = 0;
-    }
-
-    //分析主干 (左子树 | 右子树) 上的依赖项
-    Module.prototype.load = function() {
-        var module = this;
-        module.status = status.LOADING;
-        var uris = module.resolve(); //获取主干上的依赖项
-        var len = module._remain = uris.length;
-        console.log(uris)
-        //加载主干上的依赖项(模块)
-        var m;
-        for (var i = 0; i < len; i++) {
-            m = Module.get(uris[i]); //  创建缓存信息
-            if (m.status < status.LOADED) {
-                m._waitings[module.uri] = m._waitings[module.uri] || 1;
-            } else {
-                module._remain--;
-            }
-        }
-        //如果依赖列表模块全都加载完毕
-        if (module._remain == 0) {
-            module.onload();
-        };
-
-        //准备执行根目录下的依赖列表中的模块
-        var requestCache = {};
-        for (var i = 0; i < len; i++) {
-            m = Module.get(uris[i]);
-            if (m.status < status.FETCHED) {
-                m.fetch(requestCache);
-            }
-        }
-
-        for (uri in requestCache) {
-            requestCache[uri]();
-        }
-    }
-
-    //加载依赖列表中的模块
-    Module.prototype.fetch = function(requestCache) {
-        var module = this;
-        console.log(module)
-        module.status = status.FETCHED;
-        var uri = module.uri;
-        requestCache[uri] = sendRequest; //Document.createElement("script") 
-        //document.cretaE
-
-        function sendRequest() {
-            startUp.request(uri, onRequest);
-        }
-
-        function onRequest() {
-            if (anonymousMeta) {
-                module.save(uri, anonymousMeta); 
-            }
-            module.load(); //递归 模块加载策略
-        }
-    }
-
-    //更改初始化数据 
-    Module.prototype.save = function(uri, meta){
-
-    }
-
-    //资源定位 解析依赖项生成绝对路径
-    Module.prototype.resolve = function() {
-        var mod = this;
-        var ids = mod.deps; //["./a","./b"]
-        var uris = [];
-        for (var i = 0; i < ids.length; i++) {
-            uris[i] = startUp.resolve(ids[i], mod.uri); //依赖项   (主干| 子树)
-        }
-        //console.log(uris)
-        return uris;
-    }
-
-    //定义一个模块
-    Module.define = function(factory) {
-
-    }
-
-    //检测缓存对象上是否有当前模块信息
-    Module.get = function(uri, deps) {
-        return cache[uri] || (cache[uri] = new Module(uri, deps));
-    }
-
-    Module.use = function(deps, callback, uri) {
-        var module = Module.get(uri, isArray(deps) ? deps : [deps]);
-        //所有模块都加载完毕
-        module.callback = function() {
-
-        }
-        module.load();
-    }
-
-    var _cid = 0;
-
-    function cid() {
-        return _cid++;
+(function(root) {
+    //Vue编译器默认配置项
+    var baseOptions = {
+        // expectHTML: true,
+        // modules: modules$1,
+        // directives: directives$1,
+        // isPreTag: isPreTag,
+        // isUnaryTag: isUnaryTag,
+        // mustUseProp: mustUseProp,
+        // canBeLeftOpenTag: canBeLeftOpenTag,
+        // isReservedTag: isReservedTag,
+        // getTagNamespace: getTagNamespace,
+        // staticKeys: genStaticKeys(modules$1)
     };
 
-    data.preload = [];
-    //获取当前项目文档的URL
-    data.cwd = document.URL.match(/[^?]*\//)[0];
-    Module.preload = function(callback) {
-        var length = data.preload.length;
-        if (!length) callback();
-        //length !== 0 先加载预先设定模块
-    };
-
-    startUp.use = function(list, callback) {
-        //检测有没有预先加载的模块  
-        Module.preload(function() {
-            Module.use(list, callback, data.cwd + "_use_" + cid()); //虚拟的根目录
-        });
+    function extend(to, _from) {
+        for (var key in _from) {
+            to[key] = _from[key];
+        }
+        return to
     }
 
-    global.define = Module.define;
+    //渲染函数
+    function createFunction(code, errors) {
+        try {
+            return new Function(code)
+        } catch (err) {
+            errors.push({
+                err: err,
+                code: code
+            });
+            return noop
+        }
+    }
+
+
+    function createCompileToFunctionFn(compile) {
+        var cache = Object.create(null); //缓存对象  优化处理
+
+        return function compileToFunctions(template, options, vm) {
+            options = extend({}, options);
+            // options.warn 编译错误  警告信息的收集
+            {
+                // detect possible CSP restriction
+                try {
+                    new Function('return 1');
+                } catch (e) {
+                    if (e.toString().match(/unsafe-eval|CSP/)) {
+                        warn$$1(
+                            'It seems you are using the standalone build of Vue.js in an ' +
+                            'environment with Content Security Policy that prohibits unsafe-eval. ' +
+                            'The template compiler cannot work in this environment. Consider ' +
+                            'relaxing the policy to allow unsafe-eval or pre-compiling your ' +
+                            'templates into render functions.'
+                        );
+                    }
+                }
+            }
+
+            // check cache
+            var key = options.delimiters ?
+                String(options.delimiters) + template :
+                template;
+            if (cache[key]) {
+                return cache[key] //res   render
+            }
+
+            // compile
+            var compiled = compile(template, options); // 编译以结束
+
+            // check compilation errors/tips
+            {
+                if (compiled.errors && compiled.errors.length) { //错误信息
+                    warn$$1(
+                        "Error compiling template:\n\n" + template + "\n\n" +
+                        compiled.errors.map(function(e) {
+                            return ("- " + e);
+                        }).join('\n') + '\n',
+                        vm
+                    );
+                }
+                if (compiled.tips && compiled.tips.length) { //警告信息
+                    compiled.tips.forEach(function(msg) {
+                        return tip(msg, vm);
+                    });
+                }
+            }
+
+            // turn code into functions
+            var res = {};
+            var fnGenErrors = []; //渲染函数调用时的错误新收集
+            //compiled.render  渲染函数所需的字符串
+            res.render = createFunction(compiled.render, fnGenErrors);
+            res.staticRenderFns = compiled.staticRenderFns.map(function(code) { //标注的静态节点 最终也呈现成渲染函数的格式
+                return createFunction(code, fnGenErrors)
+            });
+
+            { //呈现渲染函数中的错误
+                if ((!compiled.errors || !compiled.errors.length) && fnGenErrors.length) {
+                    warn$$1(
+                        "Failed to generate render function:\n\n" +
+                        fnGenErrors.map(function(ref) {
+                            var err = ref.err;
+                            var code = ref.code;
+
+                            return ((err.toString()) + " in\n\n" + code + "\n");
+                        }).join('\n'),
+                        vm
+                    );
+                }
+            }
+
+            return (cache[key] = res)
+        }
+    }
+
+    function createCompilerCreator(baseCompile) {
+        return function createCompiler(baseOptions) {
+            function compile(template, options) { //正在编译
+                //finalOptions  最终的配置对象
+                var finalOptions = Object.create(baseOptions); //{}.__proto__  baseOptions
+                var errors = [];
+                var tips = [];
+                finalOptions.warn = function(msg, tip) { //错误 警告信息的收集
+                    (tip ? tips : errors).push(msg);
+                };
+
+                if (options) { //extend
+                    // merge custom modules    是否有要处理特殊的属性或者标签
+                    if (options.modules) {
+                        finalOptions.modules =
+                            (baseOptions.modules || []).concat(options.modules);
+                    }
+                    // merge custom directives    合并自定义的指令
+                    if (options.directives) {
+                        finalOptions.directives = extend(
+                            Object.create(baseOptions.directives || null),
+                            options.directives
+                        );
+                    }
+                    // copy other options
+                    for (var key in options) {
+                        if (key !== 'modules' && key !== 'directives') {
+                            finalOptions[key] = options[key];
+                        }
+                    }
+                }
+
+                var compiled = baseCompile(template, finalOptions);
+                compiled.errors = errors;
+                compiled.tips = tips;
+                return compiled
+
+            }
+            return {
+                compile: compile,
+                compileToFunctions: createCompileToFunctionFn(compile)
+            }
+        }
+    }
+
+    var createCompiler = createCompilerCreator(function baseCompile(
+        template, //模板
+        options //配置对象
+    ) {
+        var ast = parse(template.trim(), options); //功能划分区域   模板解析操作  ast对象
+        if (options.optimize !== false) {
+            optimize(ast, options); //标注静态节点
+        }
+        var code = generate(ast, options); //渲染函数所需的字符串
+        return {
+            ast: ast,
+            render: "code.render",
+            staticRenderFns: []
+        }
+    });
+
+
+    var ref$1 = createCompiler(baseOptions);
+    //var compile = ref$1.compile;
+    var compileToFunctions = ref$1.compileToFunctions;
+    //=createCompiler(baseOptions)=createCompilerCreator(baseCompile)(baseOptions).compileToFunctions(template调用函数的时候传进来的)
+     //compileToFunctions = createCompileToFunctionFn(compile){return compileToFunctions(template,options,vm)}
+
+     //编译器解析的工作
+    function parse(template, options) {
+         console.log(template)
+    }
+
+    function optimize() {
+
+    }
+
+    function generate() {
+
+    }
+
+    root.compiler = compileToFunctions;
 })(this);
 </pre>
-a.js
+调用
 <pre>
-define(function( require, exports, module){
-    var age = "30";
-    exports.age = age;
-});
-</pre>
-b.js
-<pre>
-define(function( require, exports, module){
-    var sex = "男";
-    return {
-        sex:sex,
-    }
-});
-</pre>
-html
-<pre>
-startUp.use(["a.js","b.js"], function(){
-    console.log("startUp...");
-});
+var ref = compiler("< div id='app' >{ { message } }< /div >");
 </pre>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/13/网易微专业-模块化编程-4-2-2-模块资源定位-异步加载/" data-id="ck911599300246yxqx0evpgah" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/01/14/网易微专业-单页应用-1-3-1-VUE编译器原理探秘一/" data-id="cka5080en002hhyxq44f06yqs" class="article-share-link">Share</a>
       
       
     </footer>
@@ -1058,10 +616,10 @@ startUp.use(["a.js","b.js"], function(){
 
 
   
-    <article id="post-网易微专业-模块化编程-4-2-1-Module构造器设计-模块数据初始化" class="article article-type-post" itemscope="" itemprop="blogPost">
+    <article id="post-网易微专业福利期-2-2-如何保证你的代码质量" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2019/12/13/网易微专业-模块化编程-4-2-1-Module构造器设计-模块数据初始化/" class="article-date">
-  <time datetime="2019-12-13T07:02:59.000Z" itemprop="datePublished">2019-12-13</time>
+    <a href="/2020/01/11/网易微专业福利期-2-2-如何保证你的代码质量/" class="article-date">
+  <time datetime="2020-01-11T06:51:33.000Z" itemprop="datePublished">2020-01-11</time>
 </a>
     
   </div>
@@ -1072,7 +630,7 @@ startUp.use(["a.js","b.js"], function(){
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/12/13/网易微专业-模块化编程-4-2-1-Module构造器设计-模块数据初始化/">网易微专业-模块化编程-4.2.1-Module构造器设计 模块数据初始化</a>
+      <a class="article-title" href="/2020/01/11/网易微专业福利期-2-2-如何保证你的代码质量/">网易微专业福利期-2.2-如何保证你的代码质量</a>
     </h1>
   
 
@@ -1080,109 +638,394 @@ startUp.use(["a.js","b.js"], function(){
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>1.依赖加载策略<br><img src="https://snakexu.github.io/images/wangyi/module/4.2.1_1.png"><br>2.模块数据初始化<br><img src="https://snakexu.github.io/images/wangyi/module/4.2.1_2.png"><br><img src="https://snakexu.github.io/images/wangyi/module/4.2.1_3.png"><br>模块生命周期里的状态码存在的意义？<br>比如我们有个需求，a.js需要加载b.js，b.js又需要加载a.js，这时候会存在循环无限加载的问题么？不会的，因为我们有状态码，根据状态码决定是否要加载当前模块。比如我们当前模块状态码为6，那么我们是不会重复加载相同模块的。<br>3.源码<br>(1)startUp.js</p>
+        <p>1.单元测试<br>·测试是一种验证我们的代码是否可以按预期工作的方法<br>·单元测试是指对软件中的最小可测试单元进行检查和验证<br>1-1.前端单元测试的意义<br>(1)检测出潜在的bug<br>(2)快速反馈功能输出，验证代码是否达到预期<br>(3)保证代码重构的安全性<br>(4)方便协作开发<br>2.单元测试代码<br>2-1.被测试对象<br>被测试对象为程序中最小组成单元，可以是一个函数/方法集/类等</p>
+<p><pre><br>// 被测试对象<br>let add = (a,b)=&gt;a+b;<br>// 测试代码<br>let expect = (res)=&gt;{<br>    return {<br>        toBe:(actual)=&gt;{<br>            if(res !== actual){<br>                throw new Error(‘期望值与预期值不符’)<br>            }<br>        }<br>    }<br>}<br></pre><br>3.jest的基础使用<br>3-1.jest的安装<br>(1)安装node<br>(2)npm i -D jest或yarn add -D jest进行安装<br>(3)通过npm ls jest查看是否安装成功 </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/01/11/网易微专业福利期-2-2-如何保证你的代码质量/" data-id="cka5080ex002xhyxqpol9571m" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业福利期-2-1-JavaScript内存管理" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/01/10/网易微专业福利期-2-1-JavaScript内存管理/" class="article-date">
+  <time datetime="2020-01-10T07:52:37.000Z" itemprop="datePublished">2020-01-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/01/10/网易微专业福利期-2-1-JavaScript内存管理/">网易微专业福利期-2.1-JavaScript内存管理</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.前端为什么要关注内存<br>任何一个程序的运行都要分配内存空间，对于一个页面来说，如果一些不需要使用的内存没有得到及时释放，我们称这种现象为内存泄漏。一次内存泄漏似乎不会有太大影响，但是内存泄漏的堆积会造成内存的溢出(内存溢出简单来说就是我们所需要使用的内存空间大于可用内存，此时我们的程序就会出现内存溢出错误)，在浏览器的表现就是浏览器长时间无响应或者浏览器崩溃。作为前端程序员我们需要给用户良好的用户体验，因为我们需要<br>·防止页面占用内存过大，引起客户端卡顿甚至无响应<br>·Node.js使用V8引擎，内存对于后台服务的性能至关重要，因为后端服务的持久性，后端更容易造成内存溢出<br>2.js数据类型与js内存机制<br>2-1.数据类型<br>·原始数据类型:字符串(string)、数字(number)、布尔(boolean)、空对象(null)、为定义(undefined)、symbol<br>·引用数据类型:object<br>·内存空间:栈内存(stack)、堆内存(heap)<br>JavaScript原始数据类型都有固定的大小，保存在栈内存中，由系统自动分配存储空间我们可以进行操作，因此原始数据都是按值访问的。栈是一种运算受限的线性表，其限制是仅允许在表的一端进行插入和删除运算。<br>var a=10;这个赋值过程都发生了什么？首先，将10存入内存空间，之后在我们当前的作用域中声明一个变量a,此时a的值为undefined，然后将变量a与我们刚才存入内存空间的10关联，变量定义到此结束。<br>js中的引用数据类型大小是不固定的，存储在堆内存空间，js不允许直接访问堆内存，我们操作对象时是在操作对象的引用而不是操作实际对象。我们可以粗浅理解操作引用就是操作保存在栈内存中的一个内存地址，该地址与堆内存的实际值相关联。引用数据的值是保存在堆内存中的对象。<br>当我们定义一个函数的时候，会在堆内存先开辟一个内存空间，将函数体中的代码以字符串的形式存储到内存中去，这块空间会有一个十六进制的内存地址，会把这个内存地址赋值给函数名(此时函数名与内存地址类似于原始数据类型存储在栈内存中)<br>3.垃圾回收<br>JavaScript的垃圾回收机制<br>垃圾回收:找出那些不再继续使用的变量，然后释放其所占用的内存，垃圾回收器会按照固定的时间间隔周期性的执行这一操作。(也就是说垃圾回收是自动执行的、不可见的)<br>JavaScript使用垃圾回收机制来自动管理内存，垃圾回收是一把双刃剑:优势——可以大幅简化程序的内存管理代码，降低程序员的负担，减少因长时间内存运转带来的内存泄漏问题；不足——意味着程序员将无法掌控内存，JavaScript没有暴露任何关于内存的API，我们无法强迫其进行垃圾回收，更无法干预内存管理。<br>3-1.垃圾回收策略<br>3-1-1.引用计数<br>引用计数:跟踪记录每个值被引用的次数，如果有一个值的引用次数为0，就表示这个值不再用到了，因此可以将这块内存释放。<br>原理:每次引用加一，被释放时减一，当这个值当引用次数变成0时，就可以将其内存空间回收。<br>示例:<br>const obj = {a:10};      //引用+1<br>const obj1 = {a:10};     //引用+1<br>const obj = {};          //引用-1<br>const obj = null;        //引用为0<br>·声明了一个变量并将一个引用类型的值赋值给这个变量，这个引用类型的值的引用次数是1<br>·同一个值又被赋值给另外一个变量，这个引用类型值的引用次数加1<br>·当包含这个引用类型值的变量又被赋值成另外一个值了，难么这个引用类型值的引用次数减1<br>·当引用次数变成0时，说明没办法访问这个值了<br>·当垃圾收集器下一次运行时，它就会释放引用次数是0的值所占用的内存<br>引用计数的bug——循环引用(也就是相互引用),会造成js垃圾回收机制无法回收内存，浪费大量性能<br>function fn(){<br>    var objA = {a:10};<br>    var objB = {a:10};<br>    objA.c = objA;<br>    objB.d = objB;<br>}<br>在采用引用策略的实现中，当函数执行完毕后，objA和objB还将继续存在，因为它们的引用次数永远不会是0，假如这个函数被多次重复调用就会导致大量内存得不到回收。这个问题主要出现在IE8以及以前的时代，现在浏览器更多采用标记清除垃圾回收机制。<br>3-1-2.标记清除<br>(1)标记清除指的是当变量进入环境时，这个变量标记为“进入环境”；而当变量离开环境时，则将其标记为“离开环境”，最后，垃圾收集器完成内存清楚工作，销毁那些带标记的值并回收它们所占用的内存空间。<br>(2)上面说到的环境即为执行环境，执行环境:执行环境定义了变量或函数有权访问的其他数据，决定了它们各自的行为。每个执行环境都有一个与之关联的变量对象(variable object)，环境中定义的所有变量和函数都保存在这个对象中。<br>执行环境分为全局执行环境和局部执行环境，虽然我们在编程时无法访问这个变量，但解析器在处理数据时，会在后台使用它。<br>(2-1)全局执行环境<br>·最外围的一个执行环境<br>·根据宿主环境不同表示执行环境的对象也不一样。在浏览器中，全局的执行环境被认为是window对象(node环境是global)<br>·全局变量和函数都是作为window对象的属性和方法创建的<br>·某个执行环境中的所有代码执行完毕后，该环境被销毁，保存在其中的所有变量和函数定义也随之销毁(例如关闭网页或浏览器)<br>(2-2)环境栈(局部)<br>每个函数都有自己的执行环境。当执行流进入一个函数时，函数的环境就会被推入一个环境栈中。而在函数执行之后，栈将其环境弹出，把控制权返回给之前的执行环境。ECMAScript程序中的执行流正是由这个方便的机制控制着。<br>示例<br>function foo(){<br>    var a = 10;        //被标记进入环境<br>    var b = ‘Hello’;   //被标记进入环境<br>}<br>foo();      //执行完毕，a和b被标记离开环境，内存被回收<br>目前主流浏览器都使用标记清除垃圾回收策略<br>4.V8内存管理机制<br>4-1.V8限制内存的原因<br>·V8最初为浏览器而设计，不太可能遇到大量内存的使用场景<br>·防止因为垃圾回收所导致的线程暂停执行的时间过长<br>4-2.V8的回收策略<br>·V8采用了一种分代回收的策略，将内存分为两个生代:新生代和老生代<br>·V8分别对新生代和老生代使用不同的垃圾回收算法来提升垃圾回收的效率<br>(1-1)新生代垃圾回收<br><img src="https://snakexu.github.io/images/fuliqi/javascript/2.1_1.png"><br>(1-2)新生代对象的晋升<br>·在新生代垃圾回收的过程中，当一个对象经过多次复制后依然存活，它将被认为是生命周期较长的对象，随后会被移动到老生代中，采用新的算法进行管理。<br>·在From空间和To空间进行反转的过程中，如果To空间中的使用量已经超过了25%，那么就将From中的对象直接晋升到老生代内存空间中<br>(1-3)老生代垃圾回收<br>老生代内存空间是一个连续的结构<br>(1-4)老生代垃圾清除<br>·标记清除(Mark Sweep):是将需要被回收的对象进行标记，在垃圾回收运行时直接释放相应的地址空间<br>·标记合并(Mark Compact):将存活的对象移动到一边，将需要被回收的对象移动到另一边，然后对需要被回收的对象区域进行整体的垃圾回收</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/01/10/网易微专业福利期-2-1-JavaScript内存管理/" data-id="cka5080ex002whyxq117wstwo" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-张容铭-设计模式-第三篇-结构型设计模式" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/01/09/张容铭-设计模式-第三篇-结构型设计模式/" class="article-date">
+  <time datetime="2020-01-09T02:07:49.000Z" itemprop="datePublished">2020-01-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/01/09/张容铭-设计模式-第三篇-结构型设计模式/">张容铭-设计模式-第三篇-结构型设计模式</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>一、外观模式<br>外观模式:为一组复杂的子系统借口提供一个更高级的统一接口，通过这个接口使得对子系统接口的访问更容易。在JavaScript中有时也会用于对底层结构兼容性做统一封装用来简化用户使用。<br>当我们用如下代码为页面添加点击事件</p>
+<p><pre><br>document.onclick = funcrtion(e){<br>    e.preventDefault();<br>    if(e.target !== document.getElementById(‘myinput’)){<br>        hidePageAlert();<br>    }<br>}<br>function hidePageAlert(){<br>    //…<br>}<br></pre><br>为document绑定了onclick事件，但是onclick是DOM0级事件，也就是说这种方式绑定的事件相当于为元素绑定了一个事件方法，所以如果这时团队中有人再次通过这种方式为document绑定click事件时，就相当于重新定义了一个方法，会将上面定义的click事件方法覆盖。因此我们应该用DOM2级事件处理程序提供的方法addEventListener来实现，然而你知道老版本的IE浏览器(低于IE9)是不支持这个方法的，所以你要用attachEvent，当然如果有不支持DOM2级事件处理程序的浏览器，你只能用onclick事件方法绑定事件。外观模式可以用来封装他们，兼容所有浏览器。</p>
+<p><pre><br>//外观模式实现<br>function addEvent(dom,type,fn){<br>    //对于支持DOM2级事件处理程序addEventListener方法的浏览器<br>    if(dom.addEventListener){<br>        dom.addEventListener(type,fn,false);<br>    //对于不支持addEventListener方法但支持attachEvent方法的浏览器<br>    }else if(dom.attachEvent){<br>        dom.attachEvent(‘on’+type,fn);<br>    //对于不支持addEventListener方法也不支持attachEvent方法，但支持’on’+事件名称的浏览器<br>    }else{<br>        dom[‘on’+type] = fn<br>    }<br>}<br>var myInput = document.getElementById(‘myinput’);<br>addEvent(myInput,’click’,function(){<br>    console.log(‘绑定第一个事件’)<br>})<br>addEvent(myInput,’click’,function(){<br>    console.log(‘绑定第二个事件’)<br>})<br>addEvent(myInput,’click’,function(){<br>    console.log(‘绑定第三个事件’)<br>})<br></pre><br>这样我们对于支持addEventListener或者attachEvent方法的浏览器就可以放心地绑定多个事件了。另外我们发现，在一开始的代码中，IE低版本浏览器中不兼容e.preventDefault()和e.target,我们也可以通过外观模式来解决。</p>
+<p><pre><br>//获取事件对象<br>var getEvent = function(event){<br>    //标准浏览器返回event,IE下window.event<br>    return event || window.event;<br>}<br>//获取元素<br>var getTarget = function(event){<br>    var event = getEvent(event);<br>    //标准浏览器下event.target,IE下event.srcElement<br>    return event.getTarget || event.srcElement<br>}<br>//阻止默认行为<br>var preventDefault = function(event){<br>    var event = getEvent(event);<br>    //标准浏览器<br>    if(event.preventDefault){<br>        event.preventDefault();<br>    //IE浏览器<br>    }else{<br>        event.returnValue = false;<br>    }<br>}<br></pre><br>然后我们可以重写开始的代码</p>
+<p><pre><br>document.onclick = function(e){<br>    //阻止默认行为<br>    preventDefault(e);<br>    //获取事件源目标对象<br>    if(getTarget(e) !== document.getElementById(‘myinput’)){<br>        hideInputSug();<br>    }<br>}<br></pre><br>外观模式可以将浏览器不兼容的方法变得简单而又兼容各个浏览器，然而这只是外观模式应用的一部分，很多代码库中都是通过外观模式来封装多个功能，简化底层操作方法，比如我们简单实现获取元素的属性样式的简单方法库。</p>
+<p><pre><br>//简约版属性样式方法库<br>var A = {<br>    //通过ID获取元素<br>    g:function(id){<br>        return document.getElementById(id);<br>    },<br>    //设置元素css属性<br>    css:function(id,key,value){<br>        document.getElementById(id).style[key] = value;<br>    },<br>    //设置元素的属性<br>    attr:function(id,key,value){<br>        document.getElementById(id)[key] = value;<br>    },<br>    html:function(id,html){<br>        document.getElementById(id).innerHTML = html;<br>    },<br>    //为元素绑定事件<br>    on:function(){<br>        document.getElementById(id)[‘on’+type] = fn;<br>    }<br>}<br>A.css(‘box’,’background’,’red’);   //设置css样式<br>A.attr(‘box’,’className’,’box’);   //设置class<br>A.html(‘box’,’这是新添加的内容’);     //设置内容<br>A.on(‘box’,’click’,function(){     //绑定事件<br>    A.css(‘box’,’width’,’500px’);<br>})<br></pre><br>二、适配器模式<br>适配器模式:将一个类(对象)的接口(方法或属性)转化成另外一个接口，以满足用户需求，使类(对象)之间的接口的不兼容问题通过适配器得以解决。<br>假如我们现在用公司内部开发的框架A已经写了一部分需求了，这时候发现公司内部的框架不能完全满足现在的需求，我们又引入了jQuery，那现在就有问题了，怎么解决A和jQuery的兼容，毕竟重写之前的需求并不是一个明智的决定。如果框架A和jQuery相似程度很高，那么就可以用一行代码解决问题</p>
+<p><pre><br>window.A = A = jQuery;<br></pre><br>但是如果框架A与jQuery差异很大，那情况就要复杂很多了。我们这里用两个事件举例，一个是页面加载事件，一个是点击事件。</p>
+<p><pre><br>//定义框架<br>var A = A || {};<br>//通过ID获取元素<br>A.g = function(id){<br>    return document.getElementById(id);<br>}<br>//为元素绑定事件<br>A.on = function(id,type,fn){<br>    //如果传递参数是字符串则以id处理，否则以元素对象处理<br>    var dom = typeof id === ‘string’?this.g(id):id;<br>    //标准DOM2级添加事件方式<br>    if(dom.addEventListener){<br>        dom.addEventListener(type,fn,false);<br>    //IE DOM2级添加事件方式<br>    }else if(dom.attachEvent){<br>        dom.attachEvent(‘on’+type,fn);<br>    //简易添加事件方式<br>    }else{<br>        dom[‘on’+type,fn];<br>    }<br>}<br>//窗口加载完成事件<br>A.on(window,’load’,function(){<br>    //按钮点击事件<br>    A.on(‘mybutton’,’click’,function(){<br>        //do something<br>    })<br>})<br></pre><br>现在，如果我们想引入jQuery来换原有的A库，该怎么做？首先g方法是通过id获取元素，所以通过$(jQuery的简写名称)方法直接获取jQuery对象然后通过get获取第一个成员即可，不过on的方法有些复杂，我们不能直接替换，因为jQuery和我们的A库在通过id获取元素时是有区别的，jQuery的id前面要加#。所以异类框架的适配器做法如下</p>
+<p><pre><br>A.g = function(id){<br>    //通过jQuery获取jQuery对象，然后返回第一个成员<br>    return $(id).get(0);<br>}<br>A.on = function(id,type,fn){<br>    //如果传递参数是字符串则以id处理，否则以元素对象处理<br>    var dom = typeof id === ‘string’?$(‘#’+id):$(id);<br>    dom.on(type,fn);<br>}<br></pre><br>除此之外，适配器还有很多用途，比如方法需要传递多个参数，例如……</p>
+<p><pre><br>function doSomething(name,title,age,color,size,prize){}<br></pre><br>我们记住上面的代码参数的顺序是很困难的，所以我们经常以一个参数对象的方式传入，如</p>
+<p><pre><br>/<strong><br><em>obj.name:name
+</em>obj.title:title<br><em>obj.age:age
+</em>obj.color:color<br><em>obj.size:size
+</em>obj.prize:prize
+</strong>/<br>function doSomething(obj){}<br></pre><br>当调用它的时候又不知道传递的参数是否完整，如果有一些必须参数没有传入，一些参数是有默认值的等待，此时我们通常的做法是用适配器来适配传入的这个参数对象，如下</p>
+<p><pre><br>function doSomething(obj){<br>    var _adapter = {<br>        name : ‘雨夜清荷’,<br>        title : ‘设计模式’,<br>        age : 24,<br>        color : ‘pink’,<br>        size : 100,<br>        prize : 50<br>    };<br>    for(var i in _adapter){<br>        _adapter[i] = obj[i] || _adapter[i];<br>    }<br>    //或者extend(_adapter,obj) 注:此时可能会多添加属性<br>    //do things<br>}<br></pre><br>对于这类对参数的适配又有衍生性，比如对数据的适配，比如这里有一个数组</p>
+<p><pre><br>var arr = [‘JavaScript’,’book’,’前端编程语言’,’8月1日’];<br></pre><br>我们发现数组中每个成员代表的意义不同，所以这种数据结构语义不好，我们通常会将其适配成对象形式，比如下面这种对象数据结构</p>
+<p><pre><br>var obj = {<br>    name:’’,<br>    title:’’,<br>    type:’’,<br>    time:’’<br>}<br></pre><br>我们就可以像下面这样适配</p>
+<p><pre><br>function arrToObjAdapter(arr){<br>    return {<br>        name:arr[0],<br>        type:arr[1],<br>        title:arr[2],<br>        data:arr[3]<br>    }<br>}<br>var adapterData = arrToObjAdapter(arr);<br>console.log(adapterData);         //[name:’JavaScript’,type:’book’,title:’前端编程语言’,data:’8月1日’]<br></pre><br>它解决了前后端数据依赖，如果后端架构改变导致传递数据结构发生变化，前端只需要写个适配器就好了。</p>
+<p><pre><br>//为简化模型，这里使用jQuery的ajax方法 理想数据是一个一维数组<br>function ajaxAdapter(data){<br>    //处理数据并返回新数据<br>    return [data[‘key1’],data[‘key2’],data[‘key3’]]<br>}<br>$.ajax({<br>    url:’someAddress.php’,<br>    success:function(data,status){<br>        if(data){<br>            //使用适配后的数据-返回的对象<br>            doSomething(ajaxAdapter(data))<br>        }<br>    }<br>})<br></pre><br>这样以后后端如果有任何数据变化，我们只需要相应的更改ajaxAdapter适配器转换格式就可以了。<br>三、代理模式<br>代理模式:由于一个对象不能直接引用另一个对象，所以需要通过代理对象在这两个对象之间起到中介的作用<br>如果我们想让跨域两端的对象之间实现通信，就需要找个代理对象来实现它们之间的通信。<br>1.代理对象一:img标签<br>img之类的标签通过src属性可以向其他域下的服务器发送请求，不过这类请求是get请求，并且是单向的，它不会有响应数据。可以用于统计，比如：一些站长平台会有对于你的页面统计项，其实现原理就是在你的页面触发一些动作的时候向站长平台发送这类img的get请求，然后它们会对你发送的请求做统计，然而你并不知道统计的相关信息。</p>
+<p><pre><br>//统计代理<br>var Count = (function(){<br>    //缓存图片<br>    var _img = new Image();<br>    //返回统计函数<br>    return function(param){<br>        //统计请求字符串<br>        var str = ‘<a href="http://www.count.com/a.gif?&#39;" target="_blank" rel="noopener">http://www.count.com/a.gif?&#39;</a>;<br>        //拼接请求字符串<br>        for(var i in param){<br>            str += i + ‘=’ + param[i];<br>        }<br>        //发送统计请求<br>        _img.src = str;<br>    }<br>})()<br>Count({num:10})<br></pre><br>2.代理对象二:script标签(JSONP)<br>我们知道通过src属性可实现get请求，因此我们可以在src指向的url(请求地址)上面添加一些字段信息，然后服务器端获取这些字段，再相应地生成一份内容</p>
+<p><pre><br>//前端浏览器页面<br>&lt; script type=”text/javascript” &gt;<br>//回调函数，打印出请求数据与响应数据<br>function jsonpCallBack(res,req){<br>    console.log(res,req);<br>}<br>&lt; /script &gt;<br>&lt; script type=”text/javascript” src=”<a href="http://localhost/test/jsonp.php?callback=jsonp_CallBack&amp;data=getJsonPData&quot;" target="_blank" rel="noopener">http://localhost/test/jsonp.php?callback=jsonp_CallBack&amp;data=getJsonPData&quot;</a> &gt;&lt; /script &gt;<br>&lt;?php<br>/<em>后端获取请求字段数据，并生成返回内容</em>/<br>$data = $_GET[‘data’];<br>$callback = $_GET[“callback”];<br>echo $callback.”(‘success’,’”.$data.”‘)”;<br>?&gt;<br></pre><br>3.代理对象三:代理模版<br>代理模版的解决思路是这样的:既然不同域之间互相调用对方的页面是有限制的，那么自己域中的两个页面相互之间的调用是可以的，即代理页面B调用被代理页面A中对象的方式是可以的。那么要实现这种方式我们只需要在被访问页面的域中，请求返回的Header重定向到代理页面，并在代理页面中处理被代理的页面A就可以了。<br>比如我们将自己的域称为X域，另外的域称为Y域，X域中要有一个被代理页面，即A页面。在A页面中应该具备三个部分，第一个部分是发送请求的模块，如form表单提交，负责向Y域发送请求，并提供额外两组数据，其一是要执行的回调函数名称，其二是X域中代理模版所在的路径，并将target目标指向内嵌框架。第二个部分是一个内嵌框架，如iframe，负责提供第一个部分中form表单的响应目标target的指向，并将迁入X域中的代理页面作为子页面，即B页面。第三个部分是一个回调函数，负责处理返回的数据。</p>
+<p><pre><br>//X域中被代理页面A<br>&lt; script type=”text/javascript” &gt;<br>function callback(data){<br>    console.log(‘成功接收数据’,data);<br>}<br>&lt; /script &gt;<br>&lt; iframe name=”proxyIframe” id=”proxyIframe” src=”” &gt;&lt; /iframe &gt;<br>&lt; form  action=”<a href="http://loacalhost/test/proxy.php&quot;" target="_blank" rel="noopener">http://loacalhost/test/proxy.php&quot;</a> method=”post” target=”proxyIframe”&gt;<br>    &lt; input type=”text” name=”callback” value=”callback” &gt;<br>    &lt; input type=”text” name=”proxy” value=”<a href="http://localhost:8080/proxy.html&quot;" target="_blank" rel="noopener">http://localhost:8080/proxy.html&quot;</a> &gt;<br>    &lt; input type=”submit” value=”提交” &gt;<br>&lt; /form &gt;<br></pre><br>其次在X域中我们也要有一个代理页面，主要负责将自己的页面URL中searcher部分的数据解析出来，如 <a href="http://www.a.com?type=1&amp;title=aa" target="_blank" rel="noopener">http://www.a.com?type=1&amp;title=aa</a> 这个URL中searcher部分指的就是?type=1&amp;title=aa 。将数据重新组装好，调用A页面里的回调函数，将组装好的数据作为参数传入父页面中定义的回调函数中并执行。</p>
+<p><pre><br>//X域中被代理页面B<br>&lt; script type=”text/javascript” &gt;<br>//页面加载后执行<br>window.onload = function(){<br>    //如果不在A页面中返回，不执行<br>    if(top == self) return;<br>    //获取并解析searcher中的数据<br>    var arr = location.search.substr(1).split(‘&amp;’);<br>    //预定义函数名称以及参数集<br>    fn,args;<br>    for(var i = 0, len = arr.length, item; i &lt; len; i++){<br>        //解析searcher中的每组数据<br>        item = arr[i].split(‘=’);<br>        //判断是否为回调函数<br>        if(item[0] == ‘callback’){<br>            //设置回调函数<br>            fn = item[1];<br>        //判断是否是参数集<br>        }else if(item[0] == ‘arg’){<br>            //设置参数集<br>            args = item[1];<br>        }<br>    }<br>    try{<br>        //执行A页面中预设的回调函数<br>        eval(‘top.’+fn+’(“‘+args+’”)’);<br>    }cache(e){}<br>}<br>&lt; /script &gt;<br></pre><br>最后是Y域中的被请求的接口文件C，它的主要工作是将从X域过来的请求的数据解析并获取回调函数字段与代理模版路径字段数据，并打包返回，并将自己的Header重定向为X域的代理模版B所在路径</p>
+<p><pre><br>&lt;?php<br>$proxy = $_POST[“proxy”];<br>$callback = $_POST[“callback”];<br>header(“Location: “.$proxy.”?callback=”.$callback.”&amp;arg=success”);<br>?&gt;<br>测试结果<br>控制台输出依次是<br>成功接收数据success<br></pre><br>四、装饰者模式<br>装饰者模式:在不改变原对象的基础上，通过对其进行包装拓展(添加属性或方法)使原有对象可以满足用户对更复杂需求</p>
+<p><pre><br>//装饰者<br>var decorator = function(input,fn){<br>    //获取事件源<br>    var input = document.getElementById(input);<br>    //若事件源已经绑定事件<br>    if(typeof input.onclick === ‘function’){<br>        //缓存事件源原有回调函数<br>        var oldClickFn = input.onclick;<br>        //为事件源定义新的事件<br>        input.onclick = function(){<br>            //事件源原有回调函数<br>            oldClickFn();<br>            //执行事件源新增回调函数<br>            fn();<br>        }<br>    }else{<br>        //事件源未绑定事件，直接为事件源添加新增回调函数<br>        input.onclick = fn;<br>    }<br>    //做其他事情<br>}<br>//电话输入框功能装饰<br>decorator(‘tel_input’,function(){<br>    document.getElementById(‘tel_demo_text’).style.display = ‘none’;<br>})<br></pre><br>装饰器模式与适配器模式的不同:适配器模式进行拓展很多时候是对对象内部结构的重组，因此了解其自身结构是必须的，而装饰者模式对对象的拓展是一种良性循环，不用了解其具体实现，只是在外部进行了一次封装拓展，这又是对原有功能完整性的一种保护。<br>五、桥接模式<br>桥接模式:在系统沿着多个维度变化的同时，又不增加其复杂度并已达到解耦。<br>写代码时一定要注意对相同的逻辑做抽象提取处理，这样很重要，并且重用率也会很大，可读性更高。<br>假设我们现在有如下需求：<br>给页面上的用户信息部分添加一些鼠标滑过的特效，对于用户名，鼠标滑过直接改变背景颜色，但是用户等级、用户消息等只能改变里面的数字内容。如果作为小白，我们的代码可能是这样的</p>
+<p><pre><br>var spans = document.getElemenentsByTagName(‘span’);<br>//为用户名绑定特效<br>spans[0].onmouseover = function(){<br>    this.style.color = ‘red’;<br>    this.style.background = ‘#ddd’;<br>}<br>spans[0].onmouseout = function(){<br>    this.style.color = ‘#333’;<br>    this.style.background = ‘#f5f5f5’;<br>}<br>//为等级绑定特效<br>spans[1].onmouseover = function(){<br>    this.getElementsByTagName(‘strong’)[0].style.color = ‘red’;<br>    this.getElementsByTagName(‘strong’)[0].style.background = ‘#ddd’;<br>}<br>spans[1].onmouseout = function(){<br>    this.getElementsByTagName(‘strong’)[0].style.color = ‘#333’;<br>    this.getElementsByTagName(‘strong’)[0].style.background = ‘#f5f5f5’;<br>}<br>……<br></pre><br>明显看出来，上面代码非常冗余，问题出在哪儿呢？应该对事件的回调函数再做处理——在写代码时一定要注意对相同的逻辑做抽象提取处理，这一点很重要。对于用户信息模块的每一个部分鼠标滑过与鼠标离开两个事件的执行函数有很大一部分是相似的，比如他们两个都处理每个部件中的某个元素，他们都是处理该元素的字体颜色和背景颜色。所以对于这个相似点的抽象提取是很有必要的，因此你可以创建下面这样一个函数，让它解除与事件中的this的耦合。</p>
+<p><pre><br>//抽象<br>function changeColor(dom,color,bg){<br>    //设置元素的字体颜色<br>    dom.style.color = color;<br>    //设置元素的背景颜色<br>    dom.style.background = bg;<br>}<br></pre><br>剩下你要做的就是对元素绑定事件了，但是有一点你要明白，仅仅知道元素事件绑定与抽象提取的设置样式方法changeColor还是不够，你需要用一个方法将他们链接起来。那么这个方法就是桥接方法，这种模式就是桥接模式。对于事件的桥接方法，我们可以用一个匿名函数代替，否则直接将changeColor作为事件的回掉函数，那么我们刚才所做的事情就白做了，因为他们还将耦合在一起。如下面的为用户名绑定事件</p>
+<p><pre><br>var spans = document.getElementByTagName(‘span’);<br>spans[0].onmouseover = function(){<br>    changeColor(this,’red’,’#ddd’)<br>}<br></pre><br>changeColor方法中dom实质上是事件回调函数中的this，那么我们想解除他们之间的耦合，我们就需要一个桥接方法——匿名回掉函数。通过这个回掉函数，我们将获取到的this传递到changeColor函数中，即可实现需求。同样对于用户名模块的鼠标移开事件用同样的方式即可。</p>
+<p><pre><br>spans[0].onmouseout = function(){<br>    changeColor(this,’#333’,’#f5f5f5’)<br>}<br></pre><br>既然用户名模块的this在桥接匿名函数中获取，那么也应该是同样的道理应用在用户等级上，通过桥接函数来获取数字元素，然后传入changeColor就可以了吧。</p>
+<p><pre><br>spans[1].onmouseover = function(){<br>    changeColor(this.getElementsByTagName(‘strong’)[0],’red’,’#ddd’);<br>}<br>spans[1].onmouseout = function(){<br>    changeColor(this.getElementsByTagName(‘strong’)[0],’#333’,’#f5f5f5’);<br>}<br></pre><br>桥接模式对于多维的变化也同样适用。比如我们写一个canvas跑步游戏，对于游戏中的人、小精灵、小球等一系列的实物都有动作单元，而他们的每个动作实现起来方式又都是统一的，比如人和精灵和球的运动其实就是位置坐标x和y的变化过程，球的颜色与精灵的色彩的绘制方式都相似等，这样我们可以将这些多维化部分，提取出来作为一个抽象运动单元进行保存，而当我们创建实体时，将需要的每个抽象动作单元通过桥接，链接在一起运作。这样他们之间不会相互影响并且该方式降低了他们之间的耦合</p>
+<p><pre><br>//多维变量类<br>//运动单元<br>function Speed(x,y){<br>    this.x = x<br>    this.y = y<br>}<br>Speed.prototype.run = function(){<br>    console.log(‘运动起来’)<br>}<br>//着色单元<br>function Color(cl){<br>    this.color = cl;<br>}<br>Color.prototype.draw = function(){<br>    console.log(‘绘制色彩’)<br>}<br>//变形单元<br>function Shape(sp){<br>    this.shape = sp<br>}<br>Shape.prototype.change = function(){<br>    console.log(‘改变形状’)<br>}<br>//说话单元<br>function Speek(wd){<br>    this.word = wd<br>}<br>Speek.prototype.say = function(){<br>    console.log(‘书写字体’)<br>}<br></pre><br>于是我们想创建一个球类，并且他可以运动可以着色</p>
+<p><pre><br>function Ball(x,y,c){<br>    //实现运动单元<br>    this.speed = new Speed(x,y);<br>    //实现着色单元<br>    this.color = new Color(c);<br>}<br>Ball.prototype.init = function(){<br>    //实现运动<br>    this.speed.run()<br>    //实现着色<br>    this.speed.dras()<br>}<br></pre><br>同样我们想创建一个人物类，他可以运动以及说话</p>
+<p><pre><br>function People(x,y,f){<br>    this.speed = new Speed(x,y)<br>    this.font = new Speek(f)<br>}<br></pre><br>当然我们也可以创建一个精灵类，让他可以运动可以着色可以改变形状</p>
+<p><pre><br>function Spirite(x,y,c,s){<br>    this.speed = new Speed(x,y);<br>    this.color = new Color(c);<br>    this.shape = new Shape(s);<br>}<br>Spirite.prototype.init = function(){<br>    this.speed.run();<br>    this.color.draw();<br>    this.shape.change();<br>}<br></pre><br>当我们想实现一个人物时，我们直接实例化一个人物对象，这样他就可以有用运动和说话的动作了</p>
+<p><pre><br>var p = new People(10,12,16);<br>p.init();<br></pre><br>桥接模式最主要的特点是将实现层(如元素绑定的事件)与抽象层(如修饰页面UI逻辑)解耦分离，使两部分可以独立变化。由此可以看出桥接模式主要是对结构之间的解构。而前面学过的抽象工厂模式与创建者模式主要业务在于创建。通过桥接模式实现的解耦，使实现层与抽象层分开处理，避免需求的改变造成对象内部的修改，体现了面向对象拓展的开放及对修改的关闭原则，这是很有用的。当然由于侨联的添加，有时也造成开发成本的添加。有时性能上也会受影响。<br>六、组合模式<br>组合模式:又称部分-整体模式，将对象组合成树形结构以表示”部分整体”的层次结构。组合模式使得用户对单个对象和组合对象的使用具有一致性。<br>需求:为强化首页用户体验，要求在用户首页添加一个新闻模块，新闻的内容是根据用户平时关注的内容挖掘的，因此有的人可能会显示文字新闻，有的人会是图片新闻，甚至有的人显示的新闻是一个直播链接，方便用户观看比赛……如果一会儿添加一条文字新闻，一会儿添加一条带有直播图标的文字新闻，一会儿添加一条图片新闻……等各种不同的新闻形式的要求。其实我们可以整理出，这些新闻大致可以分为相互独立的几种类型，而对某类新闻修改时又不会影响到其他类新闻，所以可以将每一类新闻抽象成面向对象编程中的一个类，这样日后对某类新闻修改只需针对这类新闻做相应的修改即可。而对于那些不同新闻类型的需求，我们仅需在新闻类中挑选一些组合成需要的模块，也就是说建议用组合模式来完成这个需求。<br>对于每个新闻类这个“部分”，要接口统一，在JavaScript中我们可以通过继承同一个虚拟类来实现，比如这个需求中我们可以让所有的新闻都继承一个新闻虚拟父类News，如下</p>
+<p><pre><br>var News = function(){<br>    //子组件容器<br>    this.children = [];<br>    //当前组件元素<br>    this.element = null;<br>}<br>News.prototype = {<br>    init : function(){<br>        throw new Error(‘请重写你的方法’)<br>    },<br>    add : function(){<br>        throw new Error(‘请重写你的方法’)<br>    },<br>    getElement : function(){<br>        throw new Error(‘请重写你的方法’)<br>    }<br>}<br></pre><br>我们在虚拟父类的构造函数中声明了一些特权变量——虽然通常虚拟类是定义而不实现的，但是我们在虚拟类的构造函数中定义两个特权变量是因为后面的所有继承子类都要声明这两个变量，为了简化子类我们也可以将这些共有变量提前声明在父类中。<br>另外要注意，组合模式不仅仅是单层次组合，也可以是一个多层次的，比如需求中的将图片新闻和文字新闻放在一行的条件就是说，我们将组合后的整体作为一个部分，继续组合。这样你就应该在拆分整体后还要确定他们的层次关系，比如最顶层是一个新闻模块的容器，再往下面是每一行新闻成员集合，每一行还可能有新闻组合体，当然最后一层组合体里面的成员就是新闻对象了。也就是说对象的上一层是可以有子成员的，最底层中的对象是没有子成员的。组合模式中用到了继承，所以我们要把以前学过的继承相关的知识拿出来用在组合模式中，比如应用及省组合式继承，像下面这样显现新闻模块容器类。</p>
+<p><pre><br>//容器类构造函数<br>var Container = function(id,parent){<br>    //构造函数继承父类<br>    News.call(this);<br>    //模块id<br>    this.id = id;<br>    //模块的父容器<br>    this.parent = parent;<br>    //构建方法<br>    this.init();<br>}<br>//寄生式继承父类原型的方法<br>inheritPrototype(Container,News);<br>//构建方法<br>Container.prototype.init = function(){<br>    this.element = document.createElement(‘ul’);<br>    this.element.id = this.id;<br>    this.element.className = ‘new-container’<br>}<br>//添加子元素方法<br>Container.prototype.add = function(child){<br>    //在子元素容器中插入子元素<br>    this.children.push(child);<br>    //插入当前组件元素树中<br>    this.element.appendChild(child.getElement());<br>    return this;<br>}<br>//获取当前元素方法<br>Container.prototype.getElement = function(){<br>    return this.element;<br>}<br>//显示方法<br>Container.prototype.show = function(){<br>    this.parent.appentChild(this.element);<br>}<br></pre><br>同样下一层级的行成员集合类以及后面的新闻组合体类实现的方式与之类似</p>
+<p><pre><br>var Item = function(classname){<br>    News.call(this);<br>    this.calssname = classname || ‘’<br>    this.init();<br>}<br>inheritPrototype(Item,News);<br>Item.prototype.init = function(){<br>    this.element = document.createElement(‘li’);<br>    this.element.className = this.classname;<br>}<br>Item.prototype.add = function(child){<br>    //在子元素容器中插入子元素<br>    this.children.push(child);<br>    //插入当前组件元素树中<br>    this.element.appendChild(child.getElement());<br>    return this;<br>}<br>Item.prototype.getElement = function(){<br>    return this.element;<br>}<br>var NewsGroup = function(classname){<br>    News.call(this);<br>    this.classname = classname || ‘’;<br>    this.init()<br>}<br>inheritPrototype(NewsGroup,News);<br>NewsGroup.prototype.init = function(){<br>    this.element = document.createElement(‘div’);<br>    this.element.className = this.classname;<br>}<br>NewsGroup.prototype.add = function(child){<br>    //在子元素容器中插入子元素<br>    this.children.push(child);<br>    //插入当前组件元素树中<br>    this.element.appendChild(child.getElement());<br>    return this;<br>}<br>NewsGroup.prototype.getElement = function(){<br>    retrun this.element;<br>}<br></pre><br>上面已经把所有子成员类创建出来了，不过光有这些新闻容器类是不行的，我们还需要有更底层的新闻类，但是注意这些新闻成员类是不能拥有子成员的，但是他们继承了父类，所以对于add方法最好声明一下，比如我们创建图片新闻类。</p>
+<p><pre><br>var ImageNews = function(url,href,classname){<br>    News.call(this);<br>    this.url = url || ‘’;<br>    this.href = href || ‘#’;<br>    this.classname = classname || ‘normal’;<br>    this.init();<br>}<br>inheritPrototype(ImageNews,News);<br>ImageNews.prototype.init = function(){<br>    this.element = document.crateElement(‘a’);<br>    var img = new Image();<br>    img.src = this.url;<br>    this.element.appendChild(img);<br>    this.element.className = ‘image-news’ + this.classname;<br>    this.element.href = this.href;<br>}<br>ImageNews.prototype.add = function(){}<br>ImageNews.prototype.getElement = function(){<br>    return this.element;<br>}<br></pre><br>新闻类与上面的容器类很像，也很简单吧，那么下面你把剩下的基类新闻自己动手创建一下吧</p>
+<p><pre><br>var IconNews = function(text,href,type){<br>    News.call(this);<br>    this.text = text || ‘’;<br>    this.href = href || ‘#’;<br>    this.type = type || ‘video’;<br>    this.init();<br>}<br>inheritPrototype(IconNews,News);<br>IconNews.prototype.init = function(){<br>    this.element = document.createElement(‘a’);<br>    this.element.innerHTML = this.text;<br>    this.element.href = this.href;<br>    this.element.className = ‘icon ‘+ this.type;<br>}<br>IconNews.prototype.add = function(){}<br>IconNews.prototype.getElement = function(){<br>    return this.element;<br>}<br>var EasyNews = function(text,href){<br>    News.call(this);<br>    this.text = text || ‘’;<br>    this.href = href || ‘#’;<br>    this.init();<br>}<br>inheritPrototype(EasyNews,News);<br>EasyNews.prototype.init = function(){<br>    this.element = document.createElement(‘a’);<br>    this.element.innerHTML = this.text;<br>    this.element.href = this.href;<br>    this.element.className = ‘text’;<br>}<br>EasyNews.prototype.add = function(){}<br>EasyNews.prototype.getElement = function(){<br>    return this.element;<br>}<br>var TypeNews = function(text,href,type,pos){<br>    News.call(this);<br>    this.text = text || ‘’;<br>    this.href = href || ‘#’;<br>    this.type = type || ‘’;<br>    this.pos = pos || ‘left’;<br>    this.init();<br>}<br>inheritPrototype(TypeNews,News);<br>TypeNews.prototype.init = function(){<br>    this.element = document.createElement(‘a’);<br>    if(this.pos === ‘left’){<br>        this.element.innerHTML = ‘[‘+this.type+’]’+this.text;<br>    }else{<br>        this.element.innerHTML = this.text + ‘[‘+this.type+’]’<br>    }<br>    this.element.href = this.href;<br>    this.element.className = ‘text’;<br>}<br>TypeNews.prototype.add = function(){}<br>TypeNews.prototype.getElement = function(){<br>    return this.element;<br>}<br></pre><br>现在新闻类都创建了，通过add方法像一棵树一样一层一层创建新闻就可以了</p>
+<p><pre><br>var news1 = new Container(‘news’,document.body);<br>news1.add(<br>    new Item(‘normal’).add(<br>        new IconNews(‘梅西不拿金球也伟大’,’#’,’video’)<br>    )<br>).add(<br>    new Item(‘normal’).add(<br>        new IconNews(‘保护强国强队用意明显’,’#’,’live’)<br>    )<br>).add(<br>    new Item(‘normal’).add(<br>        new NewsGroup(‘has-img’).add(<br>            new ImageNews(‘img/1.jpg’,’#’,’small’)<br>        ).add(<br>            new EasyNews(‘从240斤的胖子成功变型男’,’#’)<br>        ).add(<br>            new EasyNews(‘五大雷人跑步机’,’#’)<br>        )<br>    )<br>).add(<br>    new Item(‘normal’).add(<br>        new TypeNews(‘AK47不愿为费城打球’,’#’,’NBA’,’left’);<br>    )<br>).add(<br>    new Item(‘normal’).add(<br>        new TypeNews(‘火炮飚6三分创新高’,’#’,’CBA’,’right’);<br>    )<br>).show();<br></pre><br>这样创建的每一条新闻都是一个独立的个体，互不影响，避免相互间的耦合，也增强了组合后的模块的复杂性。日后不论再有什么样的需求，做相应的组合就可以轻松完成。<br>其实在页面中，组合模式更常用在创建表单上，比如注册页面可能有不同的表单提交模块。对于这些需求我们只需要有基本的个体，然后通过一定的组合即可实现。<br>对于日常我们登陆注册常用到的页面，例如：<br>用户名:<intpu type="text"> 4到6位数字或字母<br>密码:<intpu type="password">6到12位数字或密码<br>昵称:<intpu type="text"><br>状态:<intpu type="text"><br>我们如何用组合模式实现呢？我们可以模仿上面创建新闻模块那样创建基类Base，然后3个组合类FormItem、FieldsetItem、Group，以及成员类InputItem、LabelItem、SpanItem、TextItem，创建完成之后</intpu></intpu></intpu></intpu></p>
+<p><pre><br>var form = new FormItem(‘FormItem’,document.body);<br>form.add(<br>    new Group().add(<br>        new LabelItem(‘user_name’,’用户名:’)<br>    ).add(<br>        new InputItem(‘user_name’);<br>    ).add(<br>        new SpanItem(‘4到6位数字或字母’)<br>    )<br>).add(<br>    new Group().add(<br>        new labelItem(‘user_password’,’密码:’)<br>    ).add(<br>        new InputItem(‘user_password’)<br>    ).add(<br>        new SpanItem(‘6到12位数字或密码’)<br>    )<br>).add(<br>    //…<br>).show();<br></pre><br>组合模式能够给我们提供一个清晰的组成结构。组合对象类通过继承同一个父类使其具有统一的方法，这样也方便了我们统一管理与使用，当然此时单体成员与组合体成员行为表现就比较一致了。这样就模糊了简单对象与组合对象的区别。有时这也是一种对数据的分级式处理。清晰而又方便我们对数据的管理与使用。<br>当然组合模式有时在实现需求上给我们带来更多的选择方式，虽然对于单体对象的实现简单而又单一，但是通过对其组合将会给我们带来更多的使用形式。<br>七、享元模式<br>享元模式:运用共享技术有效地支持大量的细粒度的对象，避免对象间拥有相同内容造成多余的开销。<br>我们上面介绍组合模式的时候，做了一个新闻模块，可是随着内容的增多，单页面已经无法容纳所有的新闻了，所以需要采取分页显示所有的新闻。<br>如果我们不了解享元模式，我们的代码很可能是这样的</p>
+<p><pre><br>var dom = null,                   //缓存创建的新闻标题元素<br>    paper = 0,                    //当前页数<br>    num = 5,                      //每页显示新闻数目<br>    i = 0,                        //创建新闻元素时保存变量<br>    len = article.length;         //新闻数据长度<br>for( ;i &lt; len;i++){<br>    dom = document.createElement(‘div’);           //创建包装新闻标题元素<br>    dom.innerHTML = article[i];                    //向元素中添加新闻标题<br>    if(i &gt;= num){                                  //默认显示第一页<br>        dom.style.display = ‘none’;                //超出第一页新闻隐藏<br>    }<br>    document.getElementById(‘container’).appendChild(dom);   //添加到页面中<br>}<br>//下一页绑定事件<br>document.getElementById(‘next_page’).onclick = function(){<br>    var div = document.getElementById(‘container’).getElementByTagName(‘div’),<br>    //获取所有新闻标题包装元素<br>    j = k = n = 0;       //j,k循环变量，n当前页显示的第一个新闻序号<br>    n = ++paper % Math.ceil(len/num) * num; //获取当前页显示的第一个新闻序号<br>    for(;j &lt; len;j++){<br>        div[j].style.display = ‘none’;     //隐藏所有新闻<br>    }<br>    for(;k &lt; 5;k++){<br>        if(div[n+k])<br>            div[n+k].style.display = ‘block’ //显示当前页新闻<br>    }<br>}<br></pre><br>我们会发现代码在IE浏览器下会有卡顿现象，因为大量相同结构的新闻同时插入页面并造成多余的开销必然会影响浏览器性能。对于相同结构造成的多余开销问题，我们可以用享元模式来解决。<br>享元模式主要还是对其数据、方法共享分离，他将数据和方法分成内部数据、内部方法和外部数据、外部方法。内部方法与内部数据指的是相似或者共有的数据和方法，所以将这一部分提取出来减少开销，以提高性能。<br>在我们的案例里，新闻个体都有共同的结构，所以它们应该作为内部的数据，而‘下一页’按钮绑定的事件已经不能再抽象提取里，所以应该就是外部的方法。<br>既然这些内部的数据提取出来了，为了能使用它们，我们还需要提供一个操作方法，像下面这样:</p>
+<p><pre><br>var Flyweight = function(){<br>    //已创建的元素<br>    var created = [];<br>    //创建一个新闻包装容器<br>    function create(){<br>        var dom = document.crateElement(‘div’);<br>        //将容器插入新闻列表容器中<br>        document.getElementById(‘container’).appendChild(dom);<br>        //缓存新创建的元素<br>        created.push(dom);<br>        //返回创建的新元素<br>        return dom;<br>    }<br>    return {<br>        //获取创建新闻元素方法<br>        getDiv : function(){<br>            //如果已创建的元素小于当前页元素总个数，则创建<br>            if(created.length &lt; 5){<br>                return create()<br>            }else{<br>                //获取第一个元素，并插入最后面<br>                var div = created.shift();<br>                created.push(div);<br>                return div;<br>            }<br>        }<br>    }<br>}<br></pre><br>首先，创建一个享元类，由于我们每页只能显示5条新闻，所以我们创建5个元素，保存在享元类的内部，我们可以通过享元类为我们提供的方法getDiv来获取创建的元素。内部的数据和内部的方法提取出来之后我们就要实现外部的数据和外部的方法，外部的数据就是我们要显示的所有新闻内容，每个内容都不一样，所以它们不能被共享。当然，为下一页绑定的事件是独立的，它只绑定一次。然后我们需要做两件事，第一件事情，我们需要根据新闻的内容实例化页面，第二件事情，对下一页绑定一个点击事件，显示下一页，显示过程中我们可以优化一个策略，就是如果当前页显示的新闻数据不够5条，那么我们可以在所有新闻数据中起始处获取，这样，就要求我们新闻数据的总条数大于页面显示最多的条数——5条。首先我们初始化页面。</p>
+<p><pre><br>var paper = 0,<br>    num = 5,<br>    len = article.length;<br>//添加5条新闻<br>for(var i = 0;i &lt; 5;i++){<br>    if(article[i]){<br>        //通过享元类获取创建的元素并写入新闻内容<br>        Flyweight.getDiv().innerHTML = article[i];<br>    }<br>}<br></pre><br>现在生成新闻界面很简单了，我们还要给’下一页’元素绑定一个事件，像下面这样</p>
+<p><pre><br>document.getElementById(‘next_page’).onclick = function(){<br>    //如果新闻内容不足5条则返回<br>    if(article.length &lt; 5){<br>        return;<br>    }<br>    var n = ++paper * num % len,  //获取当前页的第一条新闻索引<br>        j = 0;                    //循环变量<br>    //插入5条新闻<br>    for(;j &lt; 5;j++){<br>        //如果存在第n+j条则插入<br>        if(article[n+j]){<br>            Flyweight.getDiv().innerHTML = article[n+j];<br>        //否则插入起始位置第n+j-len条<br>        }else if(article[n+j-len]){<br>            Flyweight.getDiv().innerHTML = article[n+j-len];<br>        //如果都不存在则插入空字符串<br>        }else{<br>            Flyweight.getDiv().innerHTML = ‘’<br>        }<br>    }<br>}<br></pre><br>通过享元模式对页面重构之后每次操作只需要操作那5个元素，与之前需要操作几百个元素的性能相比，提高了许多。<br>组合模式还有那些用途呢？我们在面向对象编程上还是很常用的，比如说一个游戏中我们可能创建一些人、精灵等角色，那么它们都会有运动这个动作，其实这一动作在所有角色中实现的方式都是相同的。对此我们可以创建一个通用的享元类，让它可以实现横向移动以及纵向移动，举例如下：</p>
+<p><pre><br>var Flyweight = {<br>    moveX : function(x){<br>        this.x = x<br>    },<br>    moveY : function(y){<br>        this.y = y<br>    }<br>}<br></pre><br>其他任何角色都可以通过继承的方式来实现这些方法，比如让人继承移动方法</p>
+<p><pre><br>var Player = function(x,y,c){<br>    this.x = x;<br>    this.y = y;<br>    this.color = c;<br>}<br>Player.prototype = Flyweight;<br>Player.prototype.changeC = function(c){<br>    this.color = c<br>}<br></pre><br>让精灵继承移动的方法</p>
+<p><pre><br>var Spirit = function(x,y,r){<br>    this.x = x;<br>    this.y = y;<br>    this.r = r;<br>}<br>Spirit.prototype = Flyweight;<br>Spirit.prototype.changeR = function(r){<br>    this.r = r<br>}<br></pre><br>那么我们创建一个人</p>
+<p><pre><br>var player1 = new Player(5,6,’red’);<br>console.log(player1); //Player {x:5,y:6,color:’red’,moveX:function,moveY:function……}<br></pre><br>让这个人移动起来</p>
+<p><pre><br>player1.moveX(6);<br>player1.moveY(7);<br>player1.changeC(‘pink’);<br>console.log(player1); //Player {x:6,y:7,color:’pink’,moveX:function,moveY:function……}<br></pre><br>我们创建一个精灵</p>
+<p><pre><br>var spirit1 = new Spirit(2,3,4);<br>console.log(spirit);//Spirit {x:2,y:3,r:4,moveX:function,moveY:function……}<br></pre><br>让精灵移动起来</p>
+<p><pre><br>spirit1.moveX(3);<br>spirit1.moveY(4);<br>spirit1.changeR(5);//Spirit {x:3,y:4,r:5,moveX:function,moveY:function……}<br></pre><br>于是我们可以看出，不论是游戏中的人还是游戏中的精灵都拥有了运动这一方法，这样我们就可以将本来在人物类以及精灵类中的内部方法(移动方法)提取出来，实现了公用，减少其他类重写时造成的不必要的开销，类似这样的提取在页面中也是很常见的，所以我们要善于观察提取相似可共享的数据与方法来优化我们的应用。<br>享元模式的应用目的是为了提高程序的执行效率与系统的性能。因此在大型系统开发中应用是比较广泛的，百分之一的效率提成有时可以发生质的改变。它可以避免程序中的数据重复。有时系统内存在大量对象，会造成大量内存占用，所以应用享元模式来减少内存消耗是很有必要的。不过应用时一定要找准内部状态(数据与方法)与外部状态(数据与方法)，这样你才能更合理的提取分离。当然在一些小程序中，性能与内存的消耗对程序的执行影响不大时，强行应用享元模式而引入复杂的代码逻辑，往往会收到负效应。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/01/09/张容铭-设计模式-第三篇-结构型设计模式/" data-id="cka5080k20045hyxqimf5zlfr" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-现代前端工程实践方案-解锁webpack-3-1-8-webpack的环境，webpack实战演练" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/01/07/网易微专业-现代前端工程实践方案-解锁webpack-3-1-8-webpack的环境，webpack实战演练/" class="article-date">
+  <time datetime="2020-01-07T07:52:20.000Z" itemprop="datePublished">2020-01-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/01/07/网易微专业-现代前端工程实践方案-解锁webpack-3-1-8-webpack的环境，webpack实战演练/">网易微专业-现代前端工程实践方案 解锁webpack-3.1.8-webpack的环境，webpack实战演练</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.webpack的环境系统<br>1-1.为什么要区分环境<br>因为在不同的场景下可能需要不同的配置，使用不同的功能，所以要区分环境，比如：<br>·开发模式：会额外用到一些调试功能，比如webpack-dev-server,但是为了加快调试速度，可能不会去用上压缩，tree-shaking之类的功能<br>·生产模式：为了减少文件体积，会使用压缩，tree-shaking等功能，但是不要入webpack-dev-server或者eslint这样的调试工具<br>1-2.具体列举一下生产环境和开发环境的不同(仅为例子，不代表每个公司一定会这么做)<br>production:去除无用代码；图片压缩，转码base64，雪碧图；提取共用代码<br>development:webpack-dev-server;source-map;代码风格检查<br>1-3.如何告诉webpack当前环境<br>webpack –env envname<br>1-4.实战<br>应该还有test.less，test2.less,index.html,app.js,这些文件与之前内容相似，在此不在赘述，如有修改，在下面需要的地方会说明<br>在这里，我们的配置文件是webpack.common.js</p>
 <pre>
-(function(global){
-    var startUp = global.startUp = {
-        version = 1.0.1
+const pro = require('webpack');
+const extractTextWebpackPlugin = require('extract-text-webpack-plugin');
+module.exports = env => {
+    var common = {
+        entry : './app.js',
+        output : {
+            filename : 'bundle.js'
+        },
+        module : {
+            rules : []
+        },
+        plugins : []
     }
-    var data = {}
-    var cache = {}
-    var status = {
-        FETCHED : 1,
-        SAVED : 2,
-        LOADING : 3,
-        LOADED : 4,
-        EXECUTING : 5,
-        EXECUTED : 6
+    return common
+}
+</pre>
+2.不同环境下的配置编写
+2-1.如何编写不同的配置文件来区分环境
+01.编写一个开发环境下的配置文件
+02.编写一个生产环境下的配置文件
+03.在基础配置引入开发和生产配置
+04.判断env参数，合并对应的配置 
+2-2.实战
+配置文件webpack.common.js
+<pre>
+const webpack = require('webpack');
+const extractTextCss = require('extract-text-webpack-plugin');
+const htmlWebpackPlugin = require('html-webpack-plugin');
+const dev = require('./webpack.dev.js');//引入开发模式下的配置
+const pro = require('./webpack.pro.js');//引入生产模式下的配置
+const merge = reuqire('webpack-merge');//用来合并不同模式下的配置，自行下载安装
+module.exports = env => {
+    //配置对象
+    var common = {
+        entry : {
+            app : './app'
+        },
+        output : {
+            path : __dirname + '/src/dist',
+            filename : './[name].bundle.js'
+        },
+        modules : {
+            rules : [{
+                test : /\.less$/,
+                use : extractTextCss.extract({
+                    fallback : {
+                        loader : 'style-loader',
+                        options : {
+                            singleton : true,
+                        }
+                    },
+                    use : [
+                        {
+                            loader : 'css-loader',
+                            options : {
+                                module : {
+                                    localIdentName:'[path][name]_[local]_[hash:4]'
+                                }
+                            }
+                        },
+                        {
+                            loader : 'postcss-loader',
+                            options : {
+                                ident : 'postcss',
+                                plugin : [
+                                    require('autoprefixer')({
+                                        "overrideBrowserslist":[//属性名，webpack3和webpack4有差异
+                                        ">1%","last 2 versions"
+                                        ]
+                                    }),
+                                    require('postcss-cssnext')()
+                                ]
+                            }
+                        },
+                        {
+                            loader : 'less-loader'
+                        }
+                    ]
+                })
+            }]
+        },
+        plugins:[
+            new extractTextCss({
+                filename : env === 'production' ? 'app.bundle.css' : 'app.dev.css'
+            })
+        ]
     }
-    var isArray = function(obj) {
-        return toString.call(obj) === "[object Array]";
-    }
-    //构造函数  模块初始化数据
-    function Module(uri, deps){
-        this.uri = uri;
-        this.deps = deps || [];
-        this.exports = null;
-        this.status = 0;
-        this._waitings = {};
-        this._remain = 0;
-    }
-    //分析主干 (左子树 | 右子树) 上的依赖项
-    Module.prototype.load = function(){
-        var module = this;
-        module.status = status.loading;
-        //var uris = module.resolve(); //获取主干上的依赖项
-        //var len = module._remain = uris.length;  
-        //加载主干上的依赖项(模块)
-    }
-    //资源定位
-    Module.prototype.resolve = function(){
-
-    }
-    //定义一个模块
-    Module.define = function(factory) {
-
-    }
-    //检测缓存对象上是否有当前模块信息
-    Module.get = function(uri, deps){
-        return cache[uri] || (cache[uri] = new Module(uri, deps));
-    }
-    Module.use = function(deps, callback, uri){
-        var module = Module.get(uri, isArray(deps) ? deps : [deps]);
-        //所有模块都加载完毕
-        module.callback = function() {
-
-        }
-        module.load();
-    }
-    var _cid = 0;
-    function cid(){
-        return _cid++
-    }
-    data.preload = [];
-    //获取当前项目文档的URL
-    data.cwd = document.URL.match(/[^?]*\//)[0];
-    Module.preload = funcrtion(callback){
-        var length = data.preload.length;
-        if(!length) calllback();
-        //length !== 0 先加载预先设定模块
-    }
-    startUp.use = function(list, callback){
-        //检测有没有预先加载的模块 
-        Module.preload(function(){
-            Module.use(list, callback, data.cwd + "_use" + cid())//虚拟根目录
+    //返回配置对象
+    return merge(common,env === 'production' ? pro : dev)
+}
+</pre>
+webpack.dev.js为开发模式准备的配置
+<pre>
+const webpack = reuqire('webpack');
+module.exports = {
+    devtool:'cheap-module-source-map',
+    devServer:{
+        port:9001,
+        overlay:true,
+        hot:true,
+        hotOnly:true,
+    },
+    plugins:[
+        new webpack.HotModuleReplacementPlugin(),
+        new webpack.NamedModulesPlugin(),
+    ]
+}
+</pre>
+webpack.pro.js为生产模式准备的配置
+<pre>
+var webpack = reuqire('webpack');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
+module.exports = {
+    optimization:{
+        minimize:false,
+    },
+    plugins:[
+        new HtmlWebpackPlugin({
+            filename:'index.html',
+            template:'./index.html',
+            minify:{
+                collapseWhitespace:true
+            },
+            inject:true,
         })
+    ]
+}
+</pre>
+在package.json中配置两行自定义命令build&dev
+<pre>
+"scripts": {
+    "test": "echo\"Error: no test specified\" && exit 1",
+    "build":"webpack --env production --config webpack.common.js",
+    "dev":"webpack-dev-server --env development --config webpack.common.js"
+},
+</pre>
+对于生产环境和开发环境需要配置不同内容，比如开发环境不需要配置雪碧图，但是生产环境需要配置雪碧图，这样的配置，在webpack.common.js里需要如何配置呢?雪碧图也是postcss支持的，所以主要修改postcss相关loader
+<pre>
+const webpack = require('webpack');
+const extractTextCss = require('extract-text-webpack-plugin');
+const htmlWebpackPlugin = require('html-webpack-plugin');
+const dev = require('./webpack.dev.js');//引入开发模式下的配置
+const pro = require('./webpack.pro.js');//引入生产模式下的配置
+const merge = reuqire('webpack-merge');//用来合并不同模式下的配置，自行下载安装
+module.exports = env => {
+    var postPlugins = [require('autoprefixer')(),require('postcss-cssnext')()]
+    postPlugins.concat(env === 'production'?[require('postcss-sprites')({spritePath:'dist/sprite',retina:true})]:[])
+    //配置对象
+    var common = {
+        entry : {
+            app : './app'
+        },
+        output : {
+            path : __dirname + '/src/dist',
+            filename : './[name].bundle.js'
+        },
+        modules : {
+            rules : [{
+                test : /\.less$/,
+                use : extractTextCss.extract({
+                    fallback : {
+                        loader : 'style-loader',
+                        options : {
+                            singleton : true,
+                        }
+                    },
+                    use : [
+                        {
+                            loader : 'css-loader',
+                            options : {
+                                module : {
+                                    localIdentName:'[path][name]_[local]_[hash:4]'
+                                }
+                            }
+                        },
+                        {
+                            loader : 'postcss-loader',
+                            options : {
+                                ident : 'postcss',
+                                plugin : postPlugins
+                            }
+                        },
+                        {
+                            loader : 'less-loader'
+                        }
+                    ]
+                })
+            }]
+        },
+        plugins:[
+            new extractTextCss({
+                filename : env === 'production' ? 'app.bundle.css' : 'app.dev.css'
+            })
+        ]
     }
-    global.define = Module.define
-})(this)
+    //返回配置对象
+    return merge(common,env === 'production' ? pro : dev)
+}
 </pre>
-a.js
+3.webpack中的环境区分
+webpack4中更简便的环境区分:webpack --mode production/development/none
+默认生产环境打包是压缩代码的，开发模式不压缩代码。如果不指定开发模式，打包的时候会有警告，可以直接在配置文件中指定mode:'development'
 <pre>
-define(function( require, exports, module){
-    var age = "30";
-    exports.age = age;
-});
-</pre>
-b.js
-<pre>
-define(function( require, exports, module){
-    var sex = "男";
-    return {
-        sex:sex,
-    }
-});
-</pre>
-demo.html
-<pre>
-startUp.use(["a.js","b.js"], function(){
-    console.log("startUp...");
-});
+module.exports = {
+    mode:'production',
+    entry:'./app.js',
+    output:{
+        filename:'bundle.js',
+    },
+    module:{
+        rules:[]
+    },
+    plugins:[]
+}
 </pre>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/13/网易微专业-模块化编程-4-2-1-Module构造器设计-模块数据初始化/" data-id="ck911599300236yxqgam8i8wg" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/01/07/网易微专业-现代前端工程实践方案-解锁webpack-3-1-8-webpack的环境，webpack实战演练/" data-id="cka5080ew002vhyxq1gjzprh4" class="article-share-link">Share</a>
       
       
     </footer>
@@ -1192,10 +1035,10 @@ startUp.use(["a.js","b.js"], function(){
 
 
   
-    <article id="post-js算法简单了解-堆排序" class="article article-type-post" itemscope="" itemprop="blogPost">
+    <article id="post-网易微专业-现代前端工程实践方案-解锁webpack-3-1-6-HTML的处理与打包-webpack的概念与基础使用" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2019/12/13/js算法简单了解-堆排序/" class="article-date">
-  <time datetime="2019-12-13T04:11:16.000Z" itemprop="datePublished">2019-12-13</time>
+    <a href="/2020/01/07/网易微专业-现代前端工程实践方案-解锁webpack-3-1-6-HTML的处理与打包-webpack的概念与基础使用/" class="article-date">
+  <time datetime="2020-01-07T07:18:18.000Z" itemprop="datePublished">2020-01-07</time>
 </a>
     
   </div>
@@ -1206,7 +1049,7 @@ startUp.use(["a.js","b.js"], function(){
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/12/13/js算法简单了解-堆排序/">js算法简单了解-堆排序</a>
+      <a class="article-title" href="/2020/01/07/网易微专业-现代前端工程实践方案-解锁webpack-3-1-6-HTML的处理与打包-webpack的概念与基础使用/">网易微专业-现代前端工程实践方案 解锁webpack-3.1.6-HTML的处理与打包,webpack的概念与基础使用</a>
     </h1>
   
 
@@ -1214,211 +1057,81 @@ startUp.use(["a.js","b.js"], function(){
     
     <div class="article-entry" itemprop="articleBody">
       
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/13/js算法简单了解-堆排序/" data-id="ck911598000046yxqorsqhiw6" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-js算法简单了解-快速排序" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/12/12/js算法简单了解-快速排序/" class="article-date">
-  <time datetime="2019-12-12T02:28:59.000Z" itemprop="datePublished">2019-12-12</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/12/12/js算法简单了解-快速排序/">js算法简单了解-快速排序</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.描述<br>（1）从数列中选择一个数作为key值；<br>（2）将比这个数小的数全部放在它的左边，大于或等于它的数全部放在它的右边；<br>（3）对左右两个小数列重复第二步，直至各区间只有1个数。<br>2.代码</p>
-<p><pre><br><!--function partition(arr,low,high){
-    //var low = 0, high = arr.length, i = 0, j = high;
-    var i = 0, j = high;
-    var cm = arr[low];
-    var temp;
-    while(true){
-        while(arr[i] < cm && i < j){
-            i++
-        }
-        while(arr[j] > cm && i < j){
-            j--
-        }
-        if(i >= j)
-            break;
-        temp = arr[i];
-        arr[i] = arr[j];
-        arr[j] = temp;
-    }
-    temp = arr[low];
-    arr[low] = arr[j]
-    arr[j] = tem;
-}
-function quicksort(arr,low,high){
-    if(low > high)
-        return
-    var j = partition(arr,low,high);
-    quicksort(arr,low,j-1);
-    quicksort(arr,j,high)
-}
-console.log(quicksort([42,20,17,13,28,14,23,15],0,8))--><br>function quickSort(a,l,r){<br>    if(l &gt;= r)<br>        return;<br>    var i = l;<br>    var j = r;<br>    var key = a[l];//选择第一个数为key<br>    while(i &lt; j){<br>        while(i &lt; j &amp;&amp; a[j] &gt;= key){//从右向左找第一个小于key的值<br>            j–;<br>        }<br>        if(i &lt; j){<br>            a[i] = a[j];<br>            i++;<br>        }<br>        while(i &lt; j &amp;&amp; a[i] &lt; key){//从左向右找第一个大于key的值<br>            i++;<br>        }<br>        if(i &lt; j){<br>            a[j] = a[i];<br>            j–;<br>        }<br>    }<br>    //i == j<br>    a[i] = key;<br>    quickSort(a, l, i-1);//递归调用<br>    quickSort(a, i+1, r);//递归调用<br>    return a;<br> }<br> console.log(quickSort([42,20,17,13,28,14,23,15],0,7))<br></pre><br>3.平均-O(NlogN)，最好-O(NlogN)，最坏-O(N^2)；空间复杂度：O(longN).不稳定<br>4.额外<br>快速排序是一种优秀的排序算法，但是程序细节还是会对算法性能产生一些影响。算法第四版有一些相关阐述。<!--我还没看，阿哈哈哈哈--></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/12/js算法简单了解-快速排序/" data-id="ck911598300076yxqzo5p513q" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-js算法简单了解-归并排序" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/12/11/js算法简单了解-归并排序/" class="article-date">
-  <time datetime="2019-12-11T01:51:58.000Z" itemprop="datePublished">2019-12-11</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/12/11/js算法简单了解-归并排序/">js算法简单了解-归并排序</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.描述<br>先递归的分解数列，再合并数列（分治思想的典型应用）<br>（1）将一个数组拆成A、B两个小组，两个小组继续拆，直到每个小组只有一个元素为止。<br>（2）按照拆分过程逐步合并小组，由于各小组初始只有一个元素，可以看做小组内部是有序的，合并小组可以被看做是合并两个有序数组的过程。<br>（3）对左右两个小数列重复第二步，直至各区间只有1个数。<br>下面对数组[42,20,17,13,28,14,23,15]进行归并排序，模拟排序过程如下：<br>第一步：拆分数组，一共需要拆分三次（logN）;<br>第一次拆成[42,20,17,13]，[28,14,23,15];<br>第二次拆成[42,20]，[17,13]，[28,14]，[23,15];<br>第三次拆成[42]，[20]，[17]，[13]，[28]，[14]，[23]，[15];<br>第二步：逐步归并数组，采用合并两个有序数组的方法，每一步其算法复杂度基本接近于O(N);<br>第一次归并为[20,42]，[13,17]，[14,28]，[15,23];<br>第二次归并为[13,17,20,42]，[14,15,23,28];<br>第三次归并为[13, 14, 15, 17, 20, 23, 28, 42];<br>2.代码</p>
+        <p>1.HTML生成<br>之前我们的课程中教了如何给css/js打包，有一个共同点就是，打包之后的css/js我们都要手动引入html文件中，其实webpack可以自动帮我们生成html，自动引入js/css。所以这里的内容是如何生成html并且自动引入css/js。<br>1-1.需要用到的plugin<br>npm install html-webpack-plugin –save-dev<br>1-2.相关配置<br>filename:打包后生成的html文件的名字<br>template:指定一个html文件为模版<br>minify:压缩html<br>inject:是否把js/css文件插入到html，插入到哪儿<br>chunks:多入口时指定引入chunks<br>1-3.实战<br>实战继续使用上一节课的例子就好，这里先说配置文件</p>
 <pre>
-function mergearr(arr1,arr2){
-    console.log('arr1:',arr1)
-    console.log('arr2:',arr2)
-    var arr3 = new Array()
-    var len1 = arr1.length;
-    var len2 = arr2.length;
-    var i=0,j=0,k=0;
-    while(i < len1 && j < len2){
-        if(arr1[i] < arr2[j]){
-            arr3[k++] = arr1[i++]
-        }else{
-            arr3[k++] = arr2[j++]
-        }
-    }
-    while(i < len1){
-        arr3[k++] = arr1[i++]
-    }
-    while(j < len2){
-        arr3[k++] = arr2[j++]
-    }
-    return arr3
+var extractTextCss = require('extract-text-webpack-plugin');
+var htmlWebpackPlugin = require('html-webpack-plugin')
+module.exports= {
+    entry : {
+        app : './app'
+    },
+    output : {
+        path : __dirname + '/src/dist',
+        filename : './[name].bundle.js'
+    },
+    modules : {
+        rules : [{
+            test : /\.less$/,
+            use : extractTextCss.extract({
+                fallback : {
+                    loader : 'style-loader',
+                    options : {
+                        singleton : true,
+                    }
+                },
+                use : [
+                    {
+                        loader : 'css-loader',
+                        options : {
+                            module : {
+                                localIdentName:'[path][name]_[local]_[hash:4]'
+                            }
+                        }
+                    },
+                    {
+                        loader : 'postcss-loader',
+                        options : {
+                            ident : 'postcss',//给谁使用的
+                            plugin : [
+                                require('autoprefixer')({
+                                    "overrideBrowserslist":[//属性名，webpack3和webpack4有差异
+                                    ">1%","last 2 versions"
+                                    ]
+                                }),
+                                require('postcss-cssnext')()
+                            ]
+                        }
+                    },
+                    {
+                        loader : 'less-loader'
+                    }
+                ]
+            })
+        }]
+    },
+    plugins:[
+        new extractTextCss({
+            filename : '[name].min.css'
+        }),
+        new htmlWebpackPlugin({
+            //filename&template这两个参数是必须配置的
+            filename : "index.html",
+            template : "./index.html",
+            minify : {
+                collapseWhitespace : true
+            },
+            //inject如果为false，那还是需要手动引入生成的js/css文件，一般保持默认为true
+            //测试chunks最好注释掉minify的配置，以免影响打包结果,入口文件也需要多入口，比如我们在入口entry处增加app2:"./app2.js"
+            //如果不指定chunks，那么app/app2都会被引入打包生成的index.html
+            chunks : [app]//指定需要app打包出来的入口文件，这个时候打包生成的index.html只有app.min.css，即只引入app.js生成的文件
+        })
+    ]
 }
-function mergesort(arr){
-    var len = arr && arr.length;
-    if(len < = 1){
-        return arr;
-    }
-    var mid = Math.floor(len/2);
-    var left = arr.slice(0,mid);
-    var right = arr.slice(mid,len);
-    return mergearr(mergesor(left),mergesort(right));
-}
-var sortresult = mergesort([42,20,17,13,28,14,23,15])
-console.log('sortresult:',sortresult)
 </pre>
-上面代码的执行结果：
-<img src="https://snakexu.github.io/images/algorithm/mergesort_1.png">
-3.时间复杂度O(NlogN)  空间复杂度O(N) 稳定排序
-4.额外的
-上面是用递归的方法实现归并排序，但是算法(第四版)给我们提供了另外一种思路
-<pre>
-function mergearr(arr1,arr2){
-    //console.log('arr1:',arr1)
-    //console.log('arr2:',arr2)
-    var arr3 = new Array()
-    var len1 = arr1.length;
-    var len2 = arr2.length;
-    var i=0,j=0,k=0;
-    while(i < len1 && j < len2){
-        if(arr1[i] < arr2[j]){
-            arr3[k++] = arr1[i++]
-        }else{
-            arr3[k++] = arr2[j++]
-        }
-    }
-    while(i < len1){
-        arr3[k++] = arr1[i++]
-    }
-    while(j < len2){
-        arr3[k++] = arr2[j++]
-    }
-    return arr3
-}
-function mergesort(arr){
-    var len = arr && arr.length; 
-    var arrresult;
-    if(len< =1)return arr;
-    var sz = 1,i,arrresult;
-    for( ; sz < len; sz+=sz){
-        arrresult = []
-        for(i=0; i < = len - sz; i+= sz + sz){
-            var mid = i+sz
-            var left = arr.slice(mid-sz,mid)
-            var right = arr.slice(mid,Math.min(mid+sz,len))
-            var midarr = mergearr(left,right)
-            arrresult = arrresult.concat(midarr)
-        }
-        arr = arrresult
-    }
-    return arr
-}
-var sortresult = mergesort([42,20,17,13,28,14,23,15])
-console.log('sortresult:',sortresult)
-</pre>
-
-
-
-
-
-
-
-
-
-
-
-
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/11/js算法简单了解-归并排序/" data-id="ck911598200066yxqm2c6ilms" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/01/07/网易微专业-现代前端工程实践方案-解锁webpack-3-1-6-HTML的处理与打包-webpack的概念与基础使用/" data-id="cka5080ev002uhyxq26emc13i" class="article-share-link">Share</a>
       
       
     </footer>
@@ -1428,10 +1141,10 @@ console.log('sortresult:',sortresult)
 
 
   
-    <article id="post-js算法简单了解-希尔排序" class="article article-type-post" itemscope="" itemprop="blogPost">
+    <article id="post-网易微专业-现代前端工程实践方案-解锁webpack-3-1-6-CSS的编译与处理-webpack的概念与基础使用" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2019/12/10/js算法简单了解-希尔排序/" class="article-date">
-  <time datetime="2019-12-10T09:18:20.000Z" itemprop="datePublished">2019-12-10</time>
+    <a href="/2020/01/06/网易微专业-现代前端工程实践方案-解锁webpack-3-1-6-CSS的编译与处理-webpack的概念与基础使用/" class="article-date">
+  <time datetime="2020-01-06T09:30:15.000Z" itemprop="datePublished">2020-01-06</time>
 </a>
     
   </div>
@@ -1442,7 +1155,7 @@ console.log('sortresult:',sortresult)
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/12/10/js算法简单了解-希尔排序/">js算法简单了解-希尔排序</a>
+      <a class="article-title" href="/2020/01/06/网易微专业-现代前端工程实践方案-解锁webpack-3-1-6-CSS的编译与处理-webpack的概念与基础使用/">网易微专业-现代前端工程实践方案 解锁webpack-3.1.6-CSS的编译与处理,webpack的概念与基础使用</a>
     </h1>
   
 
@@ -1450,13 +1163,34 @@ console.log('sortresult:',sortresult)
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>1.描述<br>插入排序对于大规模乱序数组排序很慢，希尔排序为了加快速度简单的改进了插入排序，交换不相邻元素以对数组的局部进行片排序，并最终用插入排序将局部有序数组排序。<br>（1）按照某一增量，将数组分为若干子序列，对子序列分别进行插入排序。<br>（2）逐渐减小增量，并重复此过程，直到增量为1，此时序列基本有序，最后进行插入排序。<br>2.代码</p>
-<p><pre><br>function shellsort(arr){<br>    var len = arr &amp;&amp; arr.length;<br>    var h = 1;<br>    while(h &lt; len/3){ h = 3 * h + 1}//理论上这里h可以取任意大于0的正整数<br>    while(h &gt;= 1){<br>        for(var i = h; i &lt; len; i++){<br>            //这个for循环很有意思，相当于从当前第i个元素开始，再与它之前应属于同组的元素比较<br>            //也就是说，当循环到这个元素的时候，它之前的同组元素已经做好了插入排序<br>            for(var j = i; j &gt;= h &amp;&amp; arr[j] &lt; arr[j-h]; j -= h){<br>                var temp = arr[j];<br>                arr[j] = arr[j-h];<br>                arr[j-h] = temp;<br>            }<br>        }<br>        //console.log(arr)<br>        h = parseInt(h / 3)<br>    }<br>}<br>var arr = [49,38,65,101,76,13,27,49,55,1]<br>shellsort(arr)<br></pre><br>3.时间复杂度O(N^1.5)   空间复杂度O(1)</p>
+        <p>1.css的引入<br>webpack是以JavaScript文件为入口打包的，那么项目的css怎么办？如何引入css？<br>css文件可以通过js文件引入，但必须使用相应的loader:<br>01.css-loader,让css可以被js正确的引入。<br>02.style-loader,让css被引入后可以被正确的以一个style标签插入页面<br>03.两者的顺序很重要，要先通过css-loader处理，再由style-loader处理<br>1-1.实战<br>首先建一个文件夹，文件夹中有app.js,index.html,package.json,test.css,test2.css,webpack.config.js。app.js中有以下内容</p>
+<p><pre><br>import ‘./test.css’;<br>import ‘./test2.css’;<br>console.log(‘123’);<br></pre><br>test.css中的内容</p>
+<p><pre><br>*{background-color:red}<br></pre><br>test2.css中的内容</p>
+<p><pre><br>body{<br>    font-size:20px;<br>}<br>.colorblue{<br>    color:blue;<br>}<br></pre><br>index.html中的内容</p>
+<p><pre><br>&lt; div id=”mydiv” &gt;&lt; /div &gt;<br>&lt; script type=”text/javascript” src=”./src/dist/app.bundle.js” &gt;&lt; /script &gt;<br></pre><br>webpack.config.js中的内容</p>
+<p><pre><br>modules.exports= {<br>    entry : {<br>        app : ‘./app’<br>    },<br>    output : {<br>        path : __dirname + ‘/src/dist’,<br>        filename : ‘./[name].bundle.js’<br>    },<br>    modules : {<br>        rules : [{<br>            test : /.css$/,<br>            use : [<br>                //此处需要注意，loader的执行顺序是从后往前的，下面就是先执行css-loader再执行style-loader<br>                {<br>                    loader : ‘style-loader’<br>                },<br>                {<br>                    loader : ‘css-loader’<br>                }<br>            ]<br>        }]<br>    }<br>}<br></pre><br>在浏览器中打开网页，可以看到<br><img src="https://snakexu.github.io/images/wangyi/webpack/3.1.6_1.png"><br>test.css和test2.css已经被加载称为style标签<br>1-2.style-loader的核心配置<br>insertAt:style标签插入在哪一块区域,可选项top/bottom是插入head标签的头部/底部<br>insertInto:插入指定的DOM<br>singleton:是否合并为一个style标签<br>transform:在浏览器环境下，插入style到页面前，用js对css进行操作。<br>用法举例</p>
+<p><pre><br>module.exports= {<br>    entry : {<br>        app : ‘./app’<br>    },<br>    output : {<br>        path : __dirname + ‘/src/dist’,<br>        filename : ‘./[name].bundle.js’<br>    },<br>    modules : {<br>        rules : [{<br>            test : /.css$/,<br>            use : [<br>                //此处需要注意，loader的执行顺序是从后往前的，下面就是先执行css-loader再执行style-loader<br>                {<br>                    loader : ‘style-loader’,<br>                    options : {<br>                        insertInto : “#mydiv”,<br>                        singleton : true,<br>                        transform : ‘./transform.js’//指定用哪个文件对我们当前css进行修改<br>                    }<br>                },<br>                {<br>                    loader : ‘css-loader’<br>                }<br>            ]<br>        }]<br>    }<br>}<br></pre><br>如果指定了transform文件(本例中我们是transform.js文件)，文件内容</p>
+<p><pre><br> module.exports = function(css){<br>     //参数css代表css所有内容，是一个字符串，只能进行字符串的操作。本例演示获取屏幕宽度，并对css进行修改<br>     if(window.screen.width &lt; 500){<br>         css = css.replace(‘red’,’yellow’);<br>    }<br>    return css<br>}<br></pre><br>1-3.css-loader的核心配置<br>minimize:是否压缩css,已经在webpack4中移除，webpack4建议使用uglifyjs<br>module:是否使用css模块化<br>alias:css中的全局别名,同样在webpack4中已经被移除<br>本节演示module的用法</p>
+<p><pre><br>module.exports= {<br>    entry : {<br>        app : ‘./app’<br>    },<br>    output : {<br>        path : __dirname + ‘/src/dist’,<br>        filename : ‘./[name].bundle.js’<br>    },<br>    modules : {<br>        rules : [{<br>            test : /.css$/,<br>            use : [<br>                //此处需要注意，loader的执行顺序是从后往前的，下面就是先执行css-loader再执行style-loader<br>                {<br>                    loader : ‘style-loader’,<br>                    options : {<br>                        insertInto : “#mydiv”,<br>                        singleton : true,<br>                        transform : ‘./transform.js’//指定用哪个文件对我们当前css进行修改<br>                    }<br>                },<br>                {<br>                    loader : ‘css-loader’,<br>                    options : {<br>                        module : true<br>                    }<br>                }<br>            ]<br>        }]<br>    }<br>}<br></pre><br>修改test2.css</p>
+<p><pre><br>body{<br>    font-size:20px;<br>}<br>//global是全局的意思 可以定义全局类<br>:global .border-white{<br>    border:4px solid white;<br>}<br>//local本地/局部类名<br>:local .div1{<br>    width:50px;<br>    height:50px;<br>    background-color:pink;<br>    //继承的意思，继承另外一个类<br>    composes:border-white from ‘./test2.css’;//继承border-white这个类,test2.css是文件名，也可以是别的css文件<br>}<br></pre><br>打包之后我们可以发现，webpack如果开启了cssmodule功能，对上面global包含对样式类名没有重新编码，而对local包含的样式进行类名重新编码，对没有设置任何(global/local等)修饰的类名进行重新编码。如果对类名进行了重新编码，那么我们在html上写的类名也就不会生效，为此我们要结合JavaScript来控制类名。对app.js进行如下修改</p>
+<p><pre><br>import ‘./test.css’;<br>import ‘./test2.css’;<br>document.getElementById(‘mydiv’).setAttribute(‘class’,test2.div1)<br></pre><br>webpack打包之后，我们在浏览器中看到css已经生效了。对于打包之后重新编码的类名非常复杂，难以阅读，我们可以重新指定编码类名。</p>
+<p><pre><br>module.exports= {<br>    entry : {<br>        app : ‘./app’<br>    },<br>    output : {<br>        path : __dirname + ‘/src/dist’,<br>        filename : ‘./[name].bundle.js’<br>    },<br>    modules : {<br>        rules : [{<br>            test : /.css$/,<br>            use : [<br>                //此处需要注意，loader的执行顺序是从后往前的，下面就是先执行css-loader再执行style-loader<br>                {<br>                    loader : ‘style-loader’,<br>                    options : {<br>                        insertInto : “#mydiv”,<br>                        singleton : true,<br>                        transform : ‘./transform.js’//指定用哪个文件对我们当前css进行修改<br>                    }<br>                },<br>                {<br>                    loader : ‘css-loader’,<br>                    options : {<br>                        module : {<br>                            //local是本来类名，比如上面我们设置的div1，那么生成的类名是路径名文件名和本身类名再加上重新编码的hash值截取4位<br>                            localIdentName:’[path][name]<em>[local]</em>[hash:4]’<br>                        }<br>                    }<br>                }<br>            ]<br>        }]<br>    }<br>}<br></pre><br>上面css-loader的对类名的修改，如果是webpack3，那么要进行如下修改</p>
+<p><pre><br>//只截取了需要修改相关的部分<br>{<br>    loader : ‘css-loader’,<br>    options : {<br>        module : true,<br>        localIdentName:’[path][name]<em>[local]</em>[hash:4]’<br>    }<br>}<br></pre><br>在cssmodule中，继承并不是完全继承，而是在使用过程中可以把两个类都加在class中<br>2.less，sass等预处理语言的编译<br>2-1.less，sass<br>01.less，sass是css预处理语言，用来帮助我们更方便的写css。更方便团队合作<br>02.less，sass浏览器是无法直接识别的，需要编译成css才能被识别。所以我们用less，sass写的文件都要编译。<br>2-2.less，sass编译所需loader<br>01.less:less,less-loader<br>02.sass:sass-loader,node-sass<br>2-3.实战<br>我们对上面test.css/test2.css进行一些修改,修改成less文件<br>test2.less</p>
+<p><pre><br>body{<br>    font-size:20px;<br>}<br>:global .border-white{<br>    border:4px solid white;<br>}<br>:local .div1{<br>    width:50px;<br>    height:50px;<br>    background-color:pink;<br>    composes:border-yellow from ‘./test.less’;<br>}<br></pre><br>test.less</p>
+<p><pre><br>@base:green;<br>*{<br>    background-color:red;<br>}<br>.border-yellow{<br>    border:4px solid @base;<br>}<br></pre><br>webpack.config.js</p>
+<p><pre><br>module.exports= {<br>    entry : {<br>        app : ‘./app’<br>    },<br>    output : {<br>        path : __dirname + ‘/src/dist’,<br>        filename : ‘./[name].bundle.js’<br>    },<br>    modules : {<br>        rules : [{<br>            test : /.less$/,<br>            use : [<br>                {<br>                    loader : ‘style-loader’,<br>                    options : {<br>                        insertInto : “#mydiv”,<br>                        singleton : true,<br>                        transform : ‘./transform.js’<br>                    }<br>                },<br>                {<br>                    loader : ‘css-loader’,<br>                    options : {<br>                        module : {<br>                            localIdentName:’[path][name]<em>[local]</em>[hash:4]’<br>                        }<br>                    }<br>                },<br>                {<br>                    loader : ‘less-loader’<br>                }<br>            ]<br>        }]<br>    }<br>}<br></pre><br>3.提取css代码<br>3-1.如何把css提取为单独的文件<br>01.安装对应的插件:extract-text-webpack-plugin<br>02.改造loader处的写法:    把use改为使用extract-text-webpack-plugin<br>03.在plugin处添加:把extract-text-webpack-plugin加入到plugin里<br>3-2.注意，如果是webpack3，安装命令npm extract-text-webpack-plugin –save;如果是webpack4，安装命令npm extract-text-webpack-plugin@next –save。依赖于局部webpack<br>3-3.修改配置文件</p>
+<p><pre><br>var extractTextCss = require(‘extract-text-webpack-plugin’)<br>module.exports= {<br>    entry : {<br>        app : ‘./app’<br>    },<br>    output : {<br>        path : __dirname + ‘/src/dist’,<br>        filename : ‘./[name].bundle.js’<br>    },<br>    modules : {<br>        rules : [{<br>            test : /.less$/,<br>            use : extractTextCss.extract({<br>                fallback : {<br>                    loader : ‘style-loader’,<br>                    options : {<br>                        insertInto : “#mydiv”,<br>                        singleton : true,<br>                        transform : ‘./transform.js’<br>                    }<br>                },<br>                use : [<br>                    {<br>                        loader : ‘css-loader’,<br>                        options : {<br>                            module : {<br>                                localIdentName:’[path][name]<em>[local]</em>[hash:4]’<br>                            }<br>                        }<br>                    },<br>                    {<br>                        loader : ‘less-loader’<br>                    }<br>                ]<br>            })<br>        }]<br>    },<br>    plugins:[<br>        new extractTextCss({<br>            filename : ‘[name].min.css’<br>        })<br>    ]<br>}<br></pre><br>打包之后，我们已经能看到app.min.css文件了，但是对于这个文件，我们需要手动在index.html文件中引入<br>4.autoprefixer/cssnext(postcss插件)<br>4-1.安装<br>npm install postcss postcss-loader autoprefixer postcss-cssnext –save<br>4-2.修改配置文件</p>
+<p><pre><br>var extractTextCss = require(‘extract-text-webpack-plugin’)<br>module.exports= {<br>    entry : {<br>        app : ‘./app’<br>    },<br>    output : {<br>        path : __dirname + ‘/src/dist’,<br>        filename : ‘./[name].bundle.js’<br>    },<br>    modules : {<br>        rules : [{<br>            test : /.less$/,<br>            use : extractTextCss.extract({<br>                fallback : {<br>                    loader : ‘style-loader’,<br>                    options : {<br>                        insertInto : “#mydiv”,<br>                        singleton : true,<br>                        transform : ‘./transform.js’<br>                    }<br>                },<br>                use : [<br>                    {<br>                        loader : ‘css-loader’,<br>                        options : {<br>                            module : {<br>                                localIdentName:’[path][name]<em>[local]</em>[hash:4]’<br>                            }<br>                        }<br>                    },<br>                    {<br>                        loader : ‘postcss-loader’,<br>                        options : {<br>                            ident : ‘postcss’，//给谁使用的<br>                            plugin : [<br>                                require(‘autoprefixer’)()<br>                            ]<br>                        }<br>                    },<br>                    {<br>                        loader : ‘less-loader’<br>                    }<br>                ]<br>            })<br>        }]<br>    },<br>    plugins:[<br>        new extractTextCss({<br>            filename : ‘[name].min.css’<br>        })<br>    ]<br>}<br></pre><br>此时，我们对test.less进行一点点修改</p>
+<p><pre><br>@base:green;<br>*{<br>    background-color:red;<br>}<br>.border-yellow{<br>    border:4px solid @base;<br>    display:flex;//弹性盒模型样式，有兼容性问题,我们期待用autoprefixer解决兼容性问题<br>}<br></pre><br>打包之后我们发现，并没有给display:flex;加前缀，是因为我们在配置文件里没有完善配置</p>
+<p><pre><br>//此处我们只提取相关内容<br>{<br>    loader : ‘postcss-loader’,<br>    options : {<br>        ident : ‘postcss’，//给谁使用的<br>        plugin : [<br>            require(‘autoprefixer’)({<br>                “overrideBrowserslist”:[//属性名，webpack3和webpack4有差异<br>                “&gt;1%”,”last 2 versions”<br>                ]<br>            })<br>        ]<br>    }<br>},<br></pre><br>由以上配置我们发现，只要有兼容性要求的地方，我们都需要配置兼容性要求，这无疑是非常冗余的做法，我们可以直接在package.json文件中配置</p>
+<p><pre><br>“browserslist”:[<br>“&gt;1%”,”last 2 versions”<br>]<br></pre><br>或者直接在根目录下建立一个文件.browserslistrc，但是我们还是推荐写在package.json文件中<br>5.cssnext<br>修改test.less文件</p>
+<p><pre><br>@base:green;<br>*{<br>    background-color:red;<br>}<br>.border-yellow{<br>    border:4px solid var(–mainColor);<br>    display:flex;<br>}<br>:root{<br>    –mainColor:red;<br>}<br></pre><br>修改配置文件</p>
+<p><pre><br>{<br>    loader : ‘postcss-loader’,<br>    options : {<br>        ident : ‘postcss’，//给谁使用的<br>        plugin : [<br>            require(‘autoprefixer’)({<br>                “overrideBrowserslist”:[//属性名，webpack3和webpack4有差异<br>                “&gt;1%”,”last 2 versions”<br>                ]<br>            }),<br>            require(‘postcss-cssnext’)()<br>        ]<br>    }<br>},<br></pre><br>webpack打包之后我们可以发现，test.less已经被编译了，其中.border-yellow{border:4px solid var(–mainColor);display:flex;}的–mainColory已经被编译成red</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/10/js算法简单了解-希尔排序/" data-id="ck911598100056yxqfbvebfly" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/01/06/网易微专业-现代前端工程实践方案-解锁webpack-3-1-6-CSS的编译与处理-webpack的概念与基础使用/" data-id="cka5080go003vhyxqh1ixjxs0" class="article-share-link">Share</a>
       
       
     </footer>
@@ -1470,7 +1204,7 @@ console.log('sortresult:',sortresult)
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/6/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/8/">Next &raquo;</a>
+    <a class="extend prev" rel="prev" href="/page/6/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/8/">Next &raquo;</a>
   </nav>
 
 </section>
@@ -1481,15 +1215,29 @@ console.log('sortresult:',sortresult)
 
   
     
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端路由/">前端路由</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/正则/">正则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+    </div>
+  </div>
+
 
   
     
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/前端路由/" style="font-size: 10px;">前端路由</a> <a href="/tags/数据结构/" style="font-size: 13.33px;">数据结构</a> <a href="/tags/正则/" style="font-size: 10px;">正则</a> <a href="/tags/算法/" style="font-size: 20px;">算法</a> <a href="/tags/设计模式/" style="font-size: 16.67px;">设计模式</a>
+    </div>
+  </div>
+
   
     
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
     </div>
   </div>
 
@@ -1502,23 +1250,23 @@ console.log('sortresult:',sortresult)
       <ul>
         
           <li>
-            <a href="/2020/04/15/网易微专业-node-1-1-8-MySQL入门与应用/">网易微专业-node-1.1.8-MySQL入门与应用</a>
+            <a href="/2020/05/13/es6-class-extends/">es6 class extends</a>
           </li>
         
           <li>
-            <a href="/2020/04/14/网易微专业-node-1-1-7-MongoDB入门与应用/">网易微专业-node-1.1.7-MongoDB入门与应用</a>
+            <a href="/2020/05/12/网易微专业-node-Koa源码分析-2-2-3-中间件机制剖析/">网易微专业-node-Koa源码分析-2.2.3-中间件机制剖析</a>
           </li>
         
           <li>
-            <a href="/2020/04/13/网易微专业-node-1-1-6-Redis入门及应用/">网易微专业-node-1.1.6-Redis入门及应用</a>
+            <a href="/2020/05/09/Web-前端路由原理解析和实现/">Web 前端路由原理解析和实现</a>
           </li>
         
           <li>
-            <a href="/2020/04/12/网易微专业-node-1-1-5-Nginx反向代理-静态资源服务/">网易微专业-node-1.1.5-Nginx反向代理 静态资源服务</a>
+            <a href="/2020/05/08/网易微专业-node-Koa源码分析-2-2-2-请求处理流程解读/">网易微专业-node-Koa源码分析-2.2.2-请求处理流程解读</a>
           </li>
         
           <li>
-            <a href="/2020/04/11/网易微专业-node-1-1-3-Linux快速上手玩转典型应用/">网易微专业-node-1.1.3-Linux快速上手玩转典型应用</a>
+            <a href="/2020/05/08/vue-cli了解/">vue-cli了解</a>
           </li>
         
       </ul>

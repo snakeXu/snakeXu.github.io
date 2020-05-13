@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>网易微专业-node-1.2.2-异步编程的优势与难点 | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1.事件驱动1-1.事件机制事件机制的实现2.异步I/O模型2-1.异步I/O的必要性2-1-1.实现I/O并行(1)多线程单进程多线程设计之初就是为了共享程序空间，例如java、c++等，但是缺点在于执行过程中要进行线程与线程之间的切换，即执行时上下文要交换，开销会比较大，还有就是两个线程操作同一个文件，如果两个线程对同一个文件的同一变量进行不同操作，产生了锁的机制同步状态，产生了状态同步的问题">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网易微专业-node-1.2.2-异步编程的优势与难点">
+<meta property="og:url" content="http://yoursite.com/2020/04/22/网易微专业-node-1-2-2-异步编程的优势与难点/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="1.事件驱动1-1.事件机制事件机制的实现2.异步I/O模型2-1.异步I/O的必要性2-1-1.实现I/O并行(1)多线程单进程多线程设计之初就是为了共享程序空间，例如java、c++等，但是缺点在于执行过程中要进行线程与线程之间的切换，即执行时上下文要交换，开销会比较大，还有就是两个线程操作同一个文件，如果两个线程对同一个文件的同一变量进行不同操作，产生了锁的机制同步状态，产生了状态同步的问题">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/node/1.2.2_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/node/1.2.2_2.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/node/1.2.2_4.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/node/1.2.2_5.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/node/1.2.2_6.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/node/1.2.2_7.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/node/1.2.2_8.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/node/1.2.2_9.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/node/1.2.2_10.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/node/1.2.2_11.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/node/1.2.2_12.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/node/1.2.2_13.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/node/1.2.2_14.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/node/1.2.2_15.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/node/1.2.2_16.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/node/1.2.2_17.png">
+<meta property="og:updated_time" content="2020-04-23T03:50:10.249Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="网易微专业-node-1.2.2-异步编程的优势与难点">
+<meta name="twitter:description" content="1.事件驱动1-1.事件机制事件机制的实现2.异步I/O模型2-1.异步I/O的必要性2-1-1.实现I/O并行(1)多线程单进程多线程设计之初就是为了共享程序空间，例如java、c++等，但是缺点在于执行过程中要进行线程与线程之间的切换，即执行时上下文要交换，开销会比较大，还有就是两个线程操作同一个文件，如果两个线程对同一个文件的同一变量进行不同操作，产生了锁的机制同步状态，产生了状态同步的问题">
+<meta name="twitter:image" content="https://snakexu.github.io/images/wangyi/node/1.2.2_1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-网易微专业-node-1-2-2-异步编程的优势与难点" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/04/22/网易微专业-node-1-2-2-异步编程的优势与难点/" class="article-date">
+  <time datetime="2020-04-22T04:00:37.000Z" itemprop="datePublished">2020-04-22</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      网易微专业-node-1.2.2-异步编程的优势与难点
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.事件驱动<br>1-1.事件机制<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.2_1.png"><br>事件机制的实现<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.2_2.png"><br>2.异步I/O模型<br>2-1.异步I/O的必要性<br>2-1-1.实现I/O并行<br>(1)多线程单进程<br>多线程设计之初就是为了共享程序空间，例如java、c++等，但是缺点在于执行过程中要进行线程与线程之间的切换，即执行时上下文要交换，开销会比较大，还有就是两个线程操作同一个文件，如果两个线程对同一个文件的同一变量进行不同操作，产生了锁的机制同步状态，产生了状态同步的问题，使程序更加复杂化。<br>(2)单线程多进程<br>为了避免多线程使用不便的问题，就使用了单线程保持调用的简单，但是启动的时候会启动多个进程来达到充分利用cpu和整体并行能力的问题。但是缺点在于，业务逻辑复杂的时候，业务进程不能分布到多个进程之间，处理起来可能比多线程还要复杂。<br>2-1-2.异步I/O的必要性<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.2_4.png"><br>2-2.阻塞与非阻塞、异步与同步<br>2-2-1.I/O的阻塞与非阻塞<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.2_5.png"><br>2-2-2.I/O的异步与同步<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.2_6.png"><br>另：当进行非阻塞I/O调用时，要读取完整的数据，应用程序需要进行多次轮询，才能确保数据读取完成，以进行下一步操作。<br>2-3.理想的异步I/O<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.2_7.png"><br>2-4.Node.js中的异步I/O<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.2_8.png"><br><img src="https://snakexu.github.io/images/wangyi/node/1.2.2_9.png"><br>3.事件循环<br>3-1.高并发策略<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.2_10.png"><br>3-2.Node.js运行原理<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.2_11.png"><br>3-3.事件循环实现原理<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.2_12.png"><br><img src="https://snakexu.github.io/images/wangyi/node/1.2.2_13.png"><br><img src="https://snakexu.github.io/images/wangyi/node/1.2.2_14.png"><br><img src="https://snakexu.github.io/images/wangyi/node/1.2.2_15.png"><br>3-4.业务场景<br>·不适用场景<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.2_16.png"><br>·适用场景<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.2_17.png"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/04/22/网易微专业-node-1-2-2-异步编程的优势与难点/" data-id="cka5080eg0026hyxqoc0ejefo" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/04/23/网易微专业-node-1-2-3-ES6-异步编程解决方案/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          网易微专业-node-1.2.3-ES6+异步编程解决方案
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/04/21/网易微专业-node-1-2-1-异步I-O实现现状/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">网易微专业-node-1.2.1-异步I/O实现现状</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端路由/">前端路由</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/正则/">正则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/前端路由/" style="font-size: 10px;">前端路由</a> <a href="/tags/数据结构/" style="font-size: 13.33px;">数据结构</a> <a href="/tags/正则/" style="font-size: 10px;">正则</a> <a href="/tags/算法/" style="font-size: 20px;">算法</a> <a href="/tags/设计模式/" style="font-size: 16.67px;">设计模式</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/05/13/es6-class-extends/">es6 class extends</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/12/网易微专业-node-Koa源码分析-2-2-3-中间件机制剖析/">网易微专业-node-Koa源码分析-2.2.3-中间件机制剖析</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/09/Web-前端路由原理解析和实现/">Web 前端路由原理解析和实现</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/08/网易微专业-node-Koa源码分析-2-2-2-请求处理流程解读/">网易微专业-node-Koa源码分析-2.2.2-请求处理流程解读</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/08/vue-cli了解/">vue-cli了解</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

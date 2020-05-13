@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>Web 前端路由原理解析和实现 | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="文章来源https://zhuanlan.zhihu.com/p/88895539在单页应用如此流行的今天，曾经令人惊叹的前端路由已经成为各大框架的基础标配，每个框架都提供了强大的路由功能，导致路由实现变的复杂。想要搞懂路由内部实现还是有些困难的，但是如果只想了解路由实现基本原理还是比较简单的。本文针对前端路由主流的实现方式 hash 和 history，提供了原生JS/React/Vue 共计六">
+<meta name="keywords" content="前端路由">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Web 前端路由原理解析和实现">
+<meta property="og:url" content="http://yoursite.com/2020/05/09/Web-前端路由原理解析和实现/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="文章来源https://zhuanlan.zhihu.com/p/88895539在单页应用如此流行的今天，曾经令人惊叹的前端路由已经成为各大框架的基础标配，每个框架都提供了强大的路由功能，导致路由实现变的复杂。想要搞懂路由内部实现还是有些困难的，但是如果只想了解路由实现基本原理还是比较简单的。本文针对前端路由主流的实现方式 hash 和 history，提供了原生JS/React/Vue 共计六">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://snakexu.github.io/images/others/router_1.jpg">
+<meta property="og:image" content="https://snakexu.github.io/images/others/router_2.jpg">
+<meta property="og:image" content="https://snakexu.github.io/images/others/router_3.jpg">
+<meta property="og:image" content="https://snakexu.github.io/images/others/router_4.jpg">
+<meta property="og:image" content="https://snakexu.github.io/images/others/router_5.jpg">
+<meta property="og:image" content="https://snakexu.github.io/images/others/router_6.jpg">
+<meta property="og:updated_time" content="2020-05-09T09:19:16.570Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Web 前端路由原理解析和实现">
+<meta name="twitter:description" content="文章来源https://zhuanlan.zhihu.com/p/88895539在单页应用如此流行的今天，曾经令人惊叹的前端路由已经成为各大框架的基础标配，每个框架都提供了强大的路由功能，导致路由实现变的复杂。想要搞懂路由内部实现还是有些困难的，但是如果只想了解路由实现基本原理还是比较简单的。本文针对前端路由主流的实现方式 hash 和 history，提供了原生JS/React/Vue 共计六">
+<meta name="twitter:image" content="https://snakexu.github.io/images/others/router_1.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Web-前端路由原理解析和实现" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/05/09/Web-前端路由原理解析和实现/" class="article-date">
+  <time datetime="2020-05-09T03:00:07.000Z" itemprop="datePublished">2020-05-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Web 前端路由原理解析和实现
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>文章来源<a href="https://zhuanlan.zhihu.com/p/88895539" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/88895539</a><br>在单页应用如此流行的今天，曾经令人惊叹的前端路由已经成为各大框架的基础标配，每个框架都提供了强大的路由功能，导致路由实现变的复杂。想要搞懂路由内部实现还是有些困难的，但是如果只想了解路由实现基本原理还是比较简单的。本文针对前端路由主流的实现方式 hash 和 history，提供了原生JS/React/Vue 共计六个版本供参考，每个版本的实现代码约 25~40 行左右（含空行）。<br>作者：whincwu</p>
+<p></p><h4>什么是前端路由？</h4><br>路由的概念来源于服务端，在服务端中路由描述的是 URL 与处理函数之间的映射关系。<br>在 Web 前端单页应用 SPA(Single Page Application)中，路由描述的是 URL 与 UI 之间的映射关系，这种映射是单向的，即 URL 变化引起 UI 更新（无需刷新页面）。<p></p>
+<p></p><h4>如何实现前端路由？</h4><br>要实现前端路由，需要解决两个核心问题：<br>1.如何改变 URL 却不引起页面刷新？<br>2.如何检测 URL 变化了？<br>下面分别使用 hash 和 history 两种实现方式回答上面的两个核心问题。<p></p>
+<p></p><h6>hash 实现</h6><br>1.hash 是 URL 中 hash (#) 及后面的那部分，常用作锚点在页面内进行导航，改变 URL 中的 hash 部分不会引起页面刷新<br>2.通过 <a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Window/hashchange_event" target="_blank" rel="noopener">hashchange</a> 事件监听 URL 的变化，改变 URL 的方式只有这几种：通过浏览器前进后退改变 URL、通过标签改变URL、通过window.location改变URL，这几种情况改变 URL 都会触发 hashchange 事件<p></p>
+<p></p><h6>history 实现</h6><br>1.history 提供了 pushState 和 replaceState 两个方法，这两个方法改变 URL 的 path 部分不会引起页面刷新<br>2.history 提供类似 hashchange 事件的 popstate 事件，但 popstate 事件有些不同：通过浏览器前进后退改变 URL 时会触发 popstate 事件，通过pushState/replaceState或标签改变 URL 不会触发 popstate 事件。好在我们可以拦截 pushState/replaceState的调用和标签的点击事件来检测 URL 变化，所以监听 URL 变化可以实现，只是没有 hashchange 那么方便。<p></p>
+<p></p><h4>原生JS版前端路由实现</h4><br>基于上节讨论的两种实现方式，分别实现 hash 版本和 history 版本的路由，示例使用原生 HTML/JS 实现，不依赖任何框架。<p></p>
+<p></p><h5>基于 hash 实现</h5><br>运行效果：<br><img src="https://snakexu.github.io/images/others/router_1.jpg"><br>HTML 部分：<p></p>
+<p><pre><br>&lt; body &gt;<br>  &lt; ul &gt;<br>ref=””&gt;    &lt; !– 定义路由 – &gt;<br>    &lt; li &gt;&lt; a href=”#/home”&gt;home&lt; /a &gt;&lt; /li &gt;<br>    &lt; li &gt;&lt; a href=”#/about”&gt;about&lt; /a &gt;&lt; /li &gt;<br>ref=””&gt;    <!-- 渲染路由对应的 UI --><br>    &lt; div id=”routeView” &gt;&lt; /div &gt;<br>  &lt; /ul &gt;<br>&lt; /body &gt;<br></pre><br>JavaScript 部分：</p>
+<p><pre><br>// 页面加载完不会触发 hashchange，这里主动触发一次 hashchange 事件<br>window.addEventListener(‘DOMContentLoaded’, onLoad)<br>// 监听路由变化<br>window.addEventListener(‘hashchange’, onHashChange)<br>// 路由视图<br>var routerView = null<br>function onLoad () {<br>  routerView = document.querySelector(‘#routeView’)<br>  onHashChange()<br>}<br>// 路由变化时，根据路由渲染对应 UI<br>function onHashChange () {<br>  switch (location.hash) {<br>    case ‘#/home’:<br>      routerView.innerHTML = ‘Home’<br>      return<br>    case ‘#/about’:<br>      routerView.innerHTML = ‘About’<br>      return<br>    default:<br>      return<br>  }<br>}<br></pre></p>
+<p></p><h5>基于 history 实现</h5><br>运行效果：<br><img src="https://snakexu.github.io/images/others/router_2.jpg"><br>HTML 部分：<p></p>
+<p><pre><br>&lt; body &gt;<br>  &lt; ul &gt;<br>    &lt; li &gt;&lt; a href=’/home’ &gt;home&lt; /a &gt;&lt; /li &gt;<br>    &lt; li &gt;&lt; a href=’/about’ &gt;about&lt; /a &gt;&lt; /li &gt;<br>    &lt; div id=”routeView” &gt;&lt; /div &gt;<br>  &lt; /ul &gt;<br>&lt; /body &gt;<br></pre><br>JavaScript 部分：</p>
+<p><pre><br>// 页面加载完不会触发 hashchange，这里主动触发一次 hashchange 事件<br>window.addEventListener(‘DOMContentLoaded’, onLoad)<br>// 监听路由变化<br>window.addEventListener(‘popstate’, onPopState)<br>// 路由视图<br>var routerView = null<br>function onLoad () {<br>  routerView = document.querySelector(‘#routeView’)<br>  onPopState()<br> href=””&gt;  // 拦截 &lt; a &gt; 标签点击事件默认行为， 点击时使用 pushState 修改 URL并更新手动 UI，从而实现点击链接更新 URL 和 UI 的效果。<br>  var linkList = document.querySelectorAll(‘a[href]’)<br>  linkList.forEach(el =&gt; el.addEventListener(‘click’, function (e) {<br>    e.preventDefault()<br>    history.pushState(null, ‘’, el.getAttribute(‘href’))<br>    onPopState()<br>  }))<br>}<br>// 路由变化时，根据路由渲染对应 UI<br>function onPopState () {<br>  switch (location.pathname) {<br>    case ‘/home’:<br>      routerView.innerHTML = ‘Home’<br>      return<br>    case ‘/about’:<br>      routerView.innerHTML = ‘About’<br>      return<br>    default:<br>      return<br>  }<br>}<br></pre></p>
+<p></p><h5>React 版前端路由实现</h5><p></p>
+<p></p><h6>基于 hash 实现</h6><br>运行效果：<br><img src="https://snakexu.github.io/images/others/router_3.jpg"><br>使用方式和 react-router 类似：<p></p>
+<p><pre><br>&lt; BrowserRouter &gt;<br>    &lt; ul &gt;<br>      &lt; li &gt;<br>        &lt; Link to=”/home” &gt;home&lt; /Link &gt;<br>      &lt; /li &gt;<br>      &lt; li &gt;<br>        &lt; Link to=”/about” &gt;about&lt; /Link &gt;<br>      &lt; /li &gt;<br>    &lt; /ul &gt;<br>    &lt; Route path=”/home” render={() =&gt; &lt; h2 &gt;Home&lt; /h2 &gt;} /&gt;<br>    &lt; Route path=”/about” render={() =&gt; &lt; h2 &gt;About&lt; /h2 &gt;} /&gt;<br>&lt; /BrowserRouter &gt;<br></pre><br>BrowserRouter 实现</p>
+<p><pre><br>export default class BrowserRouter extends React.Component {<br>  state = {<br>    currentPath: utils.extractHashPath(window.location.href)<br>  };<br>  onHashChange = e =&gt; {<br>    const currentPath = utils.extractHashPath(e.newURL);<br>    console.log(“onHashChange:”, currentPath);<br>    this.setState({ currentPath });<br>  };<br>  componentDidMount() {<br>    window.addEventListener(“hashchange”, this.onHashChange);<br>  }<br>  componentWillUnmount() {<br>    window.removeEventListener(“hashchange”, this.onHashChange);<br>  }<br>  render() {<br>    return (<br>      &lt; RouteContext.Provider value={ {currentPath: this.state.currentPath} } &gt;<br>        {this.props.children}<br>      &lt; /RouteContext.Provider &gt;<br>    );<br>  }<br>}<br></pre><br>Route 实现</p>
+<p><pre><br>export default ({ path, render }) =&gt; (<br>  &lt; RouteContext.Consumer &gt;<br>    {({currentPath}) =&gt; currentPath === path &amp;&amp; render()}<br>  &lt; /RouteContext.Consumer &gt;<br>);<br></pre><br>Link 实现</p>
+<p><pre><br>export default ({ to, …props }) =&gt; &lt; a {…props} href={“#” + to} /&gt;;<br></pre></p>
+<p></p><h6>基于 history 实现</h6><br>运行效果:<br><img src="https://snakexu.github.io/images/others/router_4.jpg"><br>使用方式和 react-router 类似：<p></p>
+<p><pre><br>&lt; HistoryRouter &gt;<br>    &lt; ul &gt;<br>      &lt; li &gt;<br>        &lt; Link to=”/home” &gt;home&lt; /Link &gt;<br>      &lt; /li &gt;<br>      &lt; li &gt;<br>        &lt; Link to=”/about” &gt;about&lt; /Link &gt;<br>      &lt; /li &gt;<br>    &lt; /ul &gt;<br>    &lt; Route path=”/home” render={() =&gt; &lt; h2 &gt;Home&lt; /h2 &gt;} /&gt;<br>    &lt; Route path=”/about” render={() =&gt; &lt; h2 &gt;About&lt; /h2 &gt;} /&gt;<br>  &lt; /HistoryRouter &gt;<br></pre><br>HistoryRouter 实现</p>
+<p><pre><br>export default class HistoryRouter extends React.Component {<br>  state = {<br>    currentPath: utils.extractUrlPath(window.location.href)<br>  };<br>  onPopState = e =&gt; {<br>    const currentPath = utils.extractUrlPath(window.location.href);<br>    console.log(“onPopState:”, currentPath);<br>    this.setState({ currentPath });<br>  };<br>  componentDidMount() {<br>    window.addEventListener(“popstate”, this.onPopState);<br>  }<br>  componentWillUnmount() {<br>    window.removeEventListener(“popstate”, this.onPopState);<br>  }<br>  render() {<br>    return (<br>      &lt; RouteContext.Provider value={ {currentPath: this.state.currentPath, onPopState: this.onPopState} }&gt;<br>        {this.props.children}<br>      &lt; /RouteContext.Provider&gt;<br>    );<br>  }<br>}<br></pre><br>Route 实现</p>
+<p><pre><br>export default ({ path, render }) =&gt; (<br>  &lt; RouteContext.Consumer&gt;<br>    {({currentPath}) =&gt; currentPath === path &amp;&amp; render()}<br>  &lt; /RouteContext.Consumer&gt;<br>);<br></pre><br>Link 实现</p>
+<p><pre><br>export default ({ to, …props }) =&gt; (<br>  &lt;RouteContext.Consumer&gt;<br>    {({ onPopState }) =&gt; (<br>      &lt; a<br>        href=””<br>        {…props}<br>        onClick={e =&gt; {<br>          e.preventDefault();<br>          window.history.pushState(null, “”, to);<br>          onPopState();<br>        }}<br>      /&gt;<br>    )}<br>  &lt; /RouteContext.Consumer&gt;<br>);<br></pre></p>
+<p></p><h5>Vue 版本前端路由实现</h5><p></p>
+<p></p><h6>基于 hash 实现</h6><br>运行效果：<br><img src="https://snakexu.github.io/images/others/router_5.jpg"><br>使用方式和 vue-router 类似（vue-router 通过插件机制注入路由，但是这样隐藏了实现细节，为了保持代码直观，这里没有使用 Vue 插件封装）：<p></p>
+<p><pre><br>&lt; div&gt;<br>    &lt; ul &gt;<br>        &lt; li &gt;&lt; router-link to=”/home” &gt;home&lt; /router-link &gt;&lt; /li &gt;<br>        &lt; li &gt;&lt; router-link to=”/about” &gt;about&lt; /router-link &gt;&lt; /li &gt;<br>    &lt; /ul &gt;<br>    &lt; router-view &gt;&lt; /router-view &gt;<br>&lt; /div &gt;<br>const routes = {<br>  ‘/home’: {<br>    template: ‘&lt; h2 &gt;Home&lt; /h2 &gt;’<br>  },<br>  ‘/about’: {<br>    template: ‘&lt; h2 &gt;About&lt; /h2 &gt;’<br>  }<br>}<br>const app = new Vue({<br>  el: ‘.vue.hash’,<br>  components: {<br>    ‘router-view’: RouterView,<br>    ‘router-link’: RouterLink<br>  },<br>  beforeCreate () {<br>    this.$routes = routes<br>  }<br>})<br></pre><br>router-view 实现:</p>
+<p><pre><br>&lt; template &gt;<br>  &lt; component :is=”routeView” / &gt;<br>&lt; /template &gt;<br>&lt; script &gt;<br>import utils from ‘~/utils.js’<br>export default {<br>  data () {<br>    return {<br>      routeView: null<br>    }<br>  },<br>  created () {<br>    this.boundHashChange = this.onHashChange.bind(this)<br>  },<br>  beforeMount () {<br>    window.addEventListener(‘hashchange’, this.boundHashChange)<br>  },<br>  mounted () {<br>    this.onHashChange()<br>  },<br>  beforeDestroy() {<br>    window.removeEventListener(‘hashchange’, this.boundHashChange)<br>  },<br>  methods: {<br>    onHashChange () {<br>      const path = utils.extractHashPath(window.location.href)<br>      this.routeView = this.$root.$routes[path] || null<br>      console.log(‘vue:hashchange:’, path)<br>    }<br>  }<br>}<br>&lt; /script &gt;<br></pre><br>router-link 实现:</p>
+<p><pre><br>&lt; template &gt;<br>  &lt; a @click.prevent=”onClick” href=’’ &gt;&lt; slot &gt;&lt; /slot &gt;&lt; /a &gt;<br>&lt; /template &gt;<br>&lt; script &gt;<br>export default {<br>  props: {<br>    to: String<br>  },<br>  methods: {<br>    onClick () {<br>      window.location.hash = ‘#’ + this.to<br>    }<br>  }<br>}<br>&lt; /script &gt;<br></pre></p>
+<p></p><h6>基于 history 实现</h6><br>运行效果：<br><img src="https://snakexu.github.io/images/others/router_6.jpg"><br>使用方式和 vue-router 类似：<p></p>
+<p><pre><br>&lt; div &gt;<br>    &lt; ul &gt;<br>        &lt; li &gt;&lt; router-link to=”/home” &gt;home&lt; /router-link &gt;&lt; /li &gt;<br>        &lt; li &gt;&lt; router-link to=”/about” &gt;about&lt; /router-link &gt;&lt; /li &gt;<br>    &lt; /ul &gt;<br>    &lt; router-view &gt;&lt; /router-view &gt;<br>&lt; /div &gt;<br>const routes = {<br>  ‘/home’: {<br>    template: ‘&lt; h2 &gt;Home&lt; /h2 &gt;’<br>  },<br>  ‘/about’: {<br>    template: ‘&lt; h2 &gt;About&lt; /h2 &gt;’<br>  }<br>}<br>const app = new Vue({<br>  el: ‘.vue.history’,<br>  components: {<br>    ‘router-view’: RouterView,<br>    ‘router-link’: RouterLink<br>  },<br>  created () {<br>    this.$routes = routes<br>    this.boundPopState = this.onPopState.bind(this)<br>  },<br>  beforeMount () {<br>    window.addEventListener(‘popstate’, this.boundPopState)<br>  },<br>  beforeDestroy () {<br>    window.removeEventListener(‘popstate’, this.boundPopState)<br>  },<br>  methods: {<br>    onPopState (…args) {<br>      this.$emit(‘popstate’, …args)<br>    }<br>  }<br>})<br></pre><br>router-view 实现：</p>
+<p><pre><br>&lt; template &gt;<br>  &lt; component :is=”routeView” /&gt;<br>&lt; /template &gt;</pre></p>
+<p>&lt; script &gt;<br>import utils from ‘~/utils.js’<br>export default {<br>  data () {<br>    return {<br>      routeView: null<br>    }<br>  },<br>  created () {<br>    this.boundPopState = this.onPopState.bind(this)<br>  },<br>  beforeMount () {<br>    this.$root.$on(‘popstate’, this.boundPopState)<br>  },<br>  beforeDestroy() {<br>    this.$root.$off(‘popstate’, this.boundPopState)<br>  },<br>  methods: {<br>    onPopState (e) {<br>      const path = utils.extractUrlPath(window.location.href)<br>      this.routeView = this.$root.$routes[path] || null<br>      console.log(‘[Vue] popstate:’, path)<br>    }<br>  }<br>}<br>&lt; /script &gt;<br><br>router-link 实现:</p>
+<p><pre><br>&lt; template &gt;<br>  &lt; a @click.prevent=”onClick” href=’’ &gt;&lt; slot &gt;&lt; /slot &gt;&lt; /a &gt;<br>&lt; /template &gt;<br>&lt; script &gt;<br>export default {<br>  props: {<br>    to: String<br>  },<br>  methods: {<br>    onClick () {<br>      history.pushState(null, ‘’, this.to)<br>      this.$root.$emit(‘popstate’)<br>    }<br>  }<br>}<br>&lt; /script &gt;<br></pre></p>
+<p></p><h4>小结</h4><br>前端路由的核心实现原理很简单，但是结合具体框架后，框架增加了很多特性，如动态路由、路由参数、路由动画等等，这些导致路由实现变的复杂。本文去粗取精只针对前端路由最核心部分的实现进行分析，并基于 hash 和 history 两种模式，分别提供原生JS/React/Vue 三种实现，共计六个实现版本供参考，希望对你有所帮助。<br>所有的示例的代码放在 Github 仓库：<a href="https://github.com/whinc/web-router-principle" target="_blank" rel="noopener">https://github.com/whinc/web-router-principle</a><p></p>
+<p></p><h4>参考</h4><br><a href="https://link.zhihu.com/?target=http%3A//www.cnblogs.com/xiaobie123/p/6357724.html" target="_blank">详解单页面路由的几种实现原理</a><br><a href="https://link.zhihu.com/?target=https%3A//github.com/youngwind/blog/issues/109" target="_blank">单页面应用路由实现原理：以 React-Router 为例</a><p></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/05/09/Web-前端路由原理解析和实现/" data-id="cka5080gd0036hyxq3ll9bcrf" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/前端路由/">前端路由</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/05/12/网易微专业-node-Koa源码分析-2-2-3-中间件机制剖析/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          网易微专业-node-Koa源码分析-2.2.3-中间件机制剖析
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/05/08/网易微专业-node-Koa源码分析-2-2-2-请求处理流程解读/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">网易微专业-node-Koa源码分析-2.2.2-请求处理流程解读</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端路由/">前端路由</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/正则/">正则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/前端路由/" style="font-size: 10px;">前端路由</a> <a href="/tags/数据结构/" style="font-size: 13.33px;">数据结构</a> <a href="/tags/正则/" style="font-size: 10px;">正则</a> <a href="/tags/算法/" style="font-size: 20px;">算法</a> <a href="/tags/设计模式/" style="font-size: 16.67px;">设计模式</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/05/13/es6-class-extends/">es6 class extends</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/12/网易微专业-node-Koa源码分析-2-2-3-中间件机制剖析/">网易微专业-node-Koa源码分析-2.2.3-中间件机制剖析</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/09/Web-前端路由原理解析和实现/">Web 前端路由原理解析和实现</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/08/网易微专业-node-Koa源码分析-2-2-2-请求处理流程解读/">网易微专业-node-Koa源码分析-2.2.2-请求处理流程解读</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/08/vue-cli了解/">vue-cli了解</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

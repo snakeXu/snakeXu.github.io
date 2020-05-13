@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>es6 class extends | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="继承 inheritclass 是对原型继承的一种语法糖的包装。那相对于原型继承，它有什么优点呢？我们来先看一个典型的基于原型链继承的例子。部分内容来自“Javascript高级程序设计” function SuperType() {    this.property = true;} SuperType.prototype.getSuperValue = function() {    retu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="es6 class extends">
+<meta property="og:url" content="http://yoursite.com/2020/05/13/es6-class-extends/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="继承 inheritclass 是对原型继承的一种语法糖的包装。那相对于原型继承，它有什么优点呢？我们来先看一个典型的基于原型链继承的例子。部分内容来自“Javascript高级程序设计” function SuperType() {    this.property = true;} SuperType.prototype.getSuperValue = function() {    retu">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-05-13T03:03:07.779Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="es6 class extends">
+<meta name="twitter:description" content="继承 inheritclass 是对原型继承的一种语法糖的包装。那相对于原型继承，它有什么优点呢？我们来先看一个典型的基于原型链继承的例子。部分内容来自“Javascript高级程序设计” function SuperType() {    this.property = true;} SuperType.prototype.getSuperValue = function() {    retu">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-es6-class-extends" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/05/13/es6-class-extends/" class="article-date">
+  <time datetime="2020-05-13T02:58:52.000Z" itemprop="datePublished">2020-05-13</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      es6 class extends
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>继承 inherit<br>class 是对原型继承的一种语法糖的包装。那相对于原型继承，它有什么优点呢？<br>我们来先看一个典型的基于原型链继承的例子。部分内容来自“Javascript高级程序设计”</p>
+<p><pre><br>function SuperType() {<br>    this.property = true;<br>}</pre></p>
+<p>SuperType.prototype.getSuperValue = function() {<br>    return this.property;<br>}</p>
+<p>function SubType() {<br>    this.subProperty = false;<br>}</p>
+<p>SubType.prototype = new SuperType();</p>
+<p>SubType.prototype.getSubValue = function() {<br>    return this.subProperty;<br>}</p>
+<p>var instance = new SubType();<br>console.log(instance.getSuperValue());  // true<br>console.log(instance instanceof Object);  // true<br>console.log(instance instanceof SuperType);  // true<br>console.log(instance instanceof SubType);  // true<br><br>问题，当包含引用类型的值。</p>
+<p><pre><br>function SuperType() {<br>    this.colors = [“red”, “blue”, “green”];<br>}</pre></p>
+<p>function SubType() {</p>
+<p>}</p>
+<p>SubType.prototype = new SuperType();</p>
+<p>var instance = new SubType();<br>instance.colors.push(“black”);<br>var instance1 = new SubType();<br>instance1.colors.push(“white”);<br>console.log(instance.colors);  // [ ‘red’, ‘blue’, ‘green’, ‘black’, ‘white’ ]<br>console.log(instance1.colors);  // [ ‘red’, ‘blue’, ‘green’, ‘black’, ‘white’ ]<br><br>解决方案：</p>
+<p>借用构造函数</p>
+<p><pre><br>function SuperType() {<br>    this.colors = [“red”, “blue”, “green”];<br>}</pre></p>
+<p>function SubType() {<br>   SuperType.call(this);<br>}</p>
+<p>SubType.prototype = new SuperType();</p>
+<p>var instance = new SubType();<br>instance.colors.push(“black”);<br>var instance1 = new SubType();<br>instance1.colors.push(“white”);<br>console.log(instance.colors);<br>console.log(instance1.colors);<br><br>组合继承</p>
+<p><pre><br>function SuperType(name) {<br>    this.name = name;<br>    this.colors = [“red”, “blue”, “green”];<br>}</pre></p>
+<p>SuperType.prototype.sayName = function() {<br>    console.log(this.name);<br>}</p>
+<p>function SubType(name, age) {<br>   SuperType.call(this, name);<br>   this.age = age;<br>}</p>
+<p>SubType.prototype = new SuperType();<br>SubType.prototype.sayAge = function() {<br>    console.log(this.age);<br>}<br><br>寄生组合式继承</p>
+<p><pre><br>function object(o) {<br>    function F() {}<br>    F.prototype = o;<br>    return new F();<br>}</pre></p>
+<p>function inheritPrototype(subType, superType) {<br>    let prototype = object(superType.prototype);<br>    prototype.constructor = subType;<br>    subType.prototype = prototype;<br>}</p>
+<p>function SuperType(name) {<br>    this.name = name;<br>    this.colors = [“red”, “blue”, “green”];<br>}</p>
+<p>SuperType.prototype.sayName = function() {<br>    console.log(this.name);<br>}</p>
+<p>function SubType(name, age) {<br>   SuperType.call(this, name);<br>   this.age = age;<br>}</p>
+<p>inheritPrototype(SubType, SuperType);</p>
+<p>SubType.prototype.sayAge = function() {<br>    console.log(this.age);<br>}<br>var instance = new SubType(“Tom”, 70);<br>instance.colors.push(“black”);<br>var instance1 = new SubType(“Jerry”, 69);<br>instance1.colors.push(“white”);<br>console.log(instance.colors);<br>console.log(instance.sayName());<br>console.log(instance.sayAge());<br>console.log(instance1.colors);<br>console.log(instance1.sayName());<br>console.log(instance1.sayAge());<br><br>MDN 原型链继承<br>（欠图一张）</p>
+<p>extends<br>从es5来说，实现对象的继承，还是相当麻烦的。而extends 关键字的出现，使继承变得简单，原型会自动进行调整，super()/super关键字可以访问父类的构造方法和属性。</p>
+<p><pre><br>class Animal {<br>  constructor(name) {<br>    this.name = name;<br>  }</pre></p>
+<p>  speak() {<br>    console.log(this.name + ‘ makes a noise.’);<br>  }<br>}</p>
+<p>class Dog extends Animal {<br>  speak() {<br>    console.log(this.name + ‘ barks.’);<br>  }<br>}</p>
+<p>var d = new Dog(‘Mitzie’);<br>d.speak();// ‘Mitzie barks.’<br><br>分析：Dog类没有构造函数，这样合理吗？</p>
+<p>// 等价于上个类定义</p>
+<p><pre><br>class Dog extends Animal {<br>  constructor(name) {<br>    super(name)<br>  }<br>  speak() {<br>    console.log(this.name + ‘ barks.’);<br>  }<br>}<br></pre><br>super()方法调用注意：</p>
+<p>只可在以extends 实现的派生类中的constructor方法中调用，在非派生类或方法中直接调用，会报错。<br>在constructor中访问this之前，一定要先调用super(),因为它负责初始化this,如果在super()调用之前尝试访问this，会报错。<br>如果不想调用super()，则唯一的方法是让类的constructor()返回一个对象。<br>类方法遮蔽<br>说明：派生类中的方法总会覆盖基类中的同名方法。</p>
+<p><pre><br>class Animal {<br>  constructor(name) {<br>    this.name = name;<br>  }</pre></p>
+<p>  speak() {<br>    console.log(this.name + ‘ makes a noise.’);<br>  }<br>}</p>
+<p>class Dog extends Animal {<br>  speak() {<br>    console.log(this.name + ‘ barks.’);<br>  }<br>}<br><br>// 基类中的speak()方法被覆盖<br>静态类成员继承<br>说明：如果基类有静态成员，那么这些静态成员在派生类中也可用。</p>
+<p><pre><br>class Animal {<br>    constructor(name) {<br>      this.name = name;<br>    }</pre></p>
+<pre><code>speak() {
+  console.log(this.name + &apos; makes a noise.&apos;);
+}
+static create(name) {
+    return new Animal(name);
+}
+</code></pre><p>  }</p>
+<p>  class Dog extends Animal {<br>    speak() {<br>      console.log(this.name + ‘ barks.’);<br>    }<br>  }</p>
+<p>  let a1 = Animal.create(“Monkey”);<br>  let a2 = Dog.create(“BeijinDog”);<br>  console.log(a1 instanceof Animal);  // true<br>  console.log(a2 instanceof Animal);  // true<br>  console.log(a2 instanceof Dog);  // false 这个是不是很意外？<br> <br>派生自表达式的类<br>由ES6的class定义可以知道，是function的语法糖，但为实现原型继承，提供了方便的实现。JS的强大的一点就是函数可以返回函数，那如果返回类的定义呢？是否支持继承？返回对象是个函数，并且有[[Constrcutor]]属性和原型，就能满足extends实现。</p>
+<p><pre><br>class Animal {<br>  constructor(name) {<br>    this.name = name;<br>  }</pre></p>
+<p>  speak() {<br>    console.log(this.name + ‘ makes a noise.’);<br>  }<br>}</p>
+<p>function getBase() {<br>  return Animal;<br>}<br>class Dog extends getBase() {<br>  speak() {<br>    console.log(this.name + ‘ barks.’);<br>  }<br>}</p>
+<p>const dog = new Dog(‘Tom’);<br>dog.speak();<br><br>如果这个例子基于class的实现，有点取巧的意思，那看另一个例子。</p>
+<p><pre><br>const SerializableMixin = {<br>  serialize() {<br>    return JSON.stringify(this);<br>  }<br>}</pre></p>
+<p>const AnimalMixin = {<br>  speak() {<br>    console.log(this.name + ‘ barks.’);<br>  }<br>}</p>
+<p>function mixin(…mixins) {<br>  const base = function() {};<br>  Object.assign(base.prototype, …mixins);<br>  return base;<br>}</p>
+<p>class Dog extends mixin(AnimalMixin, SerializableMixin) {<br>  constructor(name){<br>    super(name);<br>    this.name = name;<br>  }<br>}</p>
+<p>const dog = new Dog(‘Tom’);<br>dog.speak();  // Tom barks.<br><br>关于function,class,extends,mixin，是否有新的理解呢？</p>
+<p>内建对象继承<br>在ES6之前，内建对象很难实现继承的，更多用has-a思想，实现对内建对象的处理。ES6中，大量内建对象的内部实现得以暴漏，也使得继承内建对象变成了可能。</p>
+<p><pre><br>class ColorsArray extends Array {<br>}<br>const colors = new ColorsArray();<br>colors[0] = ‘red’;<br>console.log(colors.length); // 1</pre></p>
+<p>colors.length = 0;<br>console.log(colors[0]); // undefined<br><br>分析：基类（Array）创建 this 的值，然后派生类的构造函数(ColorsArray)再修改这个值。所以一开始可以通过this访问基类的所有内建功能，然后再正确地接收所有与之相关的功能。这与Array.apply/call 这种方法实现继承的this处理方式正好相反。这也是extends特殊的地方。</p>
+<p>Symbol.species</p>
+<p><pre><br>class ColorsArray extends Array {<br>}<br>const colors = new ColorsArray(‘red’, ‘green’, ‘blue’);<br>const subColors = colors.slice(0,1);<br>console.log(colors instanceof ColorsArray);  // true<br>console.log(subColors instanceof ColorsArray);  // true<br></pre><br>通常来讲，slice 方法继承自 Array ，返回的应该是Array的实例，但在这个示例中，却返回的是ColorsArray的实例，这是为什么呢？这是ES6中Symbol.species的功劳。Symbol.species MDN 详细说明</p>
+<p><pre><br>class MyArray extends Array {<br>  // Overwrite species to the parent Array constructor<br>  static get <a href="">Symbol.species</a> { return Array; }<br>}<br>var a = new MyArray(1,2,3);<br>var mapped = a.map(x =&gt; x * x);</pre></p>
+<p>console.log(mapped instanceof MyArray); // false<br>console.log(mapped instanceof Array);   // true<br><br>注意：重写实现的时候，使用getter+static，可以返回想用的类型，也可以返回 this,是的，你没看错，在static getter中使用了this，它指向的是MyArray的构造函数。</p>
+<p>constructor中new.target<br>new.target是es6中新添加的元属性，只有通过new操作创建对象的时候，new.target才会被指向类/方法本身，通过call/apply操作，new.target为undefined。可以通过判断new.target，来确实函数是否允许new操作。MDN new.target 说明<br>惯例，再加个代码示例，偷懒，直接从MDN上拷了。</p>
+<p><pre><br>function Foo() {<br>  if (!new.target) throw ‘Foo() must be called with new’;<br>  console.log(‘Foo instantiated with new’);<br>}</pre></p>
+<p>new Foo(); // logs “Foo instantiated with new”<br>Foo(); // throws “Foo() must be called with new”<br><br>又是先说function，不是已经升级到ES6，使用class了吗？始终要有一个清楚的认识，class，是function实现原型继承的语法糖，但有自己的特性存在的（不然，也不用引入class了）。</p>
+<p><pre><br>class A {<br>  constructor() {<br>    console.log(new.target.name);<br>  }<br>}</pre></p>
+<p>class B extends A { constructor() { super(); } }</p>
+<p>var a = new A(); // logs “A”<br>var b = new B(); // logs “B”</p>
+<p>class C { constructor() { console.log(new.target); } }<br>class D extends C { constructor() { super(); } }</p>
+<p>var c = new C(); // logs class C{constructor(){console.log(new.target);}}<br>var d = new D(); // logs class D extends C{constructor(){super();}}<br><br>这个就是类的了。<br>——————————————————————————————————————————————————————————————————————————————————————————————————————————————————<br>以上来自<a href="https://segmentfault.com/a/1190000019824053" target="_blank" rel="noopener">https://segmentfault.com/a/1190000019824053</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/05/13/es6-class-extends/" data-id="cka5080ge0037hyxqzjgrmmj8" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2020/05/12/网易微专业-node-Koa源码分析-2-2-3-中间件机制剖析/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">网易微专业-node-Koa源码分析-2.2.3-中间件机制剖析</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端路由/">前端路由</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/正则/">正则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/前端路由/" style="font-size: 10px;">前端路由</a> <a href="/tags/数据结构/" style="font-size: 13.33px;">数据结构</a> <a href="/tags/正则/" style="font-size: 10px;">正则</a> <a href="/tags/算法/" style="font-size: 20px;">算法</a> <a href="/tags/设计模式/" style="font-size: 16.67px;">设计模式</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/05/13/es6-class-extends/">es6 class extends</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/12/网易微专业-node-Koa源码分析-2-2-3-中间件机制剖析/">网易微专业-node-Koa源码分析-2.2.3-中间件机制剖析</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/09/Web-前端路由原理解析和实现/">Web 前端路由原理解析和实现</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/08/网易微专业-node-Koa源码分析-2-2-2-请求处理流程解读/">网易微专业-node-Koa源码分析-2.2.2-请求处理流程解读</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/08/vue-cli了解/">vue-cli了解</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

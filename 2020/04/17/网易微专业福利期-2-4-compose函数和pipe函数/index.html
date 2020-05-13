@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>网易微专业福利期-2.4-compose函数和pipe函数 | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1.compose函数·将需要嵌套执行的函数平铺·嵌套执行指的是，一个函数的返回值将作为另一个函数的参数实现函数式编程中的Pointfree，使我们专注于转换而不是数据：我们可以把数据处理的过程定义成一种与参数无关的合成运算，不需要用到代表数据的参数，只需要把一些简单的运算步骤合成在一起即可；而pointfree指的是不使用所要处理的值，只合成运算过程，即我们所指的无参数分隔。假设我们现在有一个需">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网易微专业福利期-2.4-compose函数和pipe函数">
+<meta property="og:url" content="http://yoursite.com/2020/04/17/网易微专业福利期-2-4-compose函数和pipe函数/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="1.compose函数·将需要嵌套执行的函数平铺·嵌套执行指的是，一个函数的返回值将作为另一个函数的参数实现函数式编程中的Pointfree，使我们专注于转换而不是数据：我们可以把数据处理的过程定义成一种与参数无关的合成运算，不需要用到代表数据的参数，只需要把一些简单的运算步骤合成在一起即可；而pointfree指的是不使用所要处理的值，只合成运算过程，即我们所指的无参数分隔。假设我们现在有一个需">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-04-19T07:36:15.528Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="网易微专业福利期-2.4-compose函数和pipe函数">
+<meta name="twitter:description" content="1.compose函数·将需要嵌套执行的函数平铺·嵌套执行指的是，一个函数的返回值将作为另一个函数的参数实现函数式编程中的Pointfree，使我们专注于转换而不是数据：我们可以把数据处理的过程定义成一种与参数无关的合成运算，不需要用到代表数据的参数，只需要把一些简单的运算步骤合成在一起即可；而pointfree指的是不使用所要处理的值，只合成运算过程，即我们所指的无参数分隔。假设我们现在有一个需">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-网易微专业福利期-2-4-compose函数和pipe函数" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/04/17/网易微专业福利期-2-4-compose函数和pipe函数/" class="article-date">
+  <time datetime="2020-04-17T08:42:34.000Z" itemprop="datePublished">2020-04-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      网易微专业福利期-2.4-compose函数和pipe函数
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.compose函数<br>·将需要嵌套执行的函数平铺<br>·嵌套执行指的是，一个函数的返回值将作为另一个函数的参数<br>实现函数式编程中的Pointfree，使我们专注于转换而不是数据：我们可以把数据处理的过程定义成一种与参数无关的合成运算，不需要用到代表数据的参数，只需要把一些简单的运算步骤合成在一起即可；而pointfree指的是不使用所要处理的值，只合成运算过程，即我们所指的无参数分隔。<br>假设我们现在有一个需求:一个数加上10之后再乘以10，那么我们首先想到的就是</p>
+<p><pre><br>let calculate = x =&gt; (x+10)*10<br>console.log(calculate(10))<br></pre><br>这样写是没有问题的，但是这样写是典型的命令式编程，这样的代码也不具备复用性。作为一个函数式编程开发者，会对这段代码进行抽象来实现简化代码的目的，而且函数式编程就是将我们的程序分解为一些更可充用更可靠性更易于理解的部分，然后再将他们组合起来，形成一个更易于推理的需求整体。以上面加上10再乘以10的需求为例，我们关注的是他的动作——先加上10，再乘以10，我们可以写出两个函数</p>
+<p><pre><br>let add = x =&gt; x+10;<br>let multiply = y =&gt; y*10;<br>console.log(multiply(add(10)))<br></pre><br>这样也能实现我们的需求，但是根据复合函数的定义，我们需要将上述代表动作的两个函数合成一个函数。我们分析两个函数的特性：第一，这两个函数都有一个共同的参数；第二， 函数的执行顺序是从右到左；第三，前面函数的执行结果交由后面的函数处理。根据特性，我们可以这样来实现</p>
+<p><pre><br>let add = x =&gt; x+10;<br>let multiply = y =&gt; y*10;<br>let compose = (f,g)=&gt;{<br>    return function(x){<br>        return f(g(x))<br>    }<br>}<br>let calculate = compose(multiply,add)<br>console.log(calculate(10))<br></pre><br>但是这样的compose没有通用性，因为只能处理两个函数，接下来就看如何实现通用的compose函数</p>
+<p><pre><br>let add = x =&gt; x+10;<br>let multiply = y =&gt; y*10;<br>let compose = function(){<br>    //将我们传入的函数当作参数收集起来，所以将arguments转化成数组<br>    let args = [].slice.call(arguments);<br>    return function(x){<br>        //因为需要把上一次执行结果当作参数传递给下一次执行，所以可以使用reduce来实现<br>        //reduce方法可以接收一个函数作为累加器，也就是说reduce会将数组中的每一个元素依次执行传入的函数<br>        //复合函数的执行顺序是从右到左依次执行的，reduce是从左向右累加，reduceRight是从右向左累加<br>        return args.reduceRight(function(res,cb){<br>            return cb(res);<br>        },x)<br>    }<br>}<br>let calculate = compose(multiply,add)<br>console.log(calculate(10))<br></pre><br>array.reduceRight(function(total, currentValue, currentIndex, arr), initialValue)<br>function(total,currentValue, index,arr)    必需。用于执行每个数组元素的函数。<br>total    必需。初始值, 或者计算结束后的返回值。<br>currentValue    必需。当前元素<br>currentIndex    可选。当前元素的索引<br>arr    可选。当前元素所属的数组对象。<br>initialValue    可选。传递给函数的初始值<br>用es6重写componse函数</p>
+<p><pre><br>const compose = (…args) =&gt; x =&gt; args.reduceRight((res,cb) =&gt; cb(res),x)<br></pre><br>2.pipe函数<br>compose和pipe都是函数组合，组合是函数式编程中非常重要的思想，就是将多个函数组合在一起，以便能构建出一个新函数。在函数式编程中纯函数应该只做一件事，如果想实现多个功能，可以通过函数的组合来实现。pipe函数是compose函数的复制品，唯一修改的是数据流方向，它做的事和compose函数相同，只不过交换了数据流方向</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/04/17/网易微专业福利期-2-4-compose函数和pipe函数/" data-id="cka5080ey002yhyxqs049fmec" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/04/19/网易微专业福利期-2-5-高阶函数/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          网易微专业福利期-2.5-高阶函数
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/04/16/网易微专业-node-1-1-9-通信协议/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">网易微专业-node-1.1.9-通信协议</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端路由/">前端路由</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/正则/">正则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/前端路由/" style="font-size: 10px;">前端路由</a> <a href="/tags/数据结构/" style="font-size: 13.33px;">数据结构</a> <a href="/tags/正则/" style="font-size: 10px;">正则</a> <a href="/tags/算法/" style="font-size: 20px;">算法</a> <a href="/tags/设计模式/" style="font-size: 16.67px;">设计模式</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/05/13/es6-class-extends/">es6 class extends</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/12/网易微专业-node-Koa源码分析-2-2-3-中间件机制剖析/">网易微专业-node-Koa源码分析-2.2.3-中间件机制剖析</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/09/Web-前端路由原理解析和实现/">Web 前端路由原理解析和实现</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/08/网易微专业-node-Koa源码分析-2-2-2-请求处理流程解读/">网易微专业-node-Koa源码分析-2.2.2-请求处理流程解读</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/08/vue-cli了解/">vue-cli了解</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>vue-cli了解 | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="一直觉得自己对cli的了解太少了，于是有了这篇文章，看一点源码写一点东西吧，至于能写多少，希望我坚持到底首先git clone https://github.com/vuejs/vue-cli.git 下载源码，想着用vue-cli创建项目的命令是vue create，我找到了packages/@vue/cli/bin/vue.js文件，就从这里开始吧。  //chalk用于高亮终端打印出来的信息">
+<meta property="og:type" content="article">
+<meta property="og:title" content="vue-cli了解">
+<meta property="og:url" content="http://yoursite.com/2020/05/08/vue-cli了解/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="一直觉得自己对cli的了解太少了，于是有了这篇文章，看一点源码写一点东西吧，至于能写多少，希望我坚持到底首先git clone https://github.com/vuejs/vue-cli.git 下载源码，想着用vue-cli创建项目的命令是vue create，我找到了packages/@vue/cli/bin/vue.js文件，就从这里开始吧。  //chalk用于高亮终端打印出来的信息">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-05-09T02:59:33.861Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="vue-cli了解">
+<meta name="twitter:description" content="一直觉得自己对cli的了解太少了，于是有了这篇文章，看一点源码写一点东西吧，至于能写多少，希望我坚持到底首先git clone https://github.com/vuejs/vue-cli.git 下载源码，想着用vue-cli创建项目的命令是vue create，我找到了packages/@vue/cli/bin/vue.js文件，就从这里开始吧。  //chalk用于高亮终端打印出来的信息">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-vue-cli了解" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/05/08/vue-cli了解/" class="article-date">
+  <time datetime="2020-05-08T02:32:20.000Z" itemprop="datePublished">2020-05-08</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      vue-cli了解
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>一直觉得自己对cli的了解太少了，于是有了这篇文章，看一点源码写一点东西吧，至于能写多少，希望我坚持到底<br>首先git clone <a href="https://github.com/vuejs/vue-cli.git" target="_blank" rel="noopener">https://github.com/vuejs/vue-cli.git</a> 下载源码，想着用vue-cli创建项目的命令是vue create，我找到了packages/@vue/cli/bin/vue.js文件，就从这里开始吧。</p>
+<pre>
+//chalk用于高亮终端打印出来的信息，semver版本号处理工具
+const { chalk, semver } = require('@vue/cli-shared-utils')
+//获取node版本
+//"engines": {
+//    "node": ">=8.9"
+//}
+const requiredVersion = require('../package.json').engines.node
+//比较两个字符之间的差异
+const leven = require('leven')
+//先检测下node版本号是不是符合要求，不符合提示更新node并退出进程
+function checkNodeVersion (wanted, id) {
+  if (!semver.satisfies(process.version, wanted)) {
+    console.log(chalk.red(
+      'You are using Node ' + process.version + ', but this version of ' + id +
+      ' requires Node ' + wanted + '.\nPlease upgrade your Node version.'
+    ))
+    process.exit(1)
+  }
+}
+checkNodeVersion(requiredVersion, '@vue/cli')
+//虽然希望你的node版本高于8.9，但是这里还是贴心的提示，9.X版本可能不再继续支持，赶紧更新版本为长期支持的版本
+if (semver.satisfies(process.version, '9.x')) {
+  console.log(chalk.red(
+    `You are using Node ${process.version}.\n` +
+    `Node.js 9.x has already reached end-of-life and will not be supported in future major releases.\n` +
+    `It's strongly recommended to use an active LTS version instead.`
+  ))
+}
+const fs = require('fs')
+const path = require('path')
+//用于转换 Windows 反斜杠路径转换为正斜杠路径 \ => /
+const slash = require('slash')
+//轻量级的命令行参数解析引擎
+const minimist = require('minimist')
+// enter debug mode when creating test repo
+if (
+  slash(process.cwd()).indexOf('/packages/test') > 0 && (
+    fs.existsSync(path.resolve(process.cwd(), '../@vue')) ||
+    fs.existsSync(path.resolve(process.cwd(), '../../@vue'))
+  )
+) {
+  process.env.VUE_CLI_DEBUG = true
+}
+//https://www.cnblogs.com/mirandachen/p/9826886.html commander的API
+const program = require('commander')//node.js命令行界面的完整解决方案
+const loadCommand = require('../lib/util/loadCommand')//安装检测代码
+program
+  .version(`@vue/cli ${require('../package').version}`)
+  .usage('< command > [options]')
+//获取命令行参数，传递到create
+program
+  .command('create < app-name>')
+  .description('create a new project powered by vue-cli-service')
+  .option('-p, --preset < presetName>', 'Skip prompts and use saved or remote preset')
+  .option('-d, --default', 'Skip prompts and use default preset')
+  .option('-i, --inlinePreset < json>', 'Skip prompts and use inline JSON string as preset')
+  .option('-m, --packageManager < command>', 'Use specified npm client when installing dependencies')
+  .option('-r, --registry < url>', 'Use specified npm registry when installing dependencies (only for npm)')
+  .option('-g, --git [message]', 'Force git initialization with initial commit message')
+  .option('-n, --no-git', 'Skip git initialization')
+  .option('-f, --force', 'Overwrite target directory if it exists')
+  .option('--merge', 'Merge target directory if it exists')
+  .option('-c, --clone', 'Use git clone when fetching remote preset')
+  .option('-x, --proxy', 'Use specified proxy when creating project')
+  .option('-b, --bare', 'Scaffold project without beginner instructions')
+  .option('--skipGetStarted', 'Skip displaying "Get started" instructions')
+  .action((name, cmd) => {
+    const options = cleanArgs(cmd)
+    if (minimist(process.argv.slice(3))._.length > 1) {
+      console.log(chalk.yellow('\n Info: You provided more than one argument. The first one will be used as the app\'s name, the rest are ignored.'))
+    }
+    // --git makes commander to default git to true
+    if (process.argv.includes('-g') || process.argv.includes('--git')) {
+      options.forceGit = true
+    }
+    //把经过处理的命令行参数传递到create中
+    require('../lib/create')(name, options)
+  })
+//这后面还有一些命令行的处理，我们不贪多，先从主要脉络看起
+</pre>
+loadCommand.js代码
+<pre>
+module.exports = function loadCommand (commandName, moduleName) {
+  const isNotFoundError = err => {
+    return err.message.match(/Cannot find module/)
+  }
+  try {
+    return require(moduleName)
+  } catch (err) {
+    if (isNotFoundError(err)) {
+      try {
+        return require('import-global')(moduleName)
+      } catch (err2) {
+        if (isNotFoundError(err2)) {
+          const { chalk, hasYarn, hasPnpm3OrLater } = require('@vue/cli-shared-utils')
+          let installCommand = `npm install -g`
+          if (hasYarn()) {
+            installCommand = `yarn global add`
+          } else if (hasPnpm3OrLater()) {
+            installCommand = `pnpm install -g`
+          }
+          console.log()
+          console.log(
+            `  Command ${chalk.cyan(`vue ${commandName}`)} requires a global addon to be installed.\n` +
+            `  Please run ${chalk.cyan(`${installCommand} ${moduleName}`)} and try again.`
+          )
+          console.log()
+          process.exit(1)
+        } else {
+          throw err2
+        }
+      }
+    } else {
+      throw err
+    }
+  }
+}
+</pre>
+create.js
+<pre>
+const fs = require('fs-extra')//fs-extra模块是系统fs模块的扩展，提供了更多便利的 API，并继承了fs模块的 API
+const path = require('path')
+const inquirer = require('inquirer')//用户与命令行交互的工具
+const Creator = require('./Creator')
+const { clearConsole } = require('./util/clearConsole')
+const { getPromptModules } = require('./util/createTools')
+const { chalk, error, stopSpinner, exit } = require('@vue/cli-shared-utils')
+const validateProjectName = require('validate-npm-package-name')
+async function create (projectName, options) {
+  //projectName,options都是从命令行获取的
+  //projectName项目名称
+  //options创建项目的参数
+  if (options.proxy) {
+    process.env.HTTP_PROXY = options.proxy
+  }
+  const cwd = options.cwd || process.cwd()
+  const inCurrent = projectName === '.'
+  const name = inCurrent ? path.relative('../', cwd) : projectName
+  const targetDir = path.resolve(cwd, projectName || '.')
+  //判断项目名称是否可用
+  const result = validateProjectName(name)
+  if (!result.validForNewPackages) {
+    console.error(chalk.red(`Invalid project name: "${name}"`))
+    result.errors && result.errors.forEach(err => {
+      console.error(chalk.red.dim('Error: ' + err))
+    })
+    result.warnings && result.warnings.forEach(warn => {
+      console.error(chalk.red.dim('Warning: ' + warn))
+    })
+    exit(1)
+  }
+  //判断项目是否在当前目录生成，当前目录下是否已经存在项目
+  if (fs.existsSync(targetDir) && !options.merge) {
+    if (options.force) {
+      await fs.remove(targetDir)
+    } else {
+      await clearConsole()
+      if (inCurrent) {
+        const { ok } = await inquirer.prompt([
+          {
+            name: 'ok',
+            type: 'confirm',
+            message: `Generate project in current directory?`
+          }
+        ])
+        if (!ok) {
+          return
+        }
+      } else {
+        const { action } = await inquirer.prompt([
+          {
+            name: 'action',
+            type: 'list',
+            message: `Target directory ${chalk.cyan(targetDir)} already exists. Pick an action:`,
+            choices: [
+              { name: 'Overwrite', value: 'overwrite' },
+              { name: 'Merge', value: 'merge' },
+              { name: 'Cancel', value: false }
+            ]
+          }
+        ])
+        if (!action) {
+          return
+        } else if (action === 'overwrite') {
+          console.log(`\nRemoving ${chalk.cyan(targetDir)}...`)
+          await fs.remove(targetDir)
+        }
+      }
+    }
+  }
+  const creator = new Creator(name, targetDir, getPromptModules())
+  await creator.create(options)
+}
+module.exports = (...args) => {
+  return create(...args).catch(err => {
+    stopSpinner(false) // do not persist
+    error(err)
+    if (!process.env.VUE_CLI_TEST) {
+      process.exit(1)
+    }
+  })
+}
+</pre>
+在packages/@vue/cli/lib/create中，首先通过vlidate-npm-package-name处理包名是否合规。接着在目标文件存在的情况下来提供用户处理目标文件的交互。这一段代码比较好理解，最后生成creator类并调用了creator.create方法。
+<b>creator.js</b>
+<pre>
+const path = require('path')
+const debug = require('debug')
+const inquirer = require('inquirer')
+const EventEmitter = require('events')
+const Generator = require('./Generator')
+const cloneDeep = require('lodash.clonedeep')
+//sortObject有三个参数(对象，排序关键字，不根据Unicode排序)
+const sortObject = require('./util/sortObject')
+const getVersions = require('./util/getVersions')
+const PackageManager = require('./util/ProjectPackageManager')
+const { clearConsole } = require('./util/clearConsole')
+const PromptModuleAPI = require('./PromptModuleAPI')
+const writeFileTree = require('./util/writeFileTree')
+const { formatFeatures } = require('./util/features')
+const loadLocalPreset = require('./util/loadLocalPreset')
+const loadRemotePreset = require('./util/loadRemotePreset')
+const generateReadme = require('./util/generateReadme')
+const { resolvePkg } = require('@vue/cli-shared-utils')
+
+const {
+  defaults,
+  saveOptions,
+  loadOptions,
+  savePreset,
+  validatePreset,
+  rcPath
+} = require('./options')
+
+const {
+  chalk,
+  execa,
+
+  log,
+  warn,
+  error,
+  logWithSpinner,
+  stopSpinner,
+
+  hasGit,
+  hasProjectGit,
+  hasYarn,
+  hasPnpm3OrLater,
+  hasPnpmVersionOrLater,
+
+  exit,
+  loadModule
+} = require('@vue/cli-shared-utils')
+
+const isManualMode = answers => answers.preset === '__manual__'
+
+module.exports = class Creator extends EventEmitter {
+  constructor (name, context, promptModules) {
+    super()
+
+    this.name = name
+    this.context = process.env.VUE_CLI_CONTEXT = context
+    const { presetPrompt, featurePrompt } = this.resolveIntroPrompts()
+    this.presetPrompt = presetPrompt
+    this.featurePrompt = featurePrompt
+    this.outroPrompts = this.resolveOutroPrompts()
+    this.injectedPrompts = []
+    this.promptCompleteCbs = []
+    this.afterInvokeCbs = []
+    this.afterAnyInvokeCbs = []
+
+    this.run = this.run.bind(this)
+
+    const promptAPI = new PromptModuleAPI(this)
+    promptModules.forEach(m => m(promptAPI))
+  }
+
+  async create (cliOptions = {}, preset = null) {
+    const isTestOrDebug = process.env.VUE_CLI_TEST || process.env.VUE_CLI_DEBUG
+    const { run, name, context, afterInvokeCbs, afterAnyInvokeCbs } = this
+
+    if (!preset) {
+      if (cliOptions.preset) {
+        // vue create foo --preset bar
+        preset = await this.resolvePreset(cliOptions.preset, cliOptions.clone)
+      } else if (cliOptions.default) {
+        // vue create foo --default
+        preset = defaults.presets.default
+      } else if (cliOptions.inlinePreset) {
+        // vue create foo --inlinePreset {...}
+        try {
+          preset = JSON.parse(cliOptions.inlinePreset)
+        } catch (e) {
+          error(`CLI inline preset is not valid JSON: ${cliOptions.inlinePreset}`)
+          exit(1)
+        }
+      } else {
+        preset = await this.promptAndResolvePreset()
+      }
+    }
+
+    // clone before mutating
+    preset = cloneDeep(preset)
+    // inject core service
+    preset.plugins['@vue/cli-service'] = Object.assign({
+      projectName: name
+    }, preset)
+
+    if (cliOptions.bare) {
+      preset.plugins['@vue/cli-service'].bare = true
+    }
+
+    // legacy support for router
+    if (preset.router) {
+      preset.plugins['@vue/cli-plugin-router'] = {}
+
+      if (preset.routerHistoryMode) {
+        preset.plugins['@vue/cli-plugin-router'].historyMode = true
+      }
+    }
+
+    // legacy support for vuex
+    if (preset.vuex) {
+      preset.plugins['@vue/cli-plugin-vuex'] = {}
+    }
+
+    const packageManager = (
+      cliOptions.packageManager ||
+      loadOptions().packageManager ||
+      (hasYarn() ? 'yarn' : null) ||
+      (hasPnpm3OrLater() ? 'pnpm' : 'npm')
+    )
+    const pm = new PackageManager({ context, forcePackageManager: packageManager })
+
+    await clearConsole()
+    logWithSpinner(`✨`, `Creating project in ${chalk.yellow(context)}.`)
+    this.emit('creation', { event: 'creating' })
+
+    // get latest CLI plugin version
+    const { latestMinor } = await getVersions()
+
+    // generate package.json with plugin dependencies
+    const pkg = {
+      name,
+      version: '0.1.0',
+      private: true,
+      devDependencies: {},
+      ...resolvePkg(context)
+    }
+    const deps = Object.keys(preset.plugins)
+    deps.forEach(dep => {
+      if (preset.plugins[dep]._isPreset) {
+        return
+      }
+
+      // Note: the default creator includes no more than `@vue/cli-*` & `@vue/babel-preset-env`,
+      // so it is fine to only test `@vue` prefix.
+      // Other `@vue/*` packages' version may not be in sync with the cli itself.
+      pkg.devDependencies[dep] = (
+        preset.plugins[dep].version ||
+        ((/^@vue/.test(dep)) ? `~${latestMinor}` : `latest`)
+      )
+    })
+
+    // write package.json
+    await writeFileTree(context, {
+      'package.json': JSON.stringify(pkg, null, 2)
+    })
+
+    // intilaize git repository before installing deps
+    // so that vue-cli-service can setup git hooks.
+    const shouldInitGit = this.shouldInitGit(cliOptions)
+    if (shouldInitGit) {
+      logWithSpinner(`🗃`, `Initializing git repository...`)
+      this.emit('creation', { event: 'git-init' })
+      await run('git init')
+    }
+
+    // install plugins
+    stopSpinner()
+    log(`⚙\u{fe0f}  Installing CLI plugins. This might take a while...`)
+    log()
+    this.emit('creation', { event: 'plugins-install' })
+
+    if (isTestOrDebug && !process.env.VUE_CLI_TEST_DO_INSTALL_PLUGIN) {
+      // in development, avoid installation process
+      await require('./util/setupDevProject')(context)
+    } else {
+      await pm.install()
+    }
+
+    // run generator
+    log(`🚀  Invoking generators...`)
+    this.emit('creation', { event: 'invoking-generators' })
+    const plugins = await this.resolvePlugins(preset.plugins)
+    const generator = new Generator(context, {
+      pkg,
+      plugins,
+      afterInvokeCbs,
+      afterAnyInvokeCbs
+    })
+    await generator.generate({
+      extractConfigFiles: preset.useConfigFiles
+    })
+
+    // install additional deps (injected by generators)
+    log(`📦  Installing additional dependencies...`)
+    this.emit('creation', { event: 'deps-install' })
+    log()
+    if (!isTestOrDebug) {
+      await pm.install()
+    }
+
+    // run complete cbs if any (injected by generators)
+    logWithSpinner('⚓', `Running completion hooks...`)
+    this.emit('creation', { event: 'completion-hooks' })
+    for (const cb of afterInvokeCbs) {
+      await cb()
+    }
+    for (const cb of afterAnyInvokeCbs) {
+      await cb()
+    }
+
+    // generate README.md
+    stopSpinner()
+    log()
+    logWithSpinner('📄', 'Generating README.md...')
+    await writeFileTree(context, {
+      'README.md': generateReadme(generator.pkg, packageManager)
+    })
+
+    // generate a .npmrc file for pnpm, to persist the `shamefully-flatten` flag
+    if (packageManager === 'pnpm') {
+      const pnpmConfig = hasPnpmVersionOrLater('4.0.0')
+        ? 'shamefully-hoist=true\n'
+        : 'shamefully-flatten=true\n'
+
+      await writeFileTree(context, {
+        '.npmrc': pnpmConfig
+      })
+    }
+
+    // commit initial state
+    let gitCommitFailed = false
+    if (shouldInitGit) {
+      await run('git add -A')
+      if (isTestOrDebug) {
+        await run('git', ['config', 'user.name', 'test'])
+        await run('git', ['config', 'user.email', 'test@test.com'])
+      }
+      const msg = typeof cliOptions.git === 'string' ? cliOptions.git : 'init'
+      try {
+        await run('git', ['commit', '-m', msg])
+      } catch (e) {
+        gitCommitFailed = true
+      }
+    }
+
+    // log instructions
+    stopSpinner()
+    log()
+    log(`🎉  Successfully created project ${chalk.yellow(name)}.`)
+    if (!cliOptions.skipGetStarted) {
+      log(
+        `👉  Get started with the following commands:\n\n` +
+        (this.context === process.cwd() ? `` : chalk.cyan(` ${chalk.gray('$')} cd ${name}\n`)) +
+        chalk.cyan(` ${chalk.gray('$')} ${packageManager === 'yarn' ? 'yarn serve' : packageManager === 'pnpm' ? 'pnpm run serve' : 'npm run serve'}`)
+      )
+    }
+    log()
+    this.emit('creation', { event: 'done' })
+
+    if (gitCommitFailed) {
+      warn(
+        `Skipped git commit due to missing username and email in git config.\n` +
+        `You will need to perform the initial commit yourself.\n`
+      )
+    }
+
+    generator.printExitLogs()
+  }
+
+  run (command, args) {
+    if (!args) { [command, ...args] = command.split(/\s+/) }
+    return execa(command, args, { cwd: this.context })
+  }
+
+  async promptAndResolvePreset (answers = null) {
+    // prompt
+    if (!answers) {
+      await clearConsole(true)
+      answers = await inquirer.prompt(this.resolveFinalPrompts())
+    }
+    debug('vue-cli:answers')(answers)
+
+    if (answers.packageManager) {
+      saveOptions({
+        packageManager: answers.packageManager
+      })
+    }
+
+    let preset
+    if (answers.preset && answers.preset !== '__manual__') {
+      preset = await this.resolvePreset(answers.preset)
+    } else {
+      // manual
+      preset = {
+        useConfigFiles: answers.useConfigFiles === 'files',
+        plugins: {}
+      }
+      answers.features = answers.features || []
+      // run cb registered by prompt modules to finalize the preset
+      this.promptCompleteCbs.forEach(cb => cb(answers, preset))
+    }
+
+    // validate
+    validatePreset(preset)
+
+    // save preset
+    if (answers.save && answers.saveName && savePreset(answers.saveName, preset)) {
+      log()
+      log(`🎉  Preset ${chalk.yellow(answers.saveName)} saved in ${chalk.yellow(rcPath)}`)
+    }
+
+    debug('vue-cli:preset')(preset)
+    return preset
+  }
+
+  async resolvePreset (name, clone) {
+    let preset
+    const savedPresets = loadOptions().presets || {}
+
+    if (name in savedPresets) {
+      preset = savedPresets[name]
+    } else if (name.endsWith('.json') || /^\./.test(name) || path.isAbsolute(name)) {
+      preset = await loadLocalPreset(path.resolve(name))
+    } else if (name.includes('/')) {
+      logWithSpinner(`Fetching remote preset ${chalk.cyan(name)}...`)
+      this.emit('creation', { event: 'fetch-remote-preset' })
+      try {
+        preset = await loadRemotePreset(name, clone)
+        stopSpinner()
+      } catch (e) {
+        stopSpinner()
+        error(`Failed fetching remote preset ${chalk.cyan(name)}:`)
+        throw e
+      }
+    }
+
+    // use default preset if user has not overwritten it
+    if (name === 'default' && !preset) {
+      preset = defaults.presets.default
+    }
+    if (!preset) {
+      error(`preset "${name}" not found.`)
+      const presets = Object.keys(savedPresets)
+      if (presets.length) {
+        log()
+        log(`available presets:\n${presets.join(`\n`)}`)
+      } else {
+        log(`you don't seem to have any saved preset.`)
+        log(`run vue-cli in manual mode to create a preset.`)
+      }
+      exit(1)
+    }
+    return preset
+  }
+
+  // { id: options } => [{ id, apply, options }]
+  async resolvePlugins (rawPlugins) {
+    // ensure cli-service is invoked first
+    rawPlugins = sortObject(rawPlugins, ['@vue/cli-service'], true)
+    const plugins = []
+    for (const id of Object.keys(rawPlugins)) {
+      const apply = loadModule(`${id}/generator`, this.context) || (() => {})
+      let options = rawPlugins[id] || {}
+      if (options.prompts) {
+        const prompts = loadModule(`${id}/prompts`, this.context)
+        if (prompts) {
+          log()
+          log(`${chalk.cyan(options._isPreset ? `Preset options:` : id)}`)
+          options = await inquirer.prompt(prompts)
+        }
+      }
+      plugins.push({ id, apply, options })
+    }
+    return plugins
+  }
+
+  getPresets () {
+    const savedOptions = loadOptions()
+    return Object.assign({}, savedOptions.presets, defaults.presets)
+  }
+
+  resolveIntroPrompts () {
+    const presets = this.getPresets()
+    const presetChoices = Object.keys(presets).map(name => {
+      return {
+        name: `${name} (${formatFeatures(presets[name])})`,
+        value: name
+      }
+    })
+    const presetPrompt = {
+      name: 'preset',
+      type: 'list',
+      message: `Please pick a preset:`,
+      choices: [
+        ...presetChoices,
+        {
+          name: 'Manually select features',
+          value: '__manual__'
+        }
+      ]
+    }
+    const featurePrompt = {
+      name: 'features',
+      when: isManualMode,
+      type: 'checkbox',
+      message: 'Check the features needed for your project:',
+      choices: [],
+      pageSize: 10
+    }
+    return {
+      presetPrompt,
+      featurePrompt
+    }
+  }
+
+  resolveOutroPrompts () {
+    const outroPrompts = [
+      {
+        name: 'useConfigFiles',
+        when: isManualMode,
+        type: 'list',
+        message: 'Where do you prefer placing config for Babel, ESLint, etc.?',
+        choices: [
+          {
+            name: 'In dedicated config files',
+            value: 'files'
+          },
+          {
+            name: 'In package.json',
+            value: 'pkg'
+          }
+        ]
+      },
+      {
+        name: 'save',
+        when: isManualMode,
+        type: 'confirm',
+        message: 'Save this as a preset for future projects?',
+        default: false
+      },
+      {
+        name: 'saveName',
+        when: answers => answers.save,
+        type: 'input',
+        message: 'Save preset as:'
+      }
+    ]
+
+    // ask for packageManager once
+    const savedOptions = loadOptions()
+    if (!savedOptions.packageManager && (hasYarn() || hasPnpm3OrLater())) {
+      const packageManagerChoices = []
+
+      if (hasYarn()) {
+        packageManagerChoices.push({
+          name: 'Use Yarn',
+          value: 'yarn',
+          short: 'Yarn'
+        })
+      }
+
+      if (hasPnpm3OrLater()) {
+        packageManagerChoices.push({
+          name: 'Use PNPM',
+          value: 'pnpm',
+          short: 'PNPM'
+        })
+      }
+
+      packageManagerChoices.push({
+        name: 'Use NPM',
+        value: 'npm',
+        short: 'NPM'
+      })
+
+      outroPrompts.push({
+        name: 'packageManager',
+        type: 'list',
+        message: 'Pick the package manager to use when installing dependencies:',
+        choices: packageManagerChoices
+      })
+    }
+
+    return outroPrompts
+  }
+
+  resolveFinalPrompts () {
+    // patch generator-injected prompts to only show in manual mode
+    this.injectedPrompts.forEach(prompt => {
+      const originalWhen = prompt.when || (() => true)
+      prompt.when = answers => {
+        return isManualMode(answers) && originalWhen(answers)
+      }
+    })
+    const prompts = [
+      this.presetPrompt,
+      this.featurePrompt,
+      ...this.injectedPrompts,
+      ...this.outroPrompts
+    ]
+    debug('vue-cli:prompts')(prompts)
+    return prompts
+  }
+
+  shouldInitGit (cliOptions) {
+    if (!hasGit()) {
+      return false
+    }
+    // --git
+    if (cliOptions.forceGit) {
+      return true
+    }
+    // --no-git
+    if (cliOptions.git === false || cliOptions.git === 'false') {
+      return false
+    }
+    // default: true unless already in a git repo
+    return !hasProjectGit(this.context)
+  }
+}
+</pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/05/08/vue-cli了解/" data-id="cka5080hr003xhyxquqj1l3ij" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/05/08/网易微专业-node-Koa源码分析-2-2-2-请求处理流程解读/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          网易微专业-node-Koa源码分析-2.2.2-请求处理流程解读
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/05/07/网易微专业-node-Koa源码分析-2-2-1-Koa类构造函数设计/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">网易微专业-node-Koa源码分析-2.2.1-Koa类构造函数设计</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端路由/">前端路由</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/正则/">正则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/前端路由/" style="font-size: 10px;">前端路由</a> <a href="/tags/数据结构/" style="font-size: 13.33px;">数据结构</a> <a href="/tags/正则/" style="font-size: 10px;">正则</a> <a href="/tags/算法/" style="font-size: 20px;">算法</a> <a href="/tags/设计模式/" style="font-size: 16.67px;">设计模式</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/05/13/es6-class-extends/">es6 class extends</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/12/网易微专业-node-Koa源码分析-2-2-3-中间件机制剖析/">网易微专业-node-Koa源码分析-2.2.3-中间件机制剖析</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/09/Web-前端路由原理解析和实现/">Web 前端路由原理解析和实现</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/08/网易微专业-node-Koa源码分析-2-2-2-请求处理流程解读/">网易微专业-node-Koa源码分析-2.2.2-请求处理流程解读</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/08/vue-cli了解/">vue-cli了解</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

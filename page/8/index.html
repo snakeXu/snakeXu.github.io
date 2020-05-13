@@ -62,10 +62,10 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-js算法简单了解-插入排序" class="article article-type-post" itemscope="" itemprop="blogPost">
+    <article id="post-网易微专业-现代前端工程实践方案-解锁webpack-3-1-5-JavaScript的编译-webpack的概念与基础使用" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2019/12/10/js算法简单了解-插入排序/" class="article-date">
-  <time datetime="2019-12-10T06:37:09.000Z" itemprop="datePublished">2019-12-10</time>
+    <a href="/2020/01/06/网易微专业-现代前端工程实践方案-解锁webpack-3-1-5-JavaScript的编译-webpack的概念与基础使用/" class="article-date">
+  <time datetime="2020-01-06T07:08:13.000Z" itemprop="datePublished">2020-01-06</time>
 </a>
     
   </div>
@@ -76,7 +76,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/12/10/js算法简单了解-插入排序/">js算法简单了解-插入排序</a>
+      <a class="article-title" href="/2020/01/06/网易微专业-现代前端工程实践方案-解锁webpack-3-1-5-JavaScript的编译-webpack的概念与基础使用/">网易微专业-现代前端工程实践方案 解锁webpack-3.1.5-JavaScript的编译,webpack的概念与基础使用</a>
     </h1>
   
 
@@ -84,13 +84,14 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>1.描述<br>插入排序的工作原理就是将未排序数据，对已排序数据序列从后向前扫描，找到对应的位置并插入。插入排序通常采用占位的形式，空间复杂度为O(1),因此，在从后向前扫描的过程中，需要反复的把已排序的元素逐步向后挪位，为新插入元素提供插入的位置。<br>(1）从第一个元素开始，该元素可以被认为已经被排序<br>(2）取出下一个元素，在已经排好序的序列中从后往前扫描<br>(3）直到找到小于或者等于该元素的位置<br>(4）将该位置后面的所有已排序的元素从后往前依次移一位<br>(5)将该元素插入到该位置<br>(6)重复步骤2-5<br>另外，插入排序所需的时间取决于输入中元素的初始顺序。<br>2.代码</p>
-<p><pre><br>function insertsort(arr){<br>    var len = arr &amp;&amp; arr.length,i=1,j;<br>    for( ; i &lt; len; i++){<br>        for(j = i; j &gt; 0 &amp;&amp; arr[j] &lt; arr[j-1]; j–){<br>            var temp = arr[j];<br>            arr[j] = arr[j-1]<br>            arr[j-1] = temp;<br>        }<br>        //console.log(arr)这里是为了打印每轮比较的结果<br>    }<br>    return arr<br>}<br>var arr = [49,38,65,101,76,13,27,49,55,1]<br>insertsort(arr)<br></pre><br>结果打印<br><img src="https://snakexu.github.io/images/algorithm/insertsort_1.png"><br>3.时间复杂度最好为O(N) 最坏为(N^2) 平均为O(N^2)   空间复杂度为O(1) 稳定<br>4.额外<br>4.1数组是部分有序的：数组中倒置的数量小于数组大小的某个倍数，那么我们说这个数组是部分有序的。下面是几种典型的部分有序的数组：<br>(1)数组中每个元素距离它最终位置都不远<br>(2)一个有序的大数组接一个小数组<br>(3)数组中只有几个元素的位置不正确<br>——以上来自：算法(第四版)<br><br>插入排序对这样的数组很有效。<br><br>4.2要大幅提高插入排序的速度并不难，只需要在内循环中将较大的元素都向右移动而不总是交换两个元素(这样访问数组的次数就能减半)</p>
+        <p>1.编译es6<br>编译需要安装的loader<pre>npm install babel-loader @babel/core -save-dev</pre><br>在项目的webpack.config.js文件中配置，现在该文件整体内容如下</p>
+<p><pre><br>module.exports = {<br>    entry:{<br>        app:’./app.js’<br>    },<br>    outpus:{<br>        filename:’[name].[hash:8].js’<br>    },<br>    module:{<br>        rules:[<br>            {<br>                test:/.js$/,<br>                use:’babel-loader’<br>            }<br>        ]<br>    }<br>}<br></pre><br>在该文件夹下命令行中输入webpack打包文件，我们打开打包好的文件夹发现，我们写的es6的语法并没有被编译，其原因是我们没有babel-preset。Presets是存储JavaScript不同标准的插件，通过使用正确的presets，告诉babel按照哪个规范编译。presets常见规范:<br>·es2015<br>·es2016<br>·es2017<br>·env(通常采用)<br>·babel-preset-stage<br>通过npm install @babel/preset-env -save-dev安装。同时需要修改配置文件</p>
+<p><pre><br>module.exports = {<br>    entry:{<br>        app:’./app.js’<br>    },<br>    outpus:{<br>        filename:’[name].[hash:8].js’<br>    },<br>    module:{<br>        rules:[<br>            {<br>                test:/.js$/,<br>                use:{<br>                    loader:’babel-loader’,<br>                    options:{<br>                        presets:[<br>                            [@babel/preset-env,{<br>                                targets:{<br>                                    browsers:[‘&gt;1%’]<br>                                }<br>                            }]<br>                        ]<br>                    }<br>                }<br>            }<br>        ]<br>    }<br>}<br></pre><br>babel-presets的target配置：target是preset的核心配置，告诉preset编译的具体目标。target可以:<br>·以browsers为目标(通常情况)<br>·以node版本为目标<br>·以特定的浏览器为目标<br>babel-preset只能编译一些语法<br>2.es6方法的编译<br>npm install babel-polyfill -save-dev<br>npm install babel-plugin-transform-runtime babel-runtime –save<br>babel-polyfill的生效方式:01.生成一个全局对象，该对象定义了一些es6方法的实现，对所有相关方法进行重写。02一般用于项目开发<br>babel-transform-runtime:01.生成一个局部对象，仅在app.js作用域内生成对象并且只对已经使用的方法进行重写。02一般用于框架开发<br>另外，实际项目中，由于版本等问题，需要配置的实际依赖往往和文中有区别。如果webpack.config.js的module.rules[0].use.options中内容过多时，关于babel的内容可以在项目根目录中建立.babelrc文件，将babel相关内容配置到这个文件中，webpack.config.js会自动读取该文件内容。<br>3.编译语法糖<br>以TypeScript为例，讲解webpack对语法糖的编译<br>TypeScript是JavaScript的一个超级，让我们可以用强类型的写法写JavaScript，与之类似的有jsx、vue等。<br>3-1如何编译Typescript<br>01.安装loader。安装typescript和ts-loader<br>02.写入配置文件。在webpack.config.js中写入ts-loader<br>03.编写tsconfig.json。类似于.babelrc,ts-loader的额外配置。<br>4.一些常见的JavaScript语法糖编译<br>01.安装对应loader。比如vue-loader/jsx-loader<br>02.写入配置文件。在webpack.config.js中写入对应loader处理。<br>03.根据loader规则写配置。可在loader的npm或github上查询</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/10/js算法简单了解-插入排序/" data-id="ck911598500096yxqj8zop53f" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/01/06/网易微专业-现代前端工程实践方案-解锁webpack-3-1-5-JavaScript的编译-webpack的概念与基础使用/" data-id="cka5080ev002thyxqmxrgi9y1" class="article-share-link">Share</a>
       
       
     </footer>
@@ -100,10 +101,10 @@
 
 
   
-    <article id="post-js算法简单了解-选择排序" class="article article-type-post" itemscope="" itemprop="blogPost">
+    <article id="post-网易微专业-现代前端工程实践方案-解锁webpack-3-1-4-用webpack开始一次打包" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2019/12/10/js算法简单了解-选择排序/" class="article-date">
-  <time datetime="2019-12-10T03:50:51.000Z" itemprop="datePublished">2019-12-10</time>
+    <a href="/2020/01/06/网易微专业-现代前端工程实践方案-解锁webpack-3-1-4-用webpack开始一次打包/" class="article-date">
+  <time datetime="2020-01-06T01:46:57.000Z" itemprop="datePublished">2020-01-06</time>
 </a>
     
   </div>
@@ -114,7 +115,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/12/10/js算法简单了解-选择排序/">js算法简单了解-选择排序</a>
+      <a class="article-title" href="/2020/01/06/网易微专业-现代前端工程实践方案-解锁webpack-3-1-4-用webpack开始一次打包/">网易微专业-现代前端工程实践方案 解锁webpack-3.1.4-用webpack开始一次打包</a>
     </h1>
   
 
@@ -122,364 +123,877 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>1.描述<br>在长度为N的无序数组中，第一次遍历n-1个数，找到最小的数值与第一个元素交换；第二次遍历n-2个数，找到最小的数值与第二个元素交换；。。。第n-1次遍历，找到最小的数值与第n-1个元素交换，排序完成。相较其他算法，选择排序的运行时间与数据初始状态无关，总会进行大约N2/2(N的平方除以2)次比较，而其他算法更善于利用数据初始状态<br>2.代码实现</p>
-<p><pre><br>function selectsort(arr){<br>    var len = arr &amp;&amp; arr.length,i=0,j,min;<br>    for( ; i &lt; len - 1; i++){<br>        min = i;<br>        for(j = i+1; j &lt; len; j++){<br>            if(a[j] &lt; a[min])<br>                min = j;<br>        }<br>        if(min != i){<br>            var temp = a[i];<br>            a[i] = a[min];<br>            a[min] = temp;<br>        }<br>    }<br>    return arr<br>}<br></pre><br>3.时间复杂度均为O(N^2)    空间复杂度为O(1)  不稳定(不稳定的意思就是，如果有个数组arr = [4,5,2,3,3,1],在排序之后，a[3]依然在a[4]前边)</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/10/js算法简单了解-选择排序/" data-id="ck911598400086yxqj24a4lfa" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-js算法简单了解-冒泡算法" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/12/10/js算法简单了解-冒泡算法/" class="article-date">
-  <time datetime="2019-12-10T02:02:50.000Z" itemprop="datePublished">2019-12-10</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/12/10/js算法简单了解-冒泡算法/">js算法简单了解-冒泡算法</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <!--为了补回算法了解，我也是real认真了，拿出了上学时候的教材——数据结构(C语言版)，清华大学出版社，还是很怀念上学做米虫的日子的，言归正传-->
-<p>1.其实就是把数组中相邻元素一个个比较，按照排序的条件进行互换，毫无技巧简单粗暴直接有效。不过这个算法在我看来是最容易学习的。<br>2.代码实现，例子里排序得到的结果是从小到大的，可以按照自己的需要更改比较条件</p>
-<p><pre><br>function BubbleSort(arr){<br>    var temp;//临时变量<br>    for(var i=0; i &lt; arr.length-1; i++){   //表示趟数，一共arr.length-1次。<br>        var count = 0; //打印用的参数<br>        for(var j=arr.length-1; j&gt;i; j–){<br>            if(arr[j] &lt; arr[j-1]){<br>                temp = arr[j];<br>                arr[j] = arr[j-1];<br>                arr[j-1] = temp;<br>                count++;<br>            }<br>        }<br>        console.log(‘第’+i+’轮的比较次数为’+count);<br>    }<br>    return arr;<br>}<br>var arr = [93,72,35,48,42,37,15,2];<br>BubbleSort(arr)<br></pre><br>执行结果如图所示：<br><img src="https://snakexu.github.io/images/algorithm/bubble_1.png"><br>3.时间复杂度:O(N^2)(N的平方)</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/10/js算法简单了解-冒泡算法/" data-id="ck911597y00026yxqqx3ur9lk" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-模块化编程-4-1-2-加载器结构设计导论-自研模块加载器" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/12/07/网易微专业-模块化编程-4-1-2-加载器结构设计导论-自研模块加载器/" class="article-date">
-  <time datetime="2019-12-07T09:54:59.000Z" itemprop="datePublished">2019-12-07</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/12/07/网易微专业-模块化编程-4-1-2-加载器结构设计导论-自研模块加载器/">网易微专业-模块化编程-4.1.2-加载器结构设计导论-自研模块加载器</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.结构导论<br><img src="https://snakexu.github.io/images/wangyi/module/4.1.2_1.png"><br>2.数据初始化<br><img src="https://snakexu.github.io/images/wangyi/module/4.1.2_2.png"><br>3.模块存储<br><img src="https://snakexu.github.io/images/wangyi/module/4.1.2_3.png"><br>4.资源定位<br><img src="https://snakexu.github.io/images/wangyi/module/4.1.2_4.png"><br>5.动态加载script文件<br><img src="https://snakexu.github.io/images/wangyi/module/4.1.2_5.png"><br>6.资源定位实现思路<br><img src="https://snakexu.github.io/images/wangyi/module/4.1.2_6.png"></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/07/网易微专业-模块化编程-4-1-2-加载器结构设计导论-自研模块加载器/" data-id="ck911599300226yxqulkctqne" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-模块化编程-4-1-1-模块系统概述-自定义模块规范-书写约定" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/12/07/网易微专业-模块化编程-4-1-1-模块系统概述-自定义模块规范-书写约定/" class="article-date">
-  <time datetime="2019-12-07T06:52:12.000Z" itemprop="datePublished">2019-12-07</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/12/07/网易微专业-模块化编程-4-1-1-模块系统概述-自定义模块规范-书写约定/">网易微专业-模块化编程-4.1.1-模块系统概述-自定义模块规范-书写约定</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>一.什么是模块化<br><br>1.模块化就是把系统分离成独立功能的方法，这样我们需要什么功能，就加载什么功能。<br><br>(1)当一个项目开发的越来越复杂时，会遇到一些问题:<br><br>(1-1)命名冲突<br><br>(1-2)文件依赖<br><br>(2)使用模块化开发，可以避免以上问题，并且提高开发效率<br><br>(2-1)可维护性<br><br>(2-2)可复用性<br><br>总结:在生产角度，模块化开发是一种生产方式，这种方式生产效率高，维护成本低<br><br>二.模块化开发演变<br><img src="https://snakexu.github.io/images/wangyi/module/4.1.1_1.png"><br>三.Commonjs<br><br>CommonJS规范加载模块是同步的，也就是说，加载完成才执行后面的操作。<br><br>Node.js主要用于服务器编程，模块都是存在本地硬盘中加载比较快，所以Node.js采用CommonJS规范。<br><br>CommonJS规范分为三部分：module(模块标识) require(模块引用)  exports(模块定义)<br><br>·module变量在每个模块内部，就代表当前模块；<br><br>·exports属性是对外接口，用于导出当前模块的方法或变量；<br><br>·require()用来加载外部模块，读取并执行js文件，返回该模块的exports对象；<br><br>四.AMD(requirejs)<br><br>AMD也就是异步模块定义。它采用异步方式加载模块，通过define方式去定义模块，require方法去加载模块<br><br>AMD模块定义<br><br>如果这个模块还需要依赖其他模块，那么define函数的第一个参数， 必须是一个数组，指明该模块的依赖。<br></p>
-<p><pre>define([tools],function(){})</pre><br>AMD模块的加载</p>
-<p><pre>requeire([‘modules’],callback);</pre><br>·第一个参数[‘modules’]，是一个数组，里面的成员就是要加载的模块<br><br>·第二个参数callback，则是加载成功之后的回调函数。例如加载Math.js。<br></p>
-<p><pre>require([‘math’],function(){})</pre><br>require异步加载Math,浏览器不会失去响应；它指定的回调函数，只有前面的模块都加载成功后，才会运行，解决了依赖性的问题<br><br>五.CMD(seajs)<br><br>CMD即通用模块定义，CMD规范是国内发展出来的；正如AMD有requirejs，CMD有个浏览器的实现Seajs；Seajs要解决的问题和requirejs一样，只不过在模块定义方式和模块加载方式上有所不同<br><br>在CMD规范中，一个模块就是一个文件。代码的书写格式如下：</p>
-<p><pre>define(function(require,exports,module){<br>//模块代码<br>})</pre><br><i><br>    ·require是可以把其他模块导入进来的一个参数，<br><br>    ·exports可以把模块内的一些属性和方法导出；<br><br>    ·module是一个对象，上面存储了与当前模块相关联的一些属性和方法。<br><br></i><br>CMD推崇依赖就近，延迟执行。文件是提前加载好的，只有在require的时候才去执行文件</p>
-<p><pre><br>define(functioln(require,exports,module){<br>    var Math = require(‘./Math’);<br>    Math.add()<br>})<br></pre><br>六.ES6模块化<br><br>ES6 Module<br><br>在ES6之前没有模块化，为了解决问题，提出了Commonjs、AMD、CMD；ES6模块化汲取了Commonjs和AMD的优点，语法简介，支持异步加载，未来可以成为浏览器和服务器通用的模块化解决方案。<br><br>ES6中模块的定义<br><br>ES6新增了两个关键字：export和import。<br><br>·export用于把模块里的内容暴露出来<br><br>·import用于引入模块提供的功能<br><br>ES6中模块的加载<br><br>import加载模块：<br></p>
-<p><pre>import{bar,foo,test,obj} from ‘./lib’<br>    foo()<br></pre><br>注：可以使用export default命令，为模块指定默认输出，一个模块只能有一个默认输出，所以export default只能用一次。<br><br>ES6模块运行机制<br><br>ES6模块是动态引用，如果使用import从一个模块加载变量(即import foo from ‘foo’),变量不会被缓存，而是成为一个指向被加载模块的引用。等脚本执行时，根据只读引用，到被加载到那个模块中去取值。<br><br>七.自定义规范-书写约定<br><br>书写约定<br><br>自定义加载器<br><br>模块的定义<br><br>·约定：所有的Javascript文件都应该用模块的形式来书写，并且一个文件只包含一个模块；<br><br>·使用全局函数define来定义模块 define(factory[require、export、module])；<br><br>·factroy函数在调用时，会始终传入三个参数require、export和module，这三个参数在所有模块代码里可用。<br></p>
-<p><pre><br>    define(function(require, exports, module){<br>        //模块代码<br>    })<br></pre><br>·exports用来向外提供模块的API || 使用return语句直接向外提供API。<br><br>·require函数用来模仿其他模块提供的API。<br><br>·module参数存储模块的元信息。(id模块的唯一标识 deps依赖列表 exports对外提供的接口对象)<br><br><br><br>factory函数在调用时，会始终传入三个参数：require、exports和module，这三个参数在所有模块代码里可用。<br></p>
-<p><pre><br>    define(function(require, exports, module){<br>        //模块代码<br>    })<br></pre><br>模块加载器会从factory.toString()中解析出当前模块所依赖的模块，它是由一个模块标识组成的数组。<br><br>所以：<br><br>1.在模块代码中，第一个参数必须命名为require。<br><br>2.不要重命名require函数，或在任何作用域总给require重新赋值。<br><br>3.require的参数值必须是字符串的直接量不能是表达式。<br></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/07/网易微专业-模块化编程-4-1-1-模块系统概述-自定义模块规范-书写约定/" data-id="ck911599200216yxqp9sv4wau" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-HTTP和HTTPS协议" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/12/06/HTTP和HTTPS协议/" class="article-date">
-  <time datetime="2019-12-06T08:37:32.000Z" itemprop="datePublished">2019-12-06</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/12/06/HTTP和HTTPS协议/">HTTP和HTTPS协议</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>写在前面<br><br>版权声明：本文为CSDN博主「会飞的狗~」的原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接及本声明。<br>原文链接：<a href="https://blog.csdn.net/xiaoming100001/article/details/81109617" target="_blank" rel="noopener">https://blog.csdn.net/xiaoming100001/article/details/81109617</a><br><br>文章对http和https解释的比较详细，但是也略有一些不足，比如三次握手的图略有差池，但是瑕不掩瑜，整体来说还是了解http和https一篇比较好的文章<br><br>一、前言：<br><img src="https://snakexu.github.io/images/http&https/http_1.jpeg"><br><img src="https://snakexu.github.io/images/http&https/http_2.jpeg"><br>先来观察这两张图，第一张访问域名<a href="http://www.12306.cn，谷歌浏览器提示不安全链接，第二张是https://kyfw.12306.cn/otn/regist/init，浏览器显示安全，为什么会这样子呢？2017年1月发布的Chrome" target="_blank" rel="noopener">http://www.12306.cn，谷歌浏览器提示不安全链接，第二张是https://kyfw.12306.cn/otn/regist/init，浏览器显示安全，为什么会这样子呢？2017年1月发布的Chrome</a> 56浏览器开始把收集密码或信用卡数据的HTTP页面标记为“不安全”，若用户使用2017年10月推出的Chrome 62，带有输入数据的HTTP页面和所有以无痕模式浏览的HTTP页面都会被标记为“不安全”，此外，苹果公司强制所有iOS App在2017年1月1日前使用HTTPS加密。<br><br>二、HTTP和HTTPS发展历史<br><br>什么是HTTP?<br><br>超文本传输协议，是一个基于请求与响应，无状态的，应用层的协议，常基于TCP/IP协议传输数据，互联网上应用最为广泛的一种网络协议,所有的WWW文件都必须遵守这个标准。设计HTTP的初衷是为了提供一种发布和接收HTML页面的方法。<br><br>发展历史：<br><img src="https://snakexu.github.io/images/http&https/http_3.png"><br><img src="https://snakexu.github.io/images/http&https/http_4.png"><br>这个Akamai公司建立的一个官方的演示，使用HTTP/1.1和HTTP/2同时请求379张图片，观察请求的时间，明显看出HTTP/2性能占优势。<br><img src="https://snakexu.github.io/images/http&https/http_5.jpeg"><br>多路复用：通过单一的HTTP/2连接请求发起多重的请求-响应消息，多个请求stream共享一个TCP连接，实现多留并行而不是依赖建立多个TCP连接。<br><br><br>HTTP报文格式<br><img src="https://snakexu.github.io/images/http&https/http_6.png"><br>什么是HTTPS？<br><br>《图解HTTP》这本书中曾提过HTTPS是身披SSL外壳的HTTP。HTTPS是一种通过计算机网络进行安全通信的传输协议，经由HTTP进行通信，利用SSL/TLS建立全信道，加密数据包。HTTPS使用的主要目的是提供对网站服务器的身份认证，同时保护交换数据的隐私与完整性。<br><br>PS:TLS是传输层加密协议，前身是SSL协议，由网景公司1995年发布，有时候两者不区分。<br><br>三、HTTP VS HTTPS<br><br>HTTP特点：<br><br>1.无状态：协议对客户端没有状态存储，对事物处理没有“记忆”能力，比如访问一个网站需要反复进行登录操作<br><br>2.无连接：HTTP/1.1之前，由于无状态特点，每次请求需要通过TCP三次握手四次挥手，和服务器重新建立连接。比如某个客户机在短时间多次请求同一个资源，服务器并不能区别是否已经响应过用户的请求，所以每次需要重新响应请求，需要耗费不必要的时间和流量。<br><br>3.基于请求和响应：基本的特性，由客户端发起请求，服务端响应<br><br>4.简单快速、灵活<br><br>5.通信使用明文、请求和响应不会对通信方进行确认、无法保护数据的完整性<br><br>下面通过一个简单的抓包实验观察使用HTTP请求传输的数据：<br><img src="https://snakexu.github.io/images/http&https/http_7.jpeg"><br><img src="https://snakexu.github.io/images/http&https/http_8.jpeg"><br>结果分析：HTTP协议传输数据以明文形式显示<br><br>针对无状态的一些解决策略：<br><br>场景：逛电商商场用户需要使用的时间比较长，需要对用户一段时间的HTTP通信状态进行保存，比如执行一次登陆操作，在30分钟内所有的请求都不需要再次登陆。<br><br>1.通过Cookie/Session技术<br><br>2.HTTP/1.1持久连接（HTTP keep-alive）方法，只要任意一端没有明确提出断开连接，则保持TCP连接状态，在请求首部字段中的Connection:keep-alive即为表明使用了持久连接<br><br>HTTPS特点：<br><br>基于HTTP协议，通过SSL或TLS提供加密处理数据、验证对方身份以及数据完整性保护<br><img src="https://snakexu.github.io/images/http&https/http_9.jpeg"><br>通过抓包可以看到数据不是明文传输，而且HTTPS有如下特点：<br><br>1.内容加密：采用混合加密技术，中间者无法直接查看明文内容<br><br>2.验证身份：通过证书认证客户端访问的是自己的服务器<br><br>3.保护数据完整性：防止传输的内容被中间人冒充或者篡改<br><br><strong>混合加密：</strong>结合非对称加密和对称加密技术。客户端使用对称加密生成密钥对传输数据进行加密，然后使用非对称加密的公钥再对秘钥进行加密，所以网络上传输的数据是被秘钥加密的密文和用公钥加密后的秘密秘钥，因此即使被黑客截取，由于没有私钥，无法获取到加密明文的秘钥，便无法获取到明文数据。<br><br><strong>数字摘要：</strong>通过单向hash函数对原文进行哈希，将需加密的明文“摘要”成一串固定长度(如128bit)的密文，不同的明文摘要成的密文其结果总是不相同，同样的明文其摘要必定一致，并且即使知道了摘要也不能反推出明文。<br><br><strong>数字签名技术：</strong>数字签名建立在公钥加密体制基础上，是公钥加密技术的另一类应用。它把公钥加密技术和数字摘要结合起来，形成了实用的数字签名技术。<br><br>·收方能够证实发送方的真实身份；<br><br>·发送方事后不能否认所发送过的报文；<br><br>·收方或非法者不能伪造、篡改报文。<br><br><img src="https://snakexu.github.io/images/http&https/http_10.png"><br>非对称加密过程需要用到公钥进行加密，那么公钥从何而来？其实公钥就被包含在数字证书中，数字证书通常来说是由受信任的数字证书颁发机构CA，在验证服务器身份后颁发，证书中包含了一个密钥对（公钥和私钥）和所有者识别信息。数字证书被放到服务端，具有服务器身份验证和数据传输加密功能。<br><br>四、HTTP通信传输<br><img src="https://snakexu.github.io/images/http&https/http_11.jpeg"><br>客户端输入URL回车，DNS解析域名得到服务器的IP地址，服务器在80端口监听客户端请求，端口通过TCP/IP协议（可以通过Socket实现）建立连接。HTTP属于TCP/IP模型中的运用层协议，所以通信的过程其实是对应数据的入栈和出栈。<br><img src="https://snakexu.github.io/images/http&https/http_12.jpeg"><br>报文从运用层传送到运输层，运输层通过TCP三次握手和服务器建立连接，四次挥手释放连接。<br><img src="https://snakexu.github.io/images/http&https/http_13.png"><br>为什么需要三次握手呢？为了防止已失效的连接请求报文段突然又传送到了服务端，因而产生错误。<br><br>比如：client发出的第一个连接请求报文段并没有丢失，而是在某个网络结点长时间的滞留了，以致延误到连接释放以后的某个时间才到达server。本来这是一个早已失效的报文段，但是server收到此失效的连接请求报文段后，就误认为是client再次发出的一个新的连接请求，于是就向client发出确认报文段，同意建立连接。假设不采用“三次握手”，那么只要server发出确认，新的连接就建立了，由于client并没有发出建立连接的请求，因此不会理睬server的确认，也不会向server发送数据，但server却以为新的运输连接已经建立，并一直等待client发来数据。所以没有采用“三次握手”，这种情况下server的很多资源就白白浪费掉了。<br><img src="https://snakexu.github.io/images/http&https/http_14.png"><br>为什么需要四次挥手呢？TCP是全双工模式，当client发出FIN报文段时，只是表示client已经没有数据要发送了，client告诉server，它的数据已经全部发送完毕了；但是，这个时候client还是可以接受来server的数据；当server返回ACK报文段时，表示它已经知道client没有数据发送了，但是server还是可以发送数据到client的；当server也发送了FIN报文段时，这个时候就表示server也没有数据要发送了，就会告诉client，我也没有数据要发送了，如果收到client确认报文段，之后彼此就会愉快的中断这次TCP连接。<br><br>五、HTTPS实现原理<br><br>SSL建立连接过程<br><br><img src="https://snakexu.github.io/images/http&https/http_15.png"><br>1.client向server发送请求<a href="https://baidu.com，然后连接到server的443端口，发送的信息主要是随机值1和客户端支持的加密算法。" target="_blank" rel="noopener">https://baidu.com，然后连接到server的443端口，发送的信息主要是随机值1和客户端支持的加密算法。</a><br><br>2.server接收到信息之后给予client响应握手信息，包括随机值2和匹配好的协商加密算法，这个加密算法一定是client发送给server加密算法的子集。<br><br>3.随即server给client发送第二个响应报文是数字证书。服务端必须要有一套数字证书，可以自己制作，也可以向组织申请。区别就是自己颁发的证书需要客户端验证通过，才可以继续访问，而使用受信任的公司申请的证书则不会弹出提示页面，这套证书其实就是一对公钥和私钥。传送证书，这个证书其实就是公钥，只是包含了很多信息，如证书的颁发机构，过期时间、服务端的公钥，第三方证书认证机构(CA)的签名，服务端的域名信息等内容。<br><br>4.客户端解析证书，这部分工作是由客户端的TLS来完成的，首先会验证公钥是否有效，比如颁发机构，过期时间等等，如果发现异常，则会弹出一个警告框，提示证书存在问题。如果证书没有问题，那么就生成一个随即值（预主秘钥）。<br><br>5.客户端认证证书通过之后，接下来是通过随机值1、随机值2和预主秘钥组装会话秘钥。然后通过证书的公钥加密会话秘钥。<br><br>6.传送加密信息，这部分传送的是用证书加密后的会话秘钥，目的就是让服务端使用秘钥解密得到随机值1、随机值2和预主秘钥。<br><br>7.服务端解密得到随机值1、随机值2和预主秘钥，然后组装会话秘钥，跟客户端会话秘钥相同。<br><br>8.客户端通过会话秘钥加密一条消息发送给服务端，主要验证服务端是否正常接受客户端加密的消息。<br><br>9.同样服务端也会通过会话秘钥加密一条消息回传给客户端，如果客户端能够正常接受的话表明SSL层连接建立完成了。<br><br>问题：<br><br>1.怎么保证保证服务器给客户端下发的公钥是真正的公钥，而不是中间人伪造的公钥呢？<br><br><img src="https://snakexu.github.io/images/http&https/http_16.png"><br>2.证书如何安全传输，被掉包了怎么办？<br><img src="https://snakexu.github.io/images/http&https/http_17.png"><br>数字证书内容<br><br>包括了加密后服务器的公钥、权威机构的信息、服务器域名，还有经过CA私钥签名之后的证书内容（经过先通过Hash函数计算得到证书数字摘要，然后用权威机构私钥加密数字摘要得到数字签名)，签名计算方法以及证书对应的域名。<br><br>验证证书安全性过程<br><br>1.当客户端收到这个证书之后，使用本地配置的权威机构的公钥对证书进行解密得到服务端的公钥和证书的数字签名，数字签名经过CA公钥解密得到证书信息摘要。<br><br>2.然后证书签名的方法计算一下当前证书的信息摘要，与收到的信息摘要作对比，如果一样，表示证书一定是服务器下发的，没有被中间人篡改过。因为中间人虽然有权威机构的公钥，能够解析证书内容并篡改，但是篡改完成之后中间人需要将证书重新加密，但是中间人没有权威机构的私钥，无法加密，强行加密只会导致客户端无法解密，如果中间人强行乱修改证书，就会导致证书内容和证书签名不匹配。<br><br>那第三方攻击者能否让自己的证书显示出来的信息也是服务端呢？（伪装服务端一样的配置）显然这个是不行的，因为当第三方攻击者去CA那边寻求认证的时候CA会要求其提供例如域名的whois信息、域名管理邮箱等证明你是服务端域名的拥有者，而第三方攻击者是无法提供这些信息所以他就是无法骗CA他拥有属于服务端的域名。<br><br>六、运用与总结<br><br>安全性考虑：<br><br>1.HTTPS协议的加密范围也比较有限，在黑客攻击、拒绝服务攻击、服务器劫持等方面几乎起不到什么作用<br><br>2.SSL证书的信用链体系并不安全，特别是在某些国家可以控制CA根证书的情况下，中间人攻击一样可行<br><br>中间人攻击（MITM攻击）是指，黑客拦截并篡改网络中的通信数据。又分为被动MITM和主动MITM，被动MITM只窃取通信数据而不修改，而主动MITM不但能窃取数据，还会篡改通信数据。最常见的中间人攻击常常发生在公共wifi或者公共路由上。<br><br>成本考虑：<br><br>1.SSL证书需要购买申请，功能越强大的证书费用越高<br><br>2.SSL证书通常需要绑定IP，不能在同一IP上绑定多个域名，IPv4资源不可能支撑这个消耗（SSL有扩展可以部分解决这个问题，但是比较麻烦，而且要求浏览器、操作系统支持，Windows XP就不支持这个扩展，考虑到XP的装机量，这个特性几乎没用）。<br><br>3.根据ACM CoNEXT数据显示，使用HTTPS协议会使页面的加载时间延长近50%，增加10%到20%的耗电。<br><br>4.HTTPS连接缓存不如HTTP高效，流量成本高。<br><br>5.HTTPS连接服务器端资源占用高很多，支持访客多的网站需要投入更大的成本。<br><br>6.HTTPS协议握手阶段比较费时，对网站的响应速度有影响，影响用户体验。比较好的方式是采用分而治之，类似12306网站的主页使用HTTP协议，有关于用户信息等方面使用HTTPS。<br><br><br><br><br><br>另外还看到分节介绍，更详细的介绍了一些相关细节的博文：<br><a href="https://blog.csdn.net/hherima/article/details/52469267" target="_blank" rel="noopener">https://blog.csdn.net/hherima/article/details/52469267</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/06/HTTP和HTTPS协议/" data-id="ck911599z002i6yxq0rugo0wg" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-我的typescript学习-接口" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/12/06/我的typescript学习-接口/" class="article-date">
-  <time datetime="2019-12-06T02:09:18.000Z" itemprop="datePublished">2019-12-06</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/12/06/我的typescript学习-接口/">我的typescript学习-接口</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.介绍<br>TypeScript的核心原则之一是对值所具有的结构进行类型检查。 它有时被称做“鸭式辨型法”或“结构性子类型化”。 在TypeScript里，接口的作用就是为这些类型命名和为你的代码或第三方代码定义契约。<br>2.接口初探<br>下面通过一个简单示例来观察接口是如何工作的：</p>
-<p>function printLabel(labelledObj: { label: string }) {<br>  console.log(labelledObj.label);<br>}</p>
-<p>let myObj = { size: 10, label: “Size 10 Object” };<br>printLabel(myObj);<br>类型检查器会查看printLabel的调用。 printLabel有一个参数，并要求这个对象参数有一个名为label类型为string的属性。 需要注意的是，我们传入的对象参数实际上会包含很多属性，但是编译器只会检查那些必需的属性是否存在，并且其类型是否匹配。 然而，有些时候TypeScript却并不会这么宽松，我们下面会稍做讲解。</p>
-<p>下面我们重写上面的例子，这次使用接口来描述：必须包含一个label属性且类型为string：</p>
-<p>interface LabelledValue {<br>  label: string;<br>}</p>
-<p>function printLabel(labelledObj: LabelledValue) {<br>  console.log(labelledObj.label);<br>}</p>
-<p>let myObj = {size: 10, label: “Size 10 Object”};<br>printLabel(myObj);<br>LabelledValue接口就好比一个名字，用来描述上面例子里的要求。 它代表了有一个 label属性且类型为string的对象。 需要注意的是，我们在这里并不能像在其它语言里一样，说传给 printLabel的对象实现了这个接口。我们只会去关注值的外形。 只要传入的对象满足上面提到的必要条件，那么它就是被允许的。</p>
-<p>还有一点值得提的是，类型检查器不会去检查属性的顺序，只要相应的属性存在并且类型也是对的就可以。<br>3.可选属性<br>接口里的属性不全都是必需的。 有些是只在某些条件下存在，或者根本不存在。 可选属性在应用“option bags”模式时很常用，即给函数传入的参数对象中只有部分属性赋值了。</p>
-<p>下面是应用了“option bags”的例子：</p>
-<p>interface SquareConfig {<br>  color?: string;<br>  width?: number;<br>}</p>
-<p>function createSquare(config: SquareConfig): {color: string; area: number} {<br>  let newSquare = {color: “white”, area: 100};<br>  if (config.color) {<br>    newSquare.color = config.color;<br>  }<br>  if (config.width) {<br>    newSquare.area = config.width * config.width;<br>  }<br>  return newSquare;<br>}</p>
-<p>let mySquare = createSquare({color: “black”});<br>带有可选属性的接口与普通的接口定义差不多，只是在可选属性名字定义的后面加一个?符号。</p>
-<p>可选属性的好处之一是可以对可能存在的属性进行预定义，好处之二是可以捕获引用了不存在的属性时的错误。 比如，我们故意将 createSquare里的color属性名拼错，就会得到一个错误提示：</p>
-<p>interface SquareConfig {<br>  color?: string;<br>  width?: number;<br>}</p>
-<p>function createSquare(config: SquareConfig): { color: string; area: number } {<br>  let newSquare = {color: “white”, area: 100};<br>  if (config.clor) {<br>    // Error: Property ‘clor’ does not exist on type ‘SquareConfig’<br>    newSquare.color = config.clor;<br>  }<br>  if (config.width) {<br>    newSquare.area = config.width * config.width;<br>  }<br>  return newSquare;<br>}</p>
-<p>let mySquare = createSquare({color: “black”});<br>4.只读属性<br>一些对象属性只能在对象刚刚创建的时候修改其值。 你可以在属性名前用 readonly来指定只读属性:</p>
-<p>interface Point {<br>    readonly x: number;<br>    readonly y: number;<br>}<br>你可以通过赋值一个对象字面量来构造一个Point。 赋值后， x和y再也不能被改变了。</p>
-<p>let p1: Point = { x: 10, y: 20 };<br>p1.x = 5; // error!<br>TypeScript具有ReadonlyArray<t>类型，它与Array<t>相似，只是把所有可变方法去掉了，因此可以确保数组创建后再也不能被修改：</t></t></p>
-<p>let a: number[] = [1, 2, 3, 4];<br>let ro: ReadonlyArray&lt; number &gt; = a;<br>ro[0] = 12; // error!<br>ro.push(5); // error!<br>ro.length = 100; // error!<br>a = ro; // error!<br>上面代码的最后一行，可以看到就算把整个ReadonlyArray赋值到一个普通数组也是不可以的。 但是你可以用类型断言重写：</p>
-<p>a = ro as number[];<br>readonly vs const<br>最简单判断该用readonly还是const的方法是看要把它做为变量使用还是做为一个属性。 做为变量使用的话用 const，若做为属性则使用readonly。<br>5.额外的属性检查<br>我们在第一个例子里使用了接口，TypeScript让我们传入{ size: number; label: string; }到仅期望得到{ label: string; }的函数里。 我们已经学过了可选属性，并且知道他们在“option bags”模式里很有用。</p>
-<p>然而，天真地将这两者结合的话就会像在JavaScript里那样搬起石头砸自己的脚。 比如，拿 createSquare例子来说：</p>
-<p>interface SquareConfig {<br>    color?: string;<br>    width?: number;<br>}</p>
-<p>function createSquare(config: SquareConfig): { color: string; area: number } {<br>    // …<br>}</p>
-<p>let mySquare = createSquare({ colour: “red”, width: 100 });<br>注意传入createSquare的参数拼写为colour而不是color。 在JavaScript里，这会默默地失败。</p>
-<p>你可能会争辩这个程序已经正确地类型化了，因为width属性是兼容的，不存在color属性，而且额外的colour属性是无意义的。</p>
-<p>然而，TypeScript会认为这段代码可能存在bug。 对象字面量会被特殊对待而且会经过 额外属性检查，当将它们赋值给变量或作为参数传递的时候。 如果一个对象字面量存在任何“目标类型”不包含的属性时，你会得到一个错误。</p>
-<p>// error: ‘colour’ not expected in type ‘SquareConfig’<br>let mySquare = createSquare({ colour: “red”, width: 100 });<br>绕开这些检查非常简单。 最简便的方法是使用类型断言：</p>
-<p>let mySquare = createSquare({ width: 100, opacity: 0.5 } as SquareConfig);<br>然而，最佳的方式是能够添加一个字符串索引签名，前提是你能够确定这个对象可能具有某些做为特殊用途使用的额外属性。 如果 SquareConfig带有上面定义的类型的color和width属性，并且还会带有任意数量的其它属性，那么我们可以这样定义它：</p>
-<p>interface SquareConfig {<br>    color?: string;<br>    width?: number;<br>    [propName: string]: any;<br>}<br>我们稍后会讲到索引签名，但在这我们要表示的是SquareConfig可以有任意数量的属性，并且只要它们不是color和width，那么就无所谓它们的类型是什么。</p>
-<p>还有最后一种跳过这些检查的方式，这可能会让你感到惊讶，它就是将这个对象赋值给一个另一个变量： 因为 squareOptions不会经过额外属性检查，所以编译器不会报错。</p>
-<p>let squareOptions = { colour: “red”, width: 100 };<br>let mySquare = createSquare(squareOptions);<br>要留意，在像上面一样的简单代码里，你可能不应该去绕开这些检查。 对于包含方法和内部状态的复杂对象字面量来讲，你可能需要使用这些技巧，但是大部额外属性检查错误是真正的bug。 就是说你遇到了额外类型检查出的错误，比如“option bags”，你应该去审查一下你的类型声明。 在这里，如果支持传入 color或colour属性到createSquare，你应该修改SquareConfig定义来体现出这一点。</p>
-<p>6.函数类型<br>接口能够描述JavaScript中对象拥有的各种各样的外形。 除了描述带有属性的普通对象外，接口也可以描述函数类型。</p>
-<p>为了使用接口表示函数类型，我们需要给接口定义一个调用签名。 它就像是一个只有参数列表和返回值类型的函数定义。参数列表里的每个参数都需要名字和类型。</p>
-<p>interface SearchFunc {<br>  (source: string, subString: string): boolean;<br>}<br>这样定义后，我们可以像使用其它接口一样使用这个函数类型的接口。 下例展示了如何创建一个函数类型的变量，并将一个同类型的函数赋值给这个变量。</p>
-<p>let mySearch: SearchFunc;<br>mySearch = function(source: string, subString: string) {<br>  let result = source.search(subString);<br>  return result &gt; -1;<br>}<br>对于函数类型的类型检查来说，函数的参数名不需要与接口里定义的名字相匹配。 比如，我们使用下面的代码重写上面的例子：</p>
-<p>let mySearch: SearchFunc;<br>mySearch = function(src: string, sub: string): boolean {<br>  let result = src.search(sub);<br>  return result &gt; -1;<br>}<br>函数的参数会逐个进行检查，要求对应位置上的参数类型是兼容的。 如果你不想指定类型，TypeScript的类型系统会推断出参数类型，因为函数直接赋值给了 SearchFunc类型变量。 函数的返回值类型是通过其返回值推断出来的（此例是 false和true）。 如果让这个函数返回数字或字符串，类型检查器会警告我们函数的返回值类型与 SearchFunc接口中的定义不匹配。</p>
-<p>let mySearch: SearchFunc;<br>mySearch = function(src, sub) {<br>    let result = src.search(sub);<br>    return result &gt; -1;<br>}<br>7.可索引的类型<br>与使用接口描述函数类型差不多，我们也可以描述那些能够“通过索引得到”的类型，比如a[10]或ageMap[“daniel”]。 可索引类型具有一个 索引签名，它描述了对象索引的类型，还有相应的索引返回值类型。 让我们看一个例子：</p>
-<p>interface StringArray {<br>  [index: number]: string;<br>}</p>
-<p>let myArray: StringArray;<br>myArray = [“Bob”, “Fred”];</p>
-<p>let myStr: string = myArray[0];<br>上面例子里，我们定义了StringArray接口，它具有索引签名。 这个索引签名表示了当用 number去索引StringArray时会得到string类型的返回值。</p>
-<p>TypeScript支持两种索引签名：字符串和数字。 可以同时使用两种类型的索引，但是数字索引的返回值必须是字符串索引返回值类型的子类型。 这是因为当使用 number来索引时，JavaScript会将它转换成string然后再去索引对象。 也就是说用 100（一个number）去索引等同于使用”100”（一个string）去索引，因此两者需要保持一致。</p>
-<p>class Animal {<br>    name: string;<br>}<br>class Dog extends Animal {<br>    breed: string;<br>}</p>
-<p>// 错误：使用数值型的字符串索引，有时会得到完全不同的Animal!<br>interface NotOkay {<br>    [x: number]: Animal;<br>    [x: string]: Dog;<br>}<br>字符串索引签名能够很好的描述dictionary模式，并且它们也会确保所有属性与其返回值类型相匹配。 因为字符串索引声明了 obj.property和obj[“property”]两种形式都可以。 下面的例子里， name的类型与字符串索引类型不匹配，所以类型检查器给出一个错误提示：</p>
-<p>interface NumberDictionary {<br>  [index: string]: number;<br>  length: number;    // 可以，length是number类型<br>  name: string       // 错误，<code>name</code>的类型与索引类型返回值的类型不匹配<br>}<br>最后，你可以将索引签名设置为只读，这样就防止了给索引赋值：</p>
-<p>interface ReadonlyStringArray {<br>    readonly [index: number]: string;<br>}<br>let myArray: ReadonlyStringArray = [“Alice”, “Bob”];<br>myArray[2] = “Mallory”; // error!<br>你不能设置myArray[2]，因为索引签名是只读的。<br>8.类类型<br>8-1.实现接口<br>与C#或Java里接口的基本作用一样，TypeScript也能够用它来明确的强制一个类去符合某种契约。<br>interface ClockInterface {<br>    currentTime: Date;<br>}</p>
-<p>class Clock implements ClockInterface {<br>    currentTime: Date;<br>    constructor(h: number, m: number) { }<br>}<br>你也可以在接口中描述一个方法，在类里实现它，如同下面的setTime方法一样：<br>interface ClockInterface {<br>    currentTime: Date;<br>    setTime(d: Date);<br>}</p>
-<p>class Clock implements ClockInterface {<br>    currentTime: Date;<br>    setTime(d: Date) {<br>        this.currentTime = d;<br>    }<br>    constructor(h: number, m: number) { }<br>}<br>接口描述了类的公共部分，而不是公共和私有两部分。 它不会帮你检查类是否具有某些私有成员。<br>8-2.类静态部分与实例部分的区别<br>当你操作类和接口的时候，你要知道类是具有两个类型的：静态部分的类型和实例的类型。你会注意到，当你用构造器签名去定义一个接口并试图定义一个类去实现这个接口时会得到一个错误：<br>interface ClockConstructor {<br>    new (hour: number, minute: number);<br>}</p>
-<p>class Clock implements ClockConstructor {<br>    currentTime: Date;<br>    constructor(h: number, m: number) { }<br>}<br>这里因为当一个类实现了一个接口时，只对其实例部分进行类型检查。 constructor存在于类的静态部分，所以不在检查的范围内。<br>因此，我们应该直接操作类的静态部分。 看下面的例子，我们定义了两个接口， ClockConstructor为构造函数所用和ClockInterface为实例方法所用。为了方便我们定义一个构造函数 createClock，它用传入的类型创建实例。<br>interface ClockConstructor {<br>    new (hour: number, minute: number): ClockInterface;<br>}<br>interface ClockInterface {<br>    tick();<br>}</p>
-<p>function createClock(ctor: ClockConstructor, hour: number, minute: number): ClockInterface {<br>    return new ctor(hour, minute);<br>}</p>
-<p>class DigitalClock implements ClockInterface {<br>    constructor(h: number, m: number) { }<br>    tick() {<br>        console.log(“beep beep”);<br>    }<br>}<br>class AnalogClock implements ClockInterface {<br>    constructor(h: number, m: number) { }<br>    tick() {<br>        console.log(“tick tock”);<br>    }<br>}</p>
-<p>let digital = createClock(DigitalClock, 12, 17);<br>let analog = createClock(AnalogClock, 7, 32);<br>因为createClock的第一个参数是ClockConstructor类型，在createClock(AnalogClock, 7, 32)里，会检查AnalogClock是否符合构造函数签名。<br>9.继承接口<br>和类一样，接口也可以相互继承。 这让我们能够从一个接口里复制成员到另一个接口里，可以更灵活地将接口分割到可重用的模块里。<br>interface Shape {<br>    color: string;<br>}</p>
-<p>interface Square extends Shape {<br>    sideLength: number;<br>}</p>
-<p>let square = <square>{};<br>square.color = “blue”;<br>square.sideLength = 10;<br>一个接口可以继承多个接口，创建出多个接口的合成接口。<br>interface Shape {<br>    color: string;<br>}</square></p>
-<p>interface PenStroke {<br>    penWidth: number;<br>}</p>
-<p>interface Square extends Shape, PenStroke {<br>    sideLength: number;<br>}</p>
-<p>let square = <square>{};<br>square.color = “blue”;<br>square.sideLength = 10;<br>square.penWidth = 5.0;<br>10.混合类型<br>先前我们提过，接口能够描述JavaScript里丰富的类型。 因为JavaScript其动态灵活的特点，有时你会希望一个对象可以同时具有上面提到的多种类型。<br>一个例子就是，一个对象可以同时做为函数和对象使用，并带有额外的属性。<br>interface Counter {<br>    (start: number): string;<br>    interval: number;<br>    reset(): void;<br>}</square></p>
-<p>function getCounter(): Counter {<br>    let counter = <counter>function (start: number) { };<br>    counter.interval = 123;<br>    counter.reset = function () { };<br>    return counter;<br>}</counter></p>
-<p>let c = getCounter();<br>c(10);<br>c.reset();<br>c.interval = 5.0;<br>在使用JavaScript第三方库的时候，你可能需要像上面那样去完整地定义类型。<br>11.接口继承类</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/06/我的typescript学习-接口/" data-id="ck91159a1002m6yxq13cgghoj" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-Undersocre-3-4-1-Underscore-partial偏函数or-memoize缓存" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/12/02/网易微专业-Undersocre-3-4-1-Underscore-partial偏函数or-memoize缓存/" class="article-date">
-  <time datetime="2019-12-02T06:51:43.225Z" itemprop="datePublished">2019-12-02</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <hr>
-<p>title: 网易微专业-Undersocre-3.4.1-Underscore <em>.partial偏函数or</em>.memoize缓存<br>date: 2019-12-02 14:51:43</p>
-<h2 id="tags"><a href="#tags" class="headerlink" title="tags:"></a>tags:</h2><ol>
-<li>_.parital<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.4.1_1.png"></li>
-<li><p>_.memorize<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.4.1_2.png"><br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.4.1_3.png"><br>3.</p>
+        <p>1.不利用webpack打包<br>直接指定入口与出口：webpack-cli –entry &lt; entry &gt; –output &lt; output &gt;,只指定入口和出口文件，不进行任何配置。如果是webpack 4.0以下，则用webpack命令，不用webpack-cli命令。<br><br>简单的打包分析<br><img src="https://snakexu.github.io/images/wangyi/webpack/3.1.4_1.png"><br>2.利用配置文件打包<br>配置文件，默认文件名-webpack.config.js,配置文件的结构</p>
 <pre>
-//返回一个函数的副本
-_.partial = function(func) {
- //提取参数
- var args = [].slice.call(arguments, 1);
- var bound = function() {
-     var index = 0;
-     var length = args.length;
-     var ret = Array(length);
-     for (var i = 0; i < length; i++) {
-         ret[i] = args[i];
-     }
-     while (index < arguments.length) {
-         ret.push(arguments[index++]);
-     }
-     return func.apply(this, ret);
- }
- return bound;
+var webpack = require('webpack');
+var PurifyWebpack = require('purifycss-webpack');
+module.exports = {
+    entry:{},
+    output:{},
+    module:{
+        rules:[],
+    },
+    plugins:[]
 }
-_.has = function(obj, key) {
- return obj != null && hasOwnProperty.call(obj, key);
-};
-//存储中间运算结果,提高效率
-//参数 hasher是个function通过返回值来记录key
-//_.memoize(function, [hashFunction])
-// 适用于需要大量重复求值的场景
-// 比如递归求解斐波那契数
-_.memoize = function(func, hasher) {
- var memoize = function(key) {
-     // 储存变量,方便使用
-     var cache = memoize.cache;
-     // 求 key
-     // 如果传入了 hasher,则用 hasher 函数来记录 key
-     // 否则用参数 key(即memoize 方法传入的第一个参数)当key
-     var address = '' + (hasher ? hasher.apply(this, arguments) : key);
-     // 如果这个 key 还没被求过值 先记录在缓存中.
-     if (!_.has(cache, address)) {
-         cache[address] = func.apply(this, arguments);
-     }
-     return cache[address];
- };
-
- // cache 对象被当做 key-value 键值对缓存中间运算结果
- memoize.cache = {};
- return memoize;
-};
 </pre>
+3.利用配置文件进行一次打包
+webpack:直接以当前目录下名为webpack.config.js的文件作为配置文件进行打包。<br>
+如果需要指定一个文件作为配置文件打包:webpack --config configfile
+4.全局webpack
+什么是全局的webpack:通过npm install webpack -g命令安装的webpack就是全局webpack,-g指令就是在npm全局目录下安装包。<br>
+全局webpack的作用:全局webpack是必须安装的，我们在命令行直接执行webpack指令时，使用的就是全局的webpack去完成的。
+5.局部webpack
+什么是局部webpack:局部的webpack是指在项目文件夹下安装的webpack，即安装在项目文件夹里的node_modules里。<br>
+局部webpack的作用:全局的webpack有且只有一个，但是实际情况中，不同项目的webpack版本有可能完全不同。当我们项目需求的webpack版本和我们全局的webpack版本不一致时，就需要安装局部webpack。
+6.如何在局部安装指定版本的webpack
+打开命令行，进入项目文件夹，在该目录下输入<pre>npm install webpack@3.10.0 --save</pre>
+7.利用局部webpack打包
+7-1.局部安装
+7-2.配置package.json文件
+7-3.命令行运行package.json定义的命令
+具体：打开项目中的package.json文件，在文件的scripts对象中，输入你需要执行局部webpack的命令作为scripts的一个属性，比如build，将webpack作为属性值。如果执行npm run build，会首先看scripts中有没有webpack，有的话执行，没有的话执行全局的webpack。
 <pre>
-var add = function(a, b) {
- return a + b;
-};
-var partialAdd = _.partial(add, 5);  //提取出来
-console.log(partialAdd(10)); //    提出来    => 15
+"scripts":{
+    "build":"webpack"
+}
 </pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/01/06/网易微专业-现代前端工程实践方案-解锁webpack-3-1-4-用webpack开始一次打包/" data-id="cka5080eu002rhyxqkmkllnv5" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-现代前端工程实践方案-解锁webpack-3-1-3-webpack的核心概念" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/01/04/网易微专业-现代前端工程实践方案-解锁webpack-3-1-3-webpack的核心概念/" class="article-date">
+  <time datetime="2020-01-04T09:58:12.000Z" itemprop="datePublished">2020-01-04</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/01/04/网易微专业-现代前端工程实践方案-解锁webpack-3-1-3-webpack的核心概念/">网易微专业-现代前端工程实践方案 解锁webpack-3.1.3-webpack的核心概念</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.配置文件的重要性<br>配置文件：是webpack打包的依据，webpack如何打包，打包成什么样，全都由配置文件来决定；对于webpack我们的主要工作也是编写、修改webpack的配置文件<br>2.核心概念有哪些<br>·Enter和Output-Enter是webpack打包的入口，代码从这里开始编译，程序开始的起点。Output是webpack打包的出口，最终的打包结果会根据Output的定义输出，会影响到资源的路径。<br>·loader-webpack的编译方法：webpack自身职能处理JavaScript，所以对于别的资源需要loader；webpack自身只能负责打包，相关的编译等操作，需要loader；loader本质是一个方法，使用时大多需要额外安装<br>·plugin-webpack的额外扩展，一些插件的额外扩展功能由plugin定义，帮助webpack优化代码，提供功能；plugin有的是webpack自带的，也有需要额外安装的<br>3.常用loader<br><img src="https://snakexu.github.io/images/wangyi/webpack/3.1.3_1.png"><br>4.常用plugin举例<br><img src="https://snakexu.github.io/images/wangyi/webpack/3.1.3_2.png"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/01/04/网易微专业-现代前端工程实践方案-解锁webpack-3-1-3-webpack的核心概念/" data-id="cka5080eu002shyxq4fa9so8w" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-现代前端工程实践方案-解锁webpack-3-1-2-前端模块化" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/01/04/网易微专业-现代前端工程实践方案-解锁webpack-3-1-2-前端模块化/" class="article-date">
+  <time datetime="2020-01-04T09:41:11.000Z" itemprop="datePublished">2020-01-04</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/01/04/网易微专业-现代前端工程实践方案-解锁webpack-3-1-2-前端模块化/">网易微专业-现代前端工程实践方案 解锁webpack-3.1.2-前端模块化</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.什么是前端模块化<br>1-1.非模块化代码的不足<br>·协同开发不方便，一不小心就污染别人的代码(比如大家都设置了相同名称的全局变量)<br>·JavaScript之间无法相互引用<br>·不方便分配工作<br>·引入别的模块用script，需要特别注意顺序<br>1-2.为什么要模块化<br>·前端工程日益复杂，必须多人协作，模块化更适应多人协作<br>·模块独立方便后期维护<br>2.模块化的方案<br>2-1.模块支持方案<br>·common.js(node.js模块化规范)<br>·AMD/CMD/UMDAMD/CMD/UMD<br>·ES6 Module<br>3.webpack支持的模块化规范<br>·commonJs<br>·AMD<br>·ES6 Module</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/01/04/网易微专业-现代前端工程实践方案-解锁webpack-3-1-2-前端模块化/" data-id="cka5080et002qhyxqo1at5y8d" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-现代前端工程实践方案-解锁webpack-3-1-1-webpack的概念与安装" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/01/04/网易微专业-现代前端工程实践方案-解锁webpack-3-1-1-webpack的概念与安装/" class="article-date">
+  <time datetime="2020-01-04T08:39:51.000Z" itemprop="datePublished">2020-01-04</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/01/04/网易微专业-现代前端工程实践方案-解锁webpack-3-1-1-webpack的概念与安装/">网易微专业-现代前端工程实践方案 解锁webpack-3.1.1-webpack的概念与安装</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.前端工程化<br>什么是工程化？<br><br>·工程化是系统化、模块化、规范化的过程<br>·工程化主要解决“如何提高整个系统生产效率”的问题<br>2.前端工程化的主要改变在哪些方面<br>工具/人员/写代码的方式<br>3.哪些地方发生了改变<br>3-1.需要用到更多的自动化机械，更多的脚手架<br>3-2.协作的人开始变的很多，需要有一定的机制保障合作的顺畅<br>3-3.大量的用到预制模版，用组件化的方式写项目<br>4.webpack主要功能<br>4-1.编译，包括JavaScript的编译，css的编译<br>4-2.文件的压缩，打包，合并，公共模块的提取等<br>4-3.图片等资源的处理压缩，合并雪碧图等<br>4-4.Tree-shaking等优化JavaScript工具<br>4-5.webpack-dev-server,Eslint,热更新等帮助开发等工具<br>5.安装<br>5-1.安装node<br>5-2.通过npm install webpack -g全局安装webpack(webpack4之后需要额外安装webpack-cli)<br>5-3.在命令行输入webpack -v显示版本号则表示webpack安装成功了<br>6.开始一次打包<br><img src="https://snakexu.github.io/images/wangyi/webpack/3.1.1_1.png"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/01/04/网易微专业-现代前端工程实践方案-解锁webpack-3-1-1-webpack的概念与安装/" data-id="cka5080es002phyxqwy9ivhfa" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-现代前端工程实践方案-解锁webpack-3-1-0-webpack导学" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/01/04/网易微专业-现代前端工程实践方案-解锁webpack-3-1-0-webpack导学/" class="article-date">
+  <time datetime="2020-01-04T08:28:58.000Z" itemprop="datePublished">2020-01-04</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/01/04/网易微专业-现代前端工程实践方案-解锁webpack-3-1-0-webpack导学/">网易微专业-现代前端工程实践方案 解锁webpack-3.1.0-webpack导学</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.webpack学习目标<br>1-1.知道webpack能做什么不能做什么<br>了解并学会使用webpack的一些常用功能<br>1-2.了解webpack的大致原理<br>知道webpack怎么工作，webpack结果文件怎么阅读<br>1-3.能根据业务配置合理的webpack<br>通过实战，根据业务配置合理的webpack<br>2.前置知识<br>2-1.安装node环境<br>2-2.需要会使用npm包管理工具<br>3.注意事项<br>3-1.不要死记写法-记住规律<br>3-2.不要试图学习所有功能-记住规律，必要时候查文档<br>3-3.了解原理，但没必要深入原理-作为一个工具，我们了解基本原理即可</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/01/04/网易微专业-现代前端工程实践方案-解锁webpack-3-1-0-webpack导学/" data-id="cka5080er002ohyxqbumbvtas" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-张容铭-设计模式-第二篇-创建型设计模式" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/12/31/张容铭-设计模式-第二篇-创建型设计模式/" class="article-date">
+  <time datetime="2019-12-31T03:51:57.000Z" itemprop="datePublished">2019-12-31</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/12/31/张容铭-设计模式-第二篇-创建型设计模式/">张容铭-设计模式-第二篇-创建型设计模式</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>一、简单工厂模式<br>简单工厂模式：又叫静态工厂方法，由一个工厂对象决定创建某一种产品对象类的实例。主要用来创建同一类对象。<br><br>如果我们写了这样一段代码，假设需求是登陆模块的处理</p>
 <pre>
-var hasher = function() {
- var n = arguments[0];
- return n+"max";
+var LoginAlert = function (text){
+    this.content = text
 }
-var fibonacci = _.memoize(function(n) {
- return n < 2 ? n : fibonacci(n - 1) + fibonacci(n - 2);
-},hasher);
-fibonacci(5);
-console.log(fibonacci.cache);
-</pre></li>
-</ol>
+LoginAlert.prototype.show = function(){
+    //显示警告框
+}
+var userNameAlert = new LoginAlert('用户名不能多于16个字母或数字');
+userNameAlert.show();
+var passwordAlert = new LoginAlert('输入的密码不正确');
+passwordAlert.show();
+var LoginConfirm = function(text){
+    this.content = text;
+}
+LoginConfirm.prototype.show = function(){
+    //显示确认框
+}
+var loginFailConfirm = new LoginConfirm('您的用户名不存在，请重新输入');
+loginFailConfirm.show();
+var LoginPrompt = function(text){
+    this.content = text;
+}
+LoginPrompt.prototype.show = function(){
+    //显示提示框
+}
+</pre>
+那么我们可以用简单工厂模式整理一下
+<pre>
+var PopFactory = function(name){
+    switch(name){
+        case 'alert':
+            return new LoginAlert();
+        case 'confirm':
+            return new LoginConfirm();
+        case 'prompt':
+            return new LoginPrompt();
+    }
+}
+</pre>
+下面我们可以举一个完整的例子
+<pre>
+//篮球基类
+var BasketBall = function(){
+    this.intro = '篮球盛行于美国';
+}
+BasketBall.prototype = {
+    getMember : function(){
+        console.log('每个队伍需要5名运动员');
+    },
+    getBallSize : function(){
+        console.log('篮球很大');
+    }
+}
+//足球基类
+var FootBall = function(){
+    this.intro = '足球在世界范围内很流行';
+}
+FootBall.prototype = {
+    getMember : function(){
+        console.log('每个队伍需要11名运动员');
+    },
+    getBallSize : function(){
+        console.log('足球很大');
+    }
+}
+//网球基类
+var Tennis = function(){
+    this.intro = '每年有很多网球系列赛';
+}
+Tennis.prototype = {
+    getMember : function(){
+        console.log('每个队伍需要1名运动员');
+    },
+    getBallSize : function(){
+        console.log('网球很小');
+    }
+}
+//运动工厂
+var SprotsFactory = function(name){
+    switch(name){
+        case 'NBA':
+            return new BasketBall();
+        case 'worldCup':
+            return new FootBall();
+        case 'FrenchOpen':
+            return new Tennis();
+    }
+}
+var football = SprotsFactory('worldCup');
+console.log(football);
+console.log(football.intro);
+football.getMember();
+</pre>
+我们只需要记住SprotsFactory这个工厂对象，在需要的时候告诉工厂对象我们需要什么。但是我们观察上面的代码，其实还是有一些地方是相同的，是可以抽取出来共用的。比如我们想创建一些书，这些书相似的地方是：都有目录、页码等，但是也有一些不相似的地方：比如书名、出版时间、书的类型等。对于创建的对象相似的属性好处理，对于不同的属性就要有针对性的进行处理了，比如我们将不同的属性作为参数传递进来处理。
+<pre>
+//工厂模式
+function createBook(name, time, type){
+    //创建一个对象，并对对象拓展属性和方法
+    var o = new Object();
+    o.name = name;
+    o.time = time;
+    o.type = type;
+    o.getName = function(){
+        console.lg(this.name);
+    }
+    //将对象返回
+    return o;
+}
+var book1 = createBook('js book',2014, 'js');
+var book2 = createBook('css book',2013,'css');
+book1.getName();
+book2.getName();
+</pre>
+对于登陆验证的代码，我们可以这样整理
+<pre>
+function createPop(type,text){
+    //创建一个对象，并对对象拓展属性和方法
+    var o = new Object();
+    o.content = text;
+    o.show = function(){
+        //显示方法
+    }
+    if(type == 'alert'){
+        //警告框差异部分
+    }
+    if(type == 'prompt'){
+        //提示框差异部分
+    }
+    if(type == 'confirm'){
+        //确认框差异部分
+    }
+    //将对象返回
+    return o;
+}
+//创建警示框
+var userNameAlert = createPop('alert','用户名只能是26个字母和数字')
+</pre>
+上面一共是两种方法，一种是通过类实例化的对象创建的，第二种是通过创建一个新对象然后包装增强其属性和功能来实现的。他们之间的差异性也造成前面通过类创建的对象，如果这些类继承同一父类，那么他们的父类原型上的方法是可以共用的。而后面寄生方式创建的对象都是一个新的个体，所以他们的方法就不能共用了。
+二、工厂方法模式
+工厂方法模式：通过对产品类的抽象使其创建业务主要负责用于创建多类产品的实例。
+我们有下面一些代码，比如下面是一段广告需求，对不同的编程语言有不同的样式：
+<pre>
+var Java = function(content){
+    //将内容保存在content里面以备日后使用
+    this.content = content;
+    //创建对象时，通过闭包，直接执行，将内容按需求的样式插入到页面内
+    (function(content){
+        var div = document.createElement('div');
+        div.innerHTML = content;
+        div.style.color = 'green';
+        document.getElementById('container').appendChild(div);
+    })(content);
+}
+var Php = function(content){
+    //将内容保存在content里面以备日后使用
+    this.content = content;
+    //创建对象时，通过闭包，直接执行，将内容按需求的样式插入到页面内
+    (function(content){
+        var div = document.createElement('div');
+        div.innerHTML = content;
+        div.style.color = 'yellow';
+        div.style.background = 'red';
+        document.getElementById('container').appendChild(div);
+    })(content);
+}
+var JavaScript = function(content){
+    //将内容保存在content里面以备日后使用
+    this.content = content;
+    //创建对象时，通过闭包，直接执行，将内容按需求的样式插入到页面内
+    (function(content){
+        var div = document.createElement('div');
+        div.innerHTML = content;
+        div.style.background = 'pink';
+        document.getElementById('container').appendChild(div);
+    })(content);
+}
+//工厂
+function JobFactory(type,content){
+    switch(type){
+        case 'Java':
+            return new Java(content);
+        case 'Php':
+            return new Php(content);
+        case 'JavaScript':
+            return new JavaScript(content);
+    }
 
+}
+</pre>
+上面代码，我们只写了三种编程语言的可能，如果这时候又有一个编程语言的广告，那么我们就要修改两个地方。如果我们改用工厂方法模式，那只需要修改一个地方就好，另外我们加上安全模式类，确保我们的代码更完整。
+<pre>
+var Factory = function(type,content){
+    if(this instanceof Factory){
+        var s = new this[type](content);
+        return s;
+    }else{
+        return new Factory(type,content);
+    }
+}
+//工厂原型种设置创建所有类型数据对象的基类
+Factory.prototype = {
+    Java : function(content){
+        //...
+    },
+    JavaScript : function(content){
+        //...
+    },
+    UI : function(content){
+        this.content = content;
+        (function(content){
+            var div = document.createElement('div');
+            div.innerHTML = content;
+            div.style.border = '1px solid red';
+            document.getElementById('container').appendChild(div);
+        })(content);
+    },
+    Php : function(content){
+        //...
+    },
+}
+</pre>
+三、抽象工厂模式
+抽象工厂模式：通过对类的工厂抽象使其业务用于对产品类簇的创建，而不负责创建某一类产品的实例。<br>
+1.抽象类是一种声明但不能使用的类，当你使用时就会报错。我们可以在类的方法中手动抛出错误来模拟抽象类。
+<pre>
+//汽车抽象类，当使用其实例对象的方法时会抛出错误
+var Car = function(){}
+Car.prototype = {
+    getPrice : function(){
+        return new Error('抽象方法不能调用')
+    },
+    getSpeed : function(){
+        return new Error('抽象方法不能调用')
+    }
+}
+</pre>
+我们看到我们创建这个Car类其实什么都不能做，创建时没有任何属性，然而原型prototype上的方法也不能用，否则会报错。但在继承上却是很有用的，因为定义了一种类，并定义了该类所必备的方法，如果在子类中没有重写这些方法，那么当调用时能找到这些方法便会报错。这一特点是很有必要的，因为在一些大型应用中，总会有一些子类去继承另一些父类，这些赴美经常会定义一些必要的方法，却没有具体的实现，如Car类中的getPrice()和getSpeed()方法，那么一旦用子类创建了一个对象，该对象总是应该具备一些必要的方法，但是如果这些必要的方法从父类中继承过来而没有具体去重写实现，那么实例化对象便会调用父类中的这些方法，如果父类能有一个友好提示，那么对于忘记重写子类的这些错误遗漏的避免事很有帮助的。这也是抽象类的一个作用，即定义一个产品簇，并声明一些必备方法，如果子类中没有去重写就会抛出错误。
+2.抽象工厂模式
+抽象类中定义的方法只是显性地定义一些功能，但是没有具体的实现，而一个对象是要具有一套完整的功能的，所以用抽象类创建的对象当然也是‘抽象的’，所以我们不能使用它来创建一个真实的对象。一般我们用它作为父类来创建一些子类。
+<pre>
+//抽象工厂方法
+var VehicleFactory = function(subType,superType){
+    //判断抽象工厂中是否有该抽象类
+    if(typeof VehicleFactory[superType] === 'function'){
+        //缓存类
+        function F(){};
+        //继承父类属性和方法
+        F.prototype = new VehicleFactory[superType]();
+        //将子类constructor指向子类
+        subType.constructor = subType;
+        //子类原型继承“父类”
+        subType.prototype = new F();
+    }else{
+        //不存在该抽象类抛出错误
+        throw new Error('未创建该抽象类')
+    }
+}
+VehicleFactory.Car = function(){
+    this.type = 'car';
+}
+VehicleFactory.Car.prototyp = {
+    getPrice : function(){
+        return new Error('抽象方法不能调用')
+    },
+    getSpeed : function(){
+        return new Error('抽象方法不能调用')
+    }
+}
+//公交车抽象类
+VehicleFactory.Bus = function(){
+    this.type = 'bus';
+}
+VehicleFactory.Bus.prototype = {
+    getPrice : function(){
+        return new Error('抽象方法不能调用')
+    },
+    getPassengerNum : function(){
+        return new Error('抽象方法不能调用')
+    }
+}
+//货车抽象类
+VehicleFactory.Truck = function(){
+    this.type = 'truck';
+}
+VehicleFactory.Truck.prototype = {
+    getPrice : function(){
+        return new Error('抽象方法不能调用')
+    },
+    getTrainload : function(){
+        return new Error('抽象方法不能调用')
+    }
+}
+</pre>
+抽象工厂其实是一个实现子类继承父类的方法，在这个方法中我们需要通过传递子类以及要继承父类(抽象类)的名称，并且在抽象工厂方法中又增加了一次对抽象类存在性对一次判断，如果存在，则将子类继承父类的方法。然后子类通过寄生式继承。继承父类过程中有一个地方需要注意，就是在对过渡类的原型继承时，我们不是继承父类的原型，而是通过new关键字复制父类的一个实例，这么做是因为过渡类不应仅仅继承父类的原型方法，还要继承父类的对象属性，所以要通过new关键字将父类的构造函数执行一遍来复制构造函数中的属性和方法。对抽象工厂添加抽象类也很特殊，因为抽象工厂是个方法不需要实例化对象，故只需要一份，因此直接为抽象工厂添加类的属性即可，于是我们就可以通过点语法在抽象工厂上添加我们一会儿需要的三个汽车簇抽象类Car,Bus,Truck。
+3.抽象与实现
+抽象工厂是用来创建子类的(本例中其实是让子类继承父类，是对子类的一个拓展)，所以我们需要一些产品子类，然后让子类继承相应的产品簇抽象类。
+<pre>
+//宝马汽车子类
+var BMW = function(price,speed){
+    this.price = price;
+    this.speed = speed;
+}
+//抽象工厂实现对Car抽象类的继承
+VehicleFactory(BMW,'Car');
+BMW.prototype.getPrice = function(){
+    return this.price;
+}
+BMW.prototype.getSpeed = function(){
+    return this.speed;
+}
+//兰博基尼汽车子类
+var Lamborghini = function(price,speed){
+    this.price = price;
+    this.speed = speed;
+}
+//抽象工厂实现对Car抽象类的继承
+VehicleFactory(Lamborghini,'Car');
+Lamborghini.prototype.getPrice = function(){
+    return this.price;
+}
+Lamborghini.prototype.getSpeed = function(){
+    return this.speed;
+}
+//宇通汽车子类
+var YUTONG = function(price,passenger){
+    this.price = price;
+    this.passenger = passenger;
+}
+//抽象工厂实现对Bus抽象类的继承
+VehicleFactory(YUTONG,'Bus');
+YUTONG.prototype.getPrice = function(){
+    return this.price;
+}
+YUTONG.prorotype.getPassengerNum = function(){
+    return this.passenger;
+}
+//奔驰汽车子类
+var BenzTruck = function(price,trainLoad){
+    this.price = price;
+    this.trainLoad = trainLoad;
+}
+//抽象工厂实现对Truck抽象类的继承
+VehicleFactory(BenzTruck,'Truck');
+BenzTruck.prototype.getPrice = function(){
+    return this.price;
+}
+BenzTruck.prototype.getTrainload = function(){
+    return this.price;
+}
+var truck = new BenzTruck(1000000,1000);
+console.log(truck,getPrice());          //1000000
+console.log(truck.type);                //truck
+</pre>
+通过抽象工厂，我们就能知道每个子类到底是哪一种类别，然后他们也具备了该类所必备的属性和方法。就上面代码而言，创建的truck对象真的可以知道他的类别了，通过重写父类中的getPrice方法也可以正确的使用了。
+四、建造者模式
+建造者模式：将一个复杂对象的构建层与其表示层相互分离，同样的构建过程可采用不同的表示。<br>
+工厂模式主要是为了创建对象实例或者类簇(抽象工厂)，关心的最终结果是产出(创建)的是什么。不关心你创建的整个过程，仅仅需要知道你最终创建的结果。所以通过工厂模式我们得到的都是对象实例或者类簇。然而建造者模式在创建对象时更要为复杂一些，虽然其目的也是为了创建对象，但是它更多关心的是创建这个对象的整个过程，甚至于创建对象的每一个细节，比如创建一个人，我们创建的结果不仅仅要得到人的实例，还要关注创建人的时候，这个人应该穿什么衣服，男的还是女的，爱好兴趣是什么。所以说建造者模式更注重的是创建的细节。
+<pre>
+//创建一位人类
+var Human = function(param){
+    //技能
+    this.skill = param && param.skill || '保密';
+    //兴趣爱好
+    this.hobby = param && param.hobby || '保密';
+}
+//类人原型方法
+Human.prototype = {
+    getSkill : function(){
+        return this.skill;
+    },
+    getHobby : function(){
+        return this.hobby;
+    }
+}
+//实例化姓名类
+var Named = function(name){
+    var that = this;
+    //构造器
+    //构造函数解析姓名的姓与名
+    (function(){
+        that.wholeName = name;
+        if(name.indexOf(' ') > -1){
+            that.FirstName = name.slice(0,name.indexOf(' '));
+            that.SecondName = name.slice(name.indexOf(' '));
+        }
+    })(name,that);
+}
+//实例化职位类
+var Work = function(work){
+    var that = this;
+    //构造器
+    //构造函数中通过传入的职位特征来设置相应职位以及描述
+    (function(work,that){
+        switch(work){
+            case 'code':
+                that.work = '工程师';
+                that.workDescript = '每天沉醉于编程';
+                break;
+            case 'UI':
+            case 'UE':
+                that.work = '设计师';
+                that.workDescript = '设计更似一种艺术';
+                break;
+            case 'teach':
+                that.work = '教师';
+                that.workDescript = '分享也是一种快乐';
+                break;
+            default:
+                that.work = work;
+                that.workDescript = '对不起，我们还不清楚您所选择职位的相关描述';
+        }
+    })(work,that);
+}
+//更换期望的职位
+Work.prototype.changeWork = function(work){
+    this.work = work;
+}
+//添加对职位的描述
+Work.prototype.changeDescript = function(setence){
+    this.workDescript = setence;
+}
+</pre>
+上面我们创建了应聘者类、姓名解析类、期望职位类。下面我们写一个建造者类，在建造者类中我们要通过对这3个类组合调用，创建出一个完整的影评着对象。
+<pre>
+/****
+* 应聘者建造者
+* 参数 name:姓名(全名)
+* 参数 work:期望职位
+**/
+var Person = function(name,work){
+    //创建应聘者缓存对象
+    var _person = new Human();
+    //创建应聘者姓名解析对象
+    _person.name = new Named(name);
+    //创建应聘者期望职位
+    _person.work = new Work(work);
+    //将创建的应聘者对象返回
+    return _person;
+}
+var person = new Person('Xiao Ming','code');
+console.log(person.skill);                      //保密
+console.log(person.name.FirstName);             //Xiao
+console.log(person.work.work);                  //工程师
+console.log(person.work.workDescript);          //每天沉醉于编程
+person.work.changeDescript('更改一下职位描述!')
+console.log(person.work.workDescript);          //更改一下职位描述!
+</pre>
+工厂模式创建出来的是一个对象，它追求的是创建的结果，别无他求，所以那仅仅是一个实实在在的创建过程。而建造者模式就有所不同，它不仅仅可得到创建的结果，也参与了创建的具体过程。对于创建的具体实现的细节也参与了干涉，可以说创建的对象更复杂，或者说这种模式创建的对象是一个复合对象。
+五、原型模式
+原型模式就是将原型对象指向创建对象的类，使这些类共享原型对象的方法或属性。当然JavaScript是基于原型链实现对象之间的继承，这种继承是基于一种对属性或者方法的共享，而不是对属性和方法的复制。在原型模式中，基类是要被子类继承的，那么此时将属性和方法都写在基类的构造函数里会有一些问题，比如每次子类继承都要创建一次父类，假如说父类的构造函数中创建时存在很多消耗时较长的逻辑，或者说每次初始化都做一些重复性的东西，这样的性能消耗还是蛮大。为了提高性能，我们需要有一种共享机制，这样每当创建基类时，对于每次创建的一些简单而又差异化的属性我们可以放在构造函数中，而我们将一些消耗资源比较大的方法放在基类的原型中，这样就会避免很多不必要的消耗，这也就是原型模式的一个雏形。这一模式很像我们之前提到的继承，都是基于原型链。
+原型模式就是将可复用的、可共享的、耗时大的从基类中提取出来然后放在原型中，然后子类通过组合继承或者寄生组合式继承而将方法和属性继承下来，对于类中那些需要重写的方法进行重写，这样子类创建的对象既具有子类的属性和方法也共享了类的原型方法。
+我们的例子是做一个焦点轮播图(没有详细实现细节)
+<pre>
+//图片轮播类
+var LoopImages = function(imgArr,container){
+    this.imagesArray = imgArr;       //轮播图片数组
+    this.container = container;      //轮播图片容器
+}
+LoopImages.prototype = {
+    //创建轮播图片
+    createImage :  function(){
+        console.log('LoopImages createImage function');
+    },
+    //切换下一张图片
+    changeImage : function(){
+        console.log('LoopImages changeImage function')
+    }
+}
+//上下滑动切换类
+var SlideLoopImage = function(imgArr,container){
+    //构造函数继承图片轮播类
+    LoopImages.call(this,imgArr,container);
+}
+SlideLoopImage.prototye = new LoopImages();
+//重写继承的切换下一张图片方法
+SlideLoopImage.prototye.changeImage = function(){
+    console.log('SlideLoopImage changeImage function');
+}
+//渐隐切换类
+var FadeLoopImage = function(imgArr,container,arrow){
+    LoopImages.call(this,imgArr,container);
+    //切换箭头私有变量
+    this.arrow = arrow;
+}
+FadeLoopImage.prototype = new LoopImages();
+FadeLoopImage.prototype.changeImage = function(){
+    console.log('FadeLoopImage changeImage function');
+}
+//实例化一个渐隐切换图片类
+var fadeImg = new FadeLoopImg(['01.jpg','02.jpg','03.jpg','04.jpg'],'slide',['left.jpg','right.jpg']);
+fadeImg.changeImage(); //FadeLoopImg changeImage function
+console.log(fadeImg);  //slide
+</pre>
+原型对象是一个共享的对象，那么不论是父类的实例对象或是子类的继承，都是对它的一个指向引用，所以原型对象才会被共享。既然被共享，那么对原型对象的拓展，不论是子类或者父类的实例对象都会继承下来。
+<pre>
+LoopImages.prototype.getImageLength = function(){
+    return this.imagesArray.length;
+}
+FadeLoopImg.prototype.getContainer = function(){
+    return this.container;
+}
+console.log(fadeImg.getimageLength());    //4
+console.log(fadeImg.getContainer());      //slide
+</pre>
+原型模式有一个特点就是在任何时候都可以对基类或者子类进行方法的拓展，而且所有被实例化的对象或者类都能获取这些方法，这样给予我们对功能拓展的自由性。但是有一点要注意，正是由于这种方式太自由了，所以不要随意去做，否则如果修改类的其他属性或者方法很有可能影响到他人。
+不过原型模式更多的是用在对对象的创建上。比如创建一个实例对象的构造函数比较复杂，或者耗时比较长，或者通过创建多个对象来实现。此时我们最好不要用new关键字去复制这些基类，但可以通过对这些对象属性或者方法进行复制来实现创建，这是原型模式的最初思想。如果涉及多个对象，我们也可以通过原型模式来实现对新对象的创建。那么首先要有一个原型模式的对象复制方法。
+<pre>
+/****
+*基于已经存在的模版对象克隆出新对象的模式
+*arguments[0],arguments[1],arguments[2]:参数1，参数2，参数3表示模版对象
+*注意。这里对模版引用类型的属性实质上进行了浅复制(引用类型属性共享),当然根据需求可以自行深复制(引用类型属性复制)
+****/
+function prototypeExtend(){
+    var F = function(){},     //缓存类，为实例化返回对象临时创建
+        args = arguments,     //模版对象参数序列
+        i = 0,
+        len = args.length;
+    for(; i < len; i++){
+        //遍历每个模版对象中的属性
+        for(var j in args[i]){
+            //将这些属性复制到缓存类原型中
+            F.prototype[j] = args[i][j];
+        }
+    }
+    //返回缓存类的一个实例
+    return new F();
+}
+</pre>
+比如企鹅游戏(别问，我也不知道什么是企鹅游戏)中我们创建一个企鹅对象，如果游戏中没有企鹅基类，只是提供了一些动作模版对象，我们就可以通过实现对这些模版对象的继承来创建一个企鹅实例对象。
+<pre>
+var penguin = prototypeExtend({
+    speed : 20,
+    swim : function(){
+        console.log('游泳速度'+this.speed);
+    }
+},{
+    run : function(speed){
+        console.log('奔跑速度'+speed);
+    }
+},{
+    jump : function(){
+        console.log('跳跃动作')
+    }
+})
+//prototypeExtend创建的是一个对象，我们无需用new去创建新的实例对象
+penguin.swin();       //游泳速度 20
+penguin.run(10);      //游泳速度 10
+penguin.jump();       //跳跃动作
+</pre>
+六、单例模式
+单例模式：又被称为单体模式，是只允许实例化一次的对象类。有时候我们也用一个对象来规划一个命名空间，井井有条的管理对象上的属性于方法。
+<pre>
+var Ming = {
+    g : function(id){
+        return document.getElementById(id);
+    },
+    css : function(id,key,value){
+        //通过当前对象this来使用g方法
+        this.g(id).style[key] = value;
+    },
+    //...
+}
+</pre>
+其实在JavaScript中单例模式除了定义命明空间外，还有一个作用你需要知道，就是通过单例模式来管理代码库的各个模块，比如早期百度tangram，雅虎的YUI都是通过单例模式来控制自己的每个功能模块的，比如tangram中定义命名空间为baidu，当添加设置元素class方法，插入一个元素方法时，他们会放到dom模块；当添加事件中阻止事件的冒泡方法，阻止事件的默认行为方法的时候，会放到event模块里；当添加去除字符串首尾空白自负方法，将字符串进行html编码时，会放到string模块中……
+<pre>
+baidu.dom.addClass                 //添加元素类
+baidu.dom.append                   //插入元素
+baidu.event.stopPropagation        //阻止冒泡
+baidu.event.preventDefault         //阻止默认行为
+baidu.event.trim                   //去除字符串首尾空白字符
+baidu.string.encodeHTML            //将字符串进行html编码
+</pre>
+所以我们以后写自己的小型方法库的时候也可以用单例模式来规范我们自己代码库的各个模块。比如我们有一个A库，它包含公用模块、工具模块、ajax模块和其他模块，那么我们就可以自己定制一个如下的小型代码库
+<pre>
+var A = {
+    Util:{
+        util_method1:function(){},
+        util_method2:function(){}
+        //...
+    },
+    Tool:{
+        tool_method1:function(){},
+        tool_method2:function(){}
+        //...
+    },
+    Ajax:{
+        get:function(){},
+        post:function(){}
+        //...
+    },
+    others:{
+        //...
+    }
+    //...
+}
+A.Util.util_method1();
+A.Util.util_method2();
+A.Ajax.get();
+</pre>
+有一个功能用单例模式实现更合适，就是管理静态变量。虽然JavaScript中目前为止并没有直接的静态变量，但是我们可以想办法实现静态变量。我们让创建的函数只执行一次，此时我们创建的对象内保存静态变量通过取值器访问，最后将这个对象作为一个单例放在全局空间里作为静态变量单例对象供他人使用。
+<pre>
+var Conf = (function(){
+    //私有变量
+    var conf = {
+        MAX_NUM:100,
+        MIN_NUM:1,
+        COUNT:1000,
+    }
+    //返回取值器对象
+    return {
+        //取值器方法
+        get:function(name){
+            return conf[name] ? conf[name] : null;
+        }
+    }
+})()
+var count = Conf.get('COUNT');
+console.log(count);              //1000
+</pre>
+静态变量大写是一种习惯。有些时候对于单例对象需要延迟创建，所以在单例中还存在一种延迟创建的形式，也有人称之为’惰性创建‘。
+<pre>
+//惰性载入单例
+var LazySingle = (function(){
+    //单例实例引用
+    var instance = null;
+    //单例
+    function Single(){
+        //这里定义私有属性和方法
+        return {
+            publicMethod:function(){},
+            publicProperty:'1.0'
+        }
+    }
+    //获取单例对象接口
+    return function(){
+        //如果为创建单例将创建单例
+        if(!_instance){
+            _instance = Single()
+        }
+        //返回单例
+        return _instance;
+    }
+})()
+console.log(LazySingle().publicProperty);   //1.0
+</pre>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/02/网易微专业-Undersocre-3-4-1-Underscore-partial偏函数or-memoize缓存/" data-id="ck911598p001a6yxq25nkssku" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/12/31/张容铭-设计模式-第二篇-创建型设计模式/" data-id="cka5080ir0042hyxql7674rod" class="article-share-link">Share</a>
       
       
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+
     </footer>
   </div>
   
@@ -487,10 +1001,10 @@ console.log(fibonacci.cache);
 
 
   
-    <article id="post-网易微专业-Undersocre-3-3-2-Underscore-unique去重函数-源码拾遗" class="article article-type-post" itemscope="" itemprop="blogPost">
+    <article id="post-张容铭-设计模式-第一篇" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2019/12/02/网易微专业-Undersocre-3-3-2-Underscore-unique去重函数-源码拾遗/" class="article-date">
-  <time datetime="2019-12-02T02:05:46.000Z" itemprop="datePublished">2019-12-02</time>
+    <a href="/2019/12/27/张容铭-设计模式-第一篇/" class="article-date">
+  <time datetime="2019-12-27T07:35:31.000Z" itemprop="datePublished">2019-12-27</time>
 </a>
     
   </div>
@@ -501,7 +1015,7 @@ console.log(fibonacci.cache);
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/12/02/网易微专业-Undersocre-3-3-2-Underscore-unique去重函数-源码拾遗/">网易微专业-Undersocre-3.3.2-Underscore unique去重函数&amp;源码拾遗</a>
+      <a class="article-title" href="/2019/12/27/张容铭-设计模式-第一篇/">张容铭-设计模式-第一篇</a>
     </h1>
   
 
@@ -509,36 +1023,487 @@ console.log(fibonacci.cache);
     
     <div class="article-entry" itemprop="articleBody">
       
-        <ol>
-<li>_.unique<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.3.2_1.png"></li>
-<li>_.compact<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.3.2_2.png"><br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.3.2_3.png"></li>
-<li>_.range<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.3.2_4.png"><br>4.<br><pre><br>_.unique = function(array, isSorted, iteratee, context){<br> //参数isSorted作用是被处理数组array是否是有序的<br> if(!_.isBoolean(isSorted)){<pre><code>context = iteratee;
-iteratee = isSorted;
-isSorted = false;
-</code></pre> }<br> if(iteratee != null){<pre><code>iteratee = cb(iteratee,context)
-</code></pre> }<br> var result = []<br> var seen<br> for(var i = 0; i &lt; array.length; i++){<pre><code>var computed = iteratee ? iteratee(value, i, array) : array[i];
-// 如果是有序数组,则当前元素只需跟上一个元素对比即可
-// 用 seen 变量保存上一个元素
-if(isSorted){
-    if(!i || !seen !== computed)
-        result.push(computed);
-    seen = computed;
-}else if(result.indexOf(computed)=== -1){
-        result.push(computed)
+        <p>一、起源<br>在做表单验证的时候，我们曾经是这样写代码的：</p>
+<pre>
+function checkName(){
+    ...
 }
-</code></pre> }<br>}<br>//predicate  真值检测(重点: 返回值)<br>_.filter = _.select = function(obj, predicate, context) {<br> var results = [];<br> predicate = cb(predicate, context);<br> _.each(obj, function(value, index, list) {<pre><code>if (predicate(value, index, list)) results.push(value);
-</code></pre> });<br> return results;<br>};<br>//去掉数组中所有的假值   _.identity = function(value){return value};<br>_.compact = function(array) {<br> return _.filter(array, _.identity);<br>};<br>_.range = function(start, stop, step){<br> if(stop == null){<pre><code>stop = start || 0;
-start = 0
-</code></pre> }<br> step = step || 1;<br> var length = Math.max((Math.ceil(stop - start) / step), 0);<br> var range = Array(length);<br> for(var index = 0; index &lt; length; index++, start+=step){<pre><code>range[index] = start
-</code></pre> }<br> return range<br>}<br></pre><br>这一节内容丰满了我们之前的_.unique的程序，添加了数组有序的情况下如何处理，在数组有序的情况下，如果再一一查找，显然是浪费性能的，这里给了一个更好的方法。上面的_.filter在判断是否是真值的时候用了很聪明的方法。</li>
-</ol>
+function checkEmail(){
+    ...
+}
+function checkPassword(){
+    ...
+}
+</pre>
+但是这种方式在多人团队里有很多问题，比如：
+1.如果变量/函数被覆盖不易发觉，且很容易与团队其他人代码相冲突
+2.可复用性和可扩展性不高
+于是我们想用类的概念解决上面的问题
+<pre>
+var checkObj = function(){
+    this.checkName = function(){
+        ...
+    }
+    this.checkEmail = function(){
+        ...
+    }
+    this.checkPassword = function(){
+        ...
+    }
+}
+</pre>
+使用的时候
+<pre>
+var a = new checkObj();
+a.checkName();
+</pre>
+但是每次创建对象都是对勒的this上的属性进行复制，虽然没个被创建的对象都有自己的属性，但是容易造成资源浪费,解决这个问题，用prototype就可以
+<pre>
+var checkObj = function(){}
+checkObj.prototype = {
+    checkName : function(){
+        ...
+    }
+    checkEmail : function(){
+        ...
+    }
+    checkPassword : function(){
+        ...
+    }    
+}
+</pre>
+基于上面的代码，我们稍微用一些小技巧，就可以实现链式调用，就像这样<br>
+var a = new checkObj()<br>
+a.checkName().checkEmail().checkPassword()<br>
+如何实现呢——
+<pre>
+var checkObj = function(){}
+checkObj.prototype = {
+    checkName : function(){
+        //验证姓名
+        return this
+    }
+    checkEmail : function(){
+        //验证邮箱
+        return this
+    }
+    checkPassword : function(){
+        //验证密码
+        return this
+    }    
+}
+</pre>
+如果有人了解prototype.js，就知道这个框架的最大特点是对原生对象的扩展，如果我们直接使用框架,例如:<br>
+Function.prorotype.checkEmail = function(){<br>
+    //验证邮箱<br>
+}<br>
+是不太好的，因为这样污染了原生对象Function，别人创建的函数也会被你创建的函数所污染，造成不必要的开销，基于此，我们可以抽象出来一个统一添加方法的功能方法。
+<pre>
+Function.prototype.addMethod = function(name,fn){
+    this[name] = fn
+    return this
+}
+</pre>
+这样如果你想添加邮箱验证/姓名验证/...可以这样做
+<pre>
+var methods = function()
+methods.addMethod('checkName',function(){
+    //验证姓名
+    return this
+}).addMethod('checkEmail',function(){
+    //验证邮箱
+    return this
+})
+</pre>
+使用的时候
+<pre>
+var methods = function(){}
+methods.checkName().checkEmail()
+</pre>
+对于习惯使用类式调用方式的人来说，可以这样:
+<pre>
+Function.prototype.addMethod = function(name,fn){
+    this.prototype[name] = fn
+}
+</pre>
+添加方法
+<pre>
+var Methods = function()
+methods.addMethod('checkName',function(){
+    //验证姓名
+    return this
+}).addMethod('checkEmail',function(){
+    //验证邮箱
+    return this
+})
+</pre>
+使用
+<pre>
+var m = new Methods()
+m.checkEmail()
+</pre>
+二、面向对象编程
+1.概念<br>
+无论什么时候，只要创建了一个新函数，就会根据一组特定规则为该函数创建一个prototype属性，这个属性指向函数的原型对象。在默认情况下，所有原型对象都会自动获得一个constructor(构造函数)属性，这个属性包含一个只想prototype属性所在函数的指针。而通过这个构造函数，我们还可以继续为原型对象添加其他属性和方法。创建了自定义的构造函数之后，其原型对象默认只会取得constructor属性；至于其他方法，则都是从Object继承而来。当调用构造函数创建一个新实例后，该实例的内部将包含一个指针(内部属性)，指向构造函数的原型对象。ECMA-262第5版中管这个指针叫[[Prototype]]。虽然在脚本中没有标准的方式访问[[Prototype]]，但Firefox、Safari和Chrome在每个对象上都支持一个属性__proto__；而在其他实现中，这个属性对脚本则是完全不可见的。不过，要明确的真正重要的一点就是，这个连接存在于实例与构造函数的原型对象之间，而不是存在于实例与构造函数之间。<br>
+——以上摘自JavaScript高级程序设计第三版(p148)<br>
+2.代码示例与解释
+<pre>
+//私有属性与私有方法，特权方法，对象公有属性和对象公有方法，构造器
+var Book = function(id, name, price){
+    //私有属性
+    var num = 1;
+    //私有方法
+    function checkId(){
 
+    }
+    //特权方法
+    this.getName = function(){}
+    this.getPrice = function(){}
+    this.setName = function(){}
+    this.setPrice = function(){}
+    //对象公有属性
+    this.id = id;
+    //对象公有方法
+    this.copy = function(){}
+    //构造器
+    this.setName(name);
+    this.setPrice(price);
+}
+</pre>
+由于JavaScript的块级作用域，生命在函数内部的变量以及方法在外界是访问不到的，通过此特性即可创建类的私有变量以及私有方法。然而在函数内部通过this创建的属性和方法，在创建类对象时，每个对象自身都拥有一份并且可以在外部访问到。因此通过this创建的属性可看作是对象共有属性和对象共有方法，而通过this创建的方法，不但可以访问这些对象的共有属性与共有方法，而且还能访问到类(创建时)或对象自身的私有属性和私有方法，由于这些方法权利比较大，所以我们又将它看作特权方法。在对象创建时通过使用这些特权方法我们可以初始化实例对象的一些属性，因此这些在创建对象时调用的特权方法还可以看作是类的构造器。<br>
+通过new关键字实例化对象时，由于对类执行一次，所以类的内部this上定义的属性和方法自然就可以复制到新创建的对象上。通过new关键字实例化对象时，由于类外面通过点语法添加的属性和方法没有执行到，所以新创建的对象中无法获取他们，但是可以通过类来使用。因此在类外面通过点语法定义的属性以及方法被称为类的静态共有属性和静态共有方法。而类通过prototype创建的属性或者方法在类实例的对象中时可以通过this访问到的，所以我们将通过prototype对象中的属性和方法称为共有属性和共有方法。<br>
+<pre>
+//类静态公有属性(对象不能访问)
+Book.isChinese = true;
+//类静态公有方法(对象不能访问)
+Book.resetTime = function(){
+    console.log('new Tiem')
+}
+Book.prototype = {
+    //公有属性
+    isJsBook : false,
+    //公有方法
+    display : function(){}
+}
+</pre>
+通过new关键字创建的对象实质时对新对象this的不断赋值，并将prototype指向类的prototype所指向的对象，而类的构造函数外面通过点语法定义的属性方法是不会添加到新创建的对象上去的。因此要想在新创建的对象中使用isChinese就得通过Book类使用而不能通过this，如Book.isChinese，而类的原型prototype上定义的属性在新对象里就可以直接使用，这是因为新对象的prototype和类的prototype指向的是同一个对象。
+3.闭包
+<pre>
+var Book = (function(){
+    //静态私有变量
+    var bookNum = 0;
+    //静态私有方法
+    function checkBook(name){}
+    //创建类
+    function _book(newId, newName, newPrice){
+        //私有变量
+        var name, price;
+        //私有方法
+        function checkID(id){}
+        //特权方法
+        this.getName = function(){}
+        this.getPrice = function(){}
+        this.setName = function(){}
+        this.setPrice = function(){}
+        //公有属性
+        this.id = newId;
+        //公有方法
+        this.copy = function(){};
+        bookNum++;
+        if(bookNum > 100){
+            throw new Error('我们仅出版100本书')
+        }
+        //构造器
+        this.setName(name);
+        this.setPrice(price)
+    }
+    //构建原型
+    _book.prototype = {
+        //静态公有属性
+        isJsBook : false,
+        //静态公有方法
+        display : function(){}
+    }
+    //返回类
+    return _book;
+})()
+</pre>
+闭包是有权访问另外一个函数作用域中变量的函数，即在一个函数内部创建另外一个函数。我们将这个闭包作为创建对象的构造函数，这样它既是闭包又是可实例对象的函数，即可访问到类函数作用域中的变量，如bookNum这个变量，此时这个变量叫静态私有变量，并且checkBook()可称之为静态私有方法。当然闭包内部也有其自身的私有变量以及私有方法如price，checkID()。但是，在闭包外部添加原型属性和方法看上去像似脱离了闭包这个类，所以有时候在闭包内部实现一个完整的类然后将其返回。
+4.创建对象的安全模式
+<pre>
+var Book = function(title, time, type){
+    //判断执行过程中this是否是当前这个对象(乳沟是说明是用new创建的)
+    if(this instanceof Book){
+        this.title = title;
+        this.time = time;
+        this.type = type;
+        //否则重新创建这个对象
+    }else{
+        return new Book(title, time, type)
+    }
+}
+var book = new Book('JavaScript', '2014', 'js')
+</pre>
+new关键字的作用可以看作是对当前对象的this不停地赋值，如果我们忘记使用new关键字，就会直接执行这个函数，此时this会指向当前执行环境，无法正确返回实例。<br>
+简单总结一下：<br>
+我们可以把类分为三部分，第一部分是构造函数内的，这是供实例化对象复制用的，第二部分是构造函数外的，通过点语法添加的，这是供类内使用的，实例化对象是访问不到的，第三部分是类的原型中的，实例化对象可以通过其原型链间接地访问到，也是为供所有实例化对象所共用的
+5.继承
+(1)类式继承
+<pre>
+//声明父类
+function SuperClass(){
+    this.superValue = true;
+}
+//为父类添加共有方法
+SuperClass.prototype.getSuperValue = function(){
+    return this.superValue
+}
+//声明子类
+function SubClass(){
+    this.subValue = false;
+}
+//继承父类
+SubClass.prototype = new SuperClass();
+//为子类添加共有方法
+SubClass.prototype.getSubValue = function(){
+    return this.subValue
+}
+</pre>
+类的原型对象的作用就是为类的原型添加共有方法，但类不能直接访问这些属性和方法，必须通过原型prototype来访问。而我们实例化一个父类的时候，新创建的对象复制类父类的构造函数内的属性与方法并且将原型__proto__指向了父类的原型对象，这样就拥有了父类的原型对象上的属性与方法，并且这个新创建的对象可以直接访问到父类原型对象上的属性与方法。如果我们将这个新创建的对象赋值给子类的原型，那么子类的原型就可以访问到父类的原型属性和方法。上面代码中，我们将父类赋值给了子类的原型，那么子类的原型可以访问父类原型上的属性和方法与从父类构造函数中复制的属性和方法。<br>
+不足：其一，由于子类通过其原型prototype对父类实例化，继承了父类。所以说父类中的共有属性要是引用类型，就会在子类中被所有实例共用，因此一个子类的实例更改子类原型从父类构造函数中继承来的共有属性就会直接影响到其他子类。其二，由于子类实现的继承是靠其原型prototype对父类的实例化实现的，因此在创建父类的时候，是无法向父类传递参数的，因此在实例化父类的时候也无法对父类的构造函数内的属性进行初始化
+(2)构造函数式继承
+<pre>
+//声明父类
+function SuperClass(id){
+    //引用类型共有属性
+    this.books = ['javascript','html','css'];
+    //值类型共有属性
+    this.id = id
+}
+//父类声明原型方法
+SuperClass.prototype.showBooks = function(){
+    console.log(this.books)
+}
+//声明子类
+function SubClass(id){
+    SuperClass.call(this,id);//精华语句
+}
+//创建第一个子类的实例
+var instance1 = new SubClass(10);
+//创建第二个子类的实例
+var instance2 = new SubClass(11);
+instance1.books.push("设计模式");
+console.log(instance1.books);     //['javascript','html','css','设计模式']
+console.log(instance1.id);        //10
+console.log(instance2.books);     //['javascript','html','css']
+console.log(instance2.id);        //11
+instance1.showBooks()             //TypeError
+</pre>
+SuperClass.call(this,id);这条语句是构造函数式继承的精华，由于call这个方法可以更改函数的作用域，因此在子类中，对SuperClass调用这个方法就是将子类中的变量在父类中执行一遍，由于父类中是给this绑定属性的，因此子类自然也就继承了父类的共有属性。由于这种类型的继承没有涉及原型prototype，所以父类的原型方法自然不会被子类继承，而如果想要子类被继承就必须要放在构造函数中，这样创建出来的每个实例都会单独拥有一份而不能共用，这样就违背了代码复用的原则。
+(3)组合继承
+<pre>
+//声明父类
+function SuperClass(name){
+    //引用类型共有属性
+    this.books = ['javascript','html','css'];
+    //值类型共有属性
+    this.name = name
+}
+//父类原型共有方法
+SuperClass.prototype.getName = function(){
+    console.log(this.name)
+}
+//声明子类
+function SubClass(name,time){
+    //构造函数式继承父类name属性
+    SuperClass.call(this,name);
+    //子类中新增共有属性
+    this.time = time;
+}
+//类式继承 子类原型继承父类
+SubClass.prototype = new SuperClass();
+//子类原型方法
+SubClass.prototype.getTime = function(){
+    console.log(this.name);
+}
+var instance1 = new SubClass('js book',2014);
+instance1.books.push('设计模式');
+console.log(instance1.books);       //['html','css','javascript','设计模式']
+instance1.getName();                //js book
+instance1.getTime();                //2014
+var instance2 = new SubClass('css book', 2013);
+console.log(instance2.books);       //['html','css','javascript']
+instance2.getName();                //css book
+instance2.getTime();                //2013
+</pre>
+通过组合继承，子类的实例更改父类继承下来的引用类型属性如books，不会影响到其他实例，并且子类实例化过程中又能将参数传递到父类的构造函数中如name。但是，我们在使用构造函数继承时执行了一遍父类的构造函数，而在实现子类原型的类式继承时又调用了一遍父类构造函数。因此父类构造函数调用了两遍
+(4)原型式继承
+<pre>
+function inheritObject(o){
+    //声明一个过渡函数对象
+    function F(){};
+    //过渡对象的原型继承父对象
+    F.prototype = o;
+    //返回过度对象的一个实例，该实例的原型继承了父对象
+    return new F()
+}
+var book = {
+    name:'js book',
+    alikeBook:['css book','html book']
+}
+var newBook = inheritObject(book);
+newBook.name = 'ajax book';
+newBook.alikeBook.push('xml book');
+
+var otherBook = inheritObject(book);
+otherBook.name = 'flash book';
+otherBook.alikeBook.push('as book');
+
+console.log(newBook.name);          //ajax book
+console.log(newBook.alikeBook);     //['css book','html book','xml book','as book']
+console.log(otherBook.name);        //flash book
+console.log(otherBook.alikeBook);   //['css book','html book','xml book','as book']
+console.log(book.name);             //js book
+console.log(book.alikeBook);        //['css book','html book','xml book','as book']
+</pre>
+看到inheritObject()有没有想到Object.create()，inheritObject是对类式继承的一个封装，其中的过度对象就相当于类式继承中的子类，只不过在原型式中作为一个过渡函数出现的，目的是为了创建要返回的新的实例化对象。所以类式继承中的问题在这里也会出现，只不过由于F过渡类的构造函数中无内容，所以开销比较小。如果有必要也可以将F过渡类缓存起来，不必每次创建一个新的过渡类F。
+(5)寄生式继承
+<pre>
+//声明基对象
+var book = {
+    name : 'js book',
+    alikeBook : ['css book','html book']
+}
+function createBook(obj){
+    //通过原型继承方式创建新对象
+    var o = new inheritObject(obj);
+    //拓展新对象
+    o.getName = function(){
+        console.log(name);
+    }
+    //返回拓展后的新对象
+    return o
+}
+</pre>
+寄生式继承就是对原型继承的第二次封装，并且在这第二次封装过程中对继承的对象进行了拓展，这样新创建的对象不仅仅有父类中的属性和方法而且还添加新的属性和方法。
+(6)寄生组合式继承
+<pre>
+/**
+* 寄生式继承 继承原型
+* 传递参数 subClass 子类
+* 传递参数 superClass 父类
+**/
+function inheritPrototype(subClass, superClass){
+    //复制一份父类的原型副本保存在变量中
+    var p = inheritObject(superClass.prototype);
+    //修正因为重写子类原型导致子类的constructor属性被修改
+    p.constructor = subClass;
+    //设置子类的原型
+    subClass.prototype = p;
+}
+//定义父类
+function SuperClass(name){
+    this.name = name;
+    this.colors = ['red','blue','green'];
+}
+//定义父类原型方法
+SuperClass.prototype.getName = function(){
+    console.log(this.name)
+}
+//定义子类
+function SubClass(name,time){
+    //构造函数式继承
+    SuperClass.call(this,name);
+    //子类新增属性
+    this.time = time;
+}
+//寄生式继承父类原型
+inheritPrototype(SubClass,SuperClass);
+SubClass.prototype.getTime = function(){
+    console.log(this.time)
+}
+//创建两个测试方法
+var instance1 = new SubClass('js book',2014);
+var instance2 = new SubClass('css book',2013);
+instance1.colors.push('black');
+console.log(instance1.colors);      //['red','blue','green','black']
+console.log(instance2.colors);      //['red','blue','green']
+instance2.getName();                //css book
+instance2.getTime();                //2013
+</pre>
+<img src="https://snakexu.github.io/images/http&https/WechatIMG328.jpeg">
+组合式继承，通过构造函数继承的属性和方法是没有问题的，所以这里我们主要探究通过寄生式继承重新继承父类的原型。我们需要继承的仅仅是父类的原型，不再需要调用父类的构造函数，换句话说，在构造函数继承中我们已经调用了父类的构造函数，因此我们需要的就是父类的原型对象的一个副本，而这个副本我们通过原型继承便可得到，但是这么直接赋值给子类会有问题的，因为对父类原型对象复制得到的复制对象p中的constructor指向的不是SubClass子类对象，因此在寄生式继承中要对复制对象p做一次增强，修复其constructor属性指向不正确的问题，最后将得到的复制对象p赋值给子类的原型，这样子类的原型就继承了父类的原型并且没有执行父类的构造函数。
+6.多继承
+<pre>
+//多继承 属性复制
+var mix = function(){
+    var i = 1,                           //从第二个参数起为被继承的对象
+    len = arguments.length,              //获取参数长度
+    target = arguments[0],               //第一个对象为目标对象
+    arg;                                 //缓存参数对象
+    //遍历被继承的对象
+    for(; i < len;i++){
+        //缓存当前对象
+        arg = arguments[i];
+        //遍历被继承对象中的属性
+        for(var prototype in arg){
+            //将被继承对象中的属性复制到目标对象中
+            target[prototype] = argument[prototype];
+        }
+    }
+    return target;
+}
+</pre>
+多继承的实现类似于jQuery的extend，使用的时候需要传入目标对象(第一个参数--需要继承的对象)。当然你也可以将它绑定到原生对象Object上，这样所有对象那个就可以拥有这个方法了。
+7.多态
+多态就是同一个方法多种调用方式，在JavaScript里的实现方式是对传入的参数做判断以实现多种调用方式。下面是例子
+<pre>
+function Add(){
+    //无参数算法
+    function zero(){
+        return 10;
+    }
+    //一个参数算法
+    function one(num){
+        return num + 10;
+    }
+    //两个参数算法
+    function two(num1,num2){
+        return num1 + num2;
+    }
+    //相加共有方法
+    this.add = function(){
+        var arg = arguments,
+        //获取参数长度
+        len = arg.length;
+        switch(len){
+            //如果没有参数
+            case 0:
+                return zero();
+            //如果只有一个参数
+            case 1:
+                return one(arg[0]);
+            //如果有两个参数
+            case 2:
+                return two(arg[0],arg[1])
+        }
+    }
+}
+//实例化
+var A = new Add();
+//测试
+console.log(A.add());         //10
+console.log(A.add(5));        //15
+console.log(A.add(6,7));      //13
+</pre>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/02/网易微专业-Undersocre-3-3-2-Underscore-unique去重函数-源码拾遗/" data-id="ck911598o00186yxqr3058ft1" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/12/27/张容铭-设计模式-第一篇/" data-id="cka5080hr003yhyxqv2mw0i0k" class="article-share-link">Share</a>
       
       
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+
     </footer>
   </div>
   
@@ -546,10 +1511,10 @@ start = 0
 
 
   
-    <article id="post-网易微专业-Undersocre-3-3-1-Underscore数组定位与摊平数组" class="article article-type-post" itemscope="" itemprop="blogPost">
+    <article id="post-网易微专业-单页应用-1-1-2-vue模块语法，常用指令，事件绑定" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2019/12/01/网易微专业-Undersocre-3-3-1-Underscore数组定位与摊平数组/" class="article-date">
-  <time datetime="2019-12-01T13:42:29.000Z" itemprop="datePublished">2019-12-01</time>
+    <a href="/2019/12/23/网易微专业-单页应用-1-1-2-vue模块语法，常用指令，事件绑定/" class="article-date">
+  <time datetime="2019-12-23T07:30:40.000Z" itemprop="datePublished">2019-12-23</time>
 </a>
     
   </div>
@@ -560,7 +1525,7 @@ start = 0
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/12/01/网易微专业-Undersocre-3-3-1-Underscore数组定位与摊平数组/">网易微专业-Undersocre-3.3.1-Underscore数组定位与摊平数组</a>
+      <a class="article-title" href="/2019/12/23/网易微专业-单页应用-1-1-2-vue模块语法，常用指令，事件绑定/">网易微专业-单页应用-1.1.2-vue模块语法，常用指令，事件绑定</a>
     </h1>
   
 
@@ -568,13 +1533,49 @@ start = 0
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>1.<em>.initial与</em>.flatten<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.3.1_1.png"><br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.3.1_2.png"><br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.3.1_3.png"><br>2.代码</p>
-<p><pre><br>//摊平数组<br>var flatten = function(array, shallow) {<br>    var ret = [];<br>    var index = 0;<br>    for (var i = 0; i &lt; array.length; i++) {<br>        var value = array[i]; //展开一次<br>        if (_.isArray(value) || _.isArguments(value)) {<br>            //递归全部展开<br>            if (!shallow) {<br>                value = flatten(value, shallow);<br>            }<br>            var j = 0,<br>                len = value.length;<br>            //个人以为，这个地方，思路值得学习<br>            ret.length += len;<br>            while (j &lt; len) {<br>                ret[index++] = value[j++];<br>            }<br>        } else {<br>            ret[index++] = value;<br>        }<br>    }<br>    return ret;<br>}<br>_.flatten = function(array, shallow) {<br>    return flatten(array, shallow);<br>}<br>//返回数组中除了最后一个元素外的其他全部元素。 在arguments对象上特别有用。<br>_.initial = function(array, n) {<br>    return [].slice.call(array, 0, Math.max(0, array.length - (n == null ? 1 : n)));<br>};<br>//返回数组中除了第一个元素外的其他全部元素。传递 n 参数将返回从n开始的剩余所有元素<br><em>.rest = function(array, n, guard) {<br>    return [].slice.call(array, n == null ? 1 : n);<br>};<br></em></pre><br>Underscore看到现在，这里应该是比较简单的一节了，这节摊平数组主要是递归函数，但是整理摊平出来的数组也就是递归语句下面生成新数组的思路，还是很值得学习的。.initial和_.rest很容易理解，就不多说了。</p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/12/23/网易微专业-单页应用-1-1-2-vue模块语法，常用指令，事件绑定/" data-id="cka5080em002ghyxqk0qog6io" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-单页应用-1-1-1-初识VUE" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/12/23/网易微专业-单页应用-1-1-1-初识VUE/" class="article-date">
+  <time datetime="2019-12-23T03:05:00.000Z" itemprop="datePublished">2019-12-23</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/12/23/网易微专业-单页应用-1-1-1-初识VUE/">网易微专业-单页应用-1.1.1-初识VUE</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.什么是Vue<br>参照官方文档的解释，Vue是一个构建数据驱动的web界面的渐进式框架<br>1-1.Vue开发与传统开发对比<br>一个简单的需求：我们在指定DOM(id为app)插入一个元素，并给它绑定一个点击事件<br><img src="https://snakexu.github.io/images/wangyi/vue/1.1.1_1.png"><br><img src="https://snakexu.github.io/images/wangyi/vue/1.1.1_2.png"><br>两种开发方式得出结论<br><img src="https://snakexu.github.io/images/wangyi/vue/1.1.1_3.png"><br>2.vue的引入<br><img src="https://snakexu.github.io/images/wangyi/vue/1.1.1_4.png"><br>3.搭建第一个vue应用，这里我们先采用引入script标签的方式进行搭建。<br>需求：实现列表(feBooks)渲染在ul的li中；实现对输入框的双向数据绑定<br>(以下代码需要放在html文件中)</p>
+<p><pre><br>&lt; script src=”<a href="https://cdn.bootcss.com/vue/2.6.10/vue.min.js&quot;&gt;" target="_blank" rel="noopener">https://cdn.bootcss.com/vue/2.6.10/vue.min.js&quot;&gt;</a>&lt; /script&gt;<br>&lt; div id=”app”&gt;<br>    &lt; ul&gt;<br>        &lt; li v-for=”item in feBooks”&gt;{ {item.name} }&lt; /li&gt;<br>    &lt; /ul&gt;<br>    &lt; input type=”text” v-model=”title”&gt;<br>    &lt; p&gt;{ {title} }&lt; /p&gt;<br>&lt; /div&gt;<br>&lt; script type=”text/javascript”&gt;<br>    new Vue({<br>        el:”#app”,<br>        data:{<br>            title:”欢迎来到网易云课堂”,<br>            feBooks:[<br>            {name: ‘vue基础课程’},<br>            {name: ‘vue进阶课程’},<br>            {name: ‘vue核心源码课程’},<br>            {name: ‘vue实战课程’},<br>            {name: ‘webpack课程’}<br>            ]<br>        }<br>    })<br>&lt; /script&gt;<br></pre><br>应用小结<br><img src="https://snakexu.github.io/images/wangyi/vue/1.1.1_5.png"><br>4.课程小结<br><img src="https://snakexu.github.io/images/wangyi/vue/1.1.1_6.png"></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/01/网易微专业-Undersocre-3-3-1-Underscore数组定位与摊平数组/" data-id="ck911598o00196yxqvrhdwldq" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/12/23/网易微专业-单页应用-1-1-1-初识VUE/" data-id="cka5080em002fhyxqyrvlogbi" class="article-share-link">Share</a>
       
       
     </footer>
@@ -588,7 +1589,7 @@ start = 0
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/7/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/9/">Next &raquo;</a>
+    <a class="extend prev" rel="prev" href="/page/7/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/9/">Next &raquo;</a>
   </nav>
 
 </section>
@@ -599,15 +1600,29 @@ start = 0
 
   
     
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端路由/">前端路由</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/正则/">正则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+    </div>
+  </div>
+
 
   
     
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/前端路由/" style="font-size: 10px;">前端路由</a> <a href="/tags/数据结构/" style="font-size: 13.33px;">数据结构</a> <a href="/tags/正则/" style="font-size: 10px;">正则</a> <a href="/tags/算法/" style="font-size: 20px;">算法</a> <a href="/tags/设计模式/" style="font-size: 16.67px;">设计模式</a>
+    </div>
+  </div>
+
   
     
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
     </div>
   </div>
 
@@ -620,23 +1635,23 @@ start = 0
       <ul>
         
           <li>
-            <a href="/2020/04/15/网易微专业-node-1-1-8-MySQL入门与应用/">网易微专业-node-1.1.8-MySQL入门与应用</a>
+            <a href="/2020/05/13/es6-class-extends/">es6 class extends</a>
           </li>
         
           <li>
-            <a href="/2020/04/14/网易微专业-node-1-1-7-MongoDB入门与应用/">网易微专业-node-1.1.7-MongoDB入门与应用</a>
+            <a href="/2020/05/12/网易微专业-node-Koa源码分析-2-2-3-中间件机制剖析/">网易微专业-node-Koa源码分析-2.2.3-中间件机制剖析</a>
           </li>
         
           <li>
-            <a href="/2020/04/13/网易微专业-node-1-1-6-Redis入门及应用/">网易微专业-node-1.1.6-Redis入门及应用</a>
+            <a href="/2020/05/09/Web-前端路由原理解析和实现/">Web 前端路由原理解析和实现</a>
           </li>
         
           <li>
-            <a href="/2020/04/12/网易微专业-node-1-1-5-Nginx反向代理-静态资源服务/">网易微专业-node-1.1.5-Nginx反向代理 静态资源服务</a>
+            <a href="/2020/05/08/网易微专业-node-Koa源码分析-2-2-2-请求处理流程解读/">网易微专业-node-Koa源码分析-2.2.2-请求处理流程解读</a>
           </li>
         
           <li>
-            <a href="/2020/04/11/网易微专业-node-1-1-3-Linux快速上手玩转典型应用/">网易微专业-node-1.1.3-Linux快速上手玩转典型应用</a>
+            <a href="/2020/05/08/vue-cli了解/">vue-cli了解</a>
           </li>
         
       </ul>

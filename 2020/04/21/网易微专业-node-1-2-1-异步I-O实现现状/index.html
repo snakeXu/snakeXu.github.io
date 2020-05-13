@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>网易微专业-node-1.2.1-异步I/O实现现状 | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1.模块化概述1-1.CommonJs特点a.js  let name = &apos;evan&apos; let getName = function(name){     console.log(name) } module.exports = {     name:name,     getName:getName }  b.js  let person = require(&apos;a.js&apos;) console.l">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网易微专业-node-1.2.1-异步I&#x2F;O实现现状">
+<meta property="og:url" content="http://yoursite.com/2020/04/21/网易微专业-node-1-2-1-异步I-O实现现状/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="1.模块化概述1-1.CommonJs特点a.js  let name = &apos;evan&apos; let getName = function(name){     console.log(name) } module.exports = {     name:name,     getName:getName }  b.js  let person = require(&apos;a.js&apos;) console.l">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/node/1.2.1_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/node/1.2.1_2.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/node/1.2.1_3.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/node/1.2.1_4.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/node/1.2.1_5.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/node/1.2.1_6.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/node/1.2.1_7.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/node/1.2.1_8.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/node/1.2.1_9.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/node/1.2.1_10.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/node/1.2.1_11.png">
+<meta property="og:updated_time" content="2020-04-22T03:58:57.764Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="网易微专业-node-1.2.1-异步I&#x2F;O实现现状">
+<meta name="twitter:description" content="1.模块化概述1-1.CommonJs特点a.js  let name = &apos;evan&apos; let getName = function(name){     console.log(name) } module.exports = {     name:name,     getName:getName }  b.js  let person = require(&apos;a.js&apos;) console.l">
+<meta name="twitter:image" content="https://snakexu.github.io/images/wangyi/node/1.2.1_1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-网易微专业-node-1-2-1-异步I-O实现现状" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/04/21/网易微专业-node-1-2-1-异步I-O实现现状/" class="article-date">
+  <time datetime="2020-04-21T07:34:37.000Z" itemprop="datePublished">2020-04-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      网易微专业-node-1.2.1-异步I/O实现现状
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.模块化概述<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.1_1.png"><br><img src="https://snakexu.github.io/images/wangyi/node/1.2.1_2.png"><br>1-1.CommonJs特点<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.1_3.png"><br>a.js</p>
+<pre>
+let name = 'evan'
+let getName = function(name){
+    console.log(name)
+}
+module.exports = {
+    name:name,
+    getName:getName
+}
+</pre>
+b.js
+<pre>
+let person = require('a.js')
+console.log(person)
+console.log(person.name)
+person.getName('study163')
+person.name = 'updateName'
+console.log(person)
+</pre>
+执行结果
+<img src="https://snakexu.github.io/images/wangyi/node/1.2.1_4.png">
+2.module对象详解
+2-1.module对象的属性
+<img src="https://snakexu.github.io/images/wangyi/node/1.2.1_5.png">
+03-module.js
+<pre>
+module.exports = {
+    name:'evan',
+    getName:function(name){
+        console.log(name)
+    }
+}
+console.log(module)
+</pre>
+执行结果
+<img src="https://snakexu.github.io/images/wangyi/node/1.2.1_6.png">
+2-2.模块分类
+2-2-1.核心模块
+<img src="https://snakexu.github.io/images/wangyi/node/1.2.1_7.png">
+2-2-2.文件模块
+<img src="https://snakexu.github.io/images/wangyi/node/1.2.1_8.png">
+2-3.module.exports与exports
+<img src="https://snakexu.github.io/images/wangyi/node/1.2.1_9.png">
+04-exports-module-exports.js
+<pre>
+var module = {
+    exports:{}
+}
+var exports = module.exports
+function change(exports){
+    //通过形参的方式传入的exports
+    exports.name = 'evan';
+    exports={
+        age:18
+    }
+    console.log(exports)
+}
+change(exports)
+console.log(module.exports)
+</pre>
+执行结果
+<img src="https://snakexu.github.io/images/wangyi/node/1.2.1_10.png">
+要注意的是在change函数中exports={}，相当于改变了change函数中形参exports的指向；而如果用module.exports={}这样赋值就解决了(其实个人以为这就是对象指针指向问题，另外change函数对exports的赋值还说明了参数是传值而不是传引用的)
+3.require方法详解
+3-1.模块引入规则
+<img src="https://snakexu.github.io/images/wangyi/node/1.2.1_11.png">
+3-2.加载步骤
+(1)路径分析(模块标识符分析)
+·核心模块
+·以'./'或者'../'开始的相对路径文件模块
+·以/开始的绝对路径模块
+·非路径形式的模块
+(2)文件定位
+·扩展名分析
+·目标文件和包分析
+(3)编译执行
+3-3.
+<pre>
+//a、b引入同一个对象
+var a = require('aa.js');
+var b = require('aa.js')
+console.log(a===b)//true 
+//在a引入aa.js之后，aa.js会在缓存中，b=require('aa.js')再次引入则是在缓存中查找，所以a===b
+</pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/04/21/网易微专业-node-1-2-1-异步I-O实现现状/" data-id="cka5080ef0025hyxq0098hs6e" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/04/22/网易微专业-node-1-2-2-异步编程的优势与难点/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          网易微专业-node-1.2.2-异步编程的优势与难点
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/04/20/网易微专业福利期-3-2-Event-Loop机制/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">网易微专业福利期-3.2-Event Loop机制</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端路由/">前端路由</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/正则/">正则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/前端路由/" style="font-size: 10px;">前端路由</a> <a href="/tags/数据结构/" style="font-size: 13.33px;">数据结构</a> <a href="/tags/正则/" style="font-size: 10px;">正则</a> <a href="/tags/算法/" style="font-size: 20px;">算法</a> <a href="/tags/设计模式/" style="font-size: 16.67px;">设计模式</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/05/13/es6-class-extends/">es6 class extends</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/12/网易微专业-node-Koa源码分析-2-2-3-中间件机制剖析/">网易微专业-node-Koa源码分析-2.2.3-中间件机制剖析</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/09/Web-前端路由原理解析和实现/">Web 前端路由原理解析和实现</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/08/网易微专业-node-Koa源码分析-2-2-2-请求处理流程解读/">网易微专业-node-Koa源码分析-2.2.2-请求处理流程解读</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/08/vue-cli了解/">vue-cli了解</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

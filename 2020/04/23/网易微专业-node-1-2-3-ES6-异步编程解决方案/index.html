@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>网易微专业-node-1.2.3-ES6+异步编程解决方案 | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1.异步编程优势2.异步编程难点2-1.异常处理·过去异常处理 try{    JSON.parse(json);}cache(e){    //TODO}·这对于异步编程而言并不一定适用·只能捕获当次事件循环内的异常，对’callback’执行时抛出的异常行为将无能为力 try{    async(callback);}cache(e){    //TODO}·node在处理异常形成了一种约定，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网易微专业-node-1.2.3-ES6+异步编程解决方案">
+<meta property="og:url" content="http://yoursite.com/2020/04/23/网易微专业-node-1-2-3-ES6-异步编程解决方案/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="1.异步编程优势2.异步编程难点2-1.异常处理·过去异常处理 try{    JSON.parse(json);}cache(e){    //TODO}·这对于异步编程而言并不一定适用·只能捕获当次事件循环内的异常，对’callback’执行时抛出的异常行为将无能为力 try{    async(callback);}cache(e){    //TODO}·node在处理异常形成了一种约定，">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/node/1.2.3_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/node/1.2.3_2.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/node/1.2.3_3.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/node/1.2.3_4.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/node/1.2.3_5.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/node/1.2.3_6.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/node/1.2.3_7.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/node/1.2.3_8.png">
+<meta property="og:updated_time" content="2020-04-23T10:18:36.061Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="网易微专业-node-1.2.3-ES6+异步编程解决方案">
+<meta name="twitter:description" content="1.异步编程优势2.异步编程难点2-1.异常处理·过去异常处理 try{    JSON.parse(json);}cache(e){    //TODO}·这对于异步编程而言并不一定适用·只能捕获当次事件循环内的异常，对’callback’执行时抛出的异常行为将无能为力 try{    async(callback);}cache(e){    //TODO}·node在处理异常形成了一种约定，">
+<meta name="twitter:image" content="https://snakexu.github.io/images/wangyi/node/1.2.3_1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-网易微专业-node-1-2-3-ES6-异步编程解决方案" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/04/23/网易微专业-node-1-2-3-ES6-异步编程解决方案/" class="article-date">
+  <time datetime="2020-04-23T03:50:52.000Z" itemprop="datePublished">2020-04-23</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      网易微专业-node-1.2.3-ES6+异步编程解决方案
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.异步编程优势<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.3_1.png"><br>2.异步编程难点<br>2-1.异常处理<br>·过去异常处理</p>
+<p><pre><br>try{<br>    JSON.parse(json);<br>}cache(e){<br>    //TODO<br>}<br></pre><br>·这对于异步编程而言并不一定适用<br>·只能捕获当次事件循环内的异常，对’callback’执行时抛出的异常行为将无能为力</p>
+<p><pre><br>try{<br>    async(callback);<br>}cache(e){<br>    //TODO<br>}<br></pre><br>·node在处理异常形成了一种约定，将异常作为回调函数的第一个参数传回<br>·必须执行调用者传入的回调函数<br>·正确传递异常供调用者判断<br>·另一个容易犯的错误是对用户传递的回调函数进行异常捕获<br>错误示范:</p>
+<p><pre><br>try{<br>    req.body = JSON.parse(buf,options,reviver);<br>    callback();<br>}cache(err){<br>    err.body = buf;<br>    err.status = 400;<br>    callback(400);<br>}<br></pre><br>2-2.函数嵌套过深<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.3_2.png"><br>2-3.其它难点<br>·多线程编程<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.3_3.png"><br>·异步转同步<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.3_4.png"><br>3.异步编程解决方案<br>解决方案:<br>·事件发布/订阅模式<br>·async流程控制<br>·promise模式<br>·…<br>假设我们现在有三个文件dev.json、prod.json、test.json，相应的内容分别为{“dev”:”devdev”}、{“prod”:”prodprod”}、{“test”:”testtest”}，并且这三个文件和下面的代码文件在同一个跟目录下<br>index.js</p>
+<p><pre><br>const fs = require(‘fs’);<br>let files = [‘/dev.json’, ‘/test.json’, ‘/prod.json’];<br>fs.readFile(<strong>dirname + files[0], ‘utf8’, (err, data) =&gt; {<br>    let result = [];<br>    if (err) console.log(‘Error: ‘ + err);<br>    result.push(data);<br>    fs.readFile(</strong>dirname + files[1], ‘utf8’, (err, data) =&gt; {<br>        if (err) console.log(‘Error: ‘ + err);<br>        result.push(data);<br>        fs.readFile(__dirname + files[2], ‘utf8’, (err, data) =&gt; {<br>            if (err) console.log(“Error: “ + err);<br>            result.push(data);<br>            console.log(result);<br>        });<br>    });<br>});<br></pre><br>执行上面index.js代码，得到如下结果<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.3_5.png"><br>但是index.js的代码已经看到了回调地狱的趋势，于是我们想用发布/订阅模式来使代码看起来更容易理解。<br>首先封装一个m.js</p>
+<p><pre><br>const fs = require(‘fs’);<br>module.exports = function(filename,cb){<br>    fs.readFile(__dirname + filename, ‘utf8’, (err, data) =&gt; {<br>        cb(err,data)<br>    });<br>}<br></pre><br>index1.js</p>
+<p><pre><br>const fn = require(‘./m’)//引入m.js<br>const events = require(‘events’);<br>let files = [‘/dev.json’, ‘/test.json’, ‘/prod.json’];<br>const emitter = new events.EventEmitter();<br>var done = after(times,cb,(res)=&gt;{<br>    console.log(res)<br>})<br>emitter.on(‘done’,done);<br>function after(times,cb){<br>    let count = 0, result = [];<br>    return function(data){<br>        result.push(data);<br>        count++;<br>        if(count === times){<br>            cb(result)<br>        }<br>    }<br>}<br>files.forEach((filename)=&gt;{<br>    fn(filename,(err,data)=&gt;{<br>        //if(err) TODO<br>        emitter.emit(‘done’,data)<br>    })<br>})<br></pre><br>可以看到index1.js的执行结果和上面我们用回调写的代码执行结果还是一样的，说明代码没有问题<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.3_6.png"><br>多执行几次代码，我们发现，文件读取顺序是不一样的<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.3_7.png"><br>emitter.on默认在node中只能绑定10次，超过10次就会报错，认为内存泄漏，可以通过emitter.setMaxListeners(100)这样绑定修改最大值<br>我们还可以在项目中安装async库来实现需求。async库安装之后，新建一个index2.js</p>
+<p><pre><br>const fn = require(‘./m’)<br>const async = require(‘async’)<br>let files = [‘/dev.json’, ‘/test.json’, ‘/prod.json’];<br>async.waterfall([<br>    (cb) =&gt; {<br>        fn(files[0], (err, data) =&gt; {<br>            cb(err, data);<br>        });<br>    },<br>    (data1, cb) =&gt; {<br>        fn(files[1], (err, data) =&gt; {<br>            cb(err, data1, data)<br>        });<br>    },<br>    (data1, data2, cb) =&gt; {<br>        fn(files[2], (err, data) =&gt; {<br>            cb(err, data1, data2, data);<br>        });<br>    }<br>], (err, data1, data2, data3) =&gt; {<br>    if (err) console.log(err);<br>    let result = [data1, data2, data3];<br>    console.log(result);<br>});<br></pre><br>执行index2.js会按照我们写的函数顺序去读取文件，也就是说读取文件的顺序是确定的，如果中间哪个文件读取出错，后面就不会再执行了(不会执行后面的读取，但是整个函数还是会执行)<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.3_8.png"><br>另外就是使用Promise来满足我们的需求<br>index3.js</p>
+<p><pre><br>const fn = require(‘./m’);<br>let files = [‘/dev.json’, ‘/test.json’, ‘/prod.json’];<br>function toPromiseStyle(fn) {<br>    return (…args) =&gt; {<br>        return new Promise((resolve, reject) =&gt; {<br>            fn(…args, (err, data) =&gt; {<br>                if (err) reject(err);<br>                resolve(data);<br>            });<br>        });<br>    }<br>}<br>let op = toPromiseStyle(fn);<br>let result = [];<br>op(files[0])<br>    .then((data) =&gt; {<br>        result.push(data);<br>        return op(files[1]);<br>    })<br>    .then((data) =&gt; {<br>        result.push(data);<br>        return op(files[2]);<br>    })<br>    .then((data) =&gt; {<br>        result.push(data);<br>        console.log(relust);<br>    }).catch((err) =&gt; {<br>        console.log(err);<br>        console.log(result);<br>    });<br>function* getResult() {<br>    let res;<br>    try {<br>        res = yield op(files[0]);<br>        res = yield op(files[1]);<br>        res = yield op(files[2]);<br>        return res;<br>    } catch (error) {<br>        return console.log(err);<br>    }<br>}<br>async function getResult1() {<br>    let res;<br>    try {<br>        res = await op(files[0]);<br>        res = await op(files[1]);<br>        res = await op(files[2]);<br>        return res;<br>    } catch (error) {<br>        return console.log(err);<br>    }<br>}<br></pre><br>promise这个和async相同之处就是会按照代码定义顺序去读取文件，如果中间出错，就会直接打印最后结果，出错文件之后的文件不会再读取。getResult和getResult1两个函数分别是gentor函数和async函数去执行promise，其实也就是讲述了async的原理</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/04/23/网易微专业-node-1-2-3-ES6-异步编程解决方案/" data-id="cka5080eh0027hyxq3g8e1etl" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/04/24/数据结构-线性表/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          数据结构-线性表
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/04/22/网易微专业-node-1-2-2-异步编程的优势与难点/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">网易微专业-node-1.2.2-异步编程的优势与难点</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端路由/">前端路由</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/正则/">正则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/前端路由/" style="font-size: 10px;">前端路由</a> <a href="/tags/数据结构/" style="font-size: 13.33px;">数据结构</a> <a href="/tags/正则/" style="font-size: 10px;">正则</a> <a href="/tags/算法/" style="font-size: 20px;">算法</a> <a href="/tags/设计模式/" style="font-size: 16.67px;">设计模式</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/05/13/es6-class-extends/">es6 class extends</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/12/网易微专业-node-Koa源码分析-2-2-3-中间件机制剖析/">网易微专业-node-Koa源码分析-2.2.3-中间件机制剖析</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/09/Web-前端路由原理解析和实现/">Web 前端路由原理解析和实现</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/08/网易微专业-node-Koa源码分析-2-2-2-请求处理流程解读/">网易微专业-node-Koa源码分析-2.2.2-请求处理流程解读</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/08/vue-cli了解/">vue-cli了解</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

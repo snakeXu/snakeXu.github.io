@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>网易微专业福利期-2.5-高阶函数 | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1.高阶函数js函数都指向某个变量，既然变量可以指向函数，函数的参数可以接收某个变量，那么一个函数就可以接收另一个函数作为参数，这种函数就称为高阶函数。·高阶函数是对其他函数进行操作的函数，可以将它们作为参数或返回它们·简单来说，高阶函数是一个函数，它接收函数作为参数或将函数作为输出返回2.map/reduce/filter2-1.map需求:创建一个新数组，其中的值是原数组的值的两倍  cons">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网易微专业福利期-2.5-高阶函数">
+<meta property="og:url" content="http://yoursite.com/2020/04/19/网易微专业福利期-2-5-高阶函数/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="1.高阶函数js函数都指向某个变量，既然变量可以指向函数，函数的参数可以接收某个变量，那么一个函数就可以接收另一个函数作为参数，这种函数就称为高阶函数。·高阶函数是对其他函数进行操作的函数，可以将它们作为参数或返回它们·简单来说，高阶函数是一个函数，它接收函数作为参数或将函数作为输出返回2.map/reduce/filter2-1.map需求:创建一个新数组，其中的值是原数组的值的两倍  cons">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-04-19T09:34:06.918Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="网易微专业福利期-2.5-高阶函数">
+<meta name="twitter:description" content="1.高阶函数js函数都指向某个变量，既然变量可以指向函数，函数的参数可以接收某个变量，那么一个函数就可以接收另一个函数作为参数，这种函数就称为高阶函数。·高阶函数是对其他函数进行操作的函数，可以将它们作为参数或返回它们·简单来说，高阶函数是一个函数，它接收函数作为参数或将函数作为输出返回2.map/reduce/filter2-1.map需求:创建一个新数组，其中的值是原数组的值的两倍  cons">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-网易微专业福利期-2-5-高阶函数" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/04/19/网易微专业福利期-2-5-高阶函数/" class="article-date">
+  <time datetime="2020-04-19T07:36:47.000Z" itemprop="datePublished">2020-04-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      网易微专业福利期-2.5-高阶函数
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.高阶函数<br>js函数都指向某个变量，既然变量可以指向函数，函数的参数可以接收某个变量，那么一个函数就可以接收另一个函数作为参数，这种函数就称为高阶函数。<br>·高阶函数是对其他函数进行操作的函数，可以将它们作为参数或返回它们<br>·简单来说，高阶函数是一个函数，它接收函数作为参数或将函数作为输出返回<br>2.map/reduce/filter<br>2-1.map<br>需求:创建一个新数组，其中的值是原数组的值的两倍</p>
+<pre>
+const arr1 = [1,2,3,4];
+const arr2 = arr1.map(function(item,index,array){
+    return item*2;
+})
+const arr3 = arr1.map( item => item * 2 )
+</pre>
+2-2.reduce
+<pre>
+let arr = [1,2,3,4,5];
+let sum = arr.reduce((prev,cur)=>{
+    return prev + cur
+},0)
+</pre>
+这里传入了初始值0，所以开始时prev=0，cur=1(arr的第一项),0+1=1,1作为下一轮回调的prev值……prev表示上一次回调时返回的值，或者是我们传入的初始值。
+我们还可以通过reduce实现数组去重
+<pre>
+let arr = [1,2,3,4,5,5,6,6,7,7,8];
+let newArr = arr.reduce((prev,cur)=>{
+    prev.indexOf(cur) === -1 && prev.push(cur);
+    return prev;
+},[])
+</pre>
+2-3.filter
+filter主要用于对数组的过滤、筛选，它会创建一个新数组，新数组中的元素是通过检查指定数组中符合条件的所有元素
+需求:请将对象数组中年龄大于21的组成新的对象数组
+<pre>
+let persons = [
+    {'name':'Peter',age:21},
+    {'name':'Mark',age:28},
+    {'name':'Josn',age:19},
+    {'name':'Jane',age:31},
+    {'name':'Tony',age:35},
+]
+let newAge = persons.filter(item => item.age > 21);
+console.log(newAge)
+</pre>
+3.flat
+数组成员有时还是数组，flat方法用于把数组成员拉平，也就是数组扁平化，将多维数组变成一维数组，该方法会返回一个新数组，对原数据没有影响
+<pre>
+let arr = [1,2,3,4,[5,6,7]];
+let arr1 = arr.flat();
+console.log(arr1);//[1,2,3,4,5,6,7]
+</pre>
+flat默认只能拉平一层，也就是如果数组是[1,2,3,4,[5,6,7,[8,9]]]，那么[8，9]是不能被拉平的，会变成[1,2,3,4,5,6,7,[8,9]]。如果想要拉平多层数组嵌套，可以传入一个整数参数，它的默认值为1
+<pre>
+let arr = [1,2,3,4,[5,6,[7,8]]];
+let arr1 = arr.flat(3);
+console.log(arr1);//[1,2,3,4,5,6,7,8]
+</pre>
+如果我们不确定有多少嵌套，都需要转成一维数组，可以使用Infinity关键字作为参数
+<pre>
+let arr = [1,2,3,4,[5,6,[7,8,[9,10,[11,12]]]]];
+let arr1 = arr.flat(Infinity);
+console.log(arr1);//[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+</pre>
+但是大家要注意，目前flat方法还没有在所有浏览器被兼容(包括node.js上)
+4.高阶函数的意义
+高阶函数的意义：函数可以作为参数；函数可以作为返回值
+4-1.参数为函数的高阶函数
+<pre>
+function foo(f){
+    //判断参数是否为函数
+    if((typeof f) === 'function'){
+        f();
+    }
+}
+//调用
+foo(function(){})
+</pre>
+4-2.返回值为函数的高阶函数
+<pre>
+function foo(){
+    return function(){}
+}
+//调用
+let f = foo()
+</pre>
+4-3.高阶函数的实际作用
+<pre>
+//回调函数
+let callback = (value) => {
+    console.log(value)
+}
+let foo = (value,fn) => {
+    if(typeof callback === 'function'){
+        fn(value);
+    }
+}
+foo('hello',callback);
+</pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/04/19/网易微专业福利期-2-5-高阶函数/" data-id="cka5080ez002zhyxqwj00hs62" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/04/19/网易微专业福利期-2-6-常用函数/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          网易微专业福利期-2.6-常用函数
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/04/17/网易微专业福利期-2-4-compose函数和pipe函数/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">网易微专业福利期-2.4-compose函数和pipe函数</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端路由/">前端路由</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/正则/">正则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/前端路由/" style="font-size: 10px;">前端路由</a> <a href="/tags/数据结构/" style="font-size: 13.33px;">数据结构</a> <a href="/tags/正则/" style="font-size: 10px;">正则</a> <a href="/tags/算法/" style="font-size: 20px;">算法</a> <a href="/tags/设计模式/" style="font-size: 16.67px;">设计模式</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/05/13/es6-class-extends/">es6 class extends</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/12/网易微专业-node-Koa源码分析-2-2-3-中间件机制剖析/">网易微专业-node-Koa源码分析-2.2.3-中间件机制剖析</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/09/Web-前端路由原理解析和实现/">Web 前端路由原理解析和实现</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/08/网易微专业-node-Koa源码分析-2-2-2-请求处理流程解读/">网易微专业-node-Koa源码分析-2.2.2-请求处理流程解读</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/08/vue-cli了解/">vue-cli了解</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

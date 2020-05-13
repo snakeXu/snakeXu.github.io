@@ -8,6 +8,7 @@
   <title>js算法简单了解-归并排序 | 喵小喵的窝</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="1.描述先递归的分解数列，再合并数列（分治思想的典型应用）（1）将一个数组拆成A、B两个小组，两个小组继续拆，直到每个小组只有一个元素为止。（2）按照拆分过程逐步合并小组，由于各小组初始只有一个元素，可以看做小组内部是有序的，合并小组可以被看做是合并两个有序数组的过程。（3）对左右两个小数列重复第二步，直至各区间只有1个数。下面对数组[42,20,17,13,28,14,23,15]进行归并排序，">
+<meta name="keywords" content="算法">
 <meta property="og:type" content="article">
 <meta property="og:title" content="js算法简单了解-归并排序">
 <meta property="og:url" content="http://yoursite.com/2019/12/11/js算法简单了解-归并排序/index.html">
@@ -15,7 +16,7 @@
 <meta property="og:description" content="1.描述先递归的分解数列，再合并数列（分治思想的典型应用）（1）将一个数组拆成A、B两个小组，两个小组继续拆，直到每个小组只有一个元素为止。（2）按照拆分过程逐步合并小组，由于各小组初始只有一个元素，可以看做小组内部是有序的，合并小组可以被看做是合并两个有序数组的过程。（3）对左右两个小数列重复第二步，直至各区间只有1个数。下面对数组[42,20,17,13,28,14,23,15]进行归并排序，">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="https://snakexu.github.io/images/algorithm/mergesort_1.png">
-<meta property="og:updated_time" content="2019-12-12T03:02:38.275Z">
+<meta property="og:updated_time" content="2020-04-30T03:35:26.370Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="js算法简单了解-归并排序">
 <meta name="twitter:description" content="1.描述先递归的分解数列，再合并数列（分治思想的典型应用）（1）将一个数组拆成A、B两个小组，两个小组继续拆，直到每个小组只有一个元素为止。（2）按照拆分过程逐步合并小组，由于各小组初始只有一个元素，可以看做小组内部是有序的，合并小组可以被看做是合并两个有序数组的过程。（3）对左右两个小数列重复第二步，直至各区间只有1个数。下面对数组[42,20,17,13,28,14,23,15]进行归并排序，">
@@ -91,8 +92,8 @@
         <p>1.描述<br>先递归的分解数列，再合并数列（分治思想的典型应用）<br>（1）将一个数组拆成A、B两个小组，两个小组继续拆，直到每个小组只有一个元素为止。<br>（2）按照拆分过程逐步合并小组，由于各小组初始只有一个元素，可以看做小组内部是有序的，合并小组可以被看做是合并两个有序数组的过程。<br>（3）对左右两个小数列重复第二步，直至各区间只有1个数。<br>下面对数组[42,20,17,13,28,14,23,15]进行归并排序，模拟排序过程如下：<br>第一步：拆分数组，一共需要拆分三次（logN）;<br>第一次拆成[42,20,17,13]，[28,14,23,15];<br>第二次拆成[42,20]，[17,13]，[28,14]，[23,15];<br>第三次拆成[42]，[20]，[17]，[13]，[28]，[14]，[23]，[15];<br>第二步：逐步归并数组，采用合并两个有序数组的方法，每一步其算法复杂度基本接近于O(N);<br>第一次归并为[20,42]，[13,17]，[14,28]，[15,23];<br>第二次归并为[13,17,20,42]，[14,15,23,28];<br>第三次归并为[13, 14, 15, 17, 20, 23, 28, 42];<br>2.代码</p>
 <pre>
 function mergearr(arr1,arr2){
-    console.log('arr1:',arr1)
-    console.log('arr2:',arr2)
+    //console.log('arr1:',arr1)
+    //console.log('arr2:',arr2)
     var arr3 = new Array()
     var len1 = arr1.length;
     var len2 = arr2.length;
@@ -113,6 +114,7 @@ function mergearr(arr1,arr2){
     return arr3
 }
 function mergesort(arr){
+    //console.log('mergesort',arr)
     var len = arr && arr.length;
     if(len < = 1){
         return arr;
@@ -120,7 +122,7 @@ function mergesort(arr){
     var mid = Math.floor(len/2);
     var left = arr.slice(0,mid);
     var right = arr.slice(mid,len);
-    return mergearr(mergesor(left),mergesort(right));
+    return mergearr(mergesort(left),mergesort(right));
 }
 var sortresult = mergesort([42,20,17,13,28,14,23,15])
 console.log('sortresult:',sortresult)
@@ -189,9 +191,11 @@ console.log('sortresult:',sortresult)
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/11/js算法简单了解-归并排序/" data-id="ck911598200066yxqm2c6ilms" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/12/11/js算法简单了解-归并排序/" data-id="cka5080cm0008hyxqjwgypvr0" class="article-share-link">Share</a>
       
       
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法/">算法</a></li></ul>
+
     </footer>
   </div>
   
@@ -226,15 +230,29 @@ console.log('sortresult:',sortresult)
 
   
     
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端路由/">前端路由</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/正则/">正则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+    </div>
+  </div>
+
 
   
     
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/前端路由/" style="font-size: 10px;">前端路由</a> <a href="/tags/数据结构/" style="font-size: 13.33px;">数据结构</a> <a href="/tags/正则/" style="font-size: 10px;">正则</a> <a href="/tags/算法/" style="font-size: 20px;">算法</a> <a href="/tags/设计模式/" style="font-size: 16.67px;">设计模式</a>
+    </div>
+  </div>
+
   
     
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
     </div>
   </div>
 
@@ -247,23 +265,23 @@ console.log('sortresult:',sortresult)
       <ul>
         
           <li>
-            <a href="/2020/04/15/网易微专业-node-1-1-8-MySQL入门与应用/">网易微专业-node-1.1.8-MySQL入门与应用</a>
+            <a href="/2020/05/13/es6-class-extends/">es6 class extends</a>
           </li>
         
           <li>
-            <a href="/2020/04/14/网易微专业-node-1-1-7-MongoDB入门与应用/">网易微专业-node-1.1.7-MongoDB入门与应用</a>
+            <a href="/2020/05/12/网易微专业-node-Koa源码分析-2-2-3-中间件机制剖析/">网易微专业-node-Koa源码分析-2.2.3-中间件机制剖析</a>
           </li>
         
           <li>
-            <a href="/2020/04/13/网易微专业-node-1-1-6-Redis入门及应用/">网易微专业-node-1.1.6-Redis入门及应用</a>
+            <a href="/2020/05/09/Web-前端路由原理解析和实现/">Web 前端路由原理解析和实现</a>
           </li>
         
           <li>
-            <a href="/2020/04/12/网易微专业-node-1-1-5-Nginx反向代理-静态资源服务/">网易微专业-node-1.1.5-Nginx反向代理 静态资源服务</a>
+            <a href="/2020/05/08/网易微专业-node-Koa源码分析-2-2-2-请求处理流程解读/">网易微专业-node-Koa源码分析-2.2.2-请求处理流程解读</a>
           </li>
         
           <li>
-            <a href="/2020/04/11/网易微专业-node-1-1-3-Linux快速上手玩转典型应用/">网易微专业-node-1.1.3-Linux快速上手玩转典型应用</a>
+            <a href="/2020/05/08/vue-cli了解/">vue-cli了解</a>
           </li>
         
       </ul>

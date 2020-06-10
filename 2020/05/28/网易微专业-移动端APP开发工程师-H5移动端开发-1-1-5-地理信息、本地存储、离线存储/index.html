@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>网易微专业-移动端APP开发工程师-H5移动端开发-1.1.5-地理信息、本地存储、离线存储 | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1.地理信息1-1.HTML5判断浏览器是否支持地理信息1-2.HTML5使用地理定位1-3.HTML5获取地理信息实例实例的相关参数:2.Web存储2-1.WEB存储API2-2.localStorage(本地存储)浏览器支持2-3.localStorage(本地存储)对象常用方法2-4.localStorage(本地存储)实例2-5.localStorage(本地存储)删除数据实例2-6.lo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网易微专业-移动端APP开发工程师-H5移动端开发-1.1.5-地理信息、本地存储、离线存储">
+<meta property="og:url" content="http://yoursite.com/2020/05/28/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-5-地理信息、本地存储、离线存储/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="1.地理信息1-1.HTML5判断浏览器是否支持地理信息1-2.HTML5使用地理定位1-3.HTML5获取地理信息实例实例的相关参数:2.Web存储2-1.WEB存储API2-2.localStorage(本地存储)浏览器支持2-3.localStorage(本地存储)对象常用方法2-4.localStorage(本地存储)实例2-5.localStorage(本地存储)删除数据实例2-6.lo">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/app/1.1.5_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/app/1.1.5_2.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/app/1.1.5_3.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/app/1.1.5_4.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/app/1.1.5_5.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/app/1.1.5_6.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/app/1.1.5_7.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/app/1.1.5_8.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/app/1.1.5_9.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/app/1.1.5_10.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/app/1.1.5_11.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/app/1.1.5_12.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/app/1.1.5_13.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/app/1.1.5_14.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/app/1.1.5_15.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/app/1.1.5_16.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/app/1.1.5_17.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/app/1.1.5_18.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/app/1.1.5_19.png">
+<meta property="og:updated_time" content="2020-05-28T09:49:43.092Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="网易微专业-移动端APP开发工程师-H5移动端开发-1.1.5-地理信息、本地存储、离线存储">
+<meta name="twitter:description" content="1.地理信息1-1.HTML5判断浏览器是否支持地理信息1-2.HTML5使用地理定位1-3.HTML5获取地理信息实例实例的相关参数:2.Web存储2-1.WEB存储API2-2.localStorage(本地存储)浏览器支持2-3.localStorage(本地存储)对象常用方法2-4.localStorage(本地存储)实例2-5.localStorage(本地存储)删除数据实例2-6.lo">
+<meta name="twitter:image" content="https://snakexu.github.io/images/wangyi/app/1.1.5_1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-网易微专业-移动端APP开发工程师-H5移动端开发-1-1-5-地理信息、本地存储、离线存储" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/05/28/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-5-地理信息、本地存储、离线存储/" class="article-date">
+  <time datetime="2020-05-28T07:32:42.000Z" itemprop="datePublished">2020-05-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      网易微专业-移动端APP开发工程师-H5移动端开发-1.1.5-地理信息、本地存储、离线存储
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.地理信息<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_1.png"><br>1-1.HTML5判断浏览器是否支持地理信息<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_2.png"><br>1-2.HTML5使用地理定位<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_3.png"><br>1-3.HTML5获取地理信息实例<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_4.png"><br>实例的相关参数:<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_5.png"><br>2.Web存储<br>2-1.WEB存储API<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_6.png"><br>2-2.localStorage(本地存储)浏览器支持<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_7.png"><br>2-3.localStorage(本地存储)对象常用方法<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_8.png"><br>2-4.localStorage(本地存储)实例<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_9.png"><br>2-5.localStorage(本地存储)删除数据实例<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_10.png"><br>2-6.localStorage(本地存储)存储JSON实例<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_11.png"><br>2-7.sessionStorage(会话存储)语法<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_12.png"><br>2-8.sessionStorage(会话存储)实例<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_13.png"><br>3.离线存储<br>3-1.离线存储(应用程序缓存)定义<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_14.png"><br>3-2.离线存储优势<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_15.png"><br>3-3.离线存储浏览器支持<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_16.png"><br>3-4.Cache Manifest基础<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_17.png"><br>3-5.manifest文件实例<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_18.png"><br>3-6.离线缓存实例<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_19.png"><br>HTML5的离线缓存是基于应用程序的，本地测试会失败，这里老师教了在vscode中基于live server的服务环境:</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/05/28/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-5-地理信息、本地存储、离线存储/" data-id="ckb8s87ve00334zxqdgjjw452" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/05/28/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-6-音频与视频/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          网易微专业-移动端APP开发工程师-H5移动端开发-1.1.6-音频与视频
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/05/28/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-4-跨文档消息通信/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">网易微专业-移动端APP开发工程师-H5移动端开发-1.1.4-跨文档消息通信</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端路由/">前端路由</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/正则/">正则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-node/">网易微专业 node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/前端路由/" style="font-size: 10px;">前端路由</a> <a href="/tags/数据结构/" style="font-size: 13.33px;">数据结构</a> <a href="/tags/正则/" style="font-size: 10px;">正则</a> <a href="/tags/算法/" style="font-size: 20px;">算法</a> <a href="/tags/网易微专业-node/" style="font-size: 10px;">网易微专业 node</a> <a href="/tags/设计模式/" style="font-size: 16.67px;">设计模式</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/06/08/网易微专业-look直播，企业级全栈web应用搭建分享/">网易微专业-look直播，企业级全栈web应用搭建分享</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/网易微专业-webpack实战演练-3-3-1-网易的webpack工程化实践/">网易微专业-webpack实战演练-3.3.1-网易的webpack工程化实践</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/06/网易微专业-webpack实战演练-3-2-6-webpack打包速度优化/">网易微专业-webpack实战演练-3.2.6-webpack打包速度优化</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/03/网易微专业-单页应用-1-4-1-项目全面深度优化及打包上线之网易实践/">网易微专业-单页应用-1-4-1-项目全面深度优化及打包上线之网易实践</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/28/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-6-音频与视频/">网易微专业-移动端APP开发工程师-H5移动端开发-1.1.6-音频与视频</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

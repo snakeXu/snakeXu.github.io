@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>网易微专业-look直播，企业级全栈web应用搭建分享 | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="SPA &amp;amp;&amp;amp; SSR问题两端代码复用两端的渲染保持一致两端的fallback设计node端降级方案1.工程架构1-1.组件分割根据路由分割js，避免js bundle过大(演示代码) //webpack的import方法分割js返回一个promise，会有一个异步等待过程，// baseLoadable等待promise完成之后才会去渲染组件import baseLoadable">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网易微专业-look直播，企业级全栈web应用搭建分享">
+<meta property="og:url" content="http://yoursite.com/2020/06/08/网易微专业-look直播，企业级全栈web应用搭建分享/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="SPA &amp;amp;&amp;amp; SSR问题两端代码复用两端的渲染保持一致两端的fallback设计node端降级方案1.工程架构1-1.组件分割根据路由分割js，避免js bundle过大(演示代码) //webpack的import方法分割js返回一个promise，会有一个异步等待过程，// baseLoadable等待promise完成之后才会去渲染组件import baseLoadable">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/projectlook/look_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/projectlook/look_2.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/projectlook/look_3.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/projectlook/look_4.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/projectlook/look_5.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/projectlook/look_6.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/projectlook/look_7.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/projectlook/look_8.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/projectlook/look_9.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/projectlook/look_10.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/projectlook/look_11.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/projectlook/look_12.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/projectlook/look_13.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/projectlook/look_14.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/projectlook/look_15.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/projectlook/look_16.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/projectlook/look_17.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/projectlook/look_18.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/projectlook/look_19.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/projectlook/look_20.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/projectlook/look_21.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/projectlook/look_22.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/projectlook/look_23.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/projectlook/look_24.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/projectlook/look_25.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/projectlook/look_26.png">
+<meta property="og:updated_time" content="2020-06-09T10:26:31.485Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="网易微专业-look直播，企业级全栈web应用搭建分享">
+<meta name="twitter:description" content="SPA &amp;amp;&amp;amp; SSR问题两端代码复用两端的渲染保持一致两端的fallback设计node端降级方案1.工程架构1-1.组件分割根据路由分割js，避免js bundle过大(演示代码) //webpack的import方法分割js返回一个promise，会有一个异步等待过程，// baseLoadable等待promise完成之后才会去渲染组件import baseLoadable">
+<meta name="twitter:image" content="https://snakexu.github.io/images/wangyi/projectlook/look_1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-网易微专业-look直播，企业级全栈web应用搭建分享" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/08/网易微专业-look直播，企业级全栈web应用搭建分享/" class="article-date">
+  <time datetime="2020-06-08T11:54:49.000Z" itemprop="datePublished">2020-06-08</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      网易微专业-look直播，企业级全栈web应用搭建分享
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>SPA &amp;&amp; SSR<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_1.png"><br>问题<br>两端代码复用<br>两端的渲染保持一致<br>两端的fallback设计<br>node端降级方案<br>1.工程架构<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_2.png"><br>1-1.组件分割<br>根据路由分割js，避免js bundle过大<br>(演示代码)</p>
+<p><pre><br>//webpack的import方法分割js返回一个promise，会有一个异步等待过程，<br>// baseLoadable等待promise完成之后才会去渲染组件<br>import baseLoadable from ‘@loadable/component’<br>const loading = () =&gt; {<br>    &lt; div classname = “m-loading” &gt;加载中…&lt; /div&gt;<br>}<br>const loadable = loader =&gt; baseLoadable(loader,{<br>    fallback:&lt; loading /&gt;<br>}<br>const Home = loadable(()=&gt;import(‘./views/home’))<br>const List = loadable(()=&gt;import(‘./views/list’))<br>const Detail = loadable(()=&gt;import(‘./views/detail’))<br></pre><br>1-2.路由<br>采用配置式路由为了方便node端获取对应组件</p>
+<p><pre><br>&lt; Switch &gt;<br>&lt; Route exact path=’/list’ component={List} /&gt;<br>&lt; Route exact path=’/detail/:id’ component={Detail} /&gt;<br>&lt; Route exact path=’/‘ component={Home} /&gt;<br>&lt; /Switch &gt;<br></pre><br>上面代码 组件式配置化</p>
+<p><pre><br>const config = [<br>{<br>    path:’/list’,<br>    exact:true,<br>    component:List<br>},<br>{<br>    path:’/detail/:id’,<br>    exact:true,<br>    component:Detail<br>},<br>{<br>    path:’/‘,<br>    exact:true,<br>    component:Home<br>},<br>]<br>export default config;<br></pre><br>1-3.获取组件<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_3.png"><br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_4.png"><br>1-4.请求方法<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_5.png"><br>1-5.两端数据一致</p>
+<p><pre><br>&lt; script &gt;<br>window.CURRENT_STATE = &lt; %- state% &gt;<br>&lt; /script &gt;<br>import {createStore} from ‘redux’<br>…<br>const store = createStore(rootReducer,window.CURRENT_STATE)<br></pre><br>保证首屏的css和js加载完</p>
+<p><pre><br>import { loadableReady } from ‘@loadable/component’;<br>loadableReady(()=&gt;{<br>    ReactDOM.hydrate(<br>        &lt; APP /&gt;,<br>        document.getElementById(‘j-app’)<br>    );<br>})<br></pre><br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_6.png"><br>1-6.async标签<br>提前执行script脚本<br>&lt; script async src=”/public/app.js” &gt;&lt; /script &gt;<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_7.png"><br>1-8.SEO<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_8.png"><br>1-9.webpack<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_9.png"><br>1-10.缓存<br>没有接口请求，则认为是静态可缓存<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_10.png"><br>新建Map存储上次的html<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_11.png"><br>1-11.降级<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_12.png"><br>2.状态管理<br>2-1.redux<br>只有碰到react实在解决不了的问题，你才需要redux<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_13.png"><br>2-2.思考<br>·繁琐的代码且重复<br>·开发体验不友好<br>·可读性差，不便于维护<br>2-3.改进<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_14.png"><br>·设置modal类<br>·自定义一个中间件<br>·充分利用redux数据流<br>扩展dispatch支持字符串方式<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_15.png"><br>3.异步任务<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_16.png"><br>问题<br>·数据的来源多，ajax、websocket、事件<br>·数据的依赖关系<br>·礼物消息的处理<br>3-1.rxjs<br>为了解决上面的问题，引入了rxjs<br>一种编程模型<br>针对异步数据流的编程<br>将一切数据包装成流<br>提供强大的操作符处理<br>3-2.Observable<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_17.png"><br>Publisher<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_18.png"></p>
+<p><pre><br>const Publisher = (observer) =&gt; {<br>    let count = 0;<br>    const inter = setIntrerval(()=&gt;{<br>        count+=1;<br>        observer.next(count);<br>        if(count&gt;=5){<br>            observer.complete();<br>            clearInterval(inter);<br>        }<br>    },1000);<br>}<br>const ob$ = Observable.create(Publisher);<br>const scp = ob$.subscribe((v)=&gt;{<br>    console.log(v)<br>})<br>setTimeout(()=&gt;{<br>    const scp1 = ob$.subscribe((v)=&gt;{<br>        console.log(v)<br>    })<br>},1000)<br>/<em><br>const observer = {<br>    next:(val)=&gt;{},<br>    complete:()=&gt;{},<br>    error:()=&gt;{}<br>}
+</em>/<br></pre><br>Subject<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_19.png"><br>Subject-多播<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_20.png"><br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_21.png"><br>3-3.数据的统一<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_22.png"><br>3-4.数据的依赖关系<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_23.png"><br>3-5.礼物消息<br>项目是一个直播项目，有一个需求是30s内同一用户同一礼物数目进行累加<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_24.png"><br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_25.png"><br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_26.png"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/08/网易微专业-look直播，企业级全栈web应用搭建分享/" data-id="ckb8s87up001x4zxqg4q9p6vs" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2020/06/07/网易微专业-webpack实战演练-3-3-1-网易的webpack工程化实践/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">网易微专业-webpack实战演练-3.3.1-网易的webpack工程化实践</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端路由/">前端路由</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/正则/">正则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-node/">网易微专业 node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/前端路由/" style="font-size: 10px;">前端路由</a> <a href="/tags/数据结构/" style="font-size: 13.33px;">数据结构</a> <a href="/tags/正则/" style="font-size: 10px;">正则</a> <a href="/tags/算法/" style="font-size: 20px;">算法</a> <a href="/tags/网易微专业-node/" style="font-size: 10px;">网易微专业 node</a> <a href="/tags/设计模式/" style="font-size: 16.67px;">设计模式</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/06/08/网易微专业-look直播，企业级全栈web应用搭建分享/">网易微专业-look直播，企业级全栈web应用搭建分享</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/网易微专业-webpack实战演练-3-3-1-网易的webpack工程化实践/">网易微专业-webpack实战演练-3.3.1-网易的webpack工程化实践</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/06/网易微专业-webpack实战演练-3-2-6-webpack打包速度优化/">网易微专业-webpack实战演练-3.2.6-webpack打包速度优化</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/03/网易微专业-单页应用-1-4-1-项目全面深度优化及打包上线之网易实践/">网易微专业-单页应用-1-4-1-项目全面深度优化及打包上线之网易实践</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/28/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-6-音频与视频/">网易微专业-移动端APP开发工程师-H5移动端开发-1.1.6-音频与视频</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

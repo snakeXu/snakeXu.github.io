@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>网易微专业-单页应用-1-4-1-项目全面深度优化及打包上线之网易实践 | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="优化方向——效率  开发效率(组件、指令、工具函数的优化和积累)  部署效率(打包优化)  协作效率(协作方式的优化)——质量  性能监控  自动化测试(单元测试、端到端测试等)——性能体验  首屏性能  页面加载性能、图片性能 1.工程优化1-1.esline-plugin-vue去安装一些eslint关于vue代码的检测，具体可见eslint-plugin-vue官网 eslint.vuejs">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网易微专业-单页应用-1-4-1-项目全面深度优化及打包上线之网易实践">
+<meta property="og:url" content="http://yoursite.com/2020/06/03/网易微专业-单页应用-1-4-1-项目全面深度优化及打包上线之网易实践/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="优化方向——效率  开发效率(组件、指令、工具函数的优化和积累)  部署效率(打包优化)  协作效率(协作方式的优化)——质量  性能监控  自动化测试(单元测试、端到端测试等)——性能体验  首屏性能  页面加载性能、图片性能 1.工程优化1-1.esline-plugin-vue去安装一些eslint关于vue代码的检测，具体可见eslint-plugin-vue官网 eslint.vuejs">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-06-04T04:44:36.834Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="网易微专业-单页应用-1-4-1-项目全面深度优化及打包上线之网易实践">
+<meta name="twitter:description" content="优化方向——效率  开发效率(组件、指令、工具函数的优化和积累)  部署效率(打包优化)  协作效率(协作方式的优化)——质量  性能监控  自动化测试(单元测试、端到端测试等)——性能体验  首屏性能  页面加载性能、图片性能 1.工程优化1-1.esline-plugin-vue去安装一些eslint关于vue代码的检测，具体可见eslint-plugin-vue官网 eslint.vuejs">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-网易微专业-单页应用-1-4-1-项目全面深度优化及打包上线之网易实践" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/03/网易微专业-单页应用-1-4-1-项目全面深度优化及打包上线之网易实践/" class="article-date">
+  <time datetime="2020-06-03T08:31:56.000Z" itemprop="datePublished">2020-06-03</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      网易微专业-单页应用-1-4-1-项目全面深度优化及打包上线之网易实践
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>优化方向<br>——效率<br>  开发效率(组件、指令、工具函数的优化和积累)<br>  部署效率(打包优化)<br>  协作效率(协作方式的优化)<br>——质量<br>  性能监控<br>  自动化测试(单元测试、端到端测试等)<br>——性能体验<br>  首屏性能<br>  页面加载性能、图片性能</p>
+<p>1.工程优化<br>1-1.esline-plugin-vue去安装一些eslint关于vue代码的检测，具体可见eslint-plugin-vue官网 eslint.vuejs.org 会有比如缩进提示/v-if和v-for最好不要一起使用等plugin<br>1-2.其他loader<br>01.@vusion/md-vue-loader(vusion是网易研发的一套框架)md文件转vue的一个loader<br>02.css-sprite-loader<br>03.icon-font-loader<br>这里一个是讲了vue.config.js的一些配置方法(如下面代码),另外是讲了自己写一个vue-plugin如何在项目中测试引入，简单的说就是在项目中建立一个plugin的文件夹，里面有package.json依赖文件，index入口文件，我们在项目的package.json文件中引入这个plugin，在项目的node_modules文件夹中通过ln -s ../vue-plugin vue-plugin，然后我们通过ls -al vue-plugin(这里vue-plugin是你自己做的plugin的名称)</p>
+<p><pre><br>const CSSSpritePlugin = require(‘css-sprite-loader’).Plugin;</pre></p>
+<p>function chainCSSOneOfs(config, chainOneOf) {<br>    // ‘postcss’ 留给用户自定义吧<br>    [‘css’, ‘scss’, ‘sass’, ‘less’, ‘stylus’].forEach((rule) =&gt; {<br>        const ruleCSS = config.module.rule(rule);<br>        chainOneOf(ruleCSS.oneOf(‘vue-modules’), true);<br>        chainOneOf(ruleCSS.oneOf(‘vue’), false);<br>        chainOneOf(ruleCSS.oneOf(‘normal-modules’), true);<br>        chainOneOf(ruleCSS.oneOf(‘normal’), false);<br>    });<br>}</p>
+<p>module.exports = {<br>    chainWebpack(config) {<br>        config.plugin(‘css-sprite’).use(CSSSpritePlugin, [])</p>
+<pre><code>    chainCSSOneOfs(config, (oneOf) =&gt; {
+        oneOf.use(&apos;css-sprite-loader&apos;)
+            .loader(&apos;css-sprite-loader&apos;)
+            .end();
+    });
+}
+</code></pre><p>};<br><br>2.部署优化<br>部署优化我们可以从以下4个方面考虑<br>01.git pull 拉取代码<br>02.npm install 安装npm<br>02-1.利用package.json缓存node_modules<br>下面代码展示了如何利用package-lock.json作为缓存节省npm i的安装时间(如果package-lock.json没有改变的话，会从缓存安装，节省很多时间)</p>
+<p><pre><br>const fs = require(‘fs’);<br>const path = require(‘path’);<br>const shell = require(‘shelljs’);<br>const crypto = require(‘crypto’);<br>const md5 = function (str, len = 16) {<br>    const md5 = crypto.createHash(‘md5’);<br>    return md5.update(str).digest(‘hex’).substr(0, len);<br>};<br>const cachePath = path.join(<strong>dirname, ‘./node_modules/.cache/package-lock.log’);<br>if (!fs.existsSync(path.join(cachePath, ‘../..’))) {<br>    fs.mkdirSync(path.join(cachePath, ‘../..’), {<br>        recursive: true,<br>    });<br>}<br>const lockHash = md5(fs.readFileSync(path.join(</strong>dirname, ‘./package-lock.json’)).toString());<br>let cache = false;<br>if (fs.existsSync(cachePath)) {<br>    if (lockHash === fs.readFileSync(cachePath).toString()) {<br>        cache = true;<br>        console.log(‘Installed from cache.’);<br>    }<br>}<br>if (!cache) {<br>    /**</pre></p>
+<pre><code> * Install npm packages
+ */
+console.time(&apos;npm install&apos;);
+console.log(&apos;Installing npm packages ...&apos;);
+const result = shell.exec(&apos;npm --no-audit --progress=false --registry=https://registry.npm.taobao.org install&apos;);
+if (result.code)
+    throw new Error(String(result.stderr));
+/**
+ * Log Versions
+ */
+const nodeVersion = shell.exec(&apos;node -v&apos;, { silent: true }).stdout.trim();
+console.log(&apos;node version:&apos;, nodeVersion);
+const npmVersion = shell.exec(&apos;npm -v&apos;, { silent: true }).stdout.trim();
+console.log(&apos;npm version:&apos;, npmVersion);
+console.timeEnd(&apos;npm install&apos;);
+fs.writeFileSync(cachePath, lockHash);
+</code></pre><p>}<br><br>02-2.利用webpack Dll(build和浏览器可以同时缓存)<br>……<br>03.npm run build webpack构建<br>04.cp -r 拷贝到指定目录<br>3.组件优化<br>01.虚拟列表<br>02.mixins<br>03.指令</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/03/网易微专业-单页应用-1-4-1-项目全面深度优化及打包上线之网易实践/" data-id="ckb8s87v5002o4zxqrk1lglae" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/06/06/网易微专业-webpack实战演练-3-2-6-webpack打包速度优化/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          网易微专业-webpack实战演练-3.2.6-webpack打包速度优化
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/05/28/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-6-音频与视频/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">网易微专业-移动端APP开发工程师-H5移动端开发-1.1.6-音频与视频</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端路由/">前端路由</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/正则/">正则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-node/">网易微专业 node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/前端路由/" style="font-size: 10px;">前端路由</a> <a href="/tags/数据结构/" style="font-size: 13.33px;">数据结构</a> <a href="/tags/正则/" style="font-size: 10px;">正则</a> <a href="/tags/算法/" style="font-size: 20px;">算法</a> <a href="/tags/网易微专业-node/" style="font-size: 10px;">网易微专业 node</a> <a href="/tags/设计模式/" style="font-size: 16.67px;">设计模式</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/06/08/网易微专业-look直播，企业级全栈web应用搭建分享/">网易微专业-look直播，企业级全栈web应用搭建分享</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/网易微专业-webpack实战演练-3-3-1-网易的webpack工程化实践/">网易微专业-webpack实战演练-3.3.1-网易的webpack工程化实践</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/06/网易微专业-webpack实战演练-3-2-6-webpack打包速度优化/">网易微专业-webpack实战演练-3.2.6-webpack打包速度优化</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/03/网易微专业-单页应用-1-4-1-项目全面深度优化及打包上线之网易实践/">网易微专业-单页应用-1-4-1-项目全面深度优化及打包上线之网易实践</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/28/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-6-音频与视频/">网易微专业-移动端APP开发工程师-H5移动端开发-1.1.6-音频与视频</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

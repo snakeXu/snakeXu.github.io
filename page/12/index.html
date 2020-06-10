@@ -62,10 +62,10 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-我的typescript起步学习" class="article article-type-post" itemscope="" itemprop="blogPost">
+    <article id="post-网易微专业-Underscore-3-2-3-乱序数组-洗牌算法" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2019/11/18/我的typescript起步学习/" class="article-date">
-  <time datetime="2019-11-18T09:29:02.000Z" itemprop="datePublished">2019-11-18</time>
+    <a href="/2019/11/27/网易微专业-Underscore-3-2-3-乱序数组-洗牌算法/" class="article-date">
+  <time datetime="2019-11-27T08:17:34.000Z" itemprop="datePublished">2019-11-27</time>
 </a>
     
   </div>
@@ -76,7 +76,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/11/18/我的typescript起步学习/">我的typescript起步学习</a>
+      <a class="article-title" href="/2019/11/27/网易微专业-Underscore-3-2-3-乱序数组-洗牌算法/">网易微专业-Underscore-3.2.3-乱序数组-洗牌算法</a>
     </h1>
   
 
@@ -84,132 +84,40 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>一、基础类型<br>1.boolean</p>
-<pre>let isDone: boolean = false;</pre>
-2.number,支持十进制/十六进制/二进制/八进制
-<pre>let decLiteral: number = 6;
-let hexLiteral: number = 0xf00d;
-let binaryLiteral: number = 0b1010;
-let octalLiteral: number = 0o744;</pre>
-3.string
-<pre>let name: string = "bob";
-name = "smith";
-let sentence: string = \`Hello, my name is ${ name }.\`;</pre>
-4.Array
-<pre>let list: number[] = [1, 2, 3];
-let list: Array<number> = [1, 2, 3];</number></pre>
-5.Tuple
-元组类型允许表示一个已知元素数量和类型的数组，各元素的类型不必相同。 比如，你可以定义一对值分别为 string和number类型的元组。
-<pre>// Declare a tuple type
-let x: [string, number];
-// Initialize it
-x = ['hello', 10]; // OK
-// Initialize it incorrectly
-x = [10, 'hello']; // Error</pre>
-当访问一个已知索引的元素，会得到正确的类型：
-
-<pre>console.log(x[0].substr(1)); // OK
-console.log(x[1].substr(1)); // Error, 'number' does not have 'substr'</pre>
-当访问一个越界的元素，会使用联合类型替代：
-
-<pre>x[3] = 'world'; // OK, 字符串可以赋值给(string | number)类型
-
-console.log(x[5].toString()); // OK, 'string' 和 'number' 都有 toString
-
-x[6] = true; // Error, 布尔不是(string | number)类型</pre>
-
-<p>6.enum<br>枚举类型可以为一组数值赋予友好的名字。</p>
-<pre>enum Color {Red, Green, Blue}
-let c: Color = Color.Green;</pre>
-默认情况下，从0开始为元素编号。 你也可以手动的指定成员的数值。 例如，我们将上面的例子改成从 1开始编号：
-<pre>enum Color {Red = 1, Green, Blue}
-let c: Color = Color.Green;</pre>
-或者，全部都采用手动赋值：
-<pre>enum Color {Red = 1, Green = 2, Blue = 4}
-let c: Color = Color.Green;</pre>
-枚举类型提供的一个便利是你可以由枚举的值得到它的名字。 例如，我们知道数值为2，但是不确定它映射到Color里的哪个名字，我们可以查找相应的名字：
-<pre>enum Color {Red = 1, Green, Blue}
-let colorName: string = Color[2];
-
-console.log(colorName);  // 显示'Green'因为上面代码里它的值是2</pre>
-
-<p>7.Any<br>有时候，我们会想要为那些在编程阶段还不清楚类型的变量指定一个类型。这些值可能来自于动态的内容，比如来自用户输入或第三方代码库。这种情况下，我们不希望类型检查器对这些值进行检查而是直接让它们通过编译阶段的检查。 那么我们可以使用 any类型来标记这些变量：</p>
-<pre>let notSure: any = 4;
-notSure = "maybe a string instead";
-notSure = false; // okay, definitely a boolean</pre>
-在对现有代码进行改写的时候，any类型是十分有用的，它允许你在编译时可选择地包含或移除类型检查。你可能认为Object有相似的作用，就像它在其它语言中那样。 但是 Object类型的变量只是允许你给它赋任意值 - 但是却不能够在它上面调用任意的方法，即便它真的有这些方法：
-<pre>let notSure: any = 4;
-notSure.ifItExists(); // okay, ifItExists might exist at runtime
-notSure.toFixed(); // okay, toFixed exists (but the compiler doesn't check)
-
-let prettySure: Object = 4;
-prettySure.toFixed(); // Error: Property 'toFixed' doesn't exist on type 'Object'.</pre>
-当你只知道一部分数据的类型时，any类型也是有用的。 比如，你有一个数组，它包含了不同的类型的数据：
-<pre>let list: any[] = [1, true, "free"];
-
-list[1] = 100;</pre>
-
-<p>8.Void<br>某种程度上来说，void类型像是与any类型相反，它表示没有任何类型。 当一个函数没有返回值时，你通常会见到其返回值类型是 void：</p>
+        <p>1.洗牌算法<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.2.3_1.png"><br>2.没啥说的，撸代码吧</p>
 <pre>
-function warnUser(): void {
-    console.log("This is my warning message");
+_.clone = function(obj) {
+    return _.isArray(obj) ? obj.slice() : _.extend({}, obj);
+};
+
+//返回乱序之后的数组副本
+_.shuffle = function(array){
+   //array.length
+   return _.sample(array,Infinity);
+}
+//抽样函数  10  11 
+_.sample = function(array, n){
+   if(n == null){
+      return  array[_.random(array.length-1)];
+   }
+   var sample = _.clone(array);
+   var length = sample.length;
+   var last = length-1;
+   n = Math.max(Math.min(n, length),0);
+   for(var index = 0; index < n; index++){
+       //随机数   index  n
+       var rand = _.random(index, last);
+       var temp = sample[index];
+       sample[index] = sample[rand];   //交换
+       sample[rand] = temp;  //交换
+   }
+   return sample.slice(0, n);
 }
 </pre>
-声明一个void类型的变量没有什么大用，因为你只能为它赋予undefined和null：
-<pre>let unusable: void = undefined;</pre>
-
-<p>9.Null 和 Undefined<br>TypeScript里，undefined和null两者各自有自己的类型分别叫做undefined和null。 和 void相似，它们的本身的类型用处不是很大：</p>
-<pre>// Not much else we can assign to these variables!
-let u: undefined = undefined;
-let n: null = null;</pre>
-然而，当你指定了--strictNullChecks标记，null和undefined只能赋值给void和它们各自。 这能避免 很多常见的问题。 也许在某处你想传入一个 string或null或undefined，你可以使用联合类型string | null | undefined。 再次说明，稍后我们会介绍联合类型。
-<i><pre>注意：我们鼓励尽可能地使用--strictNullChecks，但在本手册里我们假设这个标记是关闭的。</pre></i>
-
-10.Never
-never类型表示的是那些永不存在的值的类型。例如，never类型是那些总是会抛出异常或根本就不会有返回值的函数表达式或箭头函数表达式的返回值类型；变量也可能是 never类型，当它们被永不为真的类型保护所约束时。<br>
-never类型是任何类型的子类型，也可以赋值给任何类型；然而，没有类型是never的子类型或可以赋值给never类型（除了never本身之外）。即使any也不可以赋值给never。<br>
-下面是一些返回never类型的函数：
-<pre>// 返回never的函数必须存在无法达到的终点
-function error(message: string): never {
-    throw new Error(message);
-}
-
-// 推断的返回值类型为never
-function fail() {
-    return error("Something failed");
-}
-
-// 返回never的函数必须存在无法达到的终点
-function infiniteLoop(): never {
-    while (true) {
-    }
-}</pre>
-
-<p>11.Object<br>object表示非原始类型，也就是除number，string，boolean，symbol，null或undefined之外的类型。<br><br>使用object类型，就可以更好的表示像Object.create这样的API。例如：</p>
-<pre>
-declare function create(o: object | null): void;
-
-create({ prop: 0 }); // OK
-create(null); // OK
-
-create(42); // Error
-create("string"); // Error
-create(false); // Error
-create(undefined); // Error
-</pre>
-
-<p>12.类型断言<br>有时候你会遇到这样的情况，你会比TypeScript更了解某个值的详细信息。 通常这会发生在你清楚地知道一个实体具有比它现有类型更确切的类型。<br><br>通过类型断言这种方式可以告诉编译器，“相信我，我知道自己在干什么”。类型断言好比其它语言里的类型转换，但是不进行特殊的数据检查和解构。它没有运行时的影响，只是在编译阶段起作用。 TypeScript会假设你，程序员，已经进行了必须的检查。<br><br>类型断言有两种形式。 其一是“尖括号”语法：<br></p>
-<p><pre>let someValue: any = “this is a string”;</pre></p>
-<p>let strLength: number = (<string>someValue).length;<br>另一个为as语法：</string></p>
-<p><pre>let someValue: any = “this is a string”;</pre></p>
-<p>let strLength: number = (someValue as string).length;<br>两种形式是等价的。 至于使用哪个大多数情况下是凭个人喜好；然而，当你在TypeScript里使用JSX时，只有 as语法断言是被允许的。</p>
-<p>13.关于let<br>你可能已经注意到了，我们使用let关键字来代替大家所熟悉的JavaScript关键字var。 let关键字是JavaScript的一个新概念，TypeScript实现了它。 我们会在以后详细介绍它，很多常见的问题都可以通过使用 let来解决，所以尽可能地使用let来代替var吧。</p>
-<p><a href="https://snakexu.github.io/2019/11/21/%E6%88%91%E7%9A%84typescript%E5%AD%A6%E4%B9%A0-%E5%8F%98%E9%87%8F%E5%A3%B0%E6%98%8E/" target="_blank" rel="noopener">二、变量声明</a></p>
-
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/18/我的typescript起步学习/" data-id="cka5080cx000phyxql2o2nvi5" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/27/网易微专业-Underscore-3-2-3-乱序数组-洗牌算法/" data-id="ckb8s87ud001f4zxq2eg0x8pq" class="article-share-link">Share</a>
       
       
     </footer>
@@ -219,10 +127,10 @@ create(undefined); // Error
 
 
   
-    <article id="post-网易微专业-jq源码解析-1112DOM操作方法-html-text-css" class="article article-type-post" itemscope="" itemprop="blogPost">
+    <article id="post-网易微专业-Underscore-3-2-2-条件查询-背后索引查询器实现" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2019/11/17/网易微专业-jq源码解析-1112DOM操作方法-html-text-css/" class="article-date">
-  <time datetime="2019-11-17T12:30:15.000Z" itemprop="datePublished">2019-11-17</time>
+    <a href="/2019/11/27/网易微专业-Underscore-3-2-2-条件查询-背后索引查询器实现/" class="article-date">
+  <time datetime="2019-11-27T06:44:38.000Z" itemprop="datePublished">2019-11-27</time>
 </a>
     
   </div>
@@ -233,7 +141,7 @@ create(undefined); // Error
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/11/17/网易微专业-jq源码解析-1112DOM操作方法-html-text-css/">网易微专业-jq源码解析-1112DOM操作方法-html/text/css</a>
+      <a class="article-title" href="/2019/11/27/网易微专业-Underscore-3-2-2-条件查询-背后索引查询器实现/">网易微专业-Underscore-3.2.2-条件查询-背后索引查询器实现</a>
     </h1>
   
 
@@ -241,112 +149,88 @@ create(undefined); // Error
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>1、html()/text()/css()的作用<br>(1)html()用来读取和修改元素的HTML标签<br>(2)text()用来读取和修改元素的纯文本内容<br>(3)css()设置或返回被返回元素的一个或多个样式属性<br>·html()&amp;text()&amp;css()都是通过jQuery.access提供底层支持。jQuery.access()是一个多功能方法，作为set()和get()值来使用<br>2、举个栗子</p>
+        <p>1.indexOf lastIndexOf条件查询<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.2.2_1.png"><br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.2.2_2.png"><br>2.代码奉上<br>这节课，老师主要讲的其实是二分查找的算法。二分查找，就是在数组为有序数组的前提下，每次只查找数组长度的一半。最简单的来说，如果我们一个个按序对比，时间复杂度为n，如果采用二分查找，时间复杂度为log以2为底n的对数，在数据量大的时候，和明显二分查找效率更高</p>
 <pre>
-< div id="app">< /div>
-< style type="text/css">
-    #app{
-        color:#abcdef;
-    }
-< /style>
-</pre>
-//get    return String
-console.log($("#app").css("color"));
-//set    return  Object
-console.log($("#app").css("color","red"));
-//批量  get    return Object
-console.log($("#app").css(["color"]));
-//批量  set    return Object
-console.log($("#app").css({
-   color:"red",
-   "font-size":"20px"
-}));
-从这个栗子里我们看出来什么呢，这几个API其实有个相同点，就是，根据不同的参数，get/set返回不同的对象,我们要思考的问题就是，对这种灵活的参数，我们应该怎么架构代码
-3、撸代码，然鹅，我们不是为了撸代码而撸代码，是为了理解代码的思想精髓  
-<pre>
-jQuery.fn.extend({
-    text : function(value) {
-        //这里为什么会有null这个参数
-        //因为text区别于css，text参数相对于css少，text只是有或者无参数
-        //css会有0/1/2个参数，而一个参数时，这一个参数可能是数组，也可能是对象
-        //于是，下面四个参数的意义
-        //this-执行对象，function-callback函数，null-key(如css两个参数，一个是key，一个是value)
-        //value-value
-        jQuery.access(this, function(value){
-            return value === undefined ? jQuery.text(this) : jQuery.content(this,value)
-        }, null, value)
-    },
-    css : function(key, value){
-        jQuery.access(this, function(key, value){
-            var CSSStyleDeclaration, len;
-            var map = {}
-            if(jQuery.isArray(key)){
-                CSSStyleDeclaration = window.getComputedStyle(this);
-                len = key.length
-                for(var i = 0;i < len ; i++){
-                    map[key[i]] = CSSStyleDeclaration.getPropertyValue[key[i]]
-                }
-                return map;
-            }
-            return value !== undefined ? jQuery.style(this, key, value) : window.getComputedStyle(this).getPropertyValue(key) || undefined
-        }, key, value)
-    },
-})
-</pre> 
-这节课核心的内容-access,要注意的是，这里是教学代码，虽然和jquery的真实实现有区别，但是精髓总算是一样的
-<pre>
-jQuery.extend({
-    access : funcion(elems, callback, key, value){
-        var len = elems.length;
-        var testing = key === null; //false
-        var cache, chain; //chain 开始链式调用
-        if(jQuery.isPlainObject(key)){
-            chain = true;
-            for(var name in key){
-                jQuery.access(elems, callback, name, key[name]);  //color => red  font-size =>20px
-            }
+// (dir === 1 => 从前往后找)  (dir === -1 => 从后往前找) 
+function createPredicateIndexFinder(dir) {
+    return function(array, predicate, context) {
+        predicate = cb(predicate, context);  // _.isNaN
+        var length = array.length;
+        // 根据 dir 变量来确定数组遍历的起始位置
+        var index = dir > 0 ? 0 : length - 1;
+
+        for (; index >= 0 && index < length; index += dir) {
+            // 找到第一个符合条件的元素
+            // 并返回下标值
+            if (predicate(array[index], index, array))   //true
+                return index;
         }
-        if (value !== undefined) {
-            chain = true;
-            if (testing) {
-                cache = callback;
-                callback = function(key, value) {
-                    //增强功能的写法，vue也采用了这种写法，比如vue的$mount功能
-                    //具体增强功能写法的意义，课程内容大概讲述了，或者以后学习工程中慢慢了解
-                    cache.call(this, value);
-                }
-            }
-            for (var i = 0; i < len; i++) { //1 || 1+
-                callback.call(elems[i], key, value);
-            }
+        return -1;
+    };
+}
+_.findIndex = createPredicateIndexFinder(1);
+_.findLastIndex = createPredicateIndexFinder(-1);
+
+_.isNaN = function(obj) {   // NaN
+    return _.isNumber(obj) && obj !== obj;
+};
+
+_.sortedIndex = function(array, obj, iteratee, context) {
+    // 重点:cb函数 if (iteratee == null) {return function(value){return value;}}
+    iteratee = cb(iteratee, context, 1);
+    var value = iteratee(obj);
+    var low = 0,
+        high = array.length;
+    // 二分查找
+    while (low < high) {  //4  4 
+        var mid = Math.floor((low + high) / 2);   //4
+        if (iteratee(array[mid]) < value)    //  5 < 5
+            low = mid + 1;  //4
+        else
+            high = mid;   //4
+    }
+
+    return low;     //4
+};
+
+function createIndexFinder(dir, predicateFind, sortedIndex) {
+    // API 调用形式
+    // _.indexOf(array, value, [isSorted])
+    return function(array, item, idx) {
+        var i = 0,
+            length = array.length;
+        // 第三个参数true用二分查找优化 否则 遍历查找
+        if (sortedIndex && _.isBoolean(idx) && length) {
+            // 能用二分查找加速的条件
+            // 用 _.sortedIndex 找到有序数组中 item 正好插入的位置
+            idx = sortedIndex(array, item);
+            return array[idx] === item ? idx : -1;
         }
 
-        return chain ? elems : testing ? callback.call(elems[0], value) : callback.call(elems[0], key, value);
-    },
-    text : function(elem){
-        var nodeType = elem.nodeType
-        if(nodeType === 1 || nodeType === 9 || nodeType === 11){
-            return elem.textContent
+        //特殊情况 如果要查找的元素是 NaN 类型  NaN !== NaN
+        if (item !== item) {
+            idx = predicateFind(slice.call(array, i, length), _.isNaN);
+            return idx >= 0 ? idx + i : -1;
         }
-    },
-    content : function(elem, value){
-        var nodeType = elem.nodeType
-        if(nodeType === 1 || nodeType === 9 || nodeType === 11){
-            elem.textContent = value;
+
+        // 非上述情况正常遍历
+        for (idx = dir > 0 ? i : length - 1; idx >= 0 && idx < length; idx += dir) {
+            if (array[idx] === item) return idx;
         }
-    },
-    style : function(elem, key, value){
-        if (!elem || elem.nodeType === 3 || !elem.style) {
-            return;
-        }
-        elem.style[key] = value;
-    },
-})
+
+        return -1;
+    };
+}
+
+//_.findIndex  特殊情况下的处理方案  NAN  
+//_.sortedIndex 针对排序的数组做二分查找  优化性能
+_.indexOf = createIndexFinder(1, _.findIndex, _.sortedIndex);
+_.lastIndexOf = createIndexFinder(-1, _.findLastIndex);
 </pre>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/17/网易微专业-jq源码解析-1112DOM操作方法-html-text-css/" data-id="cka5080dz001qhyxqtwgccjmy" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/27/网易微专业-Underscore-3-2-2-条件查询-背后索引查询器实现/" data-id="ckb8s87uc001e4zxqafpx36eu" class="article-share-link">Share</a>
       
       
     </footer>
@@ -356,10 +240,10 @@ jQuery.extend({
 
 
   
-    <article id="post-网易微专业-jq源码解析-1107直播课源码" class="article article-type-post" itemscope="" itemprop="blogPost">
+    <article id="post-网易微专业-Underscore-3-2-1-Map-reduce真值检测函数" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2019/11/17/网易微专业-jq源码解析-1107直播课源码/" class="article-date">
-  <time datetime="2019-11-17T09:54:35.000Z" itemprop="datePublished">2019-11-17</time>
+    <a href="/2019/11/26/网易微专业-Underscore-3-2-1-Map-reduce真值检测函数/" class="article-date">
+  <time datetime="2019-11-26T13:27:48.000Z" itemprop="datePublished">2019-11-26</time>
 </a>
     
   </div>
@@ -370,7 +254,7 @@ jQuery.extend({
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/11/17/网易微专业-jq源码解析-1107直播课源码/">网易微专业-jq源码解析-1107直播课源码</a>
+      <a class="article-title" href="/2019/11/26/网易微专业-Underscore-3-2-1-Map-reduce真值检测函数/">网易微专业-Underscore-3.2.1-Map-reduce真值检测函数</a>
     </h1>
   
 
@@ -378,399 +262,307 @@ jQuery.extend({
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>html部分源码，请自行在html中调用，其中注释的汉字内容解释了链式回调的思路，即对</p>
+        <p>1.map-reduce了解介绍<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.2.1_1.png"><br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.2.1_2.png"><br>2.map源码<br>这个内容在之前章节已经讲过，在此略过<br>3.reduce介绍<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.2.1_3.png"><br>4.真值检测函数<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.2.1_4.png"><br>5.上代码<br>(1)reduce的代码，关于这段代码，只想说，代码太厉害了，逻辑清晰又有深度……(省略万字溢美之词)</p>
 <pre>
-deferred[tuple[1]](function() {
-    var returndefer = fn && fn.apply(this, arguments);
-    if (returndefer && jQuery.isFunction(returndefer.promise)) {
-         returndefer.done(newdefer.resolve)
-                    .fail(newdefer.reject)
-                    .progress(newdefer.notify);
+var optimizeCb = function(func, context, count) {
+    if (context == void 0) {
+        return func;
     }
-});
-</pre>
-这段内容中if判断执行的解释
-<pre>
-/*
-    var obj = {};
-    var callList = $.callbacks();  // 队列
-    callList.add(function(name){
-        console.log(this)
-    });
-    callList.add(function(name){
-        console.log(2+"name")
-    });
 
-    callList.fireWith(obj);
-    */
-
-
-    var wait = function(src) {
-        var der = jQuery.Deferred();
-        var img = document.getElementsByTagName("img")[0];
-
-        img.onload = function() {
-            der.resolve("加载成功1122333");    //权限 绑定状态   done  fail ...
+    switch (count == null ? 3 : count) {
+        case 1:
+            return function(value) {
+                return func.call(context, value);
+            };
+        case 3:
+            return function(value, index, obj) {
+                return func.call(context, value, index, obj);
+            };
+        case 4:
+            return function(memo, value, index, obj) {
+                return func.call(context, memo, value, index, obj);
+            };
+    }
+}
+var createReduce = function(dir) {
+    //累加
+    var reduce = function(obj, iteratee, memo, init) {
+        var keys = !_.isArray(obj) && Object.keys(obj),
+            length = (keys || obj).length,
+            index = dir > 0 ? 0 : length - 1;
+        //给memo设置了初始值memo = obj[0]
+        //即要被操作的obj对象的第一个属性值
+        if (!init) {
+            memo = obj[keys ? keys[index] : index];
+            index += dir; //1   
+        };
+        for (; index >= 0 && index < length; index += dir) {
+            var currnteKey = keys ? keys[index] : index;
+            memo = iteratee(memo, obj[currnteKey], currnteKey, obj)
         }
-        img.src = src;
-        return der.promise(); //状态凝固   promise
+        return memo;
     }
-
-    /*
-    $.when(wait("index.jpg")).done(function(message){
-        console.log(message)     //this  === der
-    });
-    */
-
-   //新的 Deferred 对象, 链式调用     
-   wait("index.jpg").then(function(message){
-       var der = jQuery.Deferred();
-       der.resolve("又是一个Deferred对象");
-       return der.promise();  //权限
-   }).then(function(message){
-       console.log(message)
-   });
-
-
-  /*
-  then方法返回的是一个新的Deferred实例
-
-  wait("index.jpg")   
-  有了一个Deferred对象  =>der  
-  状态   resolve
-  队列中的callback呢？
-  then(function(message){
-                 console.log(message)
-  })
-
-
-
-  返回的是一个新的Deferred实例
-  */ 
-
-
-  /*
-  then方法的第一个参数是resolved状态的回调函数，第二个参数（可选）是rejected状态的回调函数。
-
-  第一个then方法指定的回调函数，返回的是另一个Promise对象。这时，第二个then方法指定的回调函数，就会等待这个新的Promise对象状态发生变化。
-  如果变为resolved，就调用第一个回调函数，如果状态变为rejected，就调用第二个回调函数。
-  */
-
-  //异步操作  开始  -  结束 -> 状态 成功  | 失败   做什么?   队列里面的callback
-</pre><br>
-js部分源码
+    //memo  最终能累加的结果     每一次累加的过程
+    return function(obj, iteratee, memo, context) {
+        var init = arguments.length >= 3;
+        return reduce(obj, optimizeCb(iteratee, context, 4), memo, init);
+    }
+}
+//调用的时候，1为正向从obj[0]处理到obj[Object.keys(obj).length-1]
+//-1为负向，从obj[Object.keys(obj).length-1]处理到obj[0]
+_.reduce = createReduce(1); // 1 || -1
+</pre>
+(2)filter过滤器
 <pre>
-/*
- * @Author: Administrator
- * @Date:   2018-10-30 20:40:51
- * @Last Modified by:   Administrator
- * @Last Modified time: 2018-11-01 22:10:22
- */
+_.filter = function(obj, predicate, context) {
+    var results = [];
+    predicate = cb(predicate, context);
+    _.each(obj, function(value, index, list) {
+        if (predicate(value, index, list)) results.push(value);
+    });
+    return results;
+};
+</pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/11/26/网易微专业-Underscore-3-2-1-Map-reduce真值检测函数/" data-id="ckb8s87uc001d4zxqchb2sqn0" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-Underscore-3-1-4-rest参数-Underscore创建对象方式" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/11/25/网易微专业-Underscore-3-1-4-rest参数-Underscore创建对象方式/" class="article-date">
+  <time datetime="2019-11-25T12:04:05.000Z" itemprop="datePublished">2019-11-25</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/11/25/网易微专业-Underscore-3-1-4-rest参数-Underscore创建对象方式/">网易微专业-Underscore-3.1.4-rest参数-Underscore创建对象方式</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.rest参数<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.1.4_1.png"><br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.1.4_2.png"><br>2.Object.create.polyfill<br>这个没啥可说的，直接撸代码吧</p>
+<p><pre><br>var Ctor = function(){};</pre></p>
+<p>//Object.create polyfill   Object.create(object)   baseCreate(object)<br>var baseCreate = function(prototype) {<br>    if (!_.isObject(prototype)) return {};<br>    if (Object.create) return Object.create(prototype);<br>    Ctor.prototype = prototype;<br>    var result = new Ctor;<br>    Ctor.prototype = null;//要清空<br>    return result;<br>};<br><br>3.rest参数的实现<br>下面代码里的讲解，是以下面代码为例的</p>
+<p><pre><br>function test(count, rest){<br>    console.log(rest);   //[2,3,4]<br>}<br>//包装器<br>var restTest = _.restArguments(test);<br>restTest(1,2,3,4);<br></pre></p>
+<p><pre><br>// rest 参数<br>_.restArguments = function(func) {<br>    //rest参数位置<br>    var startIndex = func.length - 1;   //1<br>    return function() {<br>        var length = arguments.length - startIndex,<br>            rest = Array(length),<br>            index = 0;<br>        // rest数组中的成员  rest==[2,3,4]<br>        for (; index &lt; length; index++) {<br>            rest[index] = arguments[index + startIndex];  //1<br>        }<br>        //非rest参数成员的值一一对应  args  ===2  []<br>        var args = Array(startIndex + 1);<br>        for (index = 0; index &lt; startIndex; index++) {<br>            args[index] = arguments[index];  //args [1]<br>        }</pre></p>
+<pre><code>    args[startIndex] = rest;   //args [1,[2,3,4]]
+    return func.apply(this, args);
+}
+</code></pre><p>}<br><br>上面代码，关于index和startIndex的设定和应用很有技巧</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/11/25/网易微专业-Underscore-3-1-4-rest参数-Underscore创建对象方式/" data-id="ckb8s87ub001c4zxqxdhpgwij" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-Underscore-3-1-3-undefined的处理iteratee设计-源代码" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/11/25/网易微专业-Underscore-3-1-3-undefined的处理iteratee设计-源代码/" class="article-date">
+  <time datetime="2019-11-25T10:07:46.000Z" itemprop="datePublished">2019-11-25</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/11/25/网易微专业-Underscore-3-1-3-undefined的处理iteratee设计-源代码/">网易微专业-Underscore-3.1.3-undefined的处理iteratee设计-源代码</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>js部分代码</p>
+<pre>
 (function(root) {
-    var testExp = /^\s*(<[\w\w]+>)[^>]*$/;
-    var rejectExp = /^<(\w+)\s*\ ?="">(?:<\ \1="">|)$/;
-    var version = "1.0.1";
-    var optionsCache = {};
-    var jQuery = function(selector, context) {
-        return new jQuery.prototype.init(selector, context);
+    var push = Array.prototype.push;
+
+    var _ = function(obj) {
+        if (obj instanceof _) {
+            return obj;
+        }
+
+        if (!(this instanceof _)) {
+            return new _(obj);
+        }
+        this._wrapped = obj;
     }
 
-    jQuery.fn = jQuery.prototype = { //原型对象
-        length: 0,
-        jquery: version,
-        selector: "",
-        init: function(selector, context) {
-            context = context || document;
-            var match, elem, index = 0;
-            //$()  $(undefined)  $(null) $(false)  
-            if (!selector) {
-                return this;
+    _.unique = function(arr, callback) {
+        var ret = [];
+        var target, i = 0;
+        for (; i < arr.length; i++) {
+            var target = callback ? callback(arr[i]) : arr[i];
+            if (ret.indexOf(target) === -1) {
+                ret.push(target);
             }
+        }
 
-            if (typeof selector === "string") {
-                if (selector.charAt(0) === "<" &&="" selector.charat(selector.length="" -="" 1)="==" "="">" && selector.length >= 3) {
-                    match = [selector]
-                }
-                //创建DOM
-                if (match) {
-                    //this  
-                    jQuery.merge(this, jQuery.parseHTML(selector, context));
-                    //查询DOM节点
-                } else {
-                    elem = document.querySelectorAll(selector);
-                    var elems = Array.prototype.slice.call(elem);
-                    this.length = elems.length;
-                    for (; index < elems.length; index++) {
-                        this[index] = elems[index];
-                    }
-                    this.context = context;
-                    this.selector = selector;
-                }
-            } else if (selector.nodeType) {
-                this.context = this[0] = selector;
-                this.length = 1;
-                return this;
-            }
-
-        },
-        css: function() {
-            console.log("di~~didi~~")
-        },
-        //....
+        return ret;
     }
 
-    jQuery.fn.init.prototype = jQuery.fn;
-
-
-    //克隆    架构    jQuery.extend({}, obj1, obj2);   以默认配置为优先 以用户配置为覆盖
-    jQuery.extend = jQuery.prototype.extend = function() {
-        var target = arguments[0] || {};
-        var length = arguments.length;
-        var i = 1;
-        var deep = false; //默认为浅拷贝 
-        var option;
-        var name;
-        var copy;
-        var src;
-        var copyIsArray;
-        var clone;
-
-        if (typeof target === "boolean") {
-            deep = target;
-            target = arguments[1];
-            i = 2;
-        }
-
-        if (typeof target !== "object") {
-            target = {};
-        }
-
-        if (length == i) {
-            target = this;
-            i--; //0   
-        }
-
-        for (; i < length; i++) {
-            if ((option = arguments[i]) !== null) {
-                for (name in option) {
-                    src = target[name];
-                    copy = option[name];
-                    if (deep && (jQuery.isPlainObject(copy) || (copyIsArray = jQuery.isArray(copy)))) {
-                        if (copyIsArray) {
-                            copyIsArray = false;
-                            clone = src && jQuery.isArray(src) ? src : [];
-                        } else {
-                            clone = src && jQuery.isPlainObject(src) ? src : {};
-                        }
-                        target[name] = jQuery.extend(deep, clone, copy);
-                    } else if (copy !== undefined) {
-                        target[name] = copy;
-                    }
-                }
-            }
-        }
-        return target;
+    //开启链接式的调用
+    _.chain = function(obj) {
+        var instance = _(obj);
+        instance._chain = true;
+        return instance;
     }
 
+    //辅助函数    obj   数据结果
+    var result = function(instance, obj) {
+        return instance._chain ? _(obj).chain() : obj;
+    }
 
-    jQuery.extend({
-        //类型检测     
-        isPlainObject: function(obj) {
-            return typeof obj === "object";
-        },
+    _.prototype.value = function() {
+        return this._wrapped;
+    }
 
-        isArray: function(obj) {
-            return toString.call(obj) === "[object Array]";
-        },
+    _.functions = function(obj) {
+        var result = [];
+        var key;
+        for (key in obj) {
+            result.push(key);
+        }
+        return result;
+    }
 
-        isFunction: function(fn) {
-            return toString.call(fn) === "[object Function]";
-        },
-        //类数组转化成正真的数组  
-        markArray: function(arr, results) {
-            var ret = results || [];
-            if (arr != null) {
-                jQuery.merge(ret, typeof arr === "string" ? [arr] : arr);
-            }
-            return ret;
-        },
+    _.map = function(obj, iteratee, context) {
+        //生成不同功能迭代器
+        var iteratee = cb(iteratee, context);
+        //分辨 obj是数组对象, 还是object对象
+        var keys = !_.isArray(obj) && Object.keys(obj);
+        var length = (keys || obj).length;
+        var result = Array(length);
 
-        //合并数组
-        merge: function(first, second) {
-            var l = second.length,
-                i = first.length,
-                j = 0;
+        for (var index = 0; index < length; index++) {
+            var currentKey = keys ? keys[index] : index;
+            result[index] = iteratee(obj[currentKey], index, obj);
+        }
 
-            if (typeof l === "number") {
-                for (; j < l; j++) {
-                    first[i++] = second[j];
-                }
-            } else {
-                while (second[j] !== undefined) {
-                    first[i++] = second[j++];
-                }
-            }
+        return result;
+    }
 
-            first.length = i;
+    var cb = function(iteratee, context, count) {
+        if (iteratee == null) {
+            return _.identity;
+        }
 
-            return first;
-        },
+        if (_.isFunction(iteratee)) {
+            return optimizeCb(iteratee, context, count);
+        }
+    }
 
-        parseHTML: function(data, context) {
-            if (!data || typeof data !== "string") {
-                return null;
-            }
-            //过滤掉<a>   <a>   => a 
-            var parse = rejectExp.exec(data);
-            console.log(parse)
-            return [context.createElement(parse[1])];
-        },
+    //optimizeCb优化迭代器
+    var optimizeCb = function(func, context, count) {
+        if (context == void 0) {
+            return func;
+        }
 
-        //$.Callbacks用于管理函数队列
-        callbacks: function(options) {
-            options = typeof options === "string" ? (optionsCache[options] || createOptions(options)) : {};
-            var list = [];
-            var index, length, testting, memory, start, starts;
-            var fire = function(data) {
-                memory = options.memory && data;
-                index = starts || 0;
-                starts = 0;
-                testting = true;
-                length = list.length;
-                for (; index < length; index++) {
-                    if (list[index].apply(data[0], data[1]) === false && options.stopOnfalse) {
-                        break;
-                    }
-                }
-            }
-            var self = {
-                add: function() {
-                    var args = Array.prototype.slice.call(arguments);
-                    start = list.length;
-                    args.forEach(function(fn) {
-                        if (toString.call(fn) === "[object Function]") {
-                            list.push(fn);
-                        }
-                    });
-                    if (memory) {
-                        starts = start;
-                        fire(memory);
-                    }
-                    return this;
-                },
-                //指定上下文对象     resolve(object,"操作成功")  fireWith()
-                fireWith: function(context, arguments) {
-                    var args = [context, arguments];
-                    if (!options.once || !testting) {
-                        fire(args);
-                    }
-
-                },
-                //参数传递
-                fire: function() {
-                    self.fireWith(this, arguments);
-                }
-            }
-            return self;
-        },
-
-        // 异步回调解决方案
-        Deferred: function(func) {
-            var tuples = [
-                    ["resolve", "done", jQuery.callbacks("once memory"), "resolved"],
-                    ["reject", "fail", jQuery.callbacks("once memory"), "rejected"],
-                    ["notify", "progress", jQuery.callbacks("memory")]
-                ],
-                state = "pending",
-                //promise   权限分配  add   添加callback
-                promise = {
-                    state: function() {
-                        return state;
-                    },
-                    then: function( /* fnDone, fnFail, fnProgress */ ) {
-                        var fns = [].slice.call(arguments); //真正数组对象
-                        //创建一个Deferred 延迟对象  返回一个promise对象
-                        return jQuery.Deferred(function(newdefer) {
-                            tuples.forEach(function(tuple, i) {
-                                var fn = jQuery.isFunction(fns[i]) && fns[i];
-                                /*
-                                deferred   通过闭包去访问  此处链接式调用时指向的deferred对象
-                                newdefer   通过参数传递    指向新创建的deferred对象
-                                */
-                                //resolve  队列中的 callback
-                                deferred[tuple[1]](function() {
-                                    var returndefer = fn && fn.apply(this, arguments);
-                                    if (returndefer && jQuery.isFunction(returndefer.promise)) {
-                                         //console.log(newdefer)
-                                         returndefer.done(newdefer.resolve)
-                                                    .fail(newdefer.reject)
-                                                    .progress(newdefer.notify);
-                                    }
-                                });
-
-                            })
-                        }).promise();
-                    },
-                    promise: function(obj) {
-                        return obj != null ? jQuery.extend(obj, promise) : promise;
-                    }
-                },
-                deferred = {};
-
-            tuples.forEach(function(tuple, i) {
-                var list = tuple[2],
-                    stateString = tuple[3];
-
-                // promise[ done | fail | progress ] = list.add
-                promise[tuple[1]] = list.add;
-
-                // Handle state
-                if (stateString) {
-                    list.add(function() {
-                        // state = [ resolved | rejected ]
-                        state = stateString;
-                    });
-                }
-
-                // deferred[ resolve | reject | notify ]  der.resolve("加载成功");    
-                deferred[tuple[0]] = function() {
-                    deferred[tuple[0] + "With"](this === deferred ? promise : this, arguments);
-                    return this;
+        switch (count == null ? 3 : count) {
+            case 1:
+                return function(value) {
+                    return func.call(context, value);
                 };
-                deferred[tuple[0] + "With"] = list.fireWith;
-            });
+            case 3:
+                return function(value, index, obj) {
+                    return func.call(context, value, index, obj);
+                };
+        }
+    }
 
-            // Make the deferred a promise
-            promise.promise(deferred);
+   //默认迭代器
+    _.identity = function(value) {
+        return value;
+    }
 
-            //新创建的deferred 对象
-            if (func) {
-                func.call(deferred, deferred);
+
+    _.each = function(target, callback) {
+        var key, i = 0;
+        if (_.isArray(target)) {
+            var length = target.length;
+            for (; i < length; i++) {
+                callback.call(target, target[i], i);
             }
-            return deferred;
-        },
-        //执行一个或多个对象的延迟对象的回调函数
-        when: function(subordinate) {
-            return subordinate.promise();
-        },
+        } else {
+            for (key in target) {
+                callback.call(target, key, target[key]);
+            }
+        }
 
+    }
+
+    //类型检测
+    _.isArray = function(array) {
+        return toString.call(array) === "[object Array]";
+    }
+
+    _.each(["Function", "String", "Object", "Number"], function(name) {
+        _["is" + name] = function(obj) {
+            return toString.call(obj) === "[object " + name + "]";
+        }
     });
 
-    function createOptions(options) {
-        var object = optionsCache[options] = {};
-        options.split(/\s+/).forEach(function(value) {
-            object[value] = true;
+    //mixin  
+    _.mixin = function(obj) {
+        _.each(_.functions(obj), function(name) {
+            var func = obj[name];
+
+            _.prototype[name] = function() {
+                var args = [this._wrapped];
+                push.apply(args, arguments);
+                // instance      去重之后的结果
+                return result(this, func.apply(this, args));
+            }
         });
-        return object;
     }
 
-    root.$ = root.jQuery = jQuery;
+    _.mixin(_);
+    root._ = _;
 })(this);
-</a></a></"></\></(\w+)\s*\></[\w\w]+></pre>
+</pre>
+可以用如下js测试
+<pre>
+var obj = {name:"max"}
+console.log(_.map([1, 2, 3], function(value, index, object){
+    console.log(this)
+    return value*3;
+},obj));
+</pre>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/17/网易微专业-jq源码解析-1107直播课源码/" data-id="cka5080gl003phyxq34okfghq" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/25/网易微专业-Underscore-3-1-3-undefined的处理iteratee设计-源代码/" data-id="ckb8s87ua001a4zxq2t1i5ad8" class="article-share-link">Share</a>
       
       
     </footer>
@@ -780,10 +572,10 @@ js部分源码
 
 
   
-    <article id="post-网易微专业-jq源码解析-事件绑定-自定义事件-模拟事件-完整源码" class="article article-type-post" itemscope="" itemprop="blogPost">
+    <article id="post-网易微专业-Underscore-3-1-3-undefined的处理iteratee设计" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2019/11/16/网易微专业-jq源码解析-事件绑定-自定义事件-模拟事件-完整源码/" class="article-date">
-  <time datetime="2019-11-16T11:04:15.000Z" itemprop="datePublished">2019-11-16</time>
+    <a href="/2019/11/25/网易微专业-Underscore-3-1-3-undefined的处理iteratee设计/" class="article-date">
+  <time datetime="2019-11-25T09:06:17.000Z" itemprop="datePublished">2019-11-25</time>
 </a>
     
   </div>
@@ -794,7 +586,288 @@ js部分源码
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/11/16/网易微专业-jq源码解析-事件绑定-自定义事件-模拟事件-完整源码/">网易微专业-jq源码解析-事件绑定-自定义事件&amp;模拟事件-完整源码</a>
+      <a class="article-title" href="/2019/11/25/网易微专业-Underscore-3-1-3-undefined的处理iteratee设计/">网易微专业-Underscore-3.1.3-undefined的处理iteratee设计</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.undefined的处理<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.1.3_1.png"><br>2.iteratee<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.1.3_2.png"><br>3.cb<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.1.3_3.png"><br>4.optimizeCb<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.1.3_4.png"><br>5.撸代码<br>这里主要是讲iteratee，上一节内容，_.map()函数内容为空，没有进行处理，这节课我们学习怎么处理</p>
+<p><pre><br><em>.map = function(obj, iteratee, context) {<br>    //生成不同功能迭代器<br>    var iteratee = cb(iteratee, context);<br>    //分辨 obj是数组对象, 还是object对象<br>    var keys = !</em>.isArray(obj) &amp;&amp; Object.keys(obj);<br>    var length = (keys || obj).length;<br>    var result = Array(length);</pre></p>
+<pre><code>for (var index = 0; index &lt; length; index++) {
+    var currentKey = keys ? keys[index] : index;
+    result[index] = iteratee(obj[currentKey], index, obj);
+}
+
+return result;
+</code></pre><p>}</p>
+<p>var cb = function(iteratee, context, count) {<br>    if (iteratee == null) {<br>        return _.identity;<br>    }</p>
+<pre><code>if (_.isFunction(iteratee)) {
+    return optimizeCb(iteratee, context, count);
+}
+</code></pre><p>}</p>
+<p>//optimizeCb优化迭代器<br>var optimizeCb = function(func, context, count) {<br>    if (context == void 0) {<br>        return func;<br>    }</p>
+<pre><code>switch (count == null ? 3 : count) {
+    case 1:
+        //私以为，这个返回写的很腻害哇
+        return function(value) {
+            return func.call(context, value);
+        };
+    case 3:
+        //私以为，这个返回写的很腻害哇
+        return function(value, index, obj) {
+            return func.call(context, value, index, obj);
+        };
+}
+</code></pre><p>}</p>
+<p>//默认迭代器<br>_.identity = function(value) {<br>    return value;<br>}<br><br>这节课还有一个知识点，就是类型判定，这次代码给了更优雅的类型判定的写法</p>
+<p><pre><br>_.each([“Function”, “String”, “Object”, “Number”], function(name) {<br>    _[“is” + name] = function(obj) {<br>        return toString.call(obj) === “[object “ + name + “]”;<br>    }<br>});<br></pre><br>这节课完整代码</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/11/25/网易微专业-Underscore-3-1-3-undefined的处理iteratee设计/" data-id="ckb8s87ub001b4zxqnyzmi2oi" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-Underscore-3-1-2-Underscore整体结构-面向对象风格支持" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/11/24/网易微专业-Underscore-3-1-2-Underscore整体结构-面向对象风格支持/" class="article-date">
+  <time datetime="2019-11-24T13:27:06.000Z" itemprop="datePublished">2019-11-24</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/11/24/网易微专业-Underscore-3-1-2-Underscore整体结构-面向对象风格支持/">网易微专业-Underscore-3.1.2-Underscore整体结构&amp;面向对象风格支持</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.Underscore结构<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.1.2_1.png"><br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.1.2_2.png"><br>2.面向对象风格支持<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.1.2_3.png"><br>3.mixin<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.1.2_4.png"><br>4.链接式调用<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.1.2_5.png"><br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.1.2_6.png"><br>5.撸代码<br>先上调用代码吧</p>
+<p><pre><br>console.log(_([1,2,3,4,5,4,5,6,”a”,”A”]).chain().unique().map().value());<br></pre><br>.chain()是告诉underscore我要开始链式调用了，然后underscore就配合了<br><br>.unique()&amp;.map()都是对数组进行各种操作<br><br>.value()告诉underscore，我不需要再链式调用了，返回处理结果就行了<br><br>那代码是怎么实现的呢，上代码</p>
+<p><pre><br>(function(root) {<br>    var push = Array.prototype.push;</pre></p>
+<pre><code>var _ = function(obj) {
+    if (obj instanceof _) {
+        return obj;
+    }
+
+    if (!(this instanceof _)) {
+        return new _(obj);
+    }
+    this._wrapped = obj;
+}
+
+_.unique = function(arr, callback) {
+    var ret = [];
+    var target, i = 0;
+    for (; i &lt; arr.length; i++) {
+        var target = callback ? callback(arr[i]) : arr[i];
+        if (ret.indexOf(target) === -1) {
+            ret.push(target);
+        }
+    }
+
+    return ret;
+}
+
+//开启链接式的调用
+_.chain = function(obj) {
+    var instance = _(obj);
+    instance._chain = true;
+    return instance;
+}
+
+//辅助函数    obj   数据结果
+//这里的参数obj相当于返回每个调用方法的执行结果
+//比如调用unique，则返回_.unique的执行结果
+var result = function(instance, obj) {
+    //花式调用_.chain(),使underscore可以一直链式调用
+    return instance._chain ? _(obj).chain() : obj;
+}
+
+_.prototype.value = function() {
+    return this._wrapped;
+}
+
+_.functions = function(obj) {
+    var result = [];
+    var key;
+    for (key in obj) {
+        result.push(key);
+    }
+    return result;
+}
+
+_.map = function(args) {
+    args.push(&quot;max&quot;);
+  return args;
+}
+
+//类型检测
+_.isArray = function(array) {
+    return toString.call(array) === &quot;[object Array]&quot;;
+}
+
+_.each = function(target, callback) {
+    console.log(target)
+    var key, i = 0;
+    if (_.isArray(target)) {
+        var length = target.length;
+        for (; i &lt; length; i++) {
+            callback.call(target, target[i], i);
+        }
+    } else {
+        for (key in target) {
+            callback.call(target, key, target[key]);
+        }
+    }
+
+}
+
+//mixin  
+_.mixin = function(obj) {
+    _.each(_.functions(obj), function(name) {
+        var func = obj[name];
+
+        _.prototype[name] = function() {
+            var args = [this._wrapped];
+            push.apply(args, arguments);
+            // instance      去重之后的结果
+            return result(this, func.apply(this, args));
+            //这里相当于每个原型方法都返回的是result(this, func.apply(this, args)),
+            //也就是说每个方法最后都要去执行私有匿名函数result
+        }
+    });
+}
+
+_.mixin(_);//首先要注意，mixin函数先执行了一次
+root._ = _;
+</code></pre><p>})(this);<br><br>个人认为_.mixin是上面代码最需要理解的部分，正是因为有这个函数，我们上面讲过的关于函数式编程的精髓得到了应用。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/11/24/网易微专业-Underscore-3-1-2-Underscore整体结构-面向对象风格支持/" data-id="ckb8s87u900194zxq4qmv6lmn" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-Underscore-3-1-1-函数式编程思想概述" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/11/24/网易微专业-Underscore-3-1-1-函数式编程思想概述/" class="article-date">
+  <time datetime="2019-11-24T08:06:35.000Z" itemprop="datePublished">2019-11-24</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/11/24/网易微专业-Underscore-3-1-1-函数式编程思想概述/">网易微专业-Underscore-3.1.1-函数式编程思想概述</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>一、函数式编程思想概述<br>1.函数式编程基础知识<br>javaScript作为一种典型的多范式编程语言，这两年随着React的火热，函数式编程的概念也开始流行起来。<br>Rxjs、lodash、underscore等多种开源库都使用了函数式的特性。<br>(1)纯函数<br>定义:对于相同的输入，永远会得到相同的输出，而且没有任何可观察到的副作用，也不依赖外部环境的状态。<br>栗子:数学公式——y=f(x)<br>在JavaScript中，对于数组的操作，有些是纯的，有些是不纯的。<br>代码例证:</p>
+<p><pre><br>var arr = [1,2,3,4,5];<br>//纯函数<br>arr.slice(0,3);  //[1,2,3]<br>arr.slice(0,3);  //[1,2,3]<br>//非纯函数<br>arr.splice(0,3)  //[1,2,3]<br>arr.splice(0,3)  //[4,5]<br></pre><br>(2)函数式编程为何排斥不纯的函数<br>非纯函数中，函数的行为需要由外部的系统环境决定。也就是说此函数行为不仅取决于输入的参数，还取决于外部变量。这种对于外部状态的依赖，是造成系统复杂性大大提高的主要原因。<br>栗子:</p>
+<p><pre><br>var timeOfLife = 20;<br>//纯函数<br>function test(age){<br>    return age &gt; 20;<br>}<br>//非纯函数<br>function test(age){<br>    return age &gt; timeOfLife;<br>}<br></pre><br>(3)函数柯里化(Currying)<br>定义:向函数传递一部分参数来调用它，让它返回一个函数去处理剩下的函数。<br>事实上，柯里化是一种“预加载”函数的方法，通过传递较少的参数，得到了一个已经记住了这些参数的新函数，某种意义上讲，这是一种对参数的”缓存”，是一种非常高效的编写函数的方法。</p>
+<p><pre><br>var timeOfLife = 20;<br>function test(timeOfLife){<br>    return function(age){<br>        return age &gt; timeOfLife;<br>    };<br>}<br>var testing = test(20);<br>testing(18)<br></pre><br>(4)函数组合<br>为了避免写出不优雅的包菜式代码h(g(f(x)))，我们需要用到函数组合。</p>
+<p><pre><br>//两个函数的组合<br>var compose = function(f,g){<br>    return function(x){<br>        return f(g(x));<br>    }<br>}<br>var mult = function(x){<br>    return x*5;<br>}<br>var add = function(x){<br>    return x+1;<br>}<br>compose(mult,add)(2)<br></pre><br>我们定义的compose就像双面胶一样，可以把任何两个纯函数结合到一起，也可以扩展出组合N个函数的N面胶。这种灵活的组合，让我们可以像拼积木一样优雅的组合函数式代码。<br>(5)声明式与命令式<br>命令式代码:通过编写一条又一条指令，让计算机执行一些动作，其中一般会涉及许多繁杂的细节。<br><br>声明式代码:通过写表达式的方式，声明我们想干什么，而不是通过一步步指示。<br><br>声明式代码，是函数式编程的一个明显好处——编写、优化代码时能更专注。</p>
+<p><pre><br>//命令式<br>var rest = [];<br>var arr = [4,9,16,25,4,16];<br>for(var i = 0;i &lt; arr.length; i++){<br>    if(rest.indexOf(arr[i]) === -1){<br>        rest.push(arr[i])<br>    }<br>}<br>//声明式<br>var rest = arr.map(Math.sqrt);<br></pre><br>2.总结<br>(1)函数对于外部状态的依赖，是造成系统复杂性大大提高的主要原因<br>(2)代码书写中让函数尽可能纯净<br>(3)函数式编程不是万能的，它与OOP(面向对象编程)一样，只是一种编程范式<br>(4)为降低软件复杂度，OOP的方式是靠良好的封装、继承、多态以及接口定义。函数式编程则是靠纯函数以及它们的组合、柯里化等技术<br>3.underscore链接：<a href="https://www.html.cn/doc/underscore/docs/underscore.html" target="_blank" rel="noopener">https://www.html.cn/doc/underscore/docs/underscore.html</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/11/24/网易微专业-Underscore-3-1-1-函数式编程思想概述/" data-id="ckb8s87u900184zxqhvm36tpq" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-jq源码解析-1118直播课-拆箱装箱" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/11/24/网易微专业-jq源码解析-1118直播课-拆箱装箱/" class="article-date">
+  <time datetime="2019-11-24T03:36:23.000Z" itemprop="datePublished">2019-11-24</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/11/24/网易微专业-jq源码解析-1118直播课-拆箱装箱/">网易微专业-jq源码解析-1118直播课-拆箱装箱</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>首先，划重点，重点就是老师的文章：<a href="https://zhuanlan.zhihu.com/p/91861318" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/91861318</a><br>1.起源<br><br>在控制台输入1.toString()报错: Invalid or unexpected token<br><br>解释<br><br>在代码世界里，1.1为1.1，.01为0.01，1.为1,那么1.toString()中的toString()会被解析为一个数值，去进行词法分析，而这个词法不能被正确分析，于是报错。<br>解决<br><br>1 .toString()   //1后面加空格<br><br>(1).toString()  //把1用括号包裹起来<br><br>其实就是1.toString()的时候，不能确定点(.)运算符是1.的点还是.toString()的点<br><br>运算符.提供了装箱转化，构造一个临时的对象<br>2.拆箱<br>[]+[]或者{}+[]或[]+{}在运算的时候，首先会判断[].valueOf()是不是基本类型，如果不是基本类型，就进行[].toString()运算，如果是基本类型，则直接参与运算，如果在toString()之后还不是基本类型则报错<br>3.实例讲解<br>[]+[]                                = “” (解释:[].valueOf()=””)<br>[]+{}                                = “[object Object]”(解释:{}.valueOf={},{}.toString()=”[object Object]”)<br>{}+[]                                = 0<br>那么,上面这个怎么解释呢,明明{}.valueOf().toString()=”[object Object]”啊,但是，javascript有个特性，如果{}既可以被认为是代码块，又可以被认为是对象字面量，那么js会把他当做代码块来看待。这就很好解释了，{} 被当做了代码块，只有+[]，根据加法的定义，被转换为0，就得到了结果。<br>后面，老师的解释，阿哈哈哈，讲太快，我记不下来笔记了，毕竟老师的文章写的很全面细致了，看老师文章吧^_&lt;</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/11/24/网易微专业-jq源码解析-1118直播课-拆箱装箱/" data-id="ckb8s87uj001p4zxq9dwcvhgm" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-jq源码解析-1118直播课-动画队列源码" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/11/24/网易微专业-jq源码解析-1118直播课-动画队列源码/" class="article-date">
+  <time datetime="2019-11-24T02:59:06.000Z" itemprop="datePublished">2019-11-24</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/11/24/网易微专业-jq源码解析-1118直播课-动画队列源码/">网易微专业-jq源码解析-1118直播课-动画队列源码</a>
     </h1>
   
 
@@ -814,6 +887,16 @@ js部分源码
     var rejectExp = /^<(\w+)\s*\ ?="">(?:<\ \1="">|)$/;
     var core_version = "1.0.1";
     var optionsCache = {};
+    var rxhtmlTag = /<(?!area|br|col|embed|hr|img|input|link|meta|param)(([\w:]+)[^>]*)\/>/gi;
+    //关闭这些标签以支持XHTML
+    var wrapMap = {
+        option: [1, "< select multiple='multiple'>", "< /select>"],
+        thead: [1, "< table>", "< /table>"],
+        col: [2, "< table>< colgroup>", "< /colgroup>< /table>"],
+        tr: [2, "< table>< tbody>", "< /tbody>< /table>"],
+        td: [3, "< table>< tbody>< tr>", "< /tr>< /tbody>< /table>"],
+        _default: [0, "", ""]
+    };
 
     function returnTrue() {
         return true;
@@ -828,6 +911,27 @@ js部分源码
         try {
             return document.activeElement;
         } catch (err) {}
+    }
+    //类数组结构的对象
+    function isArraylike(obj) {
+        var length = obj.length;
+        if (obj.nodeType === 1 && length) {
+            return true;
+        }
+
+        return toString.call(obj) === "[object Array]" || typeof obj !== "function" &&
+            (length === 0 ||
+                typeof length === "number" && length > 0 && (length - 1) in obj);
+    }
+    //getAll(fragment.appendChild(elem), "script");
+    function getAll(context, tag) {
+
+        var ret = context.getElementsByTagName ? context.getElementsByTagName(tag || "*") :
+            context.querySelectorAll ? context.querySelectorAll(tag || "*") : [];
+        // console.log(ret);   //查找script元素
+        return tag === undefined || tag && jQuery.nodeName(context, tag) ?
+            jQuery.merge([context], ret) :
+            ret;
     }
 
     var jQuery = function(selector, context) {
@@ -853,7 +957,7 @@ js部分源码
                 //创建DOM
                 if (match) {
                     //this  
-                    jQuery.merge(this, jQuery.parseHTML(selector, context));
+                    jQuery.merge(this, jQuery.parseHTML(selector, context, true));
                     //查询DOM节点
                 } else {
                     elem = document.querySelectorAll(selector);
@@ -937,7 +1041,7 @@ js部分源码
         now: Date.now, //返回当前时间距离时间零点(1970年1月1日 00:00:00 UTC)的毫秒数
         //类型检测     
         isPlainObject: function(obj) {
-            return typeof obj === "object";
+            return toString.call(obj) === "[object Object]";
         },
 
         isArray: function(obj) {
@@ -947,18 +1051,24 @@ js部分源码
         isFunction: function(fn) {
             return toString.call(fn) === "[object Function]";
         },
-        //类数组转化成正真的数组  
-        markArray: function(arr, results) {
+        //类数组转化成正真的数组 (改造)  makeArray(data)
+        makeArray: function(arr, results) {
             var ret = results || [];
-            if (arr != null) {
-                jQuery.merge(ret, typeof arr === "string" ? [arr] : arr);
+            //arr 是否为类数组结构
+            if (isArraylike(arr)) {
+                if (arr != null) {
+                    jQuery.merge(ret, typeof arr === "string" ? [arr] : arr);
+                }
+            } else {
+                [].push.call(ret, arr); //[data]
             }
-            return ret;
+
+            return ret; //[function(){}]
         },
 
         //合并数组
         merge: function(first, second) {
-            var l = second.length,
+            var l = second.length, //function(){}  undefind
                 i = first.length,
                 j = 0;
 
@@ -977,15 +1087,102 @@ js部分源码
             return first;
         },
 
-        parseHTML: function(data, context) {
+        //init 传值 true
+        parseHTML: function(data, context, keepScripts) {
             if (!data || typeof data !== "string") {
                 return null;
             }
-            //过滤掉< a >   < a >   => a 
+            //参数兼容处理
+            if (typeof context === "boolean") {
+                keepScripts = context;
+                context = false;
+            }
+            context = context || document;
+            //过滤掉/< a >   < a >   => a   问题：
             var parse = rejectExp.exec(data);
-            console.log(parse)
-            return [context.createElement(parse[1])];
+            var scripts = !keepScripts && []; //默认空数组
+            if (parse) {
+                return [context.createElement(parse[1])];
+            }
+
+            parsed = jQuery.buildFragment([data], context, scripts);
+
+            return jQuery.merge([], parsed.childNodes);
         },
+
+        buildFragment: function(elems, context, scripts, selection) {
+            var elem, tmp, tag, wrap, contains, j,
+                i = 0,
+                l = elems.length,
+                fragment = context.createDocumentFragment(),
+                nodes = [];
+
+            for (; i < l; i++) {
+                elem = elems[i]; //字符串
+
+                if (elem || elem === 0) {
+
+                    // 是对象直接添加节点
+                    if (jQuery.isPlainObject(elem) === "object" && elem !== null) {
+                        // Support: QtWebKit
+                        // jQuery.merge because core_push.apply(_, arraylike) throws
+                        jQuery.merge(nodes, elem.nodeType ? [elem] : elem);
+
+                        // // 如果不存在html实体编号或标签,则创建文本节点
+                    } else if (!/<|&#?\w+; .test(elem))="" {="" nodes.push(context.createtextnode(elem));="" 将html转换为dom节点="" }="" else="" 代码将会执行到这="" tmp="tmp" ||="" fragment.appendchild(context.createelement("div"));="" 获取传递过来字符串中的标签名="" tag="(/<([\w:]+)/.exec(elem)" ["",="" ""])[1].tolowercase();="" _default:="" [0,="" "",="" ""]="" wrap="wrapMap[tag]" wrapmap._default;="" console.log(elem.replace(rxhtmltag,="" "<$1="">"));
+                        //<div><p>max</p></div>
+                        tmp.innerHTML = wrap[1] + elem.replace(rxhtmlTag, "<$1>") + wrap[2];
+
+                        //创建的文档碎片div 存储在nodes中
+                        jQuery.merge(nodes, tmp.childNodes);
+                        //console.log(nodes)    [div]
+                        // Remember the top-level container
+                        tmp = fragment.firstChild;
+
+                        // Fixes #12346
+                        // Support: Webkit, IE
+                        tmp.textContent = "";
+                    }
+                }
+            }
+
+            // Remove wrapper from fragment
+            fragment.textContent = "";
+
+            i = 0;
+            while ((elem = nodes[i++])) {
+
+                // #4087 - If origin and destination elements are the same, and this is
+                // that element, do not do anything   补丁
+                if (selection && jQuery.inArray(elem, selection) !== -1) {
+                    continue;
+                }
+
+                //console.log(fragment.appendChild(elem))  <div>max</div>
+                // Append to fragment  script 附加到片段  
+                //用来获取 context 上的 tag 标签，或者是将 context 和 context 里的 tag 标签的元素合并
+                tmp = getAll(fragment.appendChild(elem), "script");
+                //console.log(tmp)
+
+                //console.log(scripts)  false
+                // 捕获可执行文件
+                if (scripts) {
+                    j = 0;
+                    while ((elem = tmp[j++])) {
+                        if (rscriptType.test(elem.type || "")) {
+                            scripts.push(elem);
+                        }
+                    }
+                }
+            }
+
+            return fragment;
+        },
+
+        nodeName: function(elem, name) {
+            return elem.nodeName && elem.nodeName.toLowerCase() === name.toLowerCase();
+        },
+
 
         //$.Callbacks用于管理函数队列
         callbacks: function(options) {
@@ -1121,49 +1318,233 @@ js部分源码
             }
         },
 
+
+        access: function(elems, fn, key, value) {
+            var length = elems.length;
+            var testing = key === null; //text   key "color"  false
+            var cache, chainable, name; //是否要来链接式的调用
+            //key  
+            // if (jQuery.isPlainObject(key) && key !== null) { //
+            //     for (name in key) {
+            //         console.log(name)
+            //         jQuery.access(elems, fn, name, key[name]); //color "red"
+            //     }
+            // }
+
+            if (value !== undefined) { //value === undefined    get 
+                chainable = true;
+                if (testing) { //false
+                    cache = fn; //回调缓存
+                    fn = function(key, value) { //重置回调函数  增强代码的可塑性  Vue.$mount
+                        cache.call(this, value);
+                    }
+                }
+                for (var i = 0; i < length; i++) {
+                    fn.call(elems[i], key, value); //fn  回调函数   key  value
+                }
+            }
+            //  (testing ? fn.call(elems[0]) : fn.call(elems[0],key , value))
+            return chainable ? elems : (testing ? fn.call(elems[0]) : fn.call(elems[0], key, value)); // 最终决定返回值是什么？   jQuery的实例对象
+        },
+
+        empty: function(elem, value) {
+            var nodeType = elem.nodeType; // 1
+            //1 元素      9 文档   11 文档碎片
+            if (nodeType === 1 || nodeType === 9 || nodeType === 11) {
+                elem.textContent = value; //"max"
+            }
+        },
+
+        text: function(elem) {
+            var nodeType = elem.nodeType;
+            if (nodeType === 1 || nodeType === 9 || nodeType === 11) {
+                return elem.textContent;
+            }
+        },
+        //规范化float css属性
+        cssProps: {
+            "float": "cssFloat"
+        },
+        style: function(elem, name, value) {
+            //检测是是否驼峰写法,如果不是就得转化  常见的检测方式常见应用常见Vue检测组件名称(案例：重)
+            var origName = jQuery.camelCase(name);
+            var curcss = jQuery.cssProps[name];
+            if (value !== undefined) {
+                elem.style[curcss || origName] = value;
+            }
+        },
+        css: function(elem, name, styles) {
+            styles = styles || getStyles(elem);
+            return styles.getPropertyValue(name);
+        },
+        camelCase: function(string) {
+            return string.replace(/^-ms-/, "ms-").replace(/-([\da-z])/gi, function(context, first) {
+                return first.toUpperCase();
+            });
+        }
+
     });
+
+    function curCSS(elem, name, styles) {
+
+    }
 
     function Data() {
         //jQuery.expando是jQuery的静态属性,对于jQuery的每次加载运行期间时唯一的随机数
         this.expando = jQuery.expando + Math.random();
-        this.cache = {};
+        this.cache = {}; //创建了缓存对象
     }
 
     Data.uid = 1;
 
     Data.prototype = {
         key: function(elem) {
-            var descriptor = {},
-                unlock = elem[this.expando];
+            var descriptor = {}, //elem  jQuery实例对象   DOM对象
+                unlock = elem[this.expando]; // UUID  unlock === undefined
 
             if (!unlock) {
-                unlock = Data.uid++;
-                descriptor[this.expando] = { //钥匙
+                unlock = Data.uid++; //unlock === 1
+                descriptor[this.expando] = { //随机数 === descriptor[UUID] = 1
                     value: unlock
                 };
-                //方法直接在一个对象上定义一个或多个新的属性或修改现有属性,并返回该对象。
-                //DOM   =>  jQuery101089554822917892030.7449198463843298 = 1;
+                //方法直接在一个对象上定义一个或多个新的属性或修改现有属性,并返回该对象。   elem[UUID] = 1
                 Object.defineProperties(elem, descriptor);
             }
-            //确保缓存对象记录信息
+            //创建数据仓库   this.cache[1]  = {}  塞进去  
             if (!this.cache[unlock]) {
-                this.cache[unlock] = {}; //  数据
+                this.cache[unlock] = {};
             }
 
-            return unlock;
+            return unlock; //1
         },
 
         get: function(elem, key) {
-            //找到或者创建缓存
-            var cache = this.cache[this.key(elem)]; //1  {events:{},handle:function(){}} 
-            //key 有值直接在缓存中取读
-            return key === undefined ? cache : cache[key];
+            //找到或者创建缓存    1 
+            var cache = this.cache[this.key(elem)]; //this.cache[1] = {}
+            //key 有值直接在缓存中取读  firstqueue  cache[firstqueue]
+            return key === undefined ? cache : cache[key]; //你想要获取的数据 
         },
+        set: function(owner, key, value) {
+            var prop;
+            var unlock = this.key(owner); //1 === unlock
+            var cache = this.cache[unlock]; //数据仓库
+            if (typeof key === "string") { //firstqueue
+                cache[key] = value; //{firstqueue:[function(){}]}
+            }
+            if (jQuery.isPlainObject(key)) {
+                for (prop in key) {
+                    cache[prop] = key[prop];
+                }
+            }
+        },
+        access: function(owner, key, value) {
+            /*
+            处理  elem =cache 中映射的缓存数据对象 > {"1":{firstqueue?}}
+            未指定key的值           返回整个缓存对象
+            指定了key 未设置value   返回存储在cache中对应的key的数据
+            */
+            this.set(owner, key, value);
+            return value !== undefined ? value : key;
+        },
+        remove: function(elem, key) { //key === ["firstqueue","firstqueueHooks"]
+            var unlock = this.key(elem);
+            var cache = this.cache[unlock];
+            console.log(cache)
+            var i = key.length;
+            while (i--) {
+              delete cache[key[i]];
+            }
+            console.log(cache)
+        }
     }
-
+    //缓存用户的数据  
+    var data_user = new Data();
+    //内部私有缓存对象   
     var data_priv = new Data();
 
+    jQuery.fn.extend({
+        //缓存数据
+        data: function(key, value) {
+            var _this = this;
+            return jQuery.access(this, function(value) {
+                //get
+                if (value === undefined) {
+                    var data = data_user.get(this, key);
+                    if (data !== undefined) {
+                        return data;
+                    }
+                }
 
+                //set
+                _this.each(function() {
+                    data_user.set(this, key, value);
+                })
+
+            }, null, value);
+        }
+    });
+
+    //queue 队列
+    jQuery.extend({
+        queue: function(elem, type, data) {
+            var queue;
+            if (elem) {
+                type = (type || "fx") + "queue"; // "fxqueue" 动画队列默认的名称
+                queue = data_priv.get(elem, type);
+                //console.log(queue); //[function(){}]
+                if (data) {
+                    if (!queue || jQuery.isArray(data)) {
+                        queue = data_priv.access(elem, type, jQuery.makeArray(data)); // 包装 [function(){}]
+                    } else {
+                        queue.push(data);
+                    }
+                }
+            }
+            return queue || []; //elem != null ? queue : []
+        },
+        dequeue: function(elem, type) {
+            type = type || "fx";
+
+            var queue = jQuery.queue(elem, type), //"firstqueue"
+                startLength = queue.length,
+                fn = queue.shift(), // func   [function wait(){}]
+                hooks = jQuery._queueHooks(elem, type), //钩子
+                next = function() { //作用
+                    jQuery.dequeue(elem, type);
+                };
+
+            // If the fx queue is dequeued, always remove the progress sentinel
+            if (fn === "inprogress") {
+                fn = queue.shift();
+                startLength--;
+            }
+
+            if (fn) {
+
+                // Add a progress sentinel to prevent the fx queue from being
+                // automatically dequeued
+                if (type === "fx") {
+                    queue.unshift("inprogress");
+                }
+
+                // clear up the last queue stop function
+                fn.call(elem, next, hooks); // func
+            }
+
+            //清除工作
+            if (!startLength && hooks) {
+                hooks.empty.fire();
+            }
+        },
+        _queueHooks: function(elem, type) {
+            var key = type + "queueHooks"; //key == firstqueueHooks
+            return data_priv.get(elem, key) || data_priv.access(elem, key, {
+                empty: jQuery.callbacks("once memory").add(function() {
+                    data_priv.remove(elem, [type + "queue", key]); //["firstqueue","firstqueueHooks"]
+                })
+            });
+        }
+    });
 
 
     //jQuery 事件模块
@@ -1225,11 +1606,11 @@ js部分源码
             var args = [].slice.call(arguments);
 
             //执行事件处理函数
-            jQuery.event.handlers.call(this,handlers, args);
+            jQuery.event.handlers.call(this, handlers, args);
         },
 
         //执行事件处理函数
-        handlers: function(handlers, args) {   //[event , 自定义参数]
+        handlers: function(handlers, args) { //[event , 自定义参数]
             handlers[0].handler.apply(this, args);
         },
 
@@ -1402,7 +1783,7 @@ js部分源码
         isImmediatePropagationStopped: returnFalse,
         //取消事件的默认动作
         preventDefault: function() {
-            var e = this.originalEvent;
+            var e = this.originalEvent; //指向原始的事件对象
 
             this.isDefaultPrevented = returnTrue;
 
@@ -1420,6 +1801,7 @@ js部分源码
                 e.stopPropagation();
             }
         },
+        //阻止当前事件向祖辈元素的冒泡传递
         stopImmediatePropagation: function() {
             this.isImmediatePropagationStopped = returnTrue;
             this.stopPropagation();
@@ -1449,7 +1831,78 @@ js部分源码
                 jQuery.event.trigger(type, data, this);
             });
         },
+        text: function(value) {
+            return jQuery.access(this, function(value) {
+                //console.log(this)
+                //get  set   value === "max"
+                return value === undefined ? jQuery.text(this) : jQuery.empty(this, value);
+            }, null, value);
+        },
+        css: function(key, value) {
+            return jQuery.access(this, function(key, value) {
+                var styles, len, i = 0;
+                var map = {};
+
+                //console.log(key)
+                if (jQuery.isArray(key)) {
+                    styles = getStyles(this);
+                    len = key.length;
+                    for (; i < len; i++) {
+                        map[key[i]] = jQuery.css(this, key[i], styles);
+                    }
+                    return map;
+                }
+
+                return value !== undefined ?
+                    jQuery.style(this, key, value) :
+                    jQuery.css(this, key);
+            }, key, value); //null
+        },
+
+        addClass: function(value) {
+            var len = this.length;
+            var clazz, cur, i = 0;
+            proceed = arguments.length === 0 || typeof value === "string" && value;
+            if (proceed) {
+                //\S 非空白字符
+                classes = (value || "").match(/\S+/g) || [];
+                for (; i < len; i++) {
+                    elem = this[i];
+                    //console.log(elem.className)
+                    cur = elem.nodeType === 1 && (elem.className ?
+                        (" " + elem.className + " ").replace(/[\t\r\n\f]/g, " ") :
+                        " "
+                    );
+                }
+
+                if (cur) {
+                    j = 0;
+                    while ((clazz = classes[j++])) {
+                        if (cur.indexOf(" " + clazz + " ") < 0) {
+                            cur += clazz + " ";
+                        }
+                    }
+                    elem.className = cur.trim(cur);
+                }
+            }
+            return this;
+        },
+
+        append: function() {
+            //arguments参数   callback回调
+            return this.domManip(arguments, function(elem) {
+                if (this.nodeType === 1 || this.nodeType === 11 || this.nodeType === 9) {
+                    var target = manipulationTarget(this, elem);
+                    target.appendChild(elem);
+                }
+            });
+        },
+
     })
+
+    function getStyles(elem) {
+        return window.getComputedStyle(elem, null);
+    }
 
     function createOptions(options) {
         var object = optionsCache[options] = {};
@@ -1461,1660 +1914,11 @@ js部分源码
 
     root.$ = root.jQuery = jQuery;
 })(this);
-</"></\></(\w+)\s*\></[\w\w]+></pre>
-html部分测试代码：
-<pre>
-< input id="input" />
-< div id="box">
-< script src="jQuery.1.0.2.js">
-< script>
-    //event  模拟事件对象  name 自定义参数
-    $("#box").on("createEvent", function(event, name) {
-        console.log(name)
-        console.log("loading...");
-    })
-    $("body").on("createEvent", function(event, name) {
-        console.log("loading...");
-    })
-
-    //event
-    $("#box").trigger("createEvent", "max");
-
-
-    //执行浏览器默认事件  相当于执行了原生onfocus事件(怎么做到的)？
-//             $('input').on('focus',function(){
-//                 console.log("loading...");
-//             });
-// 
-//               $('input').trigger('focus');
-</pre>
+</$1></|&#?\w+;></"></(?!area|br|col|embed|hr|img|input|link|meta|param)(([\w:]+)[^></\></(\w+)\s*\></[\w\w]+></pre>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/16/网易微专业-jq源码解析-事件绑定-自定义事件-模拟事件-完整源码/" data-id="cka5080ht0041hyxqmylbubw5" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-jq源码解析-2-5-3-事件绑定-自定义事件-模拟事件" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/11/15/网易微专业-jq源码解析-2-5-3-事件绑定-自定义事件-模拟事件/" class="article-date">
-  <time datetime="2019-11-15T08:36:58.000Z" itemprop="datePublished">2019-11-15</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/11/15/网易微专业-jq源码解析-2-5-3-事件绑定-自定义事件-模拟事件/">网易微专业-jq源码解析-2-5-3-事件绑定-自定义事件&amp;模拟事件</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>一、自定义事件设计&amp;模拟事件<br>1、自定义事件<br>说明:在实际开发中，或许原生的javascript事件或者jQuery事件不能满足开发的需求，这时候就需要我们自己编写相应的事件。<br>添加自定义事件：通过jQuery的bind()或者是on()方法，添加自定义事件如下代码，自定义了一个createEvent()事件<br>$(‘#id’).on(‘createEvent’,function(){<br>    console.log(“createEvent”)<br>});<br>触发自定义事件：通过jQuery的trigger()方法触发自定义事件createEvent。<br>$(‘#id’).trigger(“createEvent”)<br>2、模拟事件<br>trigger()方法触发事件后，会执行浏览器默认行为<br>比如：<br>$(‘input’).trigger(‘focus’)<br>以上代码不仅会触发input元素绑定的focus事件，还会使得input元素本身的到焦点(这是浏览器的默认行为)<br>如果只想触发绑定的focus事件，而不想执行浏览器的默认行为，可以使用另一种类似的方法triggerHandler()方法<br><br><br><br><br>源码分析</p>
-<p><pre><br>jQuery.fn.extend({<br>    each: function(callback, args) {<br>        return jQuery.each(this, callback, args);<br>    },<br>    //增加trigger<br>    //语法: data可选,传递到事件处理程序的额外参数。  注意:事件处理程序第一个参数默认是event<br>    trigger: function(type, data) {<br>        return this.each(function() {<br>            jQuery.event.trigger(type, data, this);<br>        });<br>    },<br>})<br></pre><br>上面的调用和之前讲的jQuery.fn.on()是差不多的，下面是jQuery.event.trigger的源码</p>
-<p><pre><br>//event:  规定指定元素上要触发的事件,可以是自定义事件,或者任何标准事件。<br>//data:  传递到事件处理程序的额外参数。<br>//elem:  Element对象<br>trigger: function(event, data, elem) {<br>    var i, cur, tmp, bubbleType, ontype, handle,<br>        i = 0,<br>        eventPath = [elem || document], //规划冒泡路线<br>        type = event.type || event,<br>        cur = tmp = elem = elem || document,<br>        //证明是ontype绑定事件<br>        ontype = /^\w+$/.test(type) &amp;&amp; “on” + type;<br>    //模拟事件对象    如果有jQuery.expando说明event已经是模拟的事件对象<br>    event = event[jQuery.expando] ?<br>        event :<br>        new jQuery.Event(type, typeof event === “object” &amp;&amp; event);<br>    //定义event.target 属性<br>    if (!event.target) {<br>        event.target = elem;<br>    }<br>    //如果没有传入了参数,就把event存储在数组中 有传递合并数组<br>    //如之前所看到：data可选,传递到事件处理程序的额外参数。注意:事件处理程序第一个参数默认是event(此为出处)<br>    data = data == null ? [event] :<br>        jQuery.markArray(data, [event]);<br>    //事件类型是否需要进行特殊化处理   focus<br>    special = jQuery.event.special[type] || {};<br>    //如果事件类型已经有trigger方法，就调用它<br>    if (special.trigger &amp;&amp; special.trigger.apply(elem, data) === false) {<br>        return;<br>    }<br>    //自己已经在冒泡路线中 不重复添加<br>    cur = cur.parentNode;<br>    //查找当前元素的父元素 添加到eventPath (规划冒泡路线)数组中<br>    for (; cur; cur = cur.parentNode) {<br>        eventPath.push(cur);<br>        tmp = cur;<br>    }<br>    if (tmp === (elem.ownerDocument || document)) { //当tmp为document时,cur为空,就退出循环<br>        eventPath.push(tmp.defaultView || tmp.parentWindow || window); //模拟冒泡到window对象<br>    }<br>    //沿着上面规划好的冒泡路线，把经过的元素节点的指定类型事件的回调逐一触发执行<br>    while ((cur = eventPath[i++])) {<br>        //先判断在缓存系统中是否有此元素绑定的此事件类型的回调方法，如果有，就取出来<br>        handle = (data_priv.get(cur, “events”) || {})[event.type] &amp;&amp; data_priv.get(cur, “handle”);<br>        if (handle) {<br>            console.log(handle)<br>            handle.apply(cur, data);<br>        }<br>    }<br>},<br></pre><br>我们注意到，上面代码调用了new jQuery.Event这个构造函数，那么，我们看一下这个构造函数</p>
-<p><pre><br>//模拟Event对象<br>jQuery.Event = function(src, props) {<br>    //创建一个jQuery.Event实例对象<br>    if (!(this instanceof jQuery.Event)) {<br>        return new jQuery.Event(src, props);<br>    }<br>    //事件类型<br>    this.type = src;<br>    // 如果传入事件没有时间戳，则创建时间戳<br>    this.timeStamp = src &amp;&amp; src.timeStamp || jQuery.now();<br>    // jQuery.Event实例对象标记<br>    this[jQuery.expando] = true;<br>}<br></pre><br>jQuery.event.special的代码,代码里有一个函数是safeActiveElement，代码实际内容<br></p>
-<p>//activeElement 属性返回文档中当前获得焦点的元素。<br>function safeActiveElement() {<br>    try {<br>        return document.activeElement;<br>    } catch (err) {}<br>}</p>
-<p><pre><br>special: {<br>    load: {<br>        // Prevent triggered image.load events from bubbling to window.load<br>        noBubble: true<br>    },<br>    focus: {<br>        // 执行默认focus方法<br>        trigger: function() {<br>            if (this !== safeActiveElement() &amp;&amp; this.focus) {<br>                //console.log( this.focus)<br>                this.focus();<br>                return false;<br>            }<br>        },<br>        delegateType: “focusin”<br>    },<br>    blur: {<br>        trigger: function() {<br>            if (this === safeActiveElement() &amp;&amp; this.blur) {<br>                this.blur();<br>                return false;<br>            }<br>        },<br>        delegateType: “focusout”<br>    },<br>    click: {<br>        // For checkbox, fire native event so checked state will be right<br>        trigger: function() {<br>            if (this.type === “checkbox” &amp;&amp; this.click &amp;&amp; jQuery.nodeName(this, “input”)) {<br>                this.click();<br>                return false;<br>            }<br>        },<br>        // For cross-browser consistency, don’t fire native .click() on links<br>        _default: function(event) {<br>            return jQuery.nodeName(event.target, “a”);<br>        }<br>    },<br>    beforeunload: {<br>        postDispatch: function(event) {<br>            // Support: Firefox 20+<br>            // Firefox doesn’t alert if the returnValue field is not set.<br>            if (event.result !== undefined) {<br>                event.originalEvent.returnValue = event.result;<br>            }<br>        }<br>    }<br>},<br></pre><br>这段源代码，个人有两个值得注意的地方，一是设置了常用事件，例如’click’,’focus’,’blur’等事件设置了默认trigger，每次执行代码的时候检测是不是默认事件，这种把常用事件trigger事件列好，对于代码的执行非常有益；第二点，记录了事件节点的父节点，使每次事件执行都能遵循事件冒泡的思想，而且每次执行的时候没，都会注意到window和document。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/15/网易微专业-jq源码解析-2-5-3-事件绑定-自定义事件-模拟事件/" data-id="cka5080e2001vhyxqftviqs2b" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-轮询" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/11/15/轮询/" class="article-date">
-  <time datetime="2019-11-15T07:49:30.000Z" itemprop="datePublished">2019-11-15</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/11/15/轮询/">轮询</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>轮询<br>概念<br>ajax 轮询的原理很简单，让浏览器间隔几秒就发送一次请求，询问服务器是否有新信息</p>
-<p>代码</p>
-<pre>
-function showUnreadNews()  
-{  
-    $(document).ready(function() {  
-        $.ajax({  
-            type: "POST",  
-            url: "unread_list.php",  
-            dataType: "json",  
-            success: function(data) {  
-                alert(data);  
-            }  
-        });  
-    });  
-}  
-setInterval('showUnreadNews()',5000);  //轮询执行，5000ms一次  
-</pre>
-长轮训
-概念
-原理跟 ajax轮询 差不多，都是采用轮询的方式，不过采取的是阻塞模型<br>
-
-也就是说，客户端发起连接后<br>
-
-如果没消息，就一直不返回Response给客户端，直到有消息才返回或超时<br>
-
-返回完之后，客户端再次建立连接，周而复始，基于事件的触发，一个事件接一个事件<br>
-
-代码
-<pre>
-function showUnreadNews()  
-{  
-    $.ajax({  
-        type: "POST",  
-        url: "unread_list.php",  
-        dataType: "json",  
-        success: function(data) {         
-            //处理返回数据
-            alert(data);
-            //再次请求
-            showUnreadNews();
-        },
-        complete:function(XMLHttpRequest,textStatus)
-        {  
-            if(textStatus=='timeout'){//判断是否超时
-                showUnreadNews();//超时，重新请求
-            }  
-        }
-    });   
-}
-</pre>
-websocket<br>
-概念<br>
-WebSocket是HTML5开始提供的一种在单个 TCP 连接上进行全双工通讯的协议。<br>
-
-浏览器和服务器只需要做一个握手的动作，然后，浏览器和服务器之间就形成了一条快速通道, 两者之间就直接可以数据互相传送。 <br>
-
-代码<br>
-<pre>
-var ws;
-
-function WebSocketTest()
-{
-   if ("WebSocket" in window)
-   {
-      alert("您的浏览器支持 WebSocket!");
-
-      // 打开一个 web socket
-      ws = new WebSocket("ws://localhost:9998/echo");
-
-      ws.onopen = function()
-      {
-         // Web Socket 已连接上，使用 send() 方法发送数据
-         ws.send("发送数据");
-         alert("数据发送中...");
-      };
-
-      ws.onmessage = function (evt) 
-      { 
-         var received_msg = evt.data;
-         alert("数据已接收..." + received_msg);
-      };
-      ws.onerror = function (evt) {
-          //出错
-          alert(JSON.stringify(evt));
-       }
-      ws.onclose = function()
-      { 
-         // 关闭 websocket
-         alert("连接已关闭..."); 
-      };
-   }
-   else
-   {
-      // 浏览器不支持 WebSocket
-      alert("您的浏览器不支持 WebSocket!");
-   }
-}
-
-ws.close();//关闭连接
-</pre>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/15/轮询/" data-id="cka5080f20034hyxqhlrzyzbz" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-jq源码解析-事件绑定-体系结构-完整源码" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/11/15/网易微专业-jq源码解析-事件绑定-体系结构-完整源码/" class="article-date">
-  <time datetime="2019-11-15T06:24:11.000Z" itemprop="datePublished">2019-11-15</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/11/15/网易微专业-jq源码解析-事件绑定-体系结构-完整源码/">网易微专业-jq源码解析-事件绑定-体系结构-完整源码</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>完整代码：</p>
-<pre>
-(function(root) {
-    var testExp = /^\s*(<[\w\w]+>)[^>]*$/;
-    var rejectExp = /^<(\w+)\s*\ ?="">(?:<\ \1="">|)$/;
-    var core_version = "1.0.1";
-    var optionsCache = {};
-    var jQuery = function(selector, context) {
-        return new jQuery.prototype.init(selector, context);
-    }
-
-    jQuery.fn = jQuery.prototype = { //原型对象
-        length: 0,
-        jquery: core_version,
-        selector: "",
-        init: function(selector, context) {
-            context = context || document;
-            var match, elem, index = 0;
-            //$()  $(undefined)  $(null) $(false)  
-            if (!selector) {
-                return this;
-            }
-
-            if (typeof selector === "string") {
-                if (selector.charAt(0) === "<" &&="" selector.charat(selector.length="" -="" 1)="==" "="">" && selector.length >= 3) {
-                    match = [selector]
-                }
-                //创建DOM
-                if (match) {
-                    //this  
-                    jQuery.merge(this, jQuery.parseHTML(selector, context));
-                    //查询DOM节点
-                } else {
-                    elem = document.querySelectorAll(selector);
-                    var elems = Array.prototype.slice.call(elem);
-                    this.length = elems.length;
-                    for (; index < elems.length; index++) {
-                        this[index] = elems[index];
-                    }
-                    this.context = context;
-                    this.selector = selector;
-                }
-            } else if (selector.nodeType) {
-                this.context = this[0] = selector;
-                this.length = 1;
-                return this;
-            }
-
-        },
-        css: function() {
-            console.log("di~~didi~~")
-        },
-        //....
-    }
-
-    jQuery.fn.init.prototype = jQuery.fn;
-
-
-    jQuery.extend = jQuery.prototype.extend = function() {
-        var target = arguments[0] || {};
-        var length = arguments.length;
-        var i = 1;
-        var deep = false; //默认为浅拷贝 
-        var option;
-        var name;
-        var copy;
-        var src;
-        var copyIsArray;
-        var clone;
-
-        if (typeof target === "boolean") {
-            deep = target;
-            target = arguments[1];
-            i = 2;
-        }
-
-        if (typeof target !== "object") {
-            target = {};
-        }
-
-        if (length == i) {
-            target = this;
-            i--; //0   
-        }
-
-        for (; i < length; i++) {
-            if ((option = arguments[i]) !== null) {
-                for (name in option) {
-                    src = target[name];
-                    copy = option[name];
-                    if (deep && (jQuery.isPlainObject(copy) || (copyIsArray = jQuery.isArray(copy)))) {
-                        if (copyIsArray) {
-                            copyIsArray = false;
-                            clone = src && jQuery.isArray(src) ? src : [];
-                        } else {
-                            clone = src && jQuery.isPlainObject(src) ? src : {};
-                        }
-                        target[name] = jQuery.extend(deep, clone, copy);
-                    } else if (copy !== undefined) {
-                        target[name] = copy;
-                    }
-                }
-            }
-        }
-        return target;
-    }
-
-
-    jQuery.extend({
-        expando: "jQuery" + (core_version + Math.random()).replace(/\D/g, ""),
-        guid: 1, //计数器
-        //类型检测     
-        isPlainObject: function(obj) {
-            return typeof obj === "object";
-        },
-
-        isArray: function(obj) {
-            return toString.call(obj) === "[object Array]";
-        },
-
-        isFunction: function(fn) {
-            return toString.call(fn) === "[object Function]";
-        },
-        //类数组转化成正真的数组  
-        markArray: function(arr, results) {
-            var ret = results || [];
-            if (arr != null) {
-                jQuery.merge(ret, typeof arr === "string" ? [arr] : arr);
-            }
-            return ret;
-        },
-
-        //合并数组
-        merge: function(first, second) {
-            var l = second.length,
-                i = first.length,
-                j = 0;
-
-            if (typeof l === "number") {
-                for (; j < l; j++) {
-                    first[i++] = second[j];
-                }
-            } else {
-                while (second[j] !== undefined) {
-                    first[i++] = second[j++];
-                }
-            }
-
-            first.length = i;
-
-            return first;
-        },
-
-        parseHTML: function(data, context) {
-            if (!data || typeof data !== "string") {
-                return null;
-            }
-            //过滤掉< a>   < a>   => a 
-            var parse = rejectExp.exec(data);
-            console.log(parse)
-            return [context.createElement(parse[1])];
-        },
-
-        //$.Callbacks用于管理函数队列
-        callbacks: function(options) {
-            options = typeof options === "string" ? (optionsCache[options] || createOptions(options)) : {};
-            var list = [];
-            var index, length, testting, memory, start, starts;
-            var fire = function(data) {
-                memory = options.memory && data;
-                index = starts || 0;
-                start = 0;
-                testting = true;
-                length = list.length;
-                for (; index < length; index++) {
-                    if (list[index].apply(data[0], data[1]) === false && options.stopOnfalse) {
-                        break;
-                    }
-                }
-            }
-            var self = {
-                add: function() {
-                    var args = Array.prototype.slice.call(arguments);
-                    start = list.length;
-                    args.forEach(function(fn) {
-                        if (toString.call(fn) === "[object Function]") {
-                            list.push(fn);
-                        }
-                    });
-                    if (memory) {
-                        starts = start;
-                        fire(memory);
-                    }
-                    return this;
-                },
-                //指定上下文对象
-                fireWith: function(context, arguments) {
-                    var args = [context, arguments];
-                    if (!options.once || !testting) {
-                        fire(args);
-                    }
-
-                },
-                //参数传递
-                fire: function() {
-                    self.fireWith(this, arguments);
-                }
-            }
-            return self;
-        },
-
-        // 异步回调解决方案
-        Deferred: function(func) {
-            var tuples = [
-                    ["resolve", "done", jQuery.callbacks("once memory"), "resolved"],
-                    ["reject", "fail", jQuery.callbacks("once memory"), "rejected"],
-                    ["notify", "progress", jQuery.callbacks("memory")]
-                ],
-                state = "pending",
-                promise = {
-                    state: function() {
-                        return state;
-                    },
-                    then: function( /* fnDone, fnFail, fnProgress */ ) {},
-                    promise: function(obj) {
-                        return obj != null ? jQuery.extend(obj, promise) : promise;
-                    }
-                },
-                deferred = {};
-
-            tuples.forEach(function(tuple, i) {
-                var list = tuple[2],
-                    stateString = tuple[3];
-
-                // promise[ done | fail | progress ] = list.add
-                promise[tuple[1]] = list.add;
-
-                // Handle state
-                if (stateString) {
-                    list.add(function() {
-                        // state = [ resolved | rejected ]
-                        state = stateString;
-                    });
-                }
-
-                // deferred[ resolve | reject | notify ]
-                deferred[tuple[0]] = function() {
-                    deferred[tuple[0] + "With"](this === deferred ? promise : this, arguments);
-                    return this;
-                };
-                deferred[tuple[0] + "With"] = list.fireWith;
-            });
-
-            // Make the deferred a promise
-            promise.promise(deferred);
-
-            return deferred;
-        },
-        //执行一个或多个对象的延迟对象的回调函数
-        when: function(subordinate) {
-            return subordinate.promise();
-        },
-
-        /*
-         object   目标源
-         callback  回调函数
-         args     自定义回调函数参数
-         */
-        each: function(object, callback, args) {
-            //object  数组对象 || object对象 
-            var length = object.length;
-            var name, i = 0;
-
-            // 自定义callback 参数
-            if (args) {
-                if (length === undefined) {
-                    for (name in object) {
-                        callback.apply(object, args);
-                    }
-                } else {
-                    for (; i < length;) {
-                        callback.apply(object[i++], args);
-                    }
-                }
-            } else {
-                if (length === undefined) {
-                    for (name in object) {
-                        callback.call(object, name, object[name]);
-                    }
-                } else {
-                    for (; i < length;) {
-                        callback.call(object[i], i, object[i++]);
-                    }
-                }
-            }
-        },
-
-    });
-    /**
-     * Data 构造函数
-     * 是为jQuery缓存所创建的数据仓库
-     * 存储当前元素的事件名称、处理函数、子元素、子元素的事件名称、子元素的处理函数
-     */
-    function Data() {
-        //jQuery.expando是jQuery的静态属性,对于jQuery的每次加载运行期间时唯一的随机数
-        this.expando = jQuery.expando + Math.random();
-        this.cache = {};
-        console.log(this.expando);
-    }
-
-    Data.uid = 1;
-
-    Data.prototype = {
-        key: function(elem) {
-            var descriptor = {},
-                unlock = elem[this.expando];
-
-            if (!unlock) {
-                unlock = Data.uid++;
-                descriptor[this.expando] = {   //钥匙
-                    value: unlock
-                };
-                //方法直接在一个对象上定义一个或多个新的属性或修改现有属性,并返回该对象。
-                //DOM   =>  jQuery101089554822917892030.7449198463843298 = 1;
-                Object.defineProperties(elem, descriptor);
-            }
-            //确保缓存对象记录信息
-            if (!this.cache[unlock]) {
-                this.cache[unlock] = {};   //  数据
-            }
-
-            return unlock;
-        },
-
-        get: function(elem, key) {
-            //找到或者创建缓存
-            var cache = this.cache[this.key(elem)];    //1  {events:{},handle:function(){}} 
-            //key 有值直接在缓存中取读
-            return key === undefined ? cache : cache[key];
-        },
-    }
-
-    var data_priv = new Data();
-
-
-
-
-    //jQuery 事件模块
-    jQuery.event = {
-        //1:利用 data_priv 数据缓存,分离事件与数据 2:元素与缓存中建立 guid 的映射关系用于查找 
-        add: function(elem, type, handler) {
-            var eventHandle, events,handlers;
-            //事件缓存 数据对象
-            var elemData = data_priv.get(elem);
-
-
-            //检测handler是否存在ID(guid)如果没有那么传给他一个ID
-            //添加ID的目的是 用来寻找或者删除相应的事件
-            if (!handler.guid) {
-                handler.guid = jQuery.guid++;   //guid == 1
-            }
-            /*
-            给缓存增加事件处理句柄
-            elemData = {
-              events:
-              handle:    
-            }
-            */
-            //同一个元素,不同事件,不重复绑定    {events:{}}
-            if (!(events = elemData.events)) {
-                events = elemData.events = {};
-            }
-            if (!(eventHandle = elemData.handle)) {
-                //Event 对象代表事件的状态 通过apply传递
-                eventHandle = elemData.handle = function(e) {
-                    return jQuery.event.dispatch.apply(eventHandle.elem, arguments);
-                }
-            }
-            eventHandle.elem = elem;
-            //通过events存储同一个元素上的多个事件   {events:{click:[]}}   
-            if (!(handlers = events[type])) {
-                handlers = events[type] = [];
-                handlers.delegateCount = 0;  //有多少事件代理默认0
-            }
-            handlers.push({
-                type: type,
-                handler: handler,
-                guid: handler.guid,
-            });
-            //添加事件
-            if (elem.addEventListener) {
-                elem.addEventListener(type, eventHandle, false);
-            }
-        },
-
-        //修复事件对象event 从缓存体中的events对象取得对应队列。
-        dispatch: function(event) {
-            //IE兼容性处理如：event.target or event.srcElement
-            //event = jQuery.event.fix(event);
-
-            //提取当前元素在cache中的events属性值。 click
-            var handlers = (data_priv.get(this, "events") || {})[event.type] || [];
-            console.log(handlers)
-            event.delegateTarget = this;
-            //执行事件处理函数
-           jQuery.event.handlers.call( this, event, handlers );
-        },
-
-        //执行事件处理函数
-        handlers: function( event, handlers ) {
-            handlers[0].handler.call(this, event);
-        },
-
-        fix: function(event) {
-            if (event[jQuery.expando]) {
-                return event;
-            }
-            // Create a writable copy of the event object and normalize some properties
-            var i, prop, copy,
-                type = event.type,
-                originalEvent = event,
-                fixHook = this.fixHooks[type];
-
-            if (!fixHook) {
-                this.fixHooks[type] = fixHook =
-                    rmouseEvent.test(type) ? this.mouseHooks :
-                    rkeyEvent.test(type) ? this.keyHooks : {};
-            }
-            copy = fixHook.props ? this.props.concat(fixHook.props) : this.props;
-
-            event = new jQuery.Event(originalEvent);
-
-            i = copy.length;
-            while (i--) {
-                prop = copy[i];
-                event[prop] = originalEvent[prop];
-            }
-
-            // Support: Cordova 2.5 (WebKit) (#13255)
-            // All events should have a target; Cordova deviceready doesn't
-            if (!event.target) {
-                event.target = document;
-            }
-
-            // Support: Safari 6.0+, Chrome < 28
-            // Target should not be a text node (#504, #13143)
-            if (event.target.nodeType === 3) {
-                event.target = event.target.parentNode;
-            }
-
-            return fixHook.filter ? fixHook.filter(event, originalEvent) : event;
-        },
-    }
-
-    jQuery.fn.extend({
-        each: function(callback, args) {
-            return jQuery.each(this, callback, args);
-        },
-
-        on: function(types, fn) {
-            var type;
-            if (typeof types === "object") {
-                for (type in types) {
-                    this.on(types[type], fn);
-                }
-            }
-            return this.each(function() {
-                //this  element对象
-                jQuery.event.add(this, types, fn);
-            });
-        }
-    })
-
-    function createOptions(options) {
-        var object = optionsCache[options] = {};
-        options.split(/\s+/).forEach(function(value) {
-            object[value] = true;
-        });
-        return object;
-    }
-
-    root.$ = root.jQuery = jQuery;
-})(this);
-</"></\></(\w+)\s*\></[\w\w]+></pre>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/15/网易微专业-jq源码解析-事件绑定-体系结构-完整源码/" data-id="cka5080gm003shyxqfrhlbcxb" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-jq源码解析-2-5-1-事件绑定-bind-delegate-on" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/11/10/网易微专业-jq源码解析-2-5-1-事件绑定-bind-delegate-on/" class="article-date">
-  <time datetime="2019-11-10T09:45:59.000Z" itemprop="datePublished">2019-11-10</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/11/10/网易微专业-jq源码解析-2-5-1-事件绑定-bind-delegate-on/">网易微专业-jq源码解析-2.5.1 事件绑定-bind/delegate/on</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>说明：bind/delegate/on，在最近的jQuery版本中bind/delegate已经被on取代了，所以本节也是重点讲述on<br>一、事件模型<br>1、DOM0 DOM2事件模型<br><img src="https://snakexu.github.io/images/wangyi/jq/on_1.png"><br>2、事件流<br><img src="https://snakexu.github.io/images/wangyi/jq/on_2.png"><br>3、事件委托<br><img src="https://snakexu.github.io/images/wangyi/jq/on_3.png"><br>实例代码：</p>
-<p><pre><br>HTML代码：<br>&lt; ul id=”proxy”&gt;<br>    &lt; li&gt;主页&lt; /li&gt;<br>    &lt; li&gt;文章&lt; /li&gt;<br>    &lt; li&gt;官宣&lt; /li&gt;<br>    &lt; li&gt;简介&lt; /li&gt;<br>&lt; /ul&gt;<br>js代码1：<br>var ElemUl = document.getElementById(“proxy”);<br>var ElemLi = ElemUl.getElementsByTagName(‘li’);<br>for (var i = 0; i &lt; ElemLi.length; i++) {<br>    ElemLi[i].onclick = function() {<br>        alert(“loading…”);<br>    }<br>}<br>js代码2：<br>var proxy = document.getElementById(“proxy”);<br>proxy.onclick = function(event) {<br>    var target = event.target;<br>    if (target.nodeName.toLowerCase() == ‘li’) {<br>        alert(“loading…”);<br>    }<br>}<br></pre><br>上面js代码1是大家马上能想出来的，代码2是利用了事件委托/事件代理，通过代理的方式，将事件绑定在ul上，这样性能表现会优于代码1<br>二、bind/delegate/on事件绑定解析<br>1、API<br><img src="https://snakexu.github.io/images/wangyi/jq/on_4.png"><br>on相当于bind和delegate的集合<br><img src="https://snakexu.github.io/images/wangyi/jq/on_5.png"><br>2、源码分析<br>(1)jQuery事件机制解决了哪些问题：<br><br>·不同浏览器下的事件兼容<br><br>·一个事件类型添加多个事件函数，一次添加多个事件类型的处理函数<br><br>·简洁的定义方式<br><br>·允许自定义事件<br><br>实例：</p>
-<p><pre><br>//多个事件绑定同一个函数<br>$(“#id”).on(“mouseover mouseout”, function() {<br>    console.log(“loading…”)<br>});</pre></p>
-<p>//多个事件绑定不同函数<br>$(“#id”).on({<br>    mouseover: function() {<br>        $(“body”).css(“background-color”, “lightgray”);<br>    },<br>    mouseout: function() {<br>        $(“body”).css(“background-color”, “lightblue”);<br>    },<br>    click: function() {<br>        $(“body”).css(“background-color”, “yellow”);<br>    }<br>});</p>
-<p>//绑定自定义事件<br>$(“#id”).on(“myOwnEvent”, function(event, showName) {<br>    console.log(“loading…”)<br>});<br>$(“#id”).trigger(“myOwnEvent”, [“max”]);<br><br>3、jQuery事件设计原型<br>(1)原型图<br><img src="https://snakexu.github.io/images/wangyi/jq/on_6.png"><br>在本课程中，老师对内容做了一些重构，并且没有做代理子元素事件，仅为自己绑定事件，也主要是为了方便大家的理解<br><br>(2)源码<br>因为是基于之前代码的功能，所以这里代码显得比较多，其实很多都是之前的内容<br><br>下面，我们把这次课程的代码单独拿出来，这样方便理解分析<br></p>
-<p><pre><br>jQuery.fn.extend({<br>    //这段代码中this是$(‘#id’)里创建的实例对象<br>    //调用jQuery.each依次执行this对象里的内容<br>    each: function(callback, args) {<br>        return jQuery.each(this, callback, args);<br>    },<br>    //$(“#id”).on(事件，事件函数)<br>    //types:事件,fn:事件函数<br>    //绑定事件首先从这里on开始<br>    on: function(types, fn) {<br>        var type;<br>        //如果传递进来的types事件是对象/数组等<br>        if (typeof types === “object”) {<br>            for (type in types) {<br>                this.on(types[type], fn);<br>            }<br>        }<br>        //如果传递进来的types参数不是对象<br>        //this.each就是jQuery.fn.each<br>        return this.each(function() {<br>            //this  element对象<br>            //jQuery.event是jQuery内置的一个事件系统<br>            jQuery.event.add(this, types, fn);<br>        });<br>    }<br>})<br></pre><br>jQuery.each代码</p>
-<p><pre><br>/<em><br> object   目标源<br> callback  回调函数<br> args     自定义回调函数参数
- </em>/<br>each: function(object, callback, args) {<br>    //object  数组对象 || object对象<br>    //此处传递过来的object实例对象是jQuery的实例对象，有length的属性<br>    var length = object.length;<br>    var name, i = 0;</pre></p>
-<pre><code>// 自定义callback 参数
-if (args) {
-    if (length === undefined) {
-        for (name in object) {
-            callback.apply(object, args);
-        }
-    } else {
-        for (; i &lt; length;) {
-            callback.apply(object[i++], args);
-        }
-    }
-} else {
-    if (length === undefined) {
-        for (name in object) {
-            callback.call(object, name, object[name]);
-        }
-    } else {
-        //初始传进来的参数没有args，而jq本身有length属性，所以执行下面的循环
-        for (; i &lt; length;) {
-            //callback是jQuery.event.add,依次对传进来的每一个实例化对象执行jQuery.event.add
-            callback.call(object[i], i, object[i++]);
-        }
-    }
-}
-</code></pre><p>},<br><br>jQuery.event.add代码：</p>
-<p><pre><br>//1:利用 data_priv 数据缓存,分离事件与数据 2:元素与缓存中建立 guid 的映射关系用于查找<br>add: function(elem, type, handler) {<br>    //elem jQuery引擎所找到的DOM元素<br>    var eventHandle, events,handlers;<br>    //事件缓存 数据对象，data_priv来源在下面一段代码里<br>    var elemData = data_priv.get(elem);//一开始，elemData={}</pre></p>
-<pre><code>//检测handler是否存在ID(guid)如果没有那么传给他一个ID
-//添加ID的目的是 用来寻找或者删除相应的事件
-//补充：guid是按事件添加的，比如我们有三个div，每个div的class=&quot;box&quot;,
-//那么，$(&apos;.box&apos;).on(&apos;click&apos;,function(){console.log(&apos;loading...&apos;)})
-//$(&apos;box&apos;)在each里是执行三次的，因为我们有三个class=&quot;box&quot;的元素，
-//但是，这三个元素在事件触发时执行相同的函数function(){console.log(&apos;loading...&apos;)}
-//这个被执行的函数只有这一个，也就是说第一个class=&quot;box&quot;的元素执行到这里的时候，handler添加了属性guid
-//那么剩下的两个class=&quot;box&quot;的元素执行到这里的时候，不再执行handler.guid = jQuery.guid++;
-if (!handler.guid) {
-    handler.guid = jQuery.guid++;   //guid == 1
-}
-/*
-给缓存增加事件处理句柄
-elemData = {
-  events:
-  handle:    
-}
-*/
-//同一个元素,不同事件,不重复绑定    {events:{}}
-//变量=undefined 的结果为undefined,!undefined = true,
-//如果elemData.events已经存在，则判断条件为false
-if (!(events = elemData.events)) { 
-    events = elemData.events = {};
-}
-if (!(eventHandle = elemData.handle)) {
-    //Event 对象代表事件的状态 通过apply传递
-    eventHandle = elemData.handle = function(e) {
-        return jQuery.event.dispatch.apply(eventHandle.elem, arguments);
-    }
-}
-eventHandle.elem = elem;
-//通过events存储同一个元素上的多个事件   {events:{click:[]}}   
-if (!(handlers = events[type])) {
-    handlers = events[type] = [];
-    handlers.delegateCount = 0;  //有多少事件代理默认0
-}
-handlers.push({
-    type: type,
-    handler: handler,
-    guid: handler.guid,
-});
-//添加事件
-if (elem.addEventListener) {
-    elem.addEventListener(type, eventHandle, false);
-}
-</code></pre><p>},<br><br>上面的代码中data_priv来源如下</p>
-<p><pre><br>/**</pre></p>
-<ul>
-<li>Data 构造函数</li>
-<li>是为jQuery缓存所创建的数据仓库</li>
-<li>存储当前元素的事件名称、处理函数、子元素、子元素的事件名称、子元素的处理函数<br>*/<br>function Data() {<br> //jQuery.expando是jQuery的静态属性,对于jQuery的每次加载运行期间时唯一的随机数<br> this.expando = jQuery.expando + Math.random();//本质上就是生成了一个随机数<br> this.cache = {};<br>}</li>
-</ul>
-<p>Data.uid = 1;</p>
-<p>Data.prototype = {<br>    key: function(elem) {<br>        var descriptor = {},<br>            unlock = elem[this.expando];</p>
-<pre><code>    if (!unlock) {
-        unlock = Data.uid++;
-        descriptor[this.expando] = {   //钥匙
-            value: unlock
-        };
-        //方法直接在一个对象上定义一个或多个新的属性或修改现有属性,并返回该对象。
-        //DOM   =&gt;  jQuery101089554822917892030.7449198463843298 = 1;
-        Object.defineProperties(elem, descriptor);
-    }
-    //确保缓存对象记录信息
-    if (!this.cache[unlock]) {
-        this.cache[unlock] = {};   //  数据
-    }
-
-    return unlock;
-},
-
-get: function(elem, key) {
-    //找到或者创建缓存,第一次执行的时候this.key[elem]=1,this.cache[1]={}
-    var cache = this.cache[this.key(elem)];    //1  {events:{},handle:function(){}} 
-    //key 有值直接在缓存中取读
-    return key === undefined ? cache : cache[key];
-},
-</code></pre><p>}</p>
-<p>var data_priv = new Data();<br><br>jQuery.event.dispatch代码</p>
-<p><pre><br>//修复事件对象event(进行兼容性的处理) 从缓存体中的events对象取得对应队列。<br>dispatch: function(event) {<br>    //IE兼容性处理如：event.target or event.srcElement<br>    //event = jQuery.event.fix(event);</pre></p>
-<pre><code>//提取当前元素在cache中的events属性值。 click
-var handlers = (data_priv.get(this, &quot;events&quot;) || {})[event.type] || [];
-event.delegateTarget = this;
-//执行事件处理函数
-</code></pre><p>   jQuery.event.handlers.call( this, event, handlers );<br>},<br><br>这里最主要的思想之一是分离事件与数据，为自定义事件打下基础。<br><br>2019/11/19补充<br>关于上面的一段代码<br><br>if (!handler.guid) {<br><br>    handler.guid = jQuery.guid++;   <br><br>}<br><br>我做了一些解释，是我在控制台打印了一些东西后的结论:<br><img src="https://snakexu.github.io/images/wangyi/jq/on_7.png"><br><img src="https://snakexu.github.io/images/wangyi/jq/on_8.png"><br><img src="https://snakexu.github.io/images/wangyi/jq/on_9.png"><br>上面的控制台打印，可以看到，若有若干个class相同的元素$(‘.类明’).on(‘事件名’,事件函数)会取到若干个元素，执行jQuery.fn.on-&gt;jQuery.each-&gt;jQuery.event.add，是对每个元素都执行了jQuery.event.add，但是对于实例化的同类名绑定的相同事件始终只是指向了一个事件执行函数，就是$(‘.类明’).on(‘事件名’,事件函数)中的事件函数。至于说参数是传值引用的，<a href="https://snakexu.github.io/2018/11/12/js%E5%8F%82%E6%95%B0%E6%8C%89%E5%80%BC%E4%BC%A0%E9%80%92/" target="_blank" rel="noopener">https://snakexu.github.io/2018/11/12/js%E5%8F%82%E6%95%B0%E6%8C%89%E5%80%BC%E4%BC%A0%E9%80%92/</a> 我这里对参数是按值传递有一些解释</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/10/网易微专业-jq源码解析-2-5-1-事件绑定-bind-delegate-on/" data-id="cka5080gm003rhyxq6qoppkwd" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-jq源码解析-1107直播课deferred相关" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/11/09/网易微专业-jq源码解析-1107直播课deferred相关/" class="article-date">
-  <time datetime="2019-11-09T07:53:26.000Z" itemprop="datePublished">2019-11-09</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/11/09/网易微专业-jq源码解析-1107直播课deferred相关/">网易微专业-jq源码解析-1107直播课deferred相关</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1、Callbacks设计<br><img src="https://snakexu.github.io/images/wangyi/jq/1107_1.png"><br>2、Deferred对象设计<br><img src="https://snakexu.github.io/images/wangyi/jq/1107_2.png"><br><img src="https://snakexu.github.io/images/wangyi/jq/1107_3.png"><br>究其本质，就是在不同执行状态，调用$.Callbacks.add()添加不同函数，在事件状态改变的时候调用不同的函数<br><br>3、我在之前笔记里有个问题<br><br><img src="https://snakexu.github.io/images/wangyi/jq/1107_4.png"><br>这里为什么要在promise的上下文中执行<br><br>这个问题老师讲解了，这个涉及到对象状态的改变与凝固：一个对象在状态改变之后，我们首先会返回一个deferred.promise()去凝固状态(究其本质就是为了在事件状态改变之后，不再有改变其状态的可能)，而这里promise的没有修改状态的权限(deferred有修改状态的权限)<br>4、关于jQuery.extend({},obj1,obj2)<br><br>对这个要有一个认知：这个是为jQuery架构服务的，并非是单独的功能；还有一个特点：以默认配置为优先，以用户配置为覆盖<br>5、关于deferred的章节里，有个when调用的方法，这里进行升级修改<br><br>首先，我们回顾下，deferred.promise()有done()/fail()/proress()/promise()/state()/then()方法<br><br>然后，相信大多数人对es6的promise已经有一个了解，Promise.prototype.then()方法的第一个参数是resolved状态的回调函数，第二个参数(可选)是rejected状态的回调函数,另外就是promise的链式回调的思路</p>
-<p><pre><br>// 异步回调解决方案<br>Deferred: function(func) {<br>    var tuples = [<br>            [“resolve”, “done”, jQuery.callbacks(“once memory”), “resolved”],<br>            [“reject”, “fail”, jQuery.callbacks(“once memory”), “rejected”],<br>            [“notify”, “progress”, jQuery.callbacks(“memory”)]<br>        ],<br>        state = “pending”,<br>        //promise   权限分配  add   添加callback<br>        promise = {<br>            state: function() {<br>                return state;<br>            },<br>            then: function( /<em> fnDone, fnFail, fnProgress </em>/ ) {<br>                var fns = [].slice.call(arguments); //真正数组对象<br>                //创建一个Deferred 延迟对象  返回一个promise对象<br>                return jQuery.Deferred(function(newdefer) {<br>                    tuples.forEach(function(tuple, i) {<br>                        var fn = jQuery.isFunction(fns[i]) &amp;&amp; fns[i];<br>                        /<em><br>                        deferred   通过闭包去访问  此处链接式调用时指向的deferred对象<br>                        newdefer   通过参数传递    指向新创建的deferred对象
-                        </em>/<br>                        //resolve  队列中的 callback<br>                        deferred<a href="function(">tuple[1]</a> {<br>                            var returndefer = fn &amp;&amp; fn.apply(this, arguments);<br>                            //这个判断里面的内容就是链式回调的重点了<br>                            if (returndefer &amp;&amp; jQuery.isFunction(returndefer.promise)) {<br>                                 //console.log(newdefer)<br>                                 returndefer.done(newdefer.resolve)<br>                                            .fail(newdefer.reject)<br>                                            .progress(newdefer.notify);<br>                            }<br>                        });</pre></p>
-<pre><code>                })
-            }).promise();
-        },
-        promise: function(obj) {
-            return obj != null ? jQuery.extend(obj, promise) : promise;
-        }
-    },
-    deferred = {};
-
-tuples.forEach(function(tuple, i) {
-    var list = tuple[2],
-        stateString = tuple[3];
-
-    // promise[ done | fail | progress ] = list.add
-    promise[tuple[1]] = list.add;
-
-    // Handle state
-    if (stateString) {
-        list.add(function() {
-            // state = [ resolved | rejected ]
-            state = stateString;
-        });
-    }
-
-    // deferred[ resolve | reject | notify ]  der.resolve(&quot;加载成功&quot;);    
-    deferred[tuple[0]] = function() {
-        deferred[tuple[0] + &quot;With&quot;](this === deferred ? promise : this, arguments);
-        return this;
-    };
-    deferred[tuple[0] + &quot;With&quot;] = list.fireWith;
-});
-
-// Make the deferred a promise
-promise.promise(deferred);
-
-//新创建的deferred 对象
-if (func) {
-    func.call(deferred, deferred);
-}
-return deferred;
-</code></pre><p>},<br><br>这节内容，我也将源码单独作为一篇文章写出了，其中有部分内容是老师在上课的是对链式回调思路的解释，而链式回调这部分内容的思路个人认为可以说是非常经典了。我们要理解，链式回调，每一个then都是对之前调用这个then而返回的deferred的的反馈，代码中非常巧妙的通过闭包和传参的方式保留了每次deferred和then的callbacks队列</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/09/网易微专业-jq源码解析-1107直播课deferred相关/" data-id="cka5080dx001ohyxq7oeuq5yb" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-jq源码解析-2-4-1-延时对象-Deferred概念-源码剖析" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/11/08/网易微专业-jq源码解析-2-4-1-延时对象-Deferred概念-源码剖析/" class="article-date">
-  <time datetime="2019-11-08T14:06:59.000Z" itemprop="datePublished">2019-11-08</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/11/08/网易微专业-jq源码解析-2-4-1-延时对象-Deferred概念-源码剖析/">网易微专业-jq源码解析-2.4.1-延时对象-Deferred概念 &amp; 源码剖析</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>一、promise/A+规范<br>1、Promise作为一个模型，提供了一个在软件工程中描述延时（或将来）概念的解决方案:<br>(1)、表示一个异步操作的最终结果;<br>(2)、与Promise最主要的交互方法是，通过将函数传入它的then方法，从而获得Promise最终的值或者Promise最终拒绝(reject)的原因<br>(3)、一个Promise必须处于以下三种状态之一：pending，resolved或rejected；<br>(4)、一个Promise必须提供一个then方法来获取其成功（resolve）的值或者错误（reject）原因。<br>而Deferred是这种规范的具体实现<br><img src="https://snakexu.github.io/images/wangyi/jq/deferred_1.png"><br>2、Deferred API<br>jQuery.Deferred():一个构造函数，返回一个链式实用对象方法来注册多个回调，回调队列，调用回调队列，并转达任何同步或异步函数的成功或失败状态<br>deferred.done():当Deferred(延迟)对象解决时，调用添加处理程序<br>deferred.fail():当Deferred(延迟)对象拒绝时，调用添加处理程序<br>deferred.proress():当Deferred(延迟)对象生成进度通知时，调用(已)添加的处理程序<br>jQuery.when():提供一种方法来执行一个或多个对象的回调函数，Deferred(延迟)对象通常表示异步事件<br>.promise():返回一个Promise对象用来观察当某种类型的所有行动绑定到集合，排队与否还是已经完成<br>二、源码<br>1、DEMO</p>
-<pre>
-var wait = function() {
-    var der = $.Deferred();     //延迟对象    deferred 
-    var test = function() {
-        console.log("老司机开车了");
-        der.resolve("max");     //成功     队列中的处理函数  调用成功这个队列中的处理函数
-    }
-    setTimeout(test, 2000);   
-    return der;    //延迟对象 
-}       
-//延迟对象的状态 决定调用那个队列中的处理函数
-$.when(wait())     //promise对象promise.done()   self.add
-    .done(function(name) {
-        console.log(name)
-        console.log("执行成功");
-    })
-    .fail(function() {
-        console.log("执行失败");
-    });
-</pre>
-表急，我怎么会只给demo不给源码呢<br>
-2、源码
-<pre>
-(function(root) {
-    var testExp = /^\s*(<[\w\w]+>)[^>]*$/;
-    var rejectExp = /^<(\w+)\s*\ ?="">(?:<\ \1="">|)$/;
-    var version = "1.0.1";
-    var optionsCache = {};
-    var jQuery = function(selector, context) {
-        return new jQuery.prototype.init(selector, context);
-    }
-
-    jQuery.fn = jQuery.prototype = { //原型对象
-        length: 0,
-        jquery: version,
-        selector: "",
-        init: function(selector, context) {
-            context = context || document;
-            var match, elem, index = 0;
-            //$()  $(undefined)  $(null) $(false)  
-            if (!selector) {
-                return this;
-            }
-
-            if (typeof selector === "string") {
-                if (selector.charAt(0) === "<" &&="" selector.charat(selector.length="" -="" 1)="==" "="">" && selector.length >= 3) {
-                    match = [selector]
-                }
-                //创建DOM
-                if (match) {
-                    //this  
-                    jQuery.merge(this, jQuery.parseHTML(selector, context));
-                    //查询DOM节点
-                } else {
-                    elem = document.querySelectorAll(selector);
-                    var elems = Array.prototype.slice.call(elem);
-                    this.length = elems.length;
-                    for (; index < elems.length; index++) {
-                        this[index] = elems[index];
-                    }
-                    this.context = context;
-                    this.selector = selector;
-                }
-            } else if (selector.nodeType) {
-                this.context = this[0] = selector;
-                this.length = 1;
-                return this;
-            }
-
-        },
-        css: function() {
-            console.log("di~~didi~~")
-        },
-        //....
-    }
-
-    jQuery.fn.init.prototype = jQuery.fn;
-
-
-    jQuery.extend = jQuery.prototype.extend = function() {
-        var target = arguments[0] || {};
-        var length = arguments.length;
-        var i = 1;
-        var deep = false; //默认为浅拷贝 
-        var option;
-        var name;
-        var copy;
-        var src;
-        var copyIsArray;
-        var clone;
-
-        if (typeof target === "boolean") {
-            deep = target;
-            target = arguments[1];
-            i = 2;
-        }
-
-        if (typeof target !== "object") {
-            target = {};
-        }
-
-        if (length == i) {
-            target = this;
-            i--; //0   
-        }
-
-        for (; i < length; i++) {
-            if ((option = arguments[i]) !== null) {
-                for (name in option) {
-                    src = target[name];
-                    copy = option[name];
-                    if (deep && (jQuery.isPlainObject(copy) || (copyIsArray = jQuery.isArray(copy)))) {
-                        if (copyIsArray) {
-                            copyIsArray = false;
-                            clone = src && jQuery.isArray(src) ? src : [];
-                        } else {
-                            clone = src && jQuery.isPlainObject(src) ? src : {};
-                        }
-                        target[name] = jQuery.extend(deep, clone, copy);
-                    } else if (copy !== undefined) {
-                        target[name] = copy;
-                    }
-                }
-            }
-        }
-        return target;
-    }
-
-
-    jQuery.extend({
-        //类型检测     
-        isPlainObject: function(obj) {
-            return typeof obj === "object";
-        },
-
-        isArray: function(obj) {
-            return toString.call(obj) === "[object Array]";
-        },
-
-        isFunction: function(fn) {
-            return toString.call(fn) === "[object Function]";
-        },
-        //类数组转化成正真的数组  
-        markArray: function(arr, results) {
-            var ret = results || [];
-            if (arr != null) {
-                jQuery.merge(ret, typeof arr === "string" ? [arr] : arr);
-            }
-            return ret;
-        },
-
-        //合并数组
-        merge: function(first, second) {
-            var l = second.length,
-                i = first.length,
-                j = 0;
-
-            if (typeof l === "number") {
-                for (; j < l; j++) {
-                    first[i++] = second[j];
-                }
-            } else {
-                while (second[j] !== undefined) {
-                    first[i++] = second[j++];
-                }
-            }
-
-            first.length = i;
-
-            return first;
-        },
-
-        parseHTML: function(data, context) {
-            if (!data || typeof data !== "string") {
-                return null;
-            }
-            //过滤掉< a >   < a >   => a 
-            var parse = rejectExp.exec(data);
-            console.log(parse)
-            return [context.createElement(parse[1])];
-        },
-
-        //$.Callbacks用于管理函数队列
-        callbacks: function(options) {
-            options = typeof options === "string" ? (optionsCache[options] || createOptions(options)) : {};
-            var list = [];
-            var index, length, testting, memory, start, starts;
-            var fire = function(data) {
-                memory = options.memory && data;
-                index = starts || 0;
-                start = 0;
-                testting = true;
-                length = list.length;
-                for (; index < length; index++) {
-                    if (list[index].apply(data[0], data[1]) === false && options.stopOnfalse) {
-                        break;
-                    }
-                }
-            }
-            var self = {
-                add: function() {
-                    var args = Array.prototype.slice.call(arguments);
-                    start = list.length;
-                    args.forEach(function(fn) {
-                        if (toString.call(fn) === "[object Function]") {
-                            list.push(fn);
-                        }
-                    });
-                    if (memory) {
-                        starts = start;
-                        fire(memory);
-                    }
-                    return this;
-                },
-                //指定上下文对象
-                fireWith: function(context, arguments) {
-                    var args = [context, arguments];
-                    if (!options.once || !testting) {
-                        fire(args);
-                    }
-
-                },
-                //参数传递
-                fire: function() {
-                    self.fireWith(this, arguments);
-                }
-            }
-            return self;
-        },
-
-        // 异步回调解决方案
-        Deferred: function(func) {
-            //延迟对象三种不同状态信息的描述
-            //状态，往队列里添加处理函数 tuples[i][2]创建队列（创建对象副本的引用）
-            //tuples[i][3] 最终状态信息描述
-            var tuples = [
-                    ["resolve", "done", jQuery.callbacks("once memory"), "resolved"],
-                    ["reject", "fail", jQuery.callbacks("once memory"), "rejected"],
-                    ["notify", "progress", jQuery.callbacks("memory")]
-                ],
-                state = "pending",
-                promise = {
-                    state: function() {
-                        return state;
-                    },
-                    then: function( /* fnDone, fnFail, fnProgress */ ) {
-                    },
-                    promise: function(obj) {
-                        return obj != null ? jQuery.extend(obj, promise) : promise;
-                    }
-                },
-                //延迟对象 属性 方法 
-                deferred = {}; //resolve | reject | notify | state | then | promise
-
-            tuples.forEach(function(tuple, i) {
-                //即tuple[i][2]jQuery.callbacks("")
-                //创建一个队列 callbacks里self对象的引用
-                var list = tuple[2],
-                    stateString = tuple[3];//最终状态信息的描述
-
-                // promise[ done | fail | progress ] = list.add 添加处理函数
-                promise[tuple[1]] = list.add;
-
-                // Handle state
-                if (stateString) { //只有在成功或者失败的情况下，添加第一个处理程序
-                    list.add(function() {
-                        // state = [ resolved | rejected ]
-                        state = stateString;
-                    });
-                }
-
-                // deferred[ resolve | reject | notify ] 延迟对象的状态
-                deferred[tuple[0]] = function() {
-                    //promise[tuple[1]] = list.add; 
-                    deferred[tuple[0] + "With"](this === deferred ? promise : this, arguments);
-                    return this;
-                };
-                //list.fireWith 执行队列，调用队列中的处理函数并且传参，绑定执行时上下文对象
-                deferred[tuple[0] + "With"] = list.fireWith;
-            });
-
-            // Make the deferred a promise
-            promise.promise(deferred);
-
-            return deferred;
-        },
-        //执行一个或多个对象的延迟对象的回调函数
-        when: function(subordinate) {
-            return subordinate.promise();
-        },
-
-    });
-
-    function createOptions(options) {
-        var object = optionsCache[options] = {};
-        options.split(/\s+/).forEach(function(value) {
-            object[value] = true;
-        });
-        return object;
-    }
-
-    root.$ = root.jQuery = jQuery;
-})(this);
-</"></\></(\w+)\s*\></[\w\w]+></pre>
-其中有些部分，是之前课程的内容，这里主要从Deferred开始介绍。另外需要注意的是，本章内容基于上节课程$.Callbacks。Deferred实际上就是基于$.Callbacks,对于不同状态(resolve/reject/done)调用$.Callbacks.add()添加不同函数,可以如图理解：
-<img src="https://snakexu.github.io/images/wangyi/jq/1107_2.png">
-<img src="https://snakexu.github.io/images/wangyi/jq/1107_3.png">
-在源码里，个人认为非常值得关注的点：<br>
-1、定义了tuples数组，数组里包含了Deferred相关的状态，添加状态相关的函数的操作，整个编程过程其实是巧妙的运用了这个数组<br>
-2、创建的promise对象<br>
-    (1)扩展done、fail、progress三个方法，分别对应成功、失败、进行中的三个队列，并指向队列中的add方法，用于向队列中添加执行函数；<br>
-    (2)扩展了state、then和promise三个方法<br>
-    (2-1)其中state是用于记录状态<br>
-    (2-2)then是用于往成功或失败的队列添加执行函数，并在成功或失败时调用。<br>
-    (2-3)promise是用于扩展deferred对象或者返回其本身。<br>
-3、创建一个deferred对象：<br>
-    (1)扩展了resolve方法，对应成功队列，当被执行时，会往deferred对象上扩展并resolveWith函数，该resolveWith指向的是队列的fireWith函数，也即是执行函数。同时，还可以在执行过程中传参，将参数传递到最终的执行函数内部。<br>
-    (2)还扩展了reject和notify，其逻辑和resolve一致，只是分别指向了失败和进行中两个队列。<br>
-4、创建一个状态state。在成功或者失败的队列中，我们首先会添加第一条处理函数，改变state的状态为成功或者失败。<br>
-5、创建一个与Deferred函数平级的when函数，接收一个延迟对象，然后去调用该延迟对象的promise方法，也就是第二点。<br>
-
-其实关于这节课程，我还是有疑问的，不是特别理解promise和deferred对象为啥这么定义和应用过程中这两个对象的内在逻辑，还有比如<br>
-deferred[tuple[0] + "With"](this === deferred ? promise : this, arguments);<br>
-这个地方，为什么要在promise的上下文中执行。其实还是缺乏对这段内容的深刻理解。后续还会继续学习这段内容的
-<br>
-最后，我在jQuery3.4.1的源码种找到了相关的一段内容，还没有好好研究，先放在这里，待日后细细琢磨
-<pre>
-jQuery.extend( {
-
-    Deferred: function( func ) {
-        var tuples = [
-
-                // action, add listener, callbacks,
-                // ... .then handlers, argument index, [final state]
-                [ "notify", "progress", jQuery.Callbacks( "memory" ),
-                    jQuery.Callbacks( "memory" ), 2 ],
-                [ "resolve", "done", jQuery.Callbacks( "once memory" ),
-                    jQuery.Callbacks( "once memory" ), 0, "resolved" ],
-                [ "reject", "fail", jQuery.Callbacks( "once memory" ),
-                    jQuery.Callbacks( "once memory" ), 1, "rejected" ]
-            ],
-            state = "pending",
-            promise = {
-                state: function() {
-                    return state;
-                },
-                always: function() {
-                    deferred.done( arguments ).fail( arguments );
-                    return this;
-                },
-                "catch": function( fn ) {
-                    return promise.then( null, fn );
-                },
-
-                // Keep pipe for back-compat
-                pipe: function( /* fnDone, fnFail, fnProgress */ ) {
-                    var fns = arguments;
-
-                    return jQuery.Deferred( function( newDefer ) {
-                        jQuery.each( tuples, function( i, tuple ) {
-
-                            // Map tuples (progress, done, fail) to arguments (done, fail, progress)
-                            var fn = isFunction( fns[ tuple[ 4 ] ] ) && fns[ tuple[ 4 ] ];
-
-                            // deferred.progress(function() { bind to newDefer or newDefer.notify })
-                            // deferred.done(function() { bind to newDefer or newDefer.resolve })
-                            // deferred.fail(function() { bind to newDefer or newDefer.reject })
-                            deferred[ tuple[ 1 ] ]( function() {
-                                var returned = fn && fn.apply( this, arguments );
-                                if ( returned && isFunction( returned.promise ) ) {
-                                    returned.promise()
-                                        .progress( newDefer.notify )
-                                        .done( newDefer.resolve )
-                                        .fail( newDefer.reject );
-                                } else {
-                                    newDefer[ tuple[ 0 ] + "With" ](
-                                        this,
-                                        fn ? [ returned ] : arguments
-                                    );
-                                }
-                            } );
-                        } );
-                        fns = null;
-                    } ).promise();
-                },
-                then: function( onFulfilled, onRejected, onProgress ) {
-                    var maxDepth = 0;
-                    function resolve( depth, deferred, handler, special ) {
-                        return function() {
-                            var that = this,
-                                args = arguments,
-                                mightThrow = function() {
-                                    var returned, then;
-
-                                    // Support: Promises/A+ section 2.3.3.3.3
-                                    // https://promisesaplus.com/#point-59
-                                    // Ignore double-resolution attempts
-                                    if ( depth < maxDepth ) {
-                                        return;
-                                    }
-
-                                    returned = handler.apply( that, args );
-
-                                    // Support: Promises/A+ section 2.3.1
-                                    // https://promisesaplus.com/#point-48
-                                    if ( returned === deferred.promise() ) {
-                                        throw new TypeError( "Thenable self-resolution" );
-                                    }
-
-                                    // Support: Promises/A+ sections 2.3.3.1, 3.5
-                                    // https://promisesaplus.com/#point-54
-                                    // https://promisesaplus.com/#point-75
-                                    // Retrieve `then` only once
-                                    then = returned &&
-
-                                        // Support: Promises/A+ section 2.3.4
-                                        // https://promisesaplus.com/#point-64
-                                        // Only check objects and functions for thenability
-                                        ( typeof returned === "object" ||
-                                            typeof returned === "function" ) &&
-                                        returned.then;
-
-                                    // Handle a returned thenable
-                                    if ( isFunction( then ) ) {
-
-                                        // Special processors (notify) just wait for resolution
-                                        if ( special ) {
-                                            then.call(
-                                                returned,
-                                                resolve( maxDepth, deferred, Identity, special ),
-                                                resolve( maxDepth, deferred, Thrower, special )
-                                            );
-
-                                        // Normal processors (resolve) also hook into progress
-                                        } else {
-
-                                            // ...and disregard older resolution values
-                                            maxDepth++;
-
-                                            then.call(
-                                                returned,
-                                                resolve( maxDepth, deferred, Identity, special ),
-                                                resolve( maxDepth, deferred, Thrower, special ),
-                                                resolve( maxDepth, deferred, Identity,
-                                                    deferred.notifyWith )
-                                            );
-                                        }
-
-                                    // Handle all other returned values
-                                    } else {
-
-                                        // Only substitute handlers pass on context
-                                        // and multiple values (non-spec behavior)
-                                        if ( handler !== Identity ) {
-                                            that = undefined;
-                                            args = [ returned ];
-                                        }
-
-                                        // Process the value(s)
-                                        // Default process is resolve
-                                        ( special || deferred.resolveWith )( that, args );
-                                    }
-                                },
-
-                                // Only normal processors (resolve) catch and reject exceptions
-                                process = special ?
-                                    mightThrow :
-                                    function() {
-                                        try {
-                                            mightThrow();
-                                        } catch ( e ) {
-
-                                            if ( jQuery.Deferred.exceptionHook ) {
-                                                jQuery.Deferred.exceptionHook( e,
-                                                    process.stackTrace );
-                                            }
-
-                                            // Support: Promises/A+ section 2.3.3.3.4.1
-                                            // https://promisesaplus.com/#point-61
-                                            // Ignore post-resolution exceptions
-                                            if ( depth + 1 >= maxDepth ) {
-
-                                                // Only substitute handlers pass on context
-                                                // and multiple values (non-spec behavior)
-                                                if ( handler !== Thrower ) {
-                                                    that = undefined;
-                                                    args = [ e ];
-                                                }
-
-                                                deferred.rejectWith( that, args );
-                                            }
-                                        }
-                                    };
-
-                            // Support: Promises/A+ section 2.3.3.3.1
-                            // https://promisesaplus.com/#point-57
-                            // Re-resolve promises immediately to dodge false rejection from
-                            // subsequent errors
-                            if ( depth ) {
-                                process();
-                            } else {
-
-                                // Call an optional hook to record the stack, in case of exception
-                                // since it's otherwise lost when execution goes async
-                                if ( jQuery.Deferred.getStackHook ) {
-                                    process.stackTrace = jQuery.Deferred.getStackHook();
-                                }
-                                window.setTimeout( process );
-                            }
-                        };
-                    }
-
-                    return jQuery.Deferred( function( newDefer ) {
-
-                        // progress_handlers.add( ... )
-                        tuples[ 0 ][ 3 ].add(
-                            resolve(
-                                0,
-                                newDefer,
-                                isFunction( onProgress ) ?
-                                    onProgress :
-                                    Identity,
-                                newDefer.notifyWith
-                            )
-                        );
-
-                        // fulfilled_handlers.add( ... )
-                        tuples[ 1 ][ 3 ].add(
-                            resolve(
-                                0,
-                                newDefer,
-                                isFunction( onFulfilled ) ?
-                                    onFulfilled :
-                                    Identity
-                            )
-                        );
-
-                        // rejected_handlers.add( ... )
-                        tuples[ 2 ][ 3 ].add(
-                            resolve(
-                                0,
-                                newDefer,
-                                isFunction( onRejected ) ?
-                                    onRejected :
-                                    Thrower
-                            )
-                        );
-                    } ).promise();
-                },
-
-                // Get a promise for this deferred
-                // If obj is provided, the promise aspect is added to the object
-                promise: function( obj ) {
-                    return obj != null ? jQuery.extend( obj, promise ) : promise;
-                }
-            },
-            deferred = {};
-
-        // Add list-specific methods
-        jQuery.each( tuples, function( i, tuple ) {
-            var list = tuple[ 2 ],
-                stateString = tuple[ 5 ];
-
-            // promise.progress = list.add
-            // promise.done = list.add
-            // promise.fail = list.add
-            promise[ tuple[ 1 ] ] = list.add;
-
-            // Handle state
-            if ( stateString ) {
-                list.add(
-                    function() {
-
-                        // state = "resolved" (i.e., fulfilled)
-                        // state = "rejected"
-                        state = stateString;
-                    },
-
-                    // rejected_callbacks.disable
-                    // fulfilled_callbacks.disable
-                    tuples[ 3 - i ][ 2 ].disable,
-
-                    // rejected_handlers.disable
-                    // fulfilled_handlers.disable
-                    tuples[ 3 - i ][ 3 ].disable,
-
-                    // progress_callbacks.lock
-                    tuples[ 0 ][ 2 ].lock,
-
-                    // progress_handlers.lock
-                    tuples[ 0 ][ 3 ].lock
-                );
-            }
-
-            // progress_handlers.fire
-            // fulfilled_handlers.fire
-            // rejected_handlers.fire
-            list.add( tuple[ 3 ].fire );
-
-            // deferred.notify = function() { deferred.notifyWith(...) }
-            // deferred.resolve = function() { deferred.resolveWith(...) }
-            // deferred.reject = function() { deferred.rejectWith(...) }
-            deferred[ tuple[ 0 ] ] = function() {
-                deferred[ tuple[ 0 ] + "With" ]( this === deferred ? undefined : this, arguments );
-                return this;
-            };
-
-            // deferred.notifyWith = list.fireWith
-            // deferred.resolveWith = list.fireWith
-            // deferred.rejectWith = list.fireWith
-            deferred[ tuple[ 0 ] + "With" ] = list.fireWith;
-        } );
-
-        // Make the deferred a promise
-        promise.promise( deferred );
-
-        // Call given func if any
-        if ( func ) {
-            func.call( deferred, deferred );
-        }
-
-        // All done!
-        return deferred;
-    },
-
-    // Deferred helper
-    when: function( singleValue ) {
-        var
-
-            // count of uncompleted subordinates
-            remaining = arguments.length,
-
-            // count of unprocessed arguments
-            i = remaining,
-
-            // subordinate fulfillment data
-            resolveContexts = Array( i ),
-            resolveValues = slice.call( arguments ),
-
-            // the master Deferred
-            master = jQuery.Deferred(),
-
-            // subordinate callback factory
-            updateFunc = function( i ) {
-                return function( value ) {
-                    resolveContexts[ i ] = this;
-                    resolveValues[ i ] = arguments.length > 1 ? slice.call( arguments ) : value;
-                    if ( !( --remaining ) ) {
-                        master.resolveWith( resolveContexts, resolveValues );
-                    }
-                };
-            };
-
-        // Single- and empty arguments are adopted like Promise.resolve
-        if ( remaining <= 1="" )="" {="" adoptvalue(="" singlevalue,="" master.done(="" updatefunc(="" i="" ).resolve,="" master.reject,="" !remaining="" );="" use="" .then()="" to="" unwrap="" secondary="" thenables="" (cf.="" gh-3000)="" if="" (="" master.state()="==" "pending"="" ||="" isfunction(="" resolvevalues[="" ]="" &&="" ].then="" return="" master.then();="" }="" multiple arguments="" are="" aggregated="" like="" promise.all="" array="" elements="" while="" i--="" ],="" ),="" master.reject="" master.promise();="" <="" pre=""></=></pre>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/08/网易微专业-jq源码解析-2-4-1-延时对象-Deferred概念-源码剖析/" data-id="cka5080hs003zhyxqdwfbjvhk" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/24/网易微专业-jq源码解析-1118直播课-动画队列源码/" data-id="ckb8s880v004h4zxqxqq7js0a" class="article-share-link">Share</a>
       
       
     </footer>
@@ -3128,7 +1932,7 @@ jQuery.extend( {
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/11/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/13/">Next &raquo;</a>
+    <a class="extend prev" rel="prev" href="/page/11/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/">13</a><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/13/">Next &raquo;</a>
   </nav>
 
 </section>
@@ -3142,7 +1946,7 @@ jQuery.extend( {
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端路由/">前端路由</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/正则/">正则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端路由/">前端路由</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/正则/">正则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-node/">网易微专业 node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
     </div>
   </div>
 
@@ -3152,7 +1956,7 @@ jQuery.extend( {
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/前端路由/" style="font-size: 10px;">前端路由</a> <a href="/tags/数据结构/" style="font-size: 13.33px;">数据结构</a> <a href="/tags/正则/" style="font-size: 10px;">正则</a> <a href="/tags/算法/" style="font-size: 20px;">算法</a> <a href="/tags/设计模式/" style="font-size: 16.67px;">设计模式</a>
+      <a href="/tags/前端路由/" style="font-size: 10px;">前端路由</a> <a href="/tags/数据结构/" style="font-size: 13.33px;">数据结构</a> <a href="/tags/正则/" style="font-size: 10px;">正则</a> <a href="/tags/算法/" style="font-size: 20px;">算法</a> <a href="/tags/网易微专业-node/" style="font-size: 10px;">网易微专业 node</a> <a href="/tags/设计模式/" style="font-size: 16.67px;">设计模式</a>
     </div>
   </div>
 
@@ -3161,7 +1965,7 @@ jQuery.extend( {
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
     </div>
   </div>
 
@@ -3174,23 +1978,23 @@ jQuery.extend( {
       <ul>
         
           <li>
-            <a href="/2020/05/13/es6-class-extends/">es6 class extends</a>
+            <a href="/2020/06/08/网易微专业-look直播，企业级全栈web应用搭建分享/">网易微专业-look直播，企业级全栈web应用搭建分享</a>
           </li>
         
           <li>
-            <a href="/2020/05/12/网易微专业-node-Koa源码分析-2-2-3-中间件机制剖析/">网易微专业-node-Koa源码分析-2.2.3-中间件机制剖析</a>
+            <a href="/2020/06/07/网易微专业-webpack实战演练-3-3-1-网易的webpack工程化实践/">网易微专业-webpack实战演练-3.3.1-网易的webpack工程化实践</a>
           </li>
         
           <li>
-            <a href="/2020/05/09/Web-前端路由原理解析和实现/">Web 前端路由原理解析和实现</a>
+            <a href="/2020/06/06/网易微专业-webpack实战演练-3-2-6-webpack打包速度优化/">网易微专业-webpack实战演练-3.2.6-webpack打包速度优化</a>
           </li>
         
           <li>
-            <a href="/2020/05/08/网易微专业-node-Koa源码分析-2-2-2-请求处理流程解读/">网易微专业-node-Koa源码分析-2.2.2-请求处理流程解读</a>
+            <a href="/2020/06/03/网易微专业-单页应用-1-4-1-项目全面深度优化及打包上线之网易实践/">网易微专业-单页应用-1-4-1-项目全面深度优化及打包上线之网易实践</a>
           </li>
         
           <li>
-            <a href="/2020/05/08/vue-cli了解/">vue-cli了解</a>
+            <a href="/2020/05/28/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-6-音频与视频/">网易微专业-移动端APP开发工程师-H5移动端开发-1.1.6-音频与视频</a>
           </li>
         
       </ul>

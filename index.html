@@ -62,10 +62,10 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-es6-class-extends" class="article article-type-post" itemscope="" itemprop="blogPost">
+    <article id="post-网易微专业-look直播，企业级全栈web应用搭建分享" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2020/05/13/es6-class-extends/" class="article-date">
-  <time datetime="2020-05-13T02:58:52.000Z" itemprop="datePublished">2020-05-13</time>
+    <a href="/2020/06/08/网易微专业-look直播，企业级全栈web应用搭建分享/" class="article-date">
+  <time datetime="2020-06-08T11:54:49.000Z" itemprop="datePublished">2020-06-08</time>
 </a>
     
   </div>
@@ -76,7 +76,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/13/es6-class-extends/">es6 class extends</a>
+      <a class="article-title" href="/2020/06/08/网易微专业-look直播，企业级全栈web应用搭建分享/">网易微专业-look直播，企业级全栈web应用搭建分享</a>
     </h1>
   
 
@@ -84,84 +84,19 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>继承 inherit<br>class 是对原型继承的一种语法糖的包装。那相对于原型继承，它有什么优点呢？<br>我们来先看一个典型的基于原型链继承的例子。部分内容来自“Javascript高级程序设计”</p>
-<p><pre><br>function SuperType() {<br>    this.property = true;<br>}</pre></p>
-<p>SuperType.prototype.getSuperValue = function() {<br>    return this.property;<br>}</p>
-<p>function SubType() {<br>    this.subProperty = false;<br>}</p>
-<p>SubType.prototype = new SuperType();</p>
-<p>SubType.prototype.getSubValue = function() {<br>    return this.subProperty;<br>}</p>
-<p>var instance = new SubType();<br>console.log(instance.getSuperValue());  // true<br>console.log(instance instanceof Object);  // true<br>console.log(instance instanceof SuperType);  // true<br>console.log(instance instanceof SubType);  // true<br><br>问题，当包含引用类型的值。</p>
-<p><pre><br>function SuperType() {<br>    this.colors = [“red”, “blue”, “green”];<br>}</pre></p>
-<p>function SubType() {</p>
-<p>}</p>
-<p>SubType.prototype = new SuperType();</p>
-<p>var instance = new SubType();<br>instance.colors.push(“black”);<br>var instance1 = new SubType();<br>instance1.colors.push(“white”);<br>console.log(instance.colors);  // [ ‘red’, ‘blue’, ‘green’, ‘black’, ‘white’ ]<br>console.log(instance1.colors);  // [ ‘red’, ‘blue’, ‘green’, ‘black’, ‘white’ ]<br><br>解决方案：</p>
-<p>借用构造函数</p>
-<p><pre><br>function SuperType() {<br>    this.colors = [“red”, “blue”, “green”];<br>}</pre></p>
-<p>function SubType() {<br>   SuperType.call(this);<br>}</p>
-<p>SubType.prototype = new SuperType();</p>
-<p>var instance = new SubType();<br>instance.colors.push(“black”);<br>var instance1 = new SubType();<br>instance1.colors.push(“white”);<br>console.log(instance.colors);<br>console.log(instance1.colors);<br><br>组合继承</p>
-<p><pre><br>function SuperType(name) {<br>    this.name = name;<br>    this.colors = [“red”, “blue”, “green”];<br>}</pre></p>
-<p>SuperType.prototype.sayName = function() {<br>    console.log(this.name);<br>}</p>
-<p>function SubType(name, age) {<br>   SuperType.call(this, name);<br>   this.age = age;<br>}</p>
-<p>SubType.prototype = new SuperType();<br>SubType.prototype.sayAge = function() {<br>    console.log(this.age);<br>}<br><br>寄生组合式继承</p>
-<p><pre><br>function object(o) {<br>    function F() {}<br>    F.prototype = o;<br>    return new F();<br>}</pre></p>
-<p>function inheritPrototype(subType, superType) {<br>    let prototype = object(superType.prototype);<br>    prototype.constructor = subType;<br>    subType.prototype = prototype;<br>}</p>
-<p>function SuperType(name) {<br>    this.name = name;<br>    this.colors = [“red”, “blue”, “green”];<br>}</p>
-<p>SuperType.prototype.sayName = function() {<br>    console.log(this.name);<br>}</p>
-<p>function SubType(name, age) {<br>   SuperType.call(this, name);<br>   this.age = age;<br>}</p>
-<p>inheritPrototype(SubType, SuperType);</p>
-<p>SubType.prototype.sayAge = function() {<br>    console.log(this.age);<br>}<br>var instance = new SubType(“Tom”, 70);<br>instance.colors.push(“black”);<br>var instance1 = new SubType(“Jerry”, 69);<br>instance1.colors.push(“white”);<br>console.log(instance.colors);<br>console.log(instance.sayName());<br>console.log(instance.sayAge());<br>console.log(instance1.colors);<br>console.log(instance1.sayName());<br>console.log(instance1.sayAge());<br><br>MDN 原型链继承<br>（欠图一张）</p>
-<p>extends<br>从es5来说，实现对象的继承，还是相当麻烦的。而extends 关键字的出现，使继承变得简单，原型会自动进行调整，super()/super关键字可以访问父类的构造方法和属性。</p>
-<p><pre><br>class Animal {<br>  constructor(name) {<br>    this.name = name;<br>  }</pre></p>
-<p>  speak() {<br>    console.log(this.name + ‘ makes a noise.’);<br>  }<br>}</p>
-<p>class Dog extends Animal {<br>  speak() {<br>    console.log(this.name + ‘ barks.’);<br>  }<br>}</p>
-<p>var d = new Dog(‘Mitzie’);<br>d.speak();// ‘Mitzie barks.’<br><br>分析：Dog类没有构造函数，这样合理吗？</p>
-<p>// 等价于上个类定义</p>
-<p><pre><br>class Dog extends Animal {<br>  constructor(name) {<br>    super(name)<br>  }<br>  speak() {<br>    console.log(this.name + ‘ barks.’);<br>  }<br>}<br></pre><br>super()方法调用注意：</p>
-<p>只可在以extends 实现的派生类中的constructor方法中调用，在非派生类或方法中直接调用，会报错。<br>在constructor中访问this之前，一定要先调用super(),因为它负责初始化this,如果在super()调用之前尝试访问this，会报错。<br>如果不想调用super()，则唯一的方法是让类的constructor()返回一个对象。<br>类方法遮蔽<br>说明：派生类中的方法总会覆盖基类中的同名方法。</p>
-<p><pre><br>class Animal {<br>  constructor(name) {<br>    this.name = name;<br>  }</pre></p>
-<p>  speak() {<br>    console.log(this.name + ‘ makes a noise.’);<br>  }<br>}</p>
-<p>class Dog extends Animal {<br>  speak() {<br>    console.log(this.name + ‘ barks.’);<br>  }<br>}<br><br>// 基类中的speak()方法被覆盖<br>静态类成员继承<br>说明：如果基类有静态成员，那么这些静态成员在派生类中也可用。</p>
-<p><pre><br>class Animal {<br>    constructor(name) {<br>      this.name = name;<br>    }</pre></p>
-<pre><code>speak() {
-  console.log(this.name + &apos; makes a noise.&apos;);
-}
-static create(name) {
-    return new Animal(name);
-}
-</code></pre><p>  }</p>
-<p>  class Dog extends Animal {<br>    speak() {<br>      console.log(this.name + ‘ barks.’);<br>    }<br>  }</p>
-<p>  let a1 = Animal.create(“Monkey”);<br>  let a2 = Dog.create(“BeijinDog”);<br>  console.log(a1 instanceof Animal);  // true<br>  console.log(a2 instanceof Animal);  // true<br>  console.log(a2 instanceof Dog);  // false 这个是不是很意外？<br> <br>派生自表达式的类<br>由ES6的class定义可以知道，是function的语法糖，但为实现原型继承，提供了方便的实现。JS的强大的一点就是函数可以返回函数，那如果返回类的定义呢？是否支持继承？返回对象是个函数，并且有[[Constrcutor]]属性和原型，就能满足extends实现。</p>
-<p><pre><br>class Animal {<br>  constructor(name) {<br>    this.name = name;<br>  }</pre></p>
-<p>  speak() {<br>    console.log(this.name + ‘ makes a noise.’);<br>  }<br>}</p>
-<p>function getBase() {<br>  return Animal;<br>}<br>class Dog extends getBase() {<br>  speak() {<br>    console.log(this.name + ‘ barks.’);<br>  }<br>}</p>
-<p>const dog = new Dog(‘Tom’);<br>dog.speak();<br><br>如果这个例子基于class的实现，有点取巧的意思，那看另一个例子。</p>
-<p><pre><br>const SerializableMixin = {<br>  serialize() {<br>    return JSON.stringify(this);<br>  }<br>}</pre></p>
-<p>const AnimalMixin = {<br>  speak() {<br>    console.log(this.name + ‘ barks.’);<br>  }<br>}</p>
-<p>function mixin(…mixins) {<br>  const base = function() {};<br>  Object.assign(base.prototype, …mixins);<br>  return base;<br>}</p>
-<p>class Dog extends mixin(AnimalMixin, SerializableMixin) {<br>  constructor(name){<br>    super(name);<br>    this.name = name;<br>  }<br>}</p>
-<p>const dog = new Dog(‘Tom’);<br>dog.speak();  // Tom barks.<br><br>关于function,class,extends,mixin，是否有新的理解呢？</p>
-<p>内建对象继承<br>在ES6之前，内建对象很难实现继承的，更多用has-a思想，实现对内建对象的处理。ES6中，大量内建对象的内部实现得以暴漏，也使得继承内建对象变成了可能。</p>
-<p><pre><br>class ColorsArray extends Array {<br>}<br>const colors = new ColorsArray();<br>colors[0] = ‘red’;<br>console.log(colors.length); // 1</pre></p>
-<p>colors.length = 0;<br>console.log(colors[0]); // undefined<br><br>分析：基类（Array）创建 this 的值，然后派生类的构造函数(ColorsArray)再修改这个值。所以一开始可以通过this访问基类的所有内建功能，然后再正确地接收所有与之相关的功能。这与Array.apply/call 这种方法实现继承的this处理方式正好相反。这也是extends特殊的地方。</p>
-<p>Symbol.species</p>
-<p><pre><br>class ColorsArray extends Array {<br>}<br>const colors = new ColorsArray(‘red’, ‘green’, ‘blue’);<br>const subColors = colors.slice(0,1);<br>console.log(colors instanceof ColorsArray);  // true<br>console.log(subColors instanceof ColorsArray);  // true<br></pre><br>通常来讲，slice 方法继承自 Array ，返回的应该是Array的实例，但在这个示例中，却返回的是ColorsArray的实例，这是为什么呢？这是ES6中Symbol.species的功劳。Symbol.species MDN 详细说明</p>
-<p><pre><br>class MyArray extends Array {<br>  // Overwrite species to the parent Array constructor<br>  static get <a href="">Symbol.species</a> { return Array; }<br>}<br>var a = new MyArray(1,2,3);<br>var mapped = a.map(x =&gt; x * x);</pre></p>
-<p>console.log(mapped instanceof MyArray); // false<br>console.log(mapped instanceof Array);   // true<br><br>注意：重写实现的时候，使用getter+static，可以返回想用的类型，也可以返回 this,是的，你没看错，在static getter中使用了this，它指向的是MyArray的构造函数。</p>
-<p>constructor中new.target<br>new.target是es6中新添加的元属性，只有通过new操作创建对象的时候，new.target才会被指向类/方法本身，通过call/apply操作，new.target为undefined。可以通过判断new.target，来确实函数是否允许new操作。MDN new.target 说明<br>惯例，再加个代码示例，偷懒，直接从MDN上拷了。</p>
-<p><pre><br>function Foo() {<br>  if (!new.target) throw ‘Foo() must be called with new’;<br>  console.log(‘Foo instantiated with new’);<br>}</pre></p>
-<p>new Foo(); // logs “Foo instantiated with new”<br>Foo(); // throws “Foo() must be called with new”<br><br>又是先说function，不是已经升级到ES6，使用class了吗？始终要有一个清楚的认识，class，是function实现原型继承的语法糖，但有自己的特性存在的（不然，也不用引入class了）。</p>
-<p><pre><br>class A {<br>  constructor() {<br>    console.log(new.target.name);<br>  }<br>}</pre></p>
-<p>class B extends A { constructor() { super(); } }</p>
-<p>var a = new A(); // logs “A”<br>var b = new B(); // logs “B”</p>
-<p>class C { constructor() { console.log(new.target); } }<br>class D extends C { constructor() { super(); } }</p>
-<p>var c = new C(); // logs class C{constructor(){console.log(new.target);}}<br>var d = new D(); // logs class D extends C{constructor(){super();}}<br><br>这个就是类的了。<br>——————————————————————————————————————————————————————————————————————————————————————————————————————————————————<br>以上来自<a href="https://segmentfault.com/a/1190000019824053" target="_blank" rel="noopener">https://segmentfault.com/a/1190000019824053</a></p>
+        <p>SPA &amp;&amp; SSR<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_1.png"><br>问题<br>两端代码复用<br>两端的渲染保持一致<br>两端的fallback设计<br>node端降级方案<br>1.工程架构<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_2.png"><br>1-1.组件分割<br>根据路由分割js，避免js bundle过大<br>(演示代码)</p>
+<p><pre><br>//webpack的import方法分割js返回一个promise，会有一个异步等待过程，<br>// baseLoadable等待promise完成之后才会去渲染组件<br>import baseLoadable from ‘@loadable/component’<br>const loading = () =&gt; {<br>    &lt; div classname = “m-loading” &gt;加载中…&lt; /div&gt;<br>}<br>const loadable = loader =&gt; baseLoadable(loader,{<br>    fallback:&lt; loading /&gt;<br>}<br>const Home = loadable(()=&gt;import(‘./views/home’))<br>const List = loadable(()=&gt;import(‘./views/list’))<br>const Detail = loadable(()=&gt;import(‘./views/detail’))<br></pre><br>1-2.路由<br>采用配置式路由为了方便node端获取对应组件</p>
+<p><pre><br>&lt; Switch &gt;<br>&lt; Route exact path=’/list’ component={List} /&gt;<br>&lt; Route exact path=’/detail/:id’ component={Detail} /&gt;<br>&lt; Route exact path=’/‘ component={Home} /&gt;<br>&lt; /Switch &gt;<br></pre><br>上面代码 组件式配置化</p>
+<p><pre><br>const config = [<br>{<br>    path:’/list’,<br>    exact:true,<br>    component:List<br>},<br>{<br>    path:’/detail/:id’,<br>    exact:true,<br>    component:Detail<br>},<br>{<br>    path:’/‘,<br>    exact:true,<br>    component:Home<br>},<br>]<br>export default config;<br></pre><br>1-3.获取组件<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_3.png"><br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_4.png"><br>1-4.请求方法<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_5.png"><br>1-5.两端数据一致</p>
+<p><pre><br>&lt; script &gt;<br>window.CURRENT_STATE = &lt; %- state% &gt;<br>&lt; /script &gt;<br>import {createStore} from ‘redux’<br>…<br>const store = createStore(rootReducer,window.CURRENT_STATE)<br></pre><br>保证首屏的css和js加载完</p>
+<p><pre><br>import { loadableReady } from ‘@loadable/component’;<br>loadableReady(()=&gt;{<br>    ReactDOM.hydrate(<br>        &lt; APP /&gt;,<br>        document.getElementById(‘j-app’)<br>    );<br>})<br></pre><br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_6.png"><br>1-6.async标签<br>提前执行script脚本<br>&lt; script async src=”/public/app.js” &gt;&lt; /script &gt;<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_7.png"><br>1-8.SEO<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_8.png"><br>1-9.webpack<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_9.png"><br>1-10.缓存<br>没有接口请求，则认为是静态可缓存<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_10.png"><br>新建Map存储上次的html<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_11.png"><br>1-11.降级<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_12.png"><br>2.状态管理<br>2-1.redux<br>只有碰到react实在解决不了的问题，你才需要redux<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_13.png"><br>2-2.思考<br>·繁琐的代码且重复<br>·开发体验不友好<br>·可读性差，不便于维护<br>2-3.改进<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_14.png"><br>·设置modal类<br>·自定义一个中间件<br>·充分利用redux数据流<br>扩展dispatch支持字符串方式<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_15.png"><br>3.异步任务<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_16.png"><br>问题<br>·数据的来源多，ajax、websocket、事件<br>·数据的依赖关系<br>·礼物消息的处理<br>3-1.rxjs<br>为了解决上面的问题，引入了rxjs<br>一种编程模型<br>针对异步数据流的编程<br>将一切数据包装成流<br>提供强大的操作符处理<br>3-2.Observable<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_17.png"><br>Publisher<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_18.png"></p>
+<p><pre><br>const Publisher = (observer) =&gt; {<br>    let count = 0;<br>    const inter = setIntrerval(()=&gt;{<br>        count+=1;<br>        observer.next(count);<br>        if(count&gt;=5){<br>            observer.complete();<br>            clearInterval(inter);<br>        }<br>    },1000);<br>}<br>const ob$ = Observable.create(Publisher);<br>const scp = ob$.subscribe((v)=&gt;{<br>    console.log(v)<br>})<br>setTimeout(()=&gt;{<br>    const scp1 = ob$.subscribe((v)=&gt;{<br>        console.log(v)<br>    })<br>},1000)<br>/<em><br>const observer = {<br>    next:(val)=&gt;{},<br>    complete:()=&gt;{},<br>    error:()=&gt;{}<br>}
+</em>/<br></pre><br>Subject<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_19.png"><br>Subject-多播<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_20.png"><br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_21.png"><br>3-3.数据的统一<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_22.png"><br>3-4.数据的依赖关系<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_23.png"><br>3-5.礼物消息<br>项目是一个直播项目，有一个需求是30s内同一用户同一礼物数目进行累加<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_24.png"><br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_25.png"><br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_26.png"></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/05/13/es6-class-extends/" data-id="cka5080ge0037hyxqzjgrmmj8" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/06/08/网易微专业-look直播，企业级全栈web应用搭建分享/" data-id="ckb8s87up001x4zxqg4q9p6vs" class="article-share-link">Share</a>
       
       
     </footer>
@@ -171,10 +106,10 @@ static create(name) {
 
 
   
-    <article id="post-网易微专业-node-Koa源码分析-2-2-3-中间件机制剖析" class="article article-type-post" itemscope="" itemprop="blogPost">
+    <article id="post-网易微专业-webpack实战演练-3-3-1-网易的webpack工程化实践" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2020/05/12/网易微专业-node-Koa源码分析-2-2-3-中间件机制剖析/" class="article-date">
-  <time datetime="2020-05-12T14:27:04.000Z" itemprop="datePublished">2020-05-12</time>
+    <a href="/2020/06/07/网易微专业-webpack实战演练-3-3-1-网易的webpack工程化实践/" class="article-date">
+  <time datetime="2020-06-07T03:29:11.000Z" itemprop="datePublished">2020-06-07</time>
 </a>
     
   </div>
@@ -185,7 +120,7 @@ static create(name) {
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/12/网易微专业-node-Koa源码分析-2-2-3-中间件机制剖析/">网易微专业-node-Koa源码分析-2.2.3-中间件机制剖析</a>
+      <a class="article-title" href="/2020/06/07/网易微专业-webpack实战演练-3-3-1-网易的webpack工程化实践/">网易微专业-webpack实战演练-3.3.1-网易的webpack工程化实践</a>
     </h1>
   
 
@@ -193,898 +128,246 @@ static create(name) {
     
     <div class="article-entry" itemprop="articleBody">
       
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/05/12/网易微专业-node-Koa源码分析-2-2-3-中间件机制剖析/" data-id="cka5080ej002bhyxq5bvbrbid" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Web-前端路由原理解析和实现" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/05/09/Web-前端路由原理解析和实现/" class="article-date">
-  <time datetime="2020-05-09T03:00:07.000Z" itemprop="datePublished">2020-05-09</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/09/Web-前端路由原理解析和实现/">Web 前端路由原理解析和实现</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>文章来源<a href="https://zhuanlan.zhihu.com/p/88895539" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/88895539</a><br>在单页应用如此流行的今天，曾经令人惊叹的前端路由已经成为各大框架的基础标配，每个框架都提供了强大的路由功能，导致路由实现变的复杂。想要搞懂路由内部实现还是有些困难的，但是如果只想了解路由实现基本原理还是比较简单的。本文针对前端路由主流的实现方式 hash 和 history，提供了原生JS/React/Vue 共计六个版本供参考，每个版本的实现代码约 25~40 行左右（含空行）。<br>作者：whincwu</p>
-<p></p><h4>什么是前端路由？</h4><br>路由的概念来源于服务端，在服务端中路由描述的是 URL 与处理函数之间的映射关系。<br>在 Web 前端单页应用 SPA(Single Page Application)中，路由描述的是 URL 与 UI 之间的映射关系，这种映射是单向的，即 URL 变化引起 UI 更新（无需刷新页面）。<p></p>
-<p></p><h4>如何实现前端路由？</h4><br>要实现前端路由，需要解决两个核心问题：<br>1.如何改变 URL 却不引起页面刷新？<br>2.如何检测 URL 变化了？<br>下面分别使用 hash 和 history 两种实现方式回答上面的两个核心问题。<p></p>
-<p></p><h6>hash 实现</h6><br>1.hash 是 URL 中 hash (#) 及后面的那部分，常用作锚点在页面内进行导航，改变 URL 中的 hash 部分不会引起页面刷新<br>2.通过 <a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Window/hashchange_event" target="_blank" rel="noopener">hashchange</a> 事件监听 URL 的变化，改变 URL 的方式只有这几种：通过浏览器前进后退改变 URL、通过标签改变URL、通过window.location改变URL，这几种情况改变 URL 都会触发 hashchange 事件<p></p>
-<p></p><h6>history 实现</h6><br>1.history 提供了 pushState 和 replaceState 两个方法，这两个方法改变 URL 的 path 部分不会引起页面刷新<br>2.history 提供类似 hashchange 事件的 popstate 事件，但 popstate 事件有些不同：通过浏览器前进后退改变 URL 时会触发 popstate 事件，通过pushState/replaceState或标签改变 URL 不会触发 popstate 事件。好在我们可以拦截 pushState/replaceState的调用和标签的点击事件来检测 URL 变化，所以监听 URL 变化可以实现，只是没有 hashchange 那么方便。<p></p>
-<p></p><h4>原生JS版前端路由实现</h4><br>基于上节讨论的两种实现方式，分别实现 hash 版本和 history 版本的路由，示例使用原生 HTML/JS 实现，不依赖任何框架。<p></p>
-<p></p><h5>基于 hash 实现</h5><br>运行效果：<br><img src="https://snakexu.github.io/images/others/router_1.jpg"><br>HTML 部分：<p></p>
-<p><pre><br>&lt; body &gt;<br>  &lt; ul &gt;<br>ref=””&gt;    &lt; !– 定义路由 – &gt;<br>    &lt; li &gt;&lt; a href=”#/home”&gt;home&lt; /a &gt;&lt; /li &gt;<br>    &lt; li &gt;&lt; a href=”#/about”&gt;about&lt; /a &gt;&lt; /li &gt;<br>ref=””&gt;    <!-- 渲染路由对应的 UI --><br>    &lt; div id=”routeView” &gt;&lt; /div &gt;<br>  &lt; /ul &gt;<br>&lt; /body &gt;<br></pre><br>JavaScript 部分：</p>
-<p><pre><br>// 页面加载完不会触发 hashchange，这里主动触发一次 hashchange 事件<br>window.addEventListener(‘DOMContentLoaded’, onLoad)<br>// 监听路由变化<br>window.addEventListener(‘hashchange’, onHashChange)<br>// 路由视图<br>var routerView = null<br>function onLoad () {<br>  routerView = document.querySelector(‘#routeView’)<br>  onHashChange()<br>}<br>// 路由变化时，根据路由渲染对应 UI<br>function onHashChange () {<br>  switch (location.hash) {<br>    case ‘#/home’:<br>      routerView.innerHTML = ‘Home’<br>      return<br>    case ‘#/about’:<br>      routerView.innerHTML = ‘About’<br>      return<br>    default:<br>      return<br>  }<br>}<br></pre></p>
-<p></p><h5>基于 history 实现</h5><br>运行效果：<br><img src="https://snakexu.github.io/images/others/router_2.jpg"><br>HTML 部分：<p></p>
-<p><pre><br>&lt; body &gt;<br>  &lt; ul &gt;<br>    &lt; li &gt;&lt; a href=’/home’ &gt;home&lt; /a &gt;&lt; /li &gt;<br>    &lt; li &gt;&lt; a href=’/about’ &gt;about&lt; /a &gt;&lt; /li &gt;<br>    &lt; div id=”routeView” &gt;&lt; /div &gt;<br>  &lt; /ul &gt;<br>&lt; /body &gt;<br></pre><br>JavaScript 部分：</p>
-<p><pre><br>// 页面加载完不会触发 hashchange，这里主动触发一次 hashchange 事件<br>window.addEventListener(‘DOMContentLoaded’, onLoad)<br>// 监听路由变化<br>window.addEventListener(‘popstate’, onPopState)<br>// 路由视图<br>var routerView = null<br>function onLoad () {<br>  routerView = document.querySelector(‘#routeView’)<br>  onPopState()<br> href=””&gt;  // 拦截 &lt; a &gt; 标签点击事件默认行为， 点击时使用 pushState 修改 URL并更新手动 UI，从而实现点击链接更新 URL 和 UI 的效果。<br>  var linkList = document.querySelectorAll(‘a[href]’)<br>  linkList.forEach(el =&gt; el.addEventListener(‘click’, function (e) {<br>    e.preventDefault()<br>    history.pushState(null, ‘’, el.getAttribute(‘href’))<br>    onPopState()<br>  }))<br>}<br>// 路由变化时，根据路由渲染对应 UI<br>function onPopState () {<br>  switch (location.pathname) {<br>    case ‘/home’:<br>      routerView.innerHTML = ‘Home’<br>      return<br>    case ‘/about’:<br>      routerView.innerHTML = ‘About’<br>      return<br>    default:<br>      return<br>  }<br>}<br></pre></p>
-<p></p><h5>React 版前端路由实现</h5><p></p>
-<p></p><h6>基于 hash 实现</h6><br>运行效果：<br><img src="https://snakexu.github.io/images/others/router_3.jpg"><br>使用方式和 react-router 类似：<p></p>
-<p><pre><br>&lt; BrowserRouter &gt;<br>    &lt; ul &gt;<br>      &lt; li &gt;<br>        &lt; Link to=”/home” &gt;home&lt; /Link &gt;<br>      &lt; /li &gt;<br>      &lt; li &gt;<br>        &lt; Link to=”/about” &gt;about&lt; /Link &gt;<br>      &lt; /li &gt;<br>    &lt; /ul &gt;<br>    &lt; Route path=”/home” render={() =&gt; &lt; h2 &gt;Home&lt; /h2 &gt;} /&gt;<br>    &lt; Route path=”/about” render={() =&gt; &lt; h2 &gt;About&lt; /h2 &gt;} /&gt;<br>&lt; /BrowserRouter &gt;<br></pre><br>BrowserRouter 实现</p>
-<p><pre><br>export default class BrowserRouter extends React.Component {<br>  state = {<br>    currentPath: utils.extractHashPath(window.location.href)<br>  };<br>  onHashChange = e =&gt; {<br>    const currentPath = utils.extractHashPath(e.newURL);<br>    console.log(“onHashChange:”, currentPath);<br>    this.setState({ currentPath });<br>  };<br>  componentDidMount() {<br>    window.addEventListener(“hashchange”, this.onHashChange);<br>  }<br>  componentWillUnmount() {<br>    window.removeEventListener(“hashchange”, this.onHashChange);<br>  }<br>  render() {<br>    return (<br>      &lt; RouteContext.Provider value={ {currentPath: this.state.currentPath} } &gt;<br>        {this.props.children}<br>      &lt; /RouteContext.Provider &gt;<br>    );<br>  }<br>}<br></pre><br>Route 实现</p>
-<p><pre><br>export default ({ path, render }) =&gt; (<br>  &lt; RouteContext.Consumer &gt;<br>    {({currentPath}) =&gt; currentPath === path &amp;&amp; render()}<br>  &lt; /RouteContext.Consumer &gt;<br>);<br></pre><br>Link 实现</p>
-<p><pre><br>export default ({ to, …props }) =&gt; &lt; a {…props} href={“#” + to} /&gt;;<br></pre></p>
-<p></p><h6>基于 history 实现</h6><br>运行效果:<br><img src="https://snakexu.github.io/images/others/router_4.jpg"><br>使用方式和 react-router 类似：<p></p>
-<p><pre><br>&lt; HistoryRouter &gt;<br>    &lt; ul &gt;<br>      &lt; li &gt;<br>        &lt; Link to=”/home” &gt;home&lt; /Link &gt;<br>      &lt; /li &gt;<br>      &lt; li &gt;<br>        &lt; Link to=”/about” &gt;about&lt; /Link &gt;<br>      &lt; /li &gt;<br>    &lt; /ul &gt;<br>    &lt; Route path=”/home” render={() =&gt; &lt; h2 &gt;Home&lt; /h2 &gt;} /&gt;<br>    &lt; Route path=”/about” render={() =&gt; &lt; h2 &gt;About&lt; /h2 &gt;} /&gt;<br>  &lt; /HistoryRouter &gt;<br></pre><br>HistoryRouter 实现</p>
-<p><pre><br>export default class HistoryRouter extends React.Component {<br>  state = {<br>    currentPath: utils.extractUrlPath(window.location.href)<br>  };<br>  onPopState = e =&gt; {<br>    const currentPath = utils.extractUrlPath(window.location.href);<br>    console.log(“onPopState:”, currentPath);<br>    this.setState({ currentPath });<br>  };<br>  componentDidMount() {<br>    window.addEventListener(“popstate”, this.onPopState);<br>  }<br>  componentWillUnmount() {<br>    window.removeEventListener(“popstate”, this.onPopState);<br>  }<br>  render() {<br>    return (<br>      &lt; RouteContext.Provider value={ {currentPath: this.state.currentPath, onPopState: this.onPopState} }&gt;<br>        {this.props.children}<br>      &lt; /RouteContext.Provider&gt;<br>    );<br>  }<br>}<br></pre><br>Route 实现</p>
-<p><pre><br>export default ({ path, render }) =&gt; (<br>  &lt; RouteContext.Consumer&gt;<br>    {({currentPath}) =&gt; currentPath === path &amp;&amp; render()}<br>  &lt; /RouteContext.Consumer&gt;<br>);<br></pre><br>Link 实现</p>
-<p><pre><br>export default ({ to, …props }) =&gt; (<br>  &lt;RouteContext.Consumer&gt;<br>    {({ onPopState }) =&gt; (<br>      &lt; a<br>        href=””<br>        {…props}<br>        onClick={e =&gt; {<br>          e.preventDefault();<br>          window.history.pushState(null, “”, to);<br>          onPopState();<br>        }}<br>      /&gt;<br>    )}<br>  &lt; /RouteContext.Consumer&gt;<br>);<br></pre></p>
-<p></p><h5>Vue 版本前端路由实现</h5><p></p>
-<p></p><h6>基于 hash 实现</h6><br>运行效果：<br><img src="https://snakexu.github.io/images/others/router_5.jpg"><br>使用方式和 vue-router 类似（vue-router 通过插件机制注入路由，但是这样隐藏了实现细节，为了保持代码直观，这里没有使用 Vue 插件封装）：<p></p>
-<p><pre><br>&lt; div&gt;<br>    &lt; ul &gt;<br>        &lt; li &gt;&lt; router-link to=”/home” &gt;home&lt; /router-link &gt;&lt; /li &gt;<br>        &lt; li &gt;&lt; router-link to=”/about” &gt;about&lt; /router-link &gt;&lt; /li &gt;<br>    &lt; /ul &gt;<br>    &lt; router-view &gt;&lt; /router-view &gt;<br>&lt; /div &gt;<br>const routes = {<br>  ‘/home’: {<br>    template: ‘&lt; h2 &gt;Home&lt; /h2 &gt;’<br>  },<br>  ‘/about’: {<br>    template: ‘&lt; h2 &gt;About&lt; /h2 &gt;’<br>  }<br>}<br>const app = new Vue({<br>  el: ‘.vue.hash’,<br>  components: {<br>    ‘router-view’: RouterView,<br>    ‘router-link’: RouterLink<br>  },<br>  beforeCreate () {<br>    this.$routes = routes<br>  }<br>})<br></pre><br>router-view 实现:</p>
-<p><pre><br>&lt; template &gt;<br>  &lt; component :is=”routeView” / &gt;<br>&lt; /template &gt;<br>&lt; script &gt;<br>import utils from ‘~/utils.js’<br>export default {<br>  data () {<br>    return {<br>      routeView: null<br>    }<br>  },<br>  created () {<br>    this.boundHashChange = this.onHashChange.bind(this)<br>  },<br>  beforeMount () {<br>    window.addEventListener(‘hashchange’, this.boundHashChange)<br>  },<br>  mounted () {<br>    this.onHashChange()<br>  },<br>  beforeDestroy() {<br>    window.removeEventListener(‘hashchange’, this.boundHashChange)<br>  },<br>  methods: {<br>    onHashChange () {<br>      const path = utils.extractHashPath(window.location.href)<br>      this.routeView = this.$root.$routes[path] || null<br>      console.log(‘vue:hashchange:’, path)<br>    }<br>  }<br>}<br>&lt; /script &gt;<br></pre><br>router-link 实现:</p>
-<p><pre><br>&lt; template &gt;<br>  &lt; a @click.prevent=”onClick” href=’’ &gt;&lt; slot &gt;&lt; /slot &gt;&lt; /a &gt;<br>&lt; /template &gt;<br>&lt; script &gt;<br>export default {<br>  props: {<br>    to: String<br>  },<br>  methods: {<br>    onClick () {<br>      window.location.hash = ‘#’ + this.to<br>    }<br>  }<br>}<br>&lt; /script &gt;<br></pre></p>
-<p></p><h6>基于 history 实现</h6><br>运行效果：<br><img src="https://snakexu.github.io/images/others/router_6.jpg"><br>使用方式和 vue-router 类似：<p></p>
-<p><pre><br>&lt; div &gt;<br>    &lt; ul &gt;<br>        &lt; li &gt;&lt; router-link to=”/home” &gt;home&lt; /router-link &gt;&lt; /li &gt;<br>        &lt; li &gt;&lt; router-link to=”/about” &gt;about&lt; /router-link &gt;&lt; /li &gt;<br>    &lt; /ul &gt;<br>    &lt; router-view &gt;&lt; /router-view &gt;<br>&lt; /div &gt;<br>const routes = {<br>  ‘/home’: {<br>    template: ‘&lt; h2 &gt;Home&lt; /h2 &gt;’<br>  },<br>  ‘/about’: {<br>    template: ‘&lt; h2 &gt;About&lt; /h2 &gt;’<br>  }<br>}<br>const app = new Vue({<br>  el: ‘.vue.history’,<br>  components: {<br>    ‘router-view’: RouterView,<br>    ‘router-link’: RouterLink<br>  },<br>  created () {<br>    this.$routes = routes<br>    this.boundPopState = this.onPopState.bind(this)<br>  },<br>  beforeMount () {<br>    window.addEventListener(‘popstate’, this.boundPopState)<br>  },<br>  beforeDestroy () {<br>    window.removeEventListener(‘popstate’, this.boundPopState)<br>  },<br>  methods: {<br>    onPopState (…args) {<br>      this.$emit(‘popstate’, …args)<br>    }<br>  }<br>})<br></pre><br>router-view 实现：</p>
-<p><pre><br>&lt; template &gt;<br>  &lt; component :is=”routeView” /&gt;<br>&lt; /template &gt;</pre></p>
-<p>&lt; script &gt;<br>import utils from ‘~/utils.js’<br>export default {<br>  data () {<br>    return {<br>      routeView: null<br>    }<br>  },<br>  created () {<br>    this.boundPopState = this.onPopState.bind(this)<br>  },<br>  beforeMount () {<br>    this.$root.$on(‘popstate’, this.boundPopState)<br>  },<br>  beforeDestroy() {<br>    this.$root.$off(‘popstate’, this.boundPopState)<br>  },<br>  methods: {<br>    onPopState (e) {<br>      const path = utils.extractUrlPath(window.location.href)<br>      this.routeView = this.$root.$routes[path] || null<br>      console.log(‘[Vue] popstate:’, path)<br>    }<br>  }<br>}<br>&lt; /script &gt;<br><br>router-link 实现:</p>
-<p><pre><br>&lt; template &gt;<br>  &lt; a @click.prevent=”onClick” href=’’ &gt;&lt; slot &gt;&lt; /slot &gt;&lt; /a &gt;<br>&lt; /template &gt;<br>&lt; script &gt;<br>export default {<br>  props: {<br>    to: String<br>  },<br>  methods: {<br>    onClick () {<br>      history.pushState(null, ‘’, this.to)<br>      this.$root.$emit(‘popstate’)<br>    }<br>  }<br>}<br>&lt; /script &gt;<br></pre></p>
-<p></p><h4>小结</h4><br>前端路由的核心实现原理很简单，但是结合具体框架后，框架增加了很多特性，如动态路由、路由参数、路由动画等等，这些导致路由实现变的复杂。本文去粗取精只针对前端路由最核心部分的实现进行分析，并基于 hash 和 history 两种模式，分别提供原生JS/React/Vue 三种实现，共计六个实现版本供参考，希望对你有所帮助。<br>所有的示例的代码放在 Github 仓库：<a href="https://github.com/whinc/web-router-principle" target="_blank" rel="noopener">https://github.com/whinc/web-router-principle</a><p></p>
-<p></p><h4>参考</h4><br><a href="https://link.zhihu.com/?target=http%3A//www.cnblogs.com/xiaobie123/p/6357724.html" target="_blank">详解单页面路由的几种实现原理</a><br><a href="https://link.zhihu.com/?target=https%3A//github.com/youngwind/blog/issues/109" target="_blank">单页面应用路由实现原理：以 React-Router 为例</a><p></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/05/09/Web-前端路由原理解析和实现/" data-id="cka5080gd0036hyxq3ll9bcrf" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/前端路由/">前端路由</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-node-Koa源码分析-2-2-2-请求处理流程解读" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/05/08/网易微专业-node-Koa源码分析-2-2-2-请求处理流程解读/" class="article-date">
-  <time datetime="2020-05-08T10:12:51.000Z" itemprop="datePublished">2020-05-08</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/08/网易微专业-node-Koa源码分析-2-2-2-请求处理流程解读/">网易微专业-node-Koa源码分析-2.2.2-请求处理流程解读</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.上下文对象解读</p>
-<p><pre><br>// application.js<br>// 用于处理请求<br>handleRequest(ctx, fnMiddleware) {<br>    // 通过传递过来的ctx，获取到原生的可写流<br>    const res = ctx.res;<br>    // 设置默认的statusCode 404<br>    res.statusCode = 404;<br>    const onerror = err =&gt; ctx.onerror(err);<br>    const handleResponse = () =&gt; respond(ctx);<br>    onFinished(res, onerror);<br>    return fnMiddleware(ctx).then(handleResponse).catch(onerror);<br>}<br> // 响应请求<br>// res 响应辅助函数<br>function respond(ctx) {<br>  // 通过设置ctx.respond 去绕过koa<br>  if (false === ctx.respond) return;<br>  // 判断ctx原型链上的 writable属性<br>  if (!ctx.writable) return;</pre></p>
-<p>  // res,body,status<br>  const res = ctx.res;<br>  let body = ctx.body;<br>  const code = ctx.status;<br>  console.log(ctx.status);<br>  // ignore body<br>  if (statuses.empty[code]) {<br>    // strip headers<br>    ctx.body = null;<br>    return res.end();<br>  }</p>
-<p>  if (‘HEAD’ === ctx.method) {<br>    if (!res.headersSent &amp;&amp; !ctx.response.has(‘Content-Length’)) {<br>      const { length } = ctx.response;<br>      if (Number.isInteger(length)) ctx.length = length;<br>    }<br>    return res.end();<br>  }</p>
-<p>  // status body<br>  if (null == body) {<br>    if (ctx.req.httpVersionMajor &gt;= 2) {<br>      body = String(code);<br>    } else {<br>      body = ctx.message || String(code);<br>    }<br>    if (!res.headersSent) {<br>      ctx.type = ‘text’;<br>      ctx.length = Buffer.byteLength(body);<br>    }<br>    return res.end(body);<br>  }</p>
-<p>  // responses<br>  if (Buffer.isBuffer(body)) return res.end(body);<br>  if (‘string’ == typeof body) return res.end(body);<br>  if (body instanceof Stream) return body.pipe(res);</p>
-<p>  // body: json<br>  body = JSON.stringify(body);<br>  if (!res.headersSent) {<br>    ctx.length = Buffer.byteLength(body);<br>  }<br>  res.end(body);<br>}<br>// context.js<br>const util = require(‘util’);<br>const createError = require(‘http-errors’);<br>const httpAssert = require(‘http-assert’);<br>// 设置代理库 委托代理<br>const delegate = require(‘delegates’);<br>// http 状态工具包<br>const statuses = require(‘statuses’);<br>// 操作cookie<br>const Cookies = require(‘cookies’);<br>// 强调唯一性，只能在当前模块内部访问，其它地方无法访问<br>const COOKIES = Symbol(‘context#cookies’);<br>// 获取cookies<br>  get cookies() {<br>    if (!this[COOKIES]) {<br>      this[COOKIES] = new Cookies(this.req, this.res, {<br>        keys: this.app.keys,<br>        secure: this.request.secure<br>      });<br>    }<br>    return this[COOKIES];<br>  },<br>  // 设置cookie值<br>  set cookies(_cookies) {<br>    this[COOKIES] = _cookies;<br>  }<br>  // delegate库<br>// delegates<br>// TJ<br>// 构造函数<br>function Delegator(proto, target) {<br>  if (!(this instanceof Delegator)) return new Delegator(proto, target);<br>  this.proto = proto;<br>  this.target = target;<br>  this.methods = [];<br>  this.getters = [];<br>  this.setters = [];<br>  this.fluents = [];<br>}<br>// 原型方法，用于挂载 普通成员方法<br>Delegator.prototype.method = function(name){<br>  var proto = this.proto;<br>  var target = this.target;<br>  this.methods.push(name);<br>  proto[name] = function(){<br>    return this[target][name].apply(this[target], arguments);<br>  };<br>  return this;<br>};<br>// 用于同时挂载setter 和 getter<br>Delegator.prototype.access = function(name){<br>  return this.getter(name).setter(name);<br>};<br>// 用于挂载 getter<br>Delegator.prototype.getter = function(name){<br>  var proto = this.proto;<br>  var target = this.target;<br>  this.getters.push(name);<br>  proto.<strong>defineGetter</strong>(name, function(){<br>    return this[target][name];<br>  });<br>  return this;<br>};<br>// 用于挂载setter<br>Delegator.prototype.setter = function(name){<br>  var proto = this.proto;<br>  var target = this.target;<br>  this.setters.push(name);<br>  proto.<strong>defineSetter</strong>(name, function(val){<br>    return this[target][name] = val;<br>  });<br>  return this;<br>};<br>// 读取或设置某属性或方法<br>Delegator.prototype.fluent = function (name) {<br>  var proto = this.proto;<br>  var target = this.target;<br>  this.fluents.push(name);<br>  proto[name] = function(val){<br>    if (‘undefined’ != typeof val) {<br>      this[target][name] = val;<br>      return this;<br>    } else {<br>      return this[target][name];<br>    }<br>  };<br>  return this;<br>};<br><br>2.Request对象解读<br>3.Response对象解读</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/05/08/网易微专业-node-Koa源码分析-2-2-2-请求处理流程解读/" data-id="cka5080ej002ahyxqvncn0j2h" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-vue-cli了解" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/05/08/vue-cli了解/" class="article-date">
-  <time datetime="2020-05-08T02:32:20.000Z" itemprop="datePublished">2020-05-08</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/08/vue-cli了解/">vue-cli了解</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>一直觉得自己对cli的了解太少了，于是有了这篇文章，看一点源码写一点东西吧，至于能写多少，希望我坚持到底<br>首先git clone <a href="https://github.com/vuejs/vue-cli.git" target="_blank" rel="noopener">https://github.com/vuejs/vue-cli.git</a> 下载源码，想着用vue-cli创建项目的命令是vue create，我找到了packages/@vue/cli/bin/vue.js文件，就从这里开始吧。</p>
+        <p>1.eslint<br>1-1.eslint相关包<br>01.eslint+eslint-loader核心内容<br>02.eslint-plugin-html/eslint-plugin-vue<br>03.eslint-friendly-fromatter 友好提示<br>04.eslint-config-standard 代码风格标准<br>webpack.base.conf.js</p>
 <pre>
-//chalk用于高亮终端打印出来的信息，semver版本号处理工具
-const { chalk, semver } = require('@vue/cli-shared-utils')
-//获取node版本
-//"engines": {
-//    "node": ">=8.9"
-//}
-const requiredVersion = require('../package.json').engines.node
-//比较两个字符之间的差异
-const leven = require('leven')
-//先检测下node版本号是不是符合要求，不符合提示更新node并退出进程
-function checkNodeVersion (wanted, id) {
-  if (!semver.satisfies(process.version, wanted)) {
-    console.log(chalk.red(
-      'You are using Node ' + process.version + ', but this version of ' + id +
-      ' requires Node ' + wanted + '.\nPlease upgrade your Node version.'
-    ))
-    process.exit(1)
-  }
-}
-checkNodeVersion(requiredVersion, '@vue/cli')
-//虽然希望你的node版本高于8.9，但是这里还是贴心的提示，9.X版本可能不再继续支持，赶紧更新版本为长期支持的版本
-if (semver.satisfies(process.version, '9.x')) {
-  console.log(chalk.red(
-    `You are using Node ${process.version}.\n` +
-    `Node.js 9.x has already reached end-of-life and will not be supported in future major releases.\n` +
-    `It's strongly recommended to use an active LTS version instead.`
-  ))
-}
-const fs = require('fs')
-const path = require('path')
-//用于转换 Windows 反斜杠路径转换为正斜杠路径 \ => /
-const slash = require('slash')
-//轻量级的命令行参数解析引擎
-const minimist = require('minimist')
-// enter debug mode when creating test repo
-if (
-  slash(process.cwd()).indexOf('/packages/test') > 0 && (
-    fs.existsSync(path.resolve(process.cwd(), '../@vue')) ||
-    fs.existsSync(path.resolve(process.cwd(), '../../@vue'))
-  )
-) {
-  process.env.VUE_CLI_DEBUG = true
-}
-//https://www.cnblogs.com/mirandachen/p/9826886.html commander的API
-const program = require('commander')//node.js命令行界面的完整解决方案
-const loadCommand = require('../lib/util/loadCommand')//安装检测代码
-program
-  .version(`@vue/cli ${require('../package').version}`)
-  .usage('< command > [options]')
-//获取命令行参数，传递到create
-program
-  .command('create < app-name>')
-  .description('create a new project powered by vue-cli-service')
-  .option('-p, --preset < presetName>', 'Skip prompts and use saved or remote preset')
-  .option('-d, --default', 'Skip prompts and use default preset')
-  .option('-i, --inlinePreset < json>', 'Skip prompts and use inline JSON string as preset')
-  .option('-m, --packageManager < command>', 'Use specified npm client when installing dependencies')
-  .option('-r, --registry < url>', 'Use specified npm registry when installing dependencies (only for npm)')
-  .option('-g, --git [message]', 'Force git initialization with initial commit message')
-  .option('-n, --no-git', 'Skip git initialization')
-  .option('-f, --force', 'Overwrite target directory if it exists')
-  .option('--merge', 'Merge target directory if it exists')
-  .option('-c, --clone', 'Use git clone when fetching remote preset')
-  .option('-x, --proxy', 'Use specified proxy when creating project')
-  .option('-b, --bare', 'Scaffold project without beginner instructions')
-  .option('--skipGetStarted', 'Skip displaying "Get started" instructions')
-  .action((name, cmd) => {
-    const options = cleanArgs(cmd)
-    if (minimist(process.argv.slice(3))._.length > 1) {
-      console.log(chalk.yellow('\n Info: You provided more than one argument. The first one will be used as the app\'s name, the rest are ignored.'))
+const createLiningRult = ()=>({
+    test:/\.(js|vue)$/,
+    loader:'eslint-loader',
+    enforce:'pre',
+    include:[resolve('src'),resolve('test')],
+    options:{
+        formatter:require('eslint-friendly-formatter'),
+        emitWarning:!config.dev.showEslintErrorsInOverlay
     }
-    // --git makes commander to default git to true
-    if (process.argv.includes('-g') || process.argv.includes('--git')) {
-      options.forceGit = true
-    }
-    //把经过处理的命令行参数传递到create中
-    require('../lib/create')(name, options)
-  })
-//这后面还有一些命令行的处理，我们不贪多，先从主要脉络看起
+})
 </pre>
-loadCommand.js代码
+.eslintrc.js 这里并不是全部配置，截取部分老师讲的内容
 <pre>
-module.exports = function loadCommand (commandName, moduleName) {
-  const isNotFoundError = err => {
-    return err.message.match(/Cannot find module/)
-  }
-  try {
-    return require(moduleName)
-  } catch (err) {
-    if (isNotFoundError(err)) {
-      try {
-        return require('import-global')(moduleName)
-      } catch (err2) {
-        if (isNotFoundError(err2)) {
-          const { chalk, hasYarn, hasPnpm3OrLater } = require('@vue/cli-shared-utils')
-          let installCommand = `npm install -g`
-          if (hasYarn()) {
-            installCommand = `yarn global add`
-          } else if (hasPnpm3OrLater()) {
-            installCommand = `pnpm install -g`
-          }
-          console.log()
-          console.log(
-            `  Command ${chalk.cyan(`vue ${commandName}`)} requires a global addon to be installed.\n` +
-            `  Please run ${chalk.cyan(`${installCommand} ${moduleName}`)} and try again.`
-          )
-          console.log()
-          process.exit(1)
-        } else {
-          throw err2
-        }
-      }
-    } else {
-      throw err
-    }
-  }
+rules:{
+    'generator-star-spacing':'off',
+    //1-开启，以警告提示；2-开启，以报错提示；0-等价于off，即关闭这条检查规则
+    'no-console':'off',
+    'no-alert':1,
+    'no-implicit-globals':1,//不准在全局定义function、var
+    'no-debugger':process.env.NODE_ENV === 'production'?'error':'off'
 }
 </pre>
-create.js
+2.一些特别的plugins和loader
+webpack.DefinePlugin:将当前环境代码传到业务代码(比如业务代码不能获取process.env，可以通过这个方法获取环境代码)
 <pre>
-const fs = require('fs-extra')//fs-extra模块是系统fs模块的扩展，提供了更多便利的 API，并继承了fs模块的 API
-const path = require('path')
-const inquirer = require('inquirer')//用户与命令行交互的工具
-const Creator = require('./Creator')
-const { clearConsole } = require('./util/clearConsole')
-const { getPromptModules } = require('./util/createTools')
-const { chalk, error, stopSpinner, exit } = require('@vue/cli-shared-utils')
-const validateProjectName = require('validate-npm-package-name')
-async function create (projectName, options) {
-  //projectName,options都是从命令行获取的
-  //projectName项目名称
-  //options创建项目的参数
-  if (options.proxy) {
-    process.env.HTTP_PROXY = options.proxy
-  }
-  const cwd = options.cwd || process.cwd()
-  const inCurrent = projectName === '.'
-  const name = inCurrent ? path.relative('../', cwd) : projectName
-  const targetDir = path.resolve(cwd, projectName || '.')
-  //判断项目名称是否可用
-  const result = validateProjectName(name)
-  if (!result.validForNewPackages) {
-    console.error(chalk.red(`Invalid project name: "${name}"`))
-    result.errors && result.errors.forEach(err => {
-      console.error(chalk.red.dim('Error: ' + err))
+plugins:[
+    new webpack.DefinePlugin({
+        'process.env':require('../config/dev.env');
     })
-    result.warnings && result.warnings.forEach(warn => {
-      console.error(chalk.red.dim('Warning: ' + warn))
+]
+</pre>
+webpack.ProvidePlugin:避免开发过程中频繁引入同一个库
+<pre>
+plugins:[
+    new webpack.ProvidePlugin({
+        ax:'axios'
     })
-    exit(1)
-  }
-  //判断项目是否在当前目录生成，当前目录下是否已经存在项目
-  if (fs.existsSync(targetDir) && !options.merge) {
-    if (options.force) {
-      await fs.remove(targetDir)
-    } else {
-      await clearConsole()
-      if (inCurrent) {
-        const { ok } = await inquirer.prompt([
-          {
-            name: 'ok',
-            type: 'confirm',
-            message: `Generate project in current directory?`
-          }
-        ])
-        if (!ok) {
-          return
-        }
-      } else {
-        const { action } = await inquirer.prompt([
-          {
-            name: 'action',
-            type: 'list',
-            message: `Target directory ${chalk.cyan(targetDir)} already exists. Pick an action:`,
-            choices: [
-              { name: 'Overwrite', value: 'overwrite' },
-              { name: 'Merge', value: 'merge' },
-              { name: 'Cancel', value: false }
-            ]
-          }
-        ])
-        if (!action) {
-          return
-        } else if (action === 'overwrite') {
-          console.log(`\nRemoving ${chalk.cyan(targetDir)}...`)
-          await fs.remove(targetDir)
-        }
-      }
+]
+</pre>
+webpack.NoEmitOnErrorsPlugin:编译出现错误的时候，跳过错误继续编译
+copy-webpack-plugin:拷贝文件，需要安装，作用于某文件夹中文件并没有在项目中全部被引用，但是项目中需要某文件夹中全部文件的情况
+<pre>
+//是的，这里老师并没有给完整的例子
+plugins:[
+    new copyWebpackPlugin({
+        from:……
+    })
+]
+</pre>
+mini-css-extract-plugin:这个使用的时候，要先定义引入，再在plugin中写入，另外定义处理css的时候，也不能用style-loader了，要用这个插件
+3.环境区分
+<img src="https://snakexu.github.io/images/wangyi/node/3.3.1_1.png">
+4.项目问题解决
+4-1.不要把配置当配置，当成一个程序(项目中的一些配置可以写成方法，以应对灵活多变的业务需求)
+4-2.解决方案归纳
+·如果要是对模块内容进行处理
+loader是第一解决方案
+·如果要增加一些特殊的功能
+可以自定义增加插件
+·项目上的打包简化，可变性配置等
+通过编写相应的操作函数
+
+自己写一个plugin
+下面是老师示例的自己编写plugin
+<pre>
+const path = require('path');
+const fs = require('fs');
+const readFileAsync = require("util").promisify(fs.readFile);
+const writeFileAsync = require("util").promisify(fs.writeFile);
+class AddStaticServer {
+    constructor(options) {
+        this.options = options || {
+            serverPath: '//kc.stu.126.net'
+        };
+        this.serverPath = this.options.serverPath;
     }
-  }
-  const creator = new Creator(name, targetDir, getPromptModules())
-  await creator.create(options)
+    apply(compiler) {
+        // 等 html-webpack-plugin 解决多页面构建速度慢的问题可以使用此方法
+        // compiler.hooks.compilation.tap('AddStaticServer', compilation => {
+        //     compilation.hooks.htmlWebpackPluginBeforeHtmlProcessing.tap(
+        //         'AddStaticServer',
+        //         data => {
+        //             data.html =
+        //             data.html.replace(/\/static\/css/g, `${this.serverPath}res/css`)
+        //                 .replace(/\/static\/js/g, `${this.serverPath}res/js`)
+        //                 .replace(/\/static\/img/g, `${this.serverPath}res/img`);
+        //         }
+        //     );
+        // });
+        compiler.hooks.done.tap('AddStaticServer', compilation => {
+            let context = compiler.options.context;
+            let publicPath = path.resolve(context, 'dist');
+            compilation.toJson().assets.forEach((ast) => {
+                let {dir, base, ext} = path.parse(ast.name);
+                if (ext === '.ftl') {
+                    readFileAsync(path.resolve(publicPath, dir, base), {encoding: 'utf-8'}).then((cnt) => {
+                        cnt = cnt.replace(/\/static\/css/g, `${this.serverPath}res/css`)
+                                .replace(/\/static\/js/g, `${this.serverPath}res/js`)
+                                .replace(/\/static\/img/g, `${this.serverPath}res/img`);
+                        writeFileAsync(path.resolve(publicPath, dir, base), cnt);
+                    });
+                }
+            });
+        });
+    }
 }
-module.exports = (...args) => {
-  return create(...args).catch(err => {
-    stopSpinner(false) // do not persist
-    error(err)
-    if (!process.env.VUE_CLI_TEST) {
-      process.exit(1)
-    }
-  })
+module.exports = AddStaticServer;
+</pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/07/网易微专业-webpack实战演练-3-3-1-网易的webpack工程化实践/" data-id="ckb8s87v2002k4zxqh9xvlojy" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-webpack实战演练-3-2-6-webpack打包速度优化" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/06/网易微专业-webpack实战演练-3-2-6-webpack打包速度优化/" class="article-date">
+  <time datetime="2020-06-06T03:02:23.000Z" itemprop="datePublished">2020-06-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/06/网易微专业-webpack实战演练-3-2-6-webpack打包速度优化/">网易微专业-webpack实战演练-3.2.6-webpack打包速度优化</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.打包结果分析<br>1-1.chunks和module<br>chunks:即代码块，即webpack把js分割成了几块代码<br>module:模块，每一个文件即一个模块<br>1-2.如何可视化的获取打包结果分析<br>·官方版本<br>Mac:webpack –profile –json &gt;stats.json<br>Window:webpack –profile –json &gt;stats.json<br>在项目中执行上述命令之后，打开下面的网站<br><a href="http://webpack.github.io/analyse/" target="_blank" rel="noopener">http://webpack.github.io/analyse/</a><br>选择刚才打包生成的stats.json<br><img src="https://snakexu.github.io/images/wangyi/node/3.2.6_1.png"><br>·社区版本<br>(1)webpack-bundle-analyzer<br>2.优化打包速度<br>2-1.有哪些可以优化的点<br>·项目本身<br>(1)减少依赖嵌套深度<br>(2)使用尽可能少的处理<br>·webpack层面<br>(1)Dll处理<br>(2)通过include减少loader范围<br>(3)HappyPack<br>(4)Uglify优化<br>(5)减少resolve、sourcemap、cache-loader，用新版本的node和webpack</p>
+<p>webpack.dll.js</p>
+<pre>
+const webpack = require('webpack')
+module.exports = {
+    entry:{
+        vendor:['jquery','loadsh']
+    },
+    output:{
+        path:__dirname+'/src/dll',
+        filename:"./[name].js",
+        library:"[name]_library"//引用名
+    },
+    plugins:[
+        new webpack.DllPlugin({
+            path:__dirname+"/src/dll/[name].json",
+            name:"[name]_library",//这里要与引用名一致(也就是与output.library一致)
+        })//告诉打包命令，我们已经处理过jquery和lodash文件了
+    ]
 }
 </pre>
-在packages/@vue/cli/lib/create中，首先通过vlidate-npm-package-name处理包名是否合规。接着在目标文件存在的情况下来提供用户处理目标文件的交互。这一段代码比较好理解，最后生成creator类并调用了creator.create方法。
-<b>creator.js</b>
+保存之后，在命令行项目文件夹下，输入webpack --config webpack.dll.js，我们可以看到项目src文件夹下生成了一个dll文件夹，里面有vendor.js和vendor.json文件，vendor.json文件会给到真正的打包配置中。
+在webpack.config.js文件的plugin中添加:
 <pre>
-const path = require('path')
-const debug = require('debug')
-const inquirer = require('inquirer')
-const EventEmitter = require('events')
-const Generator = require('./Generator')
-const cloneDeep = require('lodash.clonedeep')
-//sortObject有三个参数(对象，排序关键字，不根据Unicode排序)
-const sortObject = require('./util/sortObject')
-const getVersions = require('./util/getVersions')
-const PackageManager = require('./util/ProjectPackageManager')
-const { clearConsole } = require('./util/clearConsole')
-const PromptModuleAPI = require('./PromptModuleAPI')
-const writeFileTree = require('./util/writeFileTree')
-const { formatFeatures } = require('./util/features')
-const loadLocalPreset = require('./util/loadLocalPreset')
-const loadRemotePreset = require('./util/loadRemotePreset')
-const generateReadme = require('./util/generateReadme')
-const { resolvePkg } = require('@vue/cli-shared-utils')
+new webpack.DllReferencePlugin({
+     manifest:require('./src/dll/vendor.json')
+}),
+</pre>
+到这里，我们只是完成了dll打包，但是我们dll打包的文件并没有被引入到html页面中，我们可以通过
+<pre>
+new htmlWebpackPlugin({
+    filename:"index.html",
+    template:"./src/index.html",
+    vendorPath:"../src/dll/vendor.js",//在这里引入dll生成的文件
+    chunks:['app','runtime']
+})
+</pre>
+并且在html页面通过模版字符串的方式引入
+<pre>
+< script type="text/javascript" src="${htmlWebpackPlugin.options.vendorPath}">< /script >
+</pre>
 
-const {
-  defaults,
-  saveOptions,
-  loadOptions,
-  savePreset,
-  validatePreset,
-  rcPath
-} = require('./options')
-
-const {
-  chalk,
-  execa,
-
-  log,
-  warn,
-  error,
-  logWithSpinner,
-  stopSpinner,
-
-  hasGit,
-  hasProjectGit,
-  hasYarn,
-  hasPnpm3OrLater,
-  hasPnpmVersionOrLater,
-
-  exit,
-  loadModule
-} = require('@vue/cli-shared-utils')
-
-const isManualMode = answers => answers.preset === '__manual__'
-
-module.exports = class Creator extends EventEmitter {
-  constructor (name, context, promptModules) {
-    super()
-
-    this.name = name
-    this.context = process.env.VUE_CLI_CONTEXT = context
-    const { presetPrompt, featurePrompt } = this.resolveIntroPrompts()
-    this.presetPrompt = presetPrompt
-    this.featurePrompt = featurePrompt
-    this.outroPrompts = this.resolveOutroPrompts()
-    this.injectedPrompts = []
-    this.promptCompleteCbs = []
-    this.afterInvokeCbs = []
-    this.afterAnyInvokeCbs = []
-
-    this.run = this.run.bind(this)
-
-    const promptAPI = new PromptModuleAPI(this)
-    promptModules.forEach(m => m(promptAPI))
-  }
-
-  async create (cliOptions = {}, preset = null) {
-    const isTestOrDebug = process.env.VUE_CLI_TEST || process.env.VUE_CLI_DEBUG
-    const { run, name, context, afterInvokeCbs, afterAnyInvokeCbs } = this
-
-    if (!preset) {
-      if (cliOptions.preset) {
-        // vue create foo --preset bar
-        preset = await this.resolvePreset(cliOptions.preset, cliOptions.clone)
-      } else if (cliOptions.default) {
-        // vue create foo --default
-        preset = defaults.presets.default
-      } else if (cliOptions.inlinePreset) {
-        // vue create foo --inlinePreset {...}
-        try {
-          preset = JSON.parse(cliOptions.inlinePreset)
-        } catch (e) {
-          error(`CLI inline preset is not valid JSON: ${cliOptions.inlinePreset}`)
-          exit(1)
-        }
-      } else {
-        preset = await this.promptAndResolvePreset()
-      }
-    }
-
-    // clone before mutating
-    preset = cloneDeep(preset)
-    // inject core service
-    preset.plugins['@vue/cli-service'] = Object.assign({
-      projectName: name
-    }, preset)
-
-    if (cliOptions.bare) {
-      preset.plugins['@vue/cli-service'].bare = true
-    }
-
-    // legacy support for router
-    if (preset.router) {
-      preset.plugins['@vue/cli-plugin-router'] = {}
-
-      if (preset.routerHistoryMode) {
-        preset.plugins['@vue/cli-plugin-router'].historyMode = true
-      }
-    }
-
-    // legacy support for vuex
-    if (preset.vuex) {
-      preset.plugins['@vue/cli-plugin-vuex'] = {}
-    }
-
-    const packageManager = (
-      cliOptions.packageManager ||
-      loadOptions().packageManager ||
-      (hasYarn() ? 'yarn' : null) ||
-      (hasPnpm3OrLater() ? 'pnpm' : 'npm')
-    )
-    const pm = new PackageManager({ context, forcePackageManager: packageManager })
-
-    await clearConsole()
-    logWithSpinner(`✨`, `Creating project in ${chalk.yellow(context)}.`)
-    this.emit('creation', { event: 'creating' })
-
-    // get latest CLI plugin version
-    const { latestMinor } = await getVersions()
-
-    // generate package.json with plugin dependencies
-    const pkg = {
-      name,
-      version: '0.1.0',
-      private: true,
-      devDependencies: {},
-      ...resolvePkg(context)
-    }
-    const deps = Object.keys(preset.plugins)
-    deps.forEach(dep => {
-      if (preset.plugins[dep]._isPreset) {
-        return
-      }
-
-      // Note: the default creator includes no more than `@vue/cli-*` & `@vue/babel-preset-env`,
-      // so it is fine to only test `@vue` prefix.
-      // Other `@vue/*` packages' version may not be in sync with the cli itself.
-      pkg.devDependencies[dep] = (
-        preset.plugins[dep].version ||
-        ((/^@vue/.test(dep)) ? `~${latestMinor}` : `latest`)
-      )
-    })
-
-    // write package.json
-    await writeFileTree(context, {
-      'package.json': JSON.stringify(pkg, null, 2)
-    })
-
-    // intilaize git repository before installing deps
-    // so that vue-cli-service can setup git hooks.
-    const shouldInitGit = this.shouldInitGit(cliOptions)
-    if (shouldInitGit) {
-      logWithSpinner(`🗃`, `Initializing git repository...`)
-      this.emit('creation', { event: 'git-init' })
-      await run('git init')
-    }
-
-    // install plugins
-    stopSpinner()
-    log(`⚙\u{fe0f}  Installing CLI plugins. This might take a while...`)
-    log()
-    this.emit('creation', { event: 'plugins-install' })
-
-    if (isTestOrDebug && !process.env.VUE_CLI_TEST_DO_INSTALL_PLUGIN) {
-      // in development, avoid installation process
-      await require('./util/setupDevProject')(context)
-    } else {
-      await pm.install()
-    }
-
-    // run generator
-    log(`🚀  Invoking generators...`)
-    this.emit('creation', { event: 'invoking-generators' })
-    const plugins = await this.resolvePlugins(preset.plugins)
-    const generator = new Generator(context, {
-      pkg,
-      plugins,
-      afterInvokeCbs,
-      afterAnyInvokeCbs
-    })
-    await generator.generate({
-      extractConfigFiles: preset.useConfigFiles
-    })
-
-    // install additional deps (injected by generators)
-    log(`📦  Installing additional dependencies...`)
-    this.emit('creation', { event: 'deps-install' })
-    log()
-    if (!isTestOrDebug) {
-      await pm.install()
-    }
-
-    // run complete cbs if any (injected by generators)
-    logWithSpinner('⚓', `Running completion hooks...`)
-    this.emit('creation', { event: 'completion-hooks' })
-    for (const cb of afterInvokeCbs) {
-      await cb()
-    }
-    for (const cb of afterAnyInvokeCbs) {
-      await cb()
-    }
-
-    // generate README.md
-    stopSpinner()
-    log()
-    logWithSpinner('📄', 'Generating README.md...')
-    await writeFileTree(context, {
-      'README.md': generateReadme(generator.pkg, packageManager)
-    })
-
-    // generate a .npmrc file for pnpm, to persist the `shamefully-flatten` flag
-    if (packageManager === 'pnpm') {
-      const pnpmConfig = hasPnpmVersionOrLater('4.0.0')
-        ? 'shamefully-hoist=true\n'
-        : 'shamefully-flatten=true\n'
-
-      await writeFileTree(context, {
-        '.npmrc': pnpmConfig
-      })
-    }
-
-    // commit initial state
-    let gitCommitFailed = false
-    if (shouldInitGit) {
-      await run('git add -A')
-      if (isTestOrDebug) {
-        await run('git', ['config', 'user.name', 'test'])
-        await run('git', ['config', 'user.email', 'test@test.com'])
-      }
-      const msg = typeof cliOptions.git === 'string' ? cliOptions.git : 'init'
-      try {
-        await run('git', ['commit', '-m', msg])
-      } catch (e) {
-        gitCommitFailed = true
-      }
-    }
-
-    // log instructions
-    stopSpinner()
-    log()
-    log(`🎉  Successfully created project ${chalk.yellow(name)}.`)
-    if (!cliOptions.skipGetStarted) {
-      log(
-        `👉  Get started with the following commands:\n\n` +
-        (this.context === process.cwd() ? `` : chalk.cyan(` ${chalk.gray('$')} cd ${name}\n`)) +
-        chalk.cyan(` ${chalk.gray('$')} ${packageManager === 'yarn' ? 'yarn serve' : packageManager === 'pnpm' ? 'pnpm run serve' : 'npm run serve'}`)
-      )
-    }
-    log()
-    this.emit('creation', { event: 'done' })
-
-    if (gitCommitFailed) {
-      warn(
-        `Skipped git commit due to missing username and email in git config.\n` +
-        `You will need to perform the initial commit yourself.\n`
-      )
-    }
-
-    generator.printExitLogs()
-  }
-
-  run (command, args) {
-    if (!args) { [command, ...args] = command.split(/\s+/) }
-    return execa(command, args, { cwd: this.context })
-  }
-
-  async promptAndResolvePreset (answers = null) {
-    // prompt
-    if (!answers) {
-      await clearConsole(true)
-      answers = await inquirer.prompt(this.resolveFinalPrompts())
-    }
-    debug('vue-cli:answers')(answers)
-
-    if (answers.packageManager) {
-      saveOptions({
-        packageManager: answers.packageManager
-      })
-    }
-
-    let preset
-    if (answers.preset && answers.preset !== '__manual__') {
-      preset = await this.resolvePreset(answers.preset)
-    } else {
-      // manual
-      preset = {
-        useConfigFiles: answers.useConfigFiles === 'files',
-        plugins: {}
-      }
-      answers.features = answers.features || []
-      // run cb registered by prompt modules to finalize the preset
-      this.promptCompleteCbs.forEach(cb => cb(answers, preset))
-    }
-
-    // validate
-    validatePreset(preset)
-
-    // save preset
-    if (answers.save && answers.saveName && savePreset(answers.saveName, preset)) {
-      log()
-      log(`🎉  Preset ${chalk.yellow(answers.saveName)} saved in ${chalk.yellow(rcPath)}`)
-    }
-
-    debug('vue-cli:preset')(preset)
-    return preset
-  }
-
-  async resolvePreset (name, clone) {
-    let preset
-    const savedPresets = loadOptions().presets || {}
-
-    if (name in savedPresets) {
-      preset = savedPresets[name]
-    } else if (name.endsWith('.json') || /^\./.test(name) || path.isAbsolute(name)) {
-      preset = await loadLocalPreset(path.resolve(name))
-    } else if (name.includes('/')) {
-      logWithSpinner(`Fetching remote preset ${chalk.cyan(name)}...`)
-      this.emit('creation', { event: 'fetch-remote-preset' })
-      try {
-        preset = await loadRemotePreset(name, clone)
-        stopSpinner()
-      } catch (e) {
-        stopSpinner()
-        error(`Failed fetching remote preset ${chalk.cyan(name)}:`)
-        throw e
-      }
-    }
-
-    // use default preset if user has not overwritten it
-    if (name === 'default' && !preset) {
-      preset = defaults.presets.default
-    }
-    if (!preset) {
-      error(`preset "${name}" not found.`)
-      const presets = Object.keys(savedPresets)
-      if (presets.length) {
-        log()
-        log(`available presets:\n${presets.join(`\n`)}`)
-      } else {
-        log(`you don't seem to have any saved preset.`)
-        log(`run vue-cli in manual mode to create a preset.`)
-      }
-      exit(1)
-    }
-    return preset
-  }
-
-  // { id: options } => [{ id, apply, options }]
-  async resolvePlugins (rawPlugins) {
-    // ensure cli-service is invoked first
-    rawPlugins = sortObject(rawPlugins, ['@vue/cli-service'], true)
-    const plugins = []
-    for (const id of Object.keys(rawPlugins)) {
-      const apply = loadModule(`${id}/generator`, this.context) || (() => {})
-      let options = rawPlugins[id] || {}
-      if (options.prompts) {
-        const prompts = loadModule(`${id}/prompts`, this.context)
-        if (prompts) {
-          log()
-          log(`${chalk.cyan(options._isPreset ? `Preset options:` : id)}`)
-          options = await inquirer.prompt(prompts)
-        }
-      }
-      plugins.push({ id, apply, options })
-    }
-    return plugins
-  }
-
-  getPresets () {
-    const savedOptions = loadOptions()
-    return Object.assign({}, savedOptions.presets, defaults.presets)
-  }
-
-  resolveIntroPrompts () {
-    const presets = this.getPresets()
-    const presetChoices = Object.keys(presets).map(name => {
-      return {
-        name: `${name} (${formatFeatures(presets[name])})`,
-        value: name
-      }
-    })
-    const presetPrompt = {
-      name: 'preset',
-      type: 'list',
-      message: `Please pick a preset:`,
-      choices: [
-        ...presetChoices,
+<p>HappyPack由于webpack是node编写的，而node可以开工作进程，所以通过这个思路，HappyPack开启多线程。HappyPack是要通过npm下载的，假设我们要用happypack处理vue文件</p>
+<pre>
+rules:[
+{
+    test:/\.vue$/,
+    loader:'happypack/loader?id=happyvue'
+}
+]
+</pre>
+在配置生产环境的配置文件中
+<pre>
+const HappyPack = require('happypack');
+const os = require('os')
+const happyThreadpool = HappyPack.ThreadPool({size:os.cpus().length})//根据cpu决定建几个线程
+const vueLoaderConfig = require('./vue-loader.conf.js')
+//这里只是需要修改plugins中的内容，并不是说plugins在文件中层级关系
+plugins:[
+    new HappyPack({
+        id:'happyvue',//对应我们在上面定义的id
+        loaders:[
         {
-          name: 'Manually select features',
-          value: '__manual__'
+            path:"vue-loader",
+            cache:true,
+            options:vueLoaderConfig
         }
-      ]
-    }
-    const featurePrompt = {
-      name: 'features',
-      when: isManualMode,
-      type: 'checkbox',
-      message: 'Check the features needed for your project:',
-      choices: [],
-      pageSize: 10
-    }
-    return {
-      presetPrompt,
-      featurePrompt
-    }
-  }
-
-  resolveOutroPrompts () {
-    const outroPrompts = [
-      {
-        name: 'useConfigFiles',
-        when: isManualMode,
-        type: 'list',
-        message: 'Where do you prefer placing config for Babel, ESLint, etc.?',
-        choices: [
-          {
-            name: 'In dedicated config files',
-            value: 'files'
-          },
-          {
-            name: 'In package.json',
-            value: 'pkg'
-          }
-        ]
-      },
-      {
-        name: 'save',
-        when: isManualMode,
-        type: 'confirm',
-        message: 'Save this as a preset for future projects?',
-        default: false
-      },
-      {
-        name: 'saveName',
-        when: answers => answers.save,
-        type: 'input',
-        message: 'Save preset as:'
-      }
-    ]
-
-    // ask for packageManager once
-    const savedOptions = loadOptions()
-    if (!savedOptions.packageManager && (hasYarn() || hasPnpm3OrLater())) {
-      const packageManagerChoices = []
-
-      if (hasYarn()) {
-        packageManagerChoices.push({
-          name: 'Use Yarn',
-          value: 'yarn',
-          short: 'Yarn'
-        })
-      }
-
-      if (hasPnpm3OrLater()) {
-        packageManagerChoices.push({
-          name: 'Use PNPM',
-          value: 'pnpm',
-          short: 'PNPM'
-        })
-      }
-
-      packageManagerChoices.push({
-        name: 'Use NPM',
-        value: 'npm',
-        short: 'NPM'
-      })
-
-      outroPrompts.push({
-        name: 'packageManager',
-        type: 'list',
-        message: 'Pick the package manager to use when installing dependencies:',
-        choices: packageManagerChoices
-      })
-    }
-
-    return outroPrompts
-  }
-
-  resolveFinalPrompts () {
-    // patch generator-injected prompts to only show in manual mode
-    this.injectedPrompts.forEach(prompt => {
-      const originalWhen = prompt.when || (() => true)
-      prompt.when = answers => {
-        return isManualMode(answers) && originalWhen(answers)
-      }
+        ],
+        threadPool:happyThreadPool
     })
-    const prompts = [
-      this.presetPrompt,
-      this.featurePrompt,
-      ...this.injectedPrompts,
-      ...this.outroPrompts
-    ]
-    debug('vue-cli:prompts')(prompts)
-    return prompts
-  }
-
-  shouldInitGit (cliOptions) {
-    if (!hasGit()) {
-      return false
-    }
-    // --git
-    if (cliOptions.forceGit) {
-      return true
-    }
-    // --no-git
-    if (cliOptions.git === false || cliOptions.git === 'false') {
-      return false
-    }
-    // default: true unless already in a git repo
-    return !hasProjectGit(this.context)
-  }
+]
+</pre>
+其实在webpack中任何操作都是需要增加打包时间的(包括优化操作)，所以在运用优化操作的时候，尽可能却确定优化操作比直接打包更值得
+3.长缓存优化
+3-1.把hash改为chunkhash
+我们在用webpack打包项目的时候，输出文件名通常会加hash，而每次项目中页面有内容变化，整个项目再次打包生成的文件hash代码会改变，影响浏览器生成缓存，我们可以将hash改成chunkhash
+<pre>
+output:{
+    path:__dirname+"/dist",
+    filename:"./[name].[chunkhash].js",
 }
+</pre>
+3-2.NamedChunksPlugin和NamedModulesPlugin
+上面的把hash改为chunkhash并不完美，当模块发生变动的时候，并不能保证hash的稳定。我们用3-2的方案完善
+在webpack配置文件中做如下修改
+<pre>
+plugins:[
+    new webpack.NamedChunksPlugin(),
+    new webpack.NamedModulesPlugin()
+]
 </pre>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/05/08/vue-cli了解/" data-id="cka5080hr003xhyxquqj1l3ij" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/06/06/网易微专业-webpack实战演练-3-2-6-webpack打包速度优化/" data-id="ckb8s87v1002j4zxqx0te8x0k" class="article-share-link">Share</a>
       
       
     </footer>
@@ -1094,10 +377,10 @@ module.exports = class Creator extends EventEmitter {
 
 
   
-    <article id="post-网易微专业-node-Koa源码分析-2-2-1-Koa类构造函数设计" class="article article-type-post" itemscope="" itemprop="blogPost">
+    <article id="post-网易微专业-单页应用-1-4-1-项目全面深度优化及打包上线之网易实践" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2020/05/07/网易微专业-node-Koa源码分析-2-2-1-Koa类构造函数设计/" class="article-date">
-  <time datetime="2020-05-07T07:09:50.000Z" itemprop="datePublished">2020-05-07</time>
+    <a href="/2020/06/03/网易微专业-单页应用-1-4-1-项目全面深度优化及打包上线之网易实践/" class="article-date">
+  <time datetime="2020-06-03T08:31:56.000Z" itemprop="datePublished">2020-06-03</time>
 </a>
     
   </div>
@@ -1108,7 +391,7 @@ module.exports = class Creator extends EventEmitter {
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/07/网易微专业-node-Koa源码分析-2-2-1-Koa类构造函数设计/">网易微专业-node-Koa源码分析-2.2.1-Koa类构造函数设计</a>
+      <a class="article-title" href="/2020/06/03/网易微专业-单页应用-1-4-1-项目全面深度优化及打包上线之网易实践/">网易微专业-单页应用-1-4-1-项目全面深度优化及打包上线之网易实践</a>
     </h1>
   
 
@@ -1116,166 +399,41 @@ module.exports = class Creator extends EventEmitter {
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>1.集成Emitter<br>我们找到node_modules文件夹下的koa文件夹，找到package.json文件，看到main中的入口文件是lib/application.js，打开application.js</p>
-<p><pre><br>// 判断是否为 genterator 方法(koa是基于async/await，而async/await是基于generator函数的)<br>const isGeneratorFunction = require(‘is-generator-function’);<br>// 设置debug的命明空间<br>const debug = require(‘debug’)(‘koa:application’);<br>// 当请求完成时执行的一个回调<br>const onFinished = require(‘on-finished’);<br>// 引入 response<br>const response = require(‘./response’);<br>// 中间件机制、剥洋葱模型<br>const compose = require(‘koa-compose’);<br>// 引入 context<br>const context = require(‘./context’);<br>// 引入 request<br>const request = require(‘./request’);<br>// 用于判断http状态的工具包<br>const statuses = require(‘statuses’);<br>// Node 原生事件驱动模块<br>const Emitter = require(‘events’);<br>// Node 原生工具包模块<br>const util = require(‘util’);<br>// Node 原生Stream模块<br>const Stream = require(‘stream’);<br>// Node 原生http模块<br>const http = require(‘http’);<br>// 用于返回对象指定的属性<br>const only = require(‘only’);<br>// 将基于koa生成器中间件转换成基于Promise的中间件<br>const convert = require(‘koa-convert’);<br>// 给出一些信息<br>const deprecate = require(‘depd’)(‘koa’);<br>// 用处创建Http Error的模块<br>const { HttpError } = require(‘http-errors’);<br></pre><br>2.构造函数<br>我们看到，application.js里边有这样的代码<br>module.exports = class Application extends Emitter<br>node是基于事件处理的，这里继承了node的event模块，在构造函数中看到<br>constructor(options) {<br>    // 调用父类进行构造<br>    super();<br>    // 设置一些初始值<br>    options = options || {};<br>    this.proxy = options.proxy || false;<br>    this.subdomainOffset = options.subdomainOffset || 2;<br>    this.proxyIpHeader = options.proxyIpHeader || ‘X-Forwarded-For’;<br>    this.maxIpsCount = options.maxIpsCount || 0;<br>    // 区分开发环境还是生产环境<br>    this.env = options.env || process.env.NODE_ENV || ‘development’;<br>    if (options.keys) this.keys = options.keys;<br>    // 将中间件保存到数组中<br>    this.middleware = [];<br>    this.context = Object.create(context);<br>    this.request = Object.create(request);<br>    this.response = Object.create(response);<br>    if (util.inspect.custom) {<br>      this[util.inspect.custom] = this.inspect;<br>    }<br> }<br><br>也就是说我们new Koa()的时候是可以根据需要传递参数的，在这里老师讲了一下每个参数的意义，部分写了注释<br>3.初始化功能<br>继续看application.js文件的Application的listen</p>
-<p><pre><br>//监听端口，启动服务<br>listen(…args) {<br>    debug(‘listen’);<br>    //利用http模块创建服务，传入回调函数，以及监听端口<br>    const server = http.createServer(this.callback());<br>    return server.listen(…args);<br>}<br>//app.callback()<br>//执行后，返回一个(req,res)=&gt;{}<br>//构建了ctx<br>callback() {<br>    const fn = compose(this.middleware);</pre></p>
-<pre><code>if (!this.listenerCount(&apos;error&apos;)) this.on(&apos;error&apos;, this.onerror);
-
-const handleRequest = (req, res) =&gt; {
-  const ctx = this.createContext(req, res);
-  return this.handleRequest(ctx, fn);
-};
-
-return handleRequest;
-</code></pre><p>}<br>//用于构建上下文对象<br>createContext(req, res) {<br>    const context = Object.create(this.context);<br>    const request = context.request = Object.create(this.request);<br>    const response = context.response = Object.create(this.response);<br>    context.app = request.app = response.app = this;<br>    context.req = request.req = response.req = req;<br>    context.res = request.res = response.res = res;<br>    request.ctx = response.ctx = context;<br>    request.response = response;<br>    response.request = request;<br>    context.originalUrl = request.originalUrl = req.url;<br>    context.state = {};<br>    return context;<br>}<br><br>4.简单模拟本节课内容<br>新建一个项目simple-koa，建立文件夹lib，然后touch application.js</p>
-<p><pre><br>const http = require(‘http’);</pre></p>
-<p>class Application {<br>    constructor() {<br>        this.callbackFunc;<br>    }</p>
-<pre><code>listen(...args) {
-    let server = http.createServer(this.callback());
-    server.listen(...args);
+        <p>优化方向<br>——效率<br>  开发效率(组件、指令、工具函数的优化和积累)<br>  部署效率(打包优化)<br>  协作效率(协作方式的优化)<br>——质量<br>  性能监控<br>  自动化测试(单元测试、端到端测试等)<br>——性能体验<br>  首屏性能<br>  页面加载性能、图片性能</p>
+<p>1.工程优化<br>1-1.esline-plugin-vue去安装一些eslint关于vue代码的检测，具体可见eslint-plugin-vue官网 eslint.vuejs.org 会有比如缩进提示/v-if和v-for最好不要一起使用等plugin<br>1-2.其他loader<br>01.@vusion/md-vue-loader(vusion是网易研发的一套框架)md文件转vue的一个loader<br>02.css-sprite-loader<br>03.icon-font-loader<br>这里一个是讲了vue.config.js的一些配置方法(如下面代码),另外是讲了自己写一个vue-plugin如何在项目中测试引入，简单的说就是在项目中建立一个plugin的文件夹，里面有package.json依赖文件，index入口文件，我们在项目的package.json文件中引入这个plugin，在项目的node_modules文件夹中通过ln -s ../vue-plugin vue-plugin，然后我们通过ls -al vue-plugin(这里vue-plugin是你自己做的plugin的名称)</p>
+<p><pre><br>const CSSSpritePlugin = require(‘css-sprite-loader’).Plugin;</pre></p>
+<p>function chainCSSOneOfs(config, chainOneOf) {<br>    // ‘postcss’ 留给用户自定义吧<br>    [‘css’, ‘scss’, ‘sass’, ‘less’, ‘stylus’].forEach((rule) =&gt; {<br>        const ruleCSS = config.module.rule(rule);<br>        chainOneOf(ruleCSS.oneOf(‘vue-modules’), true);<br>        chainOneOf(ruleCSS.oneOf(‘vue’), false);<br>        chainOneOf(ruleCSS.oneOf(‘normal-modules’), true);<br>        chainOneOf(ruleCSS.oneOf(‘normal’), false);<br>    });<br>}</p>
+<p>module.exports = {<br>    chainWebpack(config) {<br>        config.plugin(‘css-sprite’).use(CSSSpritePlugin, [])</p>
+<pre><code>    chainCSSOneOfs(config, (oneOf) =&gt; {
+        oneOf.use(&apos;css-sprite-loader&apos;)
+            .loader(&apos;css-sprite-loader&apos;)
+            .end();
+    });
 }
-
-use(fn) {
-    this.callbackFunc = fn;
-}
-
-callback() {
-    return (req, res) =&gt; {
-        this.callbackFunc(req, res);
-    };
-}
-</code></pre><p>}</p>
-<p>module.exports = Application;<br><br>在根文件夹下touch demo.js</p>
-<p><pre><br>const Koa = require(‘./lib/application’);<br>const app = new Koa();</pre></p>
-<p>app.use((req, res) =&gt; {<br>    res.writeHeader(500);<br>    res.end(‘Server Error’);<br>});</p>
-<p>app.listen(3000, () =&gt; {<br>    console.log(‘hello Simple Koa’);<br>});<br><br>初步模拟了koa的初始化。另外这里老师介绍了nodemon，这个插件就是node的热重启，安装在开发环境就好</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/05/07/网易微专业-node-Koa源码分析-2-2-1-Koa类构造函数设计/" data-id="cka5080ei0029hyxq39gi9h8f" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-node-Koa源码分析-2-1-1-Koa整体结构" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/05/06/网易微专业-node-Koa源码分析-2-1-1-Koa整体结构/" class="article-date">
-  <time datetime="2020-05-06T00:45:43.000Z" itemprop="datePublished">2020-05-06</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/06/网易微专业-node-Koa源码分析-2-1-1-Koa整体结构/">网易微专业-node-Koa源码分析-2.1.1-Koa整体结构</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.web开发框架历史<br>Node.js本身就是web开发框架，在node中主要用于web服务器的模块就是http模块，下面我们回忆下如何使用http模块。创建一个文件夹，在命令行中进入文件夹，数额入npm init -y初始化项目。<br>http-server.js</p>
-<pre>
-const http = require('http')
-http.createServer(function(req,res){
-    res.end('Hello World')
-}).listen(3000,function(){
-    console.log('服务启动成功')
-})
-</pre>
-使用node的http模块创建一个http服务还是比较简单的，但是在实际开发中会有更复杂的需求，所以有了基于nodejs的框架，express是其中之一
-express-server.js
-<pre>
-const express = require('express');
-const app = express()
-app.get('/',function(req,res){
-    res.send('hello world')
-})
-app.listen(3000)
-</pre>
-当然express的功能不仅仅是这样，我们找一个比较简单的实现一下，首先创建一个public文件夹，里面放入一些静态资源，并将express-server.js进行简单修改
-<pre>
-const express = require('express');
-const app = express();
-app.use(express.static('public'));
-app.listen(3000);
-</pre>
-就可以看到public中的页面，这是express中间件的简单使用。
-koa是express开发团队基于node.js平台的下一代开发框架
-koa-server.js
-<pre>
-const Koa = require('koa');
-const app = new Koa();
-app.use(async ctx => {
-    ctx.body = 'hello world!';
-});
-app.listen(3000)
-</pre>
-在express中是内置中间件的，但是在koa中把中间件分开，我们如果想使用koa的中间件需要安装koa-static，引入中间件之后，我们修改代码使用中间件
-<pre>
-const Koa = require('koa');
-const app = new Koa();
-const static = require('koa-static');
-
-app.use(static(__dirname + '/public'));
-app.listen(3000)
-</pre>
-重启服务看到与express使用中间件一样的效果，即看到public文件夹下的静态资源 
-2.Koa源码目录结构
-3.Koa主流程梳理
-在我们创建的项目中新建flow-analysis.js
-<pre>
-const Koa = require('koa');
-const app = new Koa();
-// x-response-time
-app.use(async (ctx, next) => {
-    const start = Date.now();                           // ①
-    await next();                                                   //  ②
-    const ms = Date.now() - start;                  // ⑧
-    ctx.set('X-Response-Time', `${ms}ms`);  // ⑨
-});
-//logger
-app.use(async (ctx, next) => {
-    const start = Date.now();                           // ③
-    await next();                                                      // ④
-    const ms = Date.now() - start;                     // ⑥
-    console.log(`${ctx.method} ${ctx.url} - ${ms}ms`);   // ⑦
-});
-// response
-app.use(async ctx => { 
-    ctx.body = 'Hello Wolrd';                                   // ⑤
-});
-app.listen(3000);
-
-/**
- *  执行过程：
- *  1. 创建一个跟踪响应时间的 时间戳
- *  2.  等待下一个中间件执行完毕
- *  3. 创建另一个logger的持续时间
- *  4. 等待下一个中间件执行完毕
- *  5. 将响应体设置为 'hello world'
- *  6. 计算出logger的持续时间
- *  7. 输出logger
- *  8. 计算响应的持续是按
- *  9. 将 x-response-time 响应头设置好
- *  10. 交给koa处理
+</code></pre><p>};<br><br>2.部署优化<br>部署优化我们可以从以下4个方面考虑<br>01.git pull 拉取代码<br>02.npm install 安装npm<br>02-1.利用package.json缓存node_modules<br>下面代码展示了如何利用package-lock.json作为缓存节省npm i的安装时间(如果package-lock.json没有改变的话，会从缓存安装，节省很多时间)</p>
+<p><pre><br>const fs = require(‘fs’);<br>const path = require(‘path’);<br>const shell = require(‘shelljs’);<br>const crypto = require(‘crypto’);<br>const md5 = function (str, len = 16) {<br>    const md5 = crypto.createHash(‘md5’);<br>    return md5.update(str).digest(‘hex’).substr(0, len);<br>};<br>const cachePath = path.join(<strong>dirname, ‘./node_modules/.cache/package-lock.log’);<br>if (!fs.existsSync(path.join(cachePath, ‘../..’))) {<br>    fs.mkdirSync(path.join(cachePath, ‘../..’), {<br>        recursive: true,<br>    });<br>}<br>const lockHash = md5(fs.readFileSync(path.join(</strong>dirname, ‘./package-lock.json’)).toString());<br>let cache = false;<br>if (fs.existsSync(cachePath)) {<br>    if (lockHash === fs.readFileSync(cachePath).toString()) {<br>        cache = true;<br>        console.log(‘Installed from cache.’);<br>    }<br>}<br>if (!cache) {<br>    /**</pre></p>
+<pre><code> * Install npm packages
  */
-</pre>
+console.time(&apos;npm install&apos;);
+console.log(&apos;Installing npm packages ...&apos;);
+const result = shell.exec(&apos;npm --no-audit --progress=false --registry=https://registry.npm.taobao.org install&apos;);
+if (result.code)
+    throw new Error(String(result.stderr));
+/**
+ * Log Versions
+ */
+const nodeVersion = shell.exec(&apos;node -v&apos;, { silent: true }).stdout.trim();
+console.log(&apos;node version:&apos;, nodeVersion);
+const npmVersion = shell.exec(&apos;npm -v&apos;, { silent: true }).stdout.trim();
+console.log(&apos;npm version:&apos;, npmVersion);
+console.timeEnd(&apos;npm install&apos;);
+fs.writeFileSync(cachePath, lockHash);
+</code></pre><p>}<br><br>02-2.利用webpack Dll(build和浏览器可以同时缓存)<br>……<br>03.npm run build webpack构建<br>04.cp -r 拷贝到指定目录<br>3.组件优化<br>01.虚拟列表<br>02.mixins<br>03.指令</p>
+
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/05/06/网易微专业-node-Koa源码分析-2-1-1-Koa整体结构/" data-id="cka5080eh0028hyxqpxk1p0ul" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/06/03/网易微专业-单页应用-1-4-1-项目全面深度优化及打包上线之网易实践/" data-id="ckb8s87v5002o4zxqrk1lglae" class="article-share-link">Share</a>
       
       
     </footer>
@@ -1285,10 +443,10 @@ app.listen(3000);
 
 
   
-    <article id="post-网易微专业福利期-3-3-异步编程方法-发布-订阅" class="article article-type-post" itemscope="" itemprop="blogPost">
+    <article id="post-网易微专业-移动端APP开发工程师-H5移动端开发-1-1-6-音频与视频" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2020/05/05/网易微专业福利期-3-3-异步编程方法-发布-订阅/" class="article-date">
-  <time datetime="2020-05-05T09:39:21.000Z" itemprop="datePublished">2020-05-05</time>
+    <a href="/2020/05/28/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-6-音频与视频/" class="article-date">
+  <time datetime="2020-05-28T10:25:54.000Z" itemprop="datePublished">2020-05-28</time>
 </a>
     
   </div>
@@ -1299,7 +457,7 @@ app.listen(3000);
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/05/网易微专业福利期-3-3-异步编程方法-发布-订阅/">网易微专业福利期-3.3-异步编程方法-发布/订阅</a>
+      <a class="article-title" href="/2020/05/28/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-6-音频与视频/">网易微专业-移动端APP开发工程师-H5移动端开发-1.1.6-音频与视频</a>
     </h1>
   
 
@@ -1307,12 +465,12 @@ app.listen(3000);
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>1.理解发布/订阅<br>2.实现发布/订阅<br>3.Node.js的发布/订阅</p>
+        <p>1.HTML5之前多媒体的方案<br>1-1.HTML5之前多媒体的方案<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.6_1.png"><br>1-2.HTML5多媒体的方案<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.6_2.png"><br>1-3.浏览器支持<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.6_3.png"><br>2.Audio音频<br>2-1.音频使用实例<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.6_4.png"><br>2-2.音频格式及浏览器支持<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.6_5.png"><br>3.Video视频<br>3-1.视频使用实例<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.6_6.png"><br>3-2.视频格式及浏览器支持<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.6_7.png"><br>3-3.flv.js<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.6_8.png"><br>3-4.video.js<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.6_9.png"><br>4.DOM控制<br>4-1.使用DOM控制<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.6_10.png"><br>4-2.相关操作<br>其中myVideo为获取的video元素<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.6_11.png"></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/05/05/网易微专业福利期-3-3-异步编程方法-发布-订阅/" data-id="cka5080f10032hyxqt65j1ude" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/05/28/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-6-音频与视频/" data-id="ckb8s87vg00374zxqdtz92n3g" class="article-share-link">Share</a>
       
       
     </footer>
@@ -1322,10 +480,10 @@ app.listen(3000);
 
 
   
-    <article id="post-数据结构-树和二叉树" class="article article-type-post" itemscope="" itemprop="blogPost">
+    <article id="post-网易微专业-移动端APP开发工程师-H5移动端开发-1-1-5-地理信息、本地存储、离线存储" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2020/04/29/数据结构-树和二叉树/" class="article-date">
-  <time datetime="2020-04-29T02:52:30.000Z" itemprop="datePublished">2020-04-29</time>
+    <a href="/2020/05/28/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-5-地理信息、本地存储、离线存储/" class="article-date">
+  <time datetime="2020-05-28T07:32:42.000Z" itemprop="datePublished">2020-05-28</time>
 </a>
     
   </div>
@@ -1336,7 +494,7 @@ app.listen(3000);
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2020/04/29/数据结构-树和二叉树/">数据结构-树和二叉树</a>
+      <a class="article-title" href="/2020/05/28/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-5-地理信息、本地存储、离线存储/">网易微专业-移动端APP开发工程师-H5移动端开发-1.1.5-地理信息、本地存储、离线存储</a>
     </h1>
   
 
@@ -1344,120 +502,14 @@ app.listen(3000);
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p></p><h2>树形结构</h2><br>树形结构是一类重要的非线性数据结构。<br>树是n(n &gt;= 0)个结点的有限集。在任意一棵非空树中:<br>(1)有且仅有一个特定的称为根(Root)的结点<br>(2)当n &gt; 1时，其余结点可分为m(m &gt; 0)个互不相交的有限集T<sub>1</sub>,T<sub>2</sub>,…,T<sub>M</sub>，其中每一个集合本身又是一棵树，并且称为根的子树。<br>树的<b>结点</b>包含一个数据元素及若干指向其子树的分支。结点拥有的子树称为<b>结点的度</b>(Degree)。度为0的结点称为<b>叶子</b>(Leaf)或<b>终端结点</b>。度不为0的结点称为<b>非终端结点</b>或<b>分支结点</b>。<b>树的度</b>是树内各结点的度的最大值。结点的子树的根称为该结点的<b>孩子</b>(Child)，相应的，该结点称为孩子的<b>双亲</b>(Parent)。同一双亲的孩子之间互称<b>兄弟</b>。结点的<b>祖先</b>是从根到该结点所经分支上的所有结点。以某结点为根的子树中任一结点都称为该结点的<b>子孙</b>。<br>结点的<b>层次</b>(Level)是从根开始定义起，根为第一层，根的孩子为第二层。其双亲在同一层的结点互为<b>堂兄弟</b>。树中结点的最大层次称为树的<b>深度</b>(Depth)或高度。<br>如果将树中结点的各子树看成从左至右是有序次的(即不能互换)，则成该树为<b>有序树</b>，否则称为<b>无序树</b>。在有序树中最左边的子树的根称为第一个孩子，最右边的称为最后一个孩子。<br><b>森林</b>(Forest)是m(m &gt;= 0)棵互不相交的树的集合。对树中每个结点而言，其子树的集合即为森林。由此，也可以森林和树相互递归的定义来描述树。<br>就逻辑结构而言，任何一棵树是一个二元组Tree=(root,F)，其中:root是数据元素，称作树的根结点；F是m(m &gt;= 0)棵树的森林，F=(T<sub>1</sub>,T<sub>2</sub>,…,T<sub>M</sub>)，其中T<sub>i</sub>=(r<sub>i</sub>,F<sub>i</sub>)称做根root的第i棵子树；当m!=0时，在树根和其子树森林之间存在下列关系:<br>RF = { &lt; root,r<sub>i</sub> &gt; | i = 1,2,…,m,m &gt; 0}<br>这个定义将有助于得到森林和树与二叉树之间转换的递归定义。<p></p>
-<p></p><h3>二叉树</h3><br><b>二叉树</b>(Binary Tree)是另一种树形结构，它的特点是每个结点至多只有两棵子树(即二叉树中不存在度大于2的结点)，并且，二叉树的子树有左右之分，其次序不能任意颠倒。<p></p>
-<p></p><h6>二叉树的重要特性</h6><br>1.在二叉树的第i层上至多有2<sup>i-1</sup>个结点(i &gt;= 1)<br>2.深度为k第二叉树至多有2<sup>k</sup>-1个结点(k &gt;= 1)<br>3.对任何一棵二叉树T，如果其终端结点数为n<sub>0</sub>，度为2的结点数为n<sub>2</sub>，则n<sub>0</sub>=n<sub>2</sub>+1<br>4.具有n个结点的完全二叉树的深度为parseInt(log<sub>2</sub>n)+1<br>5.如果对一棵有n个结点的完全二叉树(其深度为parseInt(log<sub>2</sub>n)+1)的结点按层序编号(从第一层到第parseInt(log<sub>2</sub>n)+1层，每层从左到右)，则对任一结点i(1 &lt;= i &lt;= n)，有<br>(1)如果i=1，则结点i是二叉树的根，无双亲；如果i &gt; 1，则其双亲parent(i)结点是parseInt(i/2)<br>(2)如果2<em>i &gt; n，则结点i无左孩子(结点i为叶子结点)；否则其左孩子LCHILD(i)是结点2</em>i<br>(3)如果2<em>i+1 &gt; n，则结点i无右孩子；否则其右孩子RCHILD(i)是结点2</em>i+1<p></p>
-<p>一棵深度为k且有2<sup>k</sup>-1个结点的二叉树称为<b>满二叉树</b>。深度为k的，有n个结点的二叉树，当且仅当其每一个结点都与深度为k的满二叉树中编号从1至n的结点一一对应时，称之为<b>完全二叉树</b>。<br><img src="https://snakexu.github.io/images/others/tree_1.jpeg"><br>上图(a)满二叉树；(b)完全二叉树；(c)&amp;(d)非完全二叉树</p>
-<p></p><h4>二叉树的存储结构</h4><br>1.顺序存储结构<br>按照顺序存储结构的定义，在此约定，用一组地址看许的存储单元依次自上而下、自左至右存储完全二叉树上的结点元素，即将完全二叉树上编号为i的结点元素存储在一维数组中下标为i-1的分量中。对于一般二叉树，则应将其每个结点与完全二叉树上的结点相对照，存储在一维数组的相应分量中<br>完全二叉树，图a<br><img src="https://snakexu.github.io/images/others/tree_2.jpeg"><br>二叉树，图b<br><img src="https://snakexu.github.io/images/others/tree_3.jpeg"><br>下图是上面两个二叉树的顺序存储，a是完全二叉树图a的顺序存储结构，b是二叉树图b的顺序存储结构<br><img src="https://snakexu.github.io/images/others/tree_4.jpeg"><br>由此可见，这种顺序存储结构仅适用于完全二叉树。因为，在醉话的情况下，一个深度为k且只有k个结点的单支树(树中不存在度为2度结点)却需要长度为2<sup>k</sup>-1的一维数组。<br>2.链式存储结构<br>设计不同的结点结构可构成不同形式的链式存储结构。由二叉树的定义得知，二叉树的结点由一个数据元素和分别指向其左右子树的两个分支构成，则表示二叉树的链表中的结点至少包含3个域:数据域和左右指针域。有时为了便于找到结点的双亲，则还可以在结点的结构中增加一个指向其双亲结点的指针域。利用这两种结点结构所得二叉树的存储结构分别称之为二叉链表和三叉链表。链表的头指针指向二叉树的根结点。<br><img src="https://snakexu.github.io/images/others/tree_5.jpeg"><p></p>
-<pre>
-var BinaryTree =
-    (value,parent,left,right) => ({ value, parent, left, right });
-var banana = BinaryTree( "banana" );
-var apple = banana.left = BinaryTree( "apple", banana );
-var cherry = banana.right = BinaryTree( "cherry", banana );
-var apricot = apple.right = BinaryTree( "apricot", apple );
-var avocado = apricot.right = BinaryTree( "avocado", apricot );
-var cantelope = cherry.left = BinaryTree( "cantelope", cherry );
-var cucumber = cherry.right = BinaryTree( "cucumber", cherry );
-var grape = cucumber.right = BinaryTree( "grape", cucumber );
-</pre>
-上面的代码生成的树如下图所示:
-<img src="https://snakexu.github.io/images/others/tree_6.png">
-<h3>遍历二叉树和线索二叉树</h3>
-遍历二叉树:如何按照某条搜索路径巡访树中每个结点，使得每个结点均被访问一次，而且仅被访问一次。"访问"的含义很广，可以是对结点作各种处理，如输出结点的信息等。
-限定先左后右的遍历二叉树，有三种情况——
-1.先序遍历
-若二叉树为空，则空操作；否则:
-(1)访问根结点
-(2)先序遍历左子树
-(3)先序遍历右子树
-2.中序遍历
-若二叉树为空，则空操作；否则:
-(1)中序遍历左子树
-(2)访问根结点
-(3)中序遍历右子树
-3.后序遍历
-若二叉树为空，则空操作；否则:
-(1)后序遍历左子树
-(2)后序遍历右子树
-(3)访问根结点
-<pre>
-//中序遍历
-BinaryTree.leftEach = function leftEach(visitFn,node){
-    if (node) {
-        if (node.left) {
-            leftEach( visitFn, node.left );
-        }
-        visitFn( node );
-        if (node.right) {
-            leftEach( visitFn, node.right );
-        }
-    }
-};
-BinaryTree.leftEach( node => console.log( node.value ), banana );
-// apple apricot avocado banana cantelope cherry cucumber grape
-// 仅访问根节点为 `cherry` 的子树
-BinaryTree.leftEach( node => console.log( node.value ), cherry );
-// cantelope cherry cucumber grape
-//前序遍历
-BinaryTree.preorderEach = function preorderEach(visitFn,node){
-    visitFn( node );
-    if (node.left) {
-        preorderEach( visitFn, node.left );
-    }
-    if (node.right) {
-        preorderEach( visitFn, node.right );
-    }
-};
-BinaryTree.preorderEach( node => console.log( node.value ), banana );
-//banana apple apricot avocado cherry cantelope cucumber grape
-//后序遍历
-BinaryTree.postEach = function postEach(visitFn,node){
-    if (node.left) {
-        postEach( visitFn, node.left );
-    }
-    if (node.right) {
-        postEach( visitFn, node.right );
-    }
-    visitFn( node );
-};
-BinaryTree.postEach( node => console.log( node.value ), banana );
-//avocado apricot apple cantelope grape cucumber cherry banana
-//对树元素进行处理
-BinaryTree.map = function map(mapperFn,node){
-    if (node) {
-        let newNode = mapperFn( node );
-        newNode.parent = node.parent;
-        newNode.left = node.left ?
-            map( mapperFn, node.left ) : undefined;
-        newNode.right = node.right ?
-            map( mapperFn, node.right ): undefined;
-        if (newNode.left) {
-            newNode.left.parent = newNode;
-        }
-        if (newNode.right) {
-            newNode.right.parent = newNode;
-        }
-        return newNode;
-    }
-};
-var BANANA = BinaryTree.map(
-    node => BinaryTree( node.value.toUpperCase() ),
-    banana
-);
+        <p>1.地理信息<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_1.png"><br>1-1.HTML5判断浏览器是否支持地理信息<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_2.png"><br>1-2.HTML5使用地理定位<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_3.png"><br>1-3.HTML5获取地理信息实例<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_4.png"><br>实例的相关参数:<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_5.png"><br>2.Web存储<br>2-1.WEB存储API<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_6.png"><br>2-2.localStorage(本地存储)浏览器支持<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_7.png"><br>2-3.localStorage(本地存储)对象常用方法<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_8.png"><br>2-4.localStorage(本地存储)实例<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_9.png"><br>2-5.localStorage(本地存储)删除数据实例<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_10.png"><br>2-6.localStorage(本地存储)存储JSON实例<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_11.png"><br>2-7.sessionStorage(会话存储)语法<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_12.png"><br>2-8.sessionStorage(会话存储)实例<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_13.png"><br>3.离线存储<br>3-1.离线存储(应用程序缓存)定义<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_14.png"><br>3-2.离线存储优势<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_15.png"><br>3-3.离线存储浏览器支持<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_16.png"><br>3-4.Cache Manifest基础<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_17.png"><br>3-5.manifest文件实例<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_18.png"><br>3-6.离线缓存实例<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_19.png"><br>HTML5的离线缓存是基于应用程序的，本地测试会失败，这里老师教了在vscode中基于live server的服务环境:</p>
 
-BinaryTree.forEach( node => console.log( node.value ), BANANA );
-// APPLE APRICOT AVOCADO BANANA CANTELOPE CHERRY CUCUMBER GRAPE
-// https://cloud.tencent.com/developer/article/1013613
-</pre>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/04/29/数据结构-树和二叉树/" data-id="cka5080gi003fhyxqug0b92bz" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/05/28/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-5-地理信息、本地存储、离线存储/" data-id="ckb8s87ve00334zxqdgjjw452" class="article-share-link">Share</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据结构/">数据结构</a></li></ul>
-
     </footer>
   </div>
   
@@ -1465,10 +517,10 @@ BinaryTree.forEach( node => console.log( node.value ), BANANA );
 
 
   
-    <article id="post-数据结构-线性表" class="article article-type-post" itemscope="" itemprop="blogPost">
+    <article id="post-网易微专业-移动端APP开发工程师-H5移动端开发-1-1-4-跨文档消息通信" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2020/04/24/数据结构-线性表/" class="article-date">
-  <time datetime="2020-04-24T02:34:18.000Z" itemprop="datePublished">2020-04-24</time>
+    <a href="/2020/05/28/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-4-跨文档消息通信/" class="article-date">
+  <time datetime="2020-05-28T02:00:53.000Z" itemprop="datePublished">2020-05-28</time>
 </a>
     
   </div>
@@ -1479,7 +531,7 @@ BinaryTree.forEach( node => console.log( node.value ), BANANA );
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2020/04/24/数据结构-线性表/">数据结构-线性表</a>
+      <a class="article-title" href="/2020/05/28/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-4-跨文档消息通信/">网易微专业-移动端APP开发工程师-H5移动端开发-1.1.4-跨文档消息通信</a>
     </h1>
   
 
@@ -1487,227 +539,125 @@ BinaryTree.forEach( node => console.log( node.value ), BANANA );
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>为了复习数据结构，把大学时候的数据结构课本找出来了，希望能达到理想的效果吧。废话不多说，从线性结构开始。<br>线性结构的特点是:在数据元素的非空有限集合中，(1)存在唯一的一个被称作“第一个”的数据元素(2)存在唯一的一个被称作“最后一个”的数据元素(3)除第一个之外，集合中的每个数据元素均只有一个前驱(4)除最后一个之外，集合中每个数据元素均只有一个后续</p>
-<p></p><h2>线性表</h2><br>线性表是最常用且最简单的一种数据结构。简而言之，一个线性表是N个数据元素的有限序列。<br>在稍复杂的线性表中，一个数据元素可以由若干个<b>数据项</b>组成。在这种情况下，常把数据元素称为<b>记录</b>，含有带昂记录的线性表又称为<b>文件</b>。<br>线性表中的数据元素可以是各种各样的，可以是26个英文字母(A,B,···，Z)，也可以是数字(1,2,3,···，100)，也可以是学生成绩的记录<br><!-- |姓名|学号|性别|年龄|数学|语文|
-|张三|001|男  |15 |98 |95 |
-|李四|002|男  |15 |99 |92 | --><br>  
-<table>
-	<thead>
-		<th>
-			</th></thead><td>姓名</td>
-			<td>学号</td>
-			<td>性别</td>
-			<td>年龄</td>
-			<td>数学</td>
-			<td>语文</td>
-		
-	
-	<tbody>
-		<tr>
-			<td>张三</td>
-			<td>001</td>
-			<td>男</td>
-			<td>15</td>
-			<td>98</td>
-			<td>95</td>
-		</tr>
-		<tr>
-			<td>李四</td>
-			<td>002</td>
-			<td>男</td>
-			<td>15</td>
-			<td>99</td>
-			<td>92</td>
-		</tr>
-	</tbody>
-</table>
-<br>但是同一线性表中的元素必定具有相同特性，即属于同一数据对象，相邻数据元素之间存在着序偶关系。若将线性表记为<br>(a<sub>1</sub>,···,a<sub>i-1</sub>,a<sub>i</sub>,a<sub>i+1</sub>,···,a<sub>n</sub>)<br>则表中a<sub>i-1</sub>领先于a<sub>i</sub>，a<sub>i</sub>领先于a<sub>i+1</sub>，称a<sub>i-1</sub>是a<sub>i</sub>的直接前驱元素，a<sub>i+1</sub>是a<sub>i</sub>的直接后继元素。当i=1,2,···,n-1时，a<sub>i</sub>有且仅有一个直接后继，当i=2,3,···,n时，a<sub>i</sub>有且仅有一个直接前驱。<br>线性表中元素的个数n(n&gt;=0)定义为线性表的长度，n=0时称为控表。在非空表中的每个数据元素都有一个确定的位置，如a<sub>i</sub>是第一个数据元素，a<sub>n</sub>是最后一个数据元素，a<sub>i</sub>是第i个数据元素，称i为数据元素a<sub>i</sub>在线性表中的位序。<br>线性表是一个相当灵活的数据结构，它的长度可根据需要增长或缩短，即对线性表的数据元素不仅可以进行访问，还可进行插入和删除等。<p></p>
-<p></p><h3>线性表的顺序表示和实现</h3><br>线性表的顺序表示指的是用一组连续的存储单元依次存储线性表的数据元素。<br>假设线性表的每个元素需占用l个存储单元，并以所占的第一个单元的存储地址作为数据元素的存储位置。则线性表中第i+1个数据元素的存储位置LOC(a<sub>i+1</sub>)和第i个数据元素的存储位置LOC(a<sub>i</sub>)之间满足下列关系:<br>LOC(a<sub>i+1</sub>) = LOC(a<sub>i</sub>) + l<br>一般来说，线性表的第i个数据元素a<sub>i</sub>的存储位置为<br>LOC(a<sub>i</sub>) = LOC(a<sub>1</sub>) + (i-1) * l<br>上面LOC(a<sub>1</sub>)是线性表中的第一个数据元素a<sub>1</sub>的存储位置，通常称作线性表的起始位置或者基地址<br>线性表的这种机内表示称作线性表的顺序存储结构或顺序映像，通常，称这种存储结构的线性表为顺序表。它的特点是，为表中相邻的元素a<sub>i</sub>和a<sub>i+1</sub>赋以相邻的存储位置LOC(a<sub>i</sub>)和LOC(a<sub>i+1</sub>)。换句话说，以元素在计算机内“物理位置相邻”来表示线性表中数据元素之间的逻辑关系。每一个数据元素的存储位置都和线性表的起始位置相差一个和数据元素在线性表中的位序成正比的常数。由此，只要确定了存储线性表的起始位置，线性表中任一数据元素都可随机存取，所以线性表的顺序存储结构是一种随机存取的存储结构。<p></p>
-<p></p><h3>线性表的链式表示和实现</h3><br>线性表的顺序存储结构的特点是逻辑关系上相邻的两个元素在物理位置上也相邻，因此可以随机存取表中任一元素，它的存储位置可用一个简单、直观的公式来表示。然而，从另一方面来讲，这个特点也铸成了这种存储结构的弱点：在作插入或删除操作时，需要移动大量元素。本节我们将讨论线性表的另一种表示方法——链式存储结构，由于它不要求逻辑上相邻的元素在物理位置上也相邻，因此它没有顺序存储所具有的弱点，但同时也失去了顺序表可随机存取的优点。<p></p>
-<p></p><h4>线性链表</h4><br>线性表的链式存储结构的特点是用一组任意的存储单元存储线性表的数据元素(这组存储单元可以是连续的，也可以是不连续的)。因此，为了表示每个数据元素a<sub>i</sub>与其直接后继数据元素a<sub>i+1</sub>之间的逻辑关系，对数据元素a<sub>i</sub>来说除了存储其本身的信息之外，还需要存储一个指示其直接后继的信息(即直接后继的存储位置)。这两部分信息组成数据元素a<sub>i</sub>的存储映像，称为<b>结点</b>。它包括连个域：其中存储数据元素信息的域称为<b>数据域</b>，存储直接后继存储位置的域称为<b>指针域</b>。指针域中存储的信息称作<b>指针</b>或<b>链</b>。n个节点(a<sub>i</sub>(1&lt;=1&lt;=n)的存储映像)链结成一个<b>链表</b>，即为线性表<br>(a<sub>1</sub>,a<sub>2</sub>,…,a<sub>n</sub>)<br>的链式存储结构。又由于此链表的每个结点中只包含一个指针域，故又称<b>线性链表</b>或<b>单链表</b>。<br>例如：<br>(ZHAO,QIAN,SUN,LI,ZHOU,WU,ZHENG,WANG)<br>的线性链表存储结构，整个链表的存取必须从<b>头指针</b>开始进行，头指针指示链表中第一个结点(即第一个数据元素的存储映像)的存储位置。同时，由于最后一个数据元素没有直接后继，则线性链表中最后一个结点的指针为”空”(NULL)。<br> 
-<table>
-	<thead>
-		<th>
-			</th></thead><td></td>
-			<td>存储地址</td>
-			<td>数据域</td>
-			<td>指针域</td>
-		
-	
-	<tbody>
-		<tr>
-			<td rowspan="8" align="center">头指针H<br>31</td>
-			<td>1</td>
-			<td>LI</td>
-			<td>43</td>
-		</tr>
-		<tr>
-			<td>7</td>
-			<td>QIAN</td>
-			<td>13</td>
-		</tr>
-		<tr>
-			<td>13</td>
-			<td>SUN</td>
-			<td>1</td>
-		</tr>
-		<tr>
-			<td>19</td>
-			<td>WANG</td>
-			<td>NULL</td>
-		</tr>
-		<tr>
-			<td>25</td>
-			<td>WU</td>
-			<td>37</td>
-		</tr>
-		<tr>
-			<td>31</td>
-			<td>ZHAO</td>
-			<td>7</td>
-		</tr>
-		<tr>
-			<td>37</td>
-			<td>ZHENG</td>
-			<td>19</td>
-		</tr>
-		<tr>
-			<td>43</td>
-			<td>ZHOU</td>
-			<td>25</td>
-		</tr>
-	</tbody>
-</table>
-<br>用线性链表表示线性表时，数据元素之间的逻辑关系是由结点中的指针指示的。换句话说，指针为数据元素之间的逻辑关系的映像，则逻辑上相邻的两个数据元素其存储的物理位置不要求紧邻，由此，这种存储结构为非顺序映像或链式映像。<br>假设L是LinkList型的变量，则L为单链表的头指针，它指向表中第一个结点。若L为”空”(L=NULL)，则所表示的线性表为”空”表，其长度为”零”。有时我们在单链表的第一个结点之前附设一个结点，称之为<b>头结点</b>。头结点的数据域可以不存储任何信息，也可以存储如线性表的长度等类的附加信息，头结点的指针域存储指向第一个结点的指针(即第一个元素结点的存储位置)。<br>在单链表中，任何两个元素的存储位置之间没有固定的联系。然而，每个元素的存储位置都包含在其直接前驱结点的信息之中。假设p是指向线性表中第i个数据元素(结点a<sub>i</sub>)的指针，则p-&gt;next是指向第i+1个数据元素(结点a<sub>i+1</sub>)的指针。换句话说，若p-&gt;data=a<sub>i</sub>，则p-&gt;next-&gt;data=a<sub>i+1</sub>。由此，在单链表中，取得第i个数据元素必须从头指针出发寻找，因此，单链表是非随机存取的存储结构。<p></p>
-<pre>
-/*
-* 单向链表的基本操作 增、删、查
-* param data 结点的值
-* param index 
-* reverse 逆转链表
-*/
-class Node{
-    constructor(data,next) {
-        this.data = data
-        this.next = next
-    }
-}
-class LinkList{
-    constructor(){
-        this.head = new Node(0,null);//头结点
-        this.length = 0;
-    }
-    createNode(data,next) {
-        return new Node(data,next);
-    }
-    insertNode(index,data){
-        if(index < 1) return new Error('请正确填写要插入数据的位置')
-        let j = 1;
-        let p = this.head;
-        while(p.next && j < index){
-            j++
-            p = p.next
-        }
-        let newNode = this.createNode(data,p.next)
-        p.next = newNode
-        this.length++
-    }
-    deleteNode(index){
-        if(typeof index !== 'number' || index < 0){
-            return new Error('请正确选择要删除的项')
-        }
-        if(this.length === 0){
-            return new Error('结点不存在')
-        }
-        let p = this.head,j=1;
-        while(p.next && j < index){
-            j++
-            p = p.next
-        }
-        let item = p.next
-        p.next = item.next
-        item = null
-        this.length -= 1;
-    }
-    find(index){
-        let p = this.head,j=1;
-        while(p.next && j < index){
-            j++
-            p = p.next
-        }
-        return p.next
-    }
-    getList(){
-        let arr = []
-        let p = this.head,i=0
-        while(p.next){
-            p=p.next
-            arr[i++] = p.data
-        }
-        return arr
-    }
-    //getLength(){
-        //return this.length
-    //}
-    reverse(){
-        let p = this.head,s = p.next,t;
-        while(s.next){
-            t = s.next;
-            s.next = p;
-            p = s;
-            s = t;
-        }
-        s.next = p;
-        this.head.next.next = null
-        this.head.next = s
-    }
-}
-let list = new LinkList();
-list.insertNode(1,'a')
-list.insertNode(2,'b')
-list.insertNode(3,'c')
-list.deleteNode(1)
-console.log(list.find(1))
-console.log(list.getList())
-console.log(list.getLength())
-</pre>
-<h3>循环链表</h3>
-循环链表是另一种形式的链式存储结构。它的特点是表中最后一个结点的指针指向头结点，整个链表形成一个环。由此，从表中任一结点出发均可找到表中其它结点。
-循环链表的操作和线性链表基本一致，差别仅在于算法中的循环条件是不是p或p->next是否为空，而是它们是否等于头指针。但有的时候，若在循环链表中设立尾指针而不设立头指针，可使某些操作简化。例如将两个线性表合并成一个表时，仅需将一个表的表尾和另一个表的表头相接。
-<h3>双向链表</h3>
-双向链表的结点中有两个指针域，其一指向直接后继，另一指向直接前趋。和单链的循环链表类似，双向链表也可以有循环链表。
-<img src="https://snakexu.github.io/images/others/linear_1.jpeg">
-上图中(c)，链表中存有两个环，(b)所示为只有一个表头结点的空表。在双向链表中，若d为指向表中某一结点的指针(即d为DuLinkList型变量)，则显然有
-d -> next -> prior = d -> prior -> next = d
-这个表示式恰当地反应了这种结构的特性。
-在双向链表中，有些操作如:ListLength、GetElem和LocateElem等仅需涉及一个方向的指针，则它们的算法描述和线性链表的操作相同，但在插入、删除时有很大的不同，在双向链表中需同时修改两个方向上的指针。
-<pre>
-/*
-* 双向链表的基本操作
-* param data 结点的值
-* param index 结点索引
-* param prev 前驱指针
-* param next 后继指针
-*/
-class Node{
-    constructor(data,prev,next){
-        this.data = data;
-        this.next = next;
-        this.prev = prev
-    }
-}
-class DoubleList{
-    //
-}
-</pre>
+        <p>1.跨文档通讯概念<br>html文档指的是html文件，跨文档通讯指的是跨html文件通讯。一个html文件被抽象成Bob的概念，而BOM的核心对象是window，所以从理解上来讲，html文档在程序中的代名词是window对象而不是document对象。document对象代表的是BOM模型下加载在内存之中的文档对象模型对外暴露的API接口。<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.4_1.png"><br>2.H5跨文档通讯<br>2-1.HTML5跨文档通讯核心——postMessage()方法<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.4_2.png"><br>2-2.HTML5跨文档通讯案例<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.4_3.png"><br><img src="https://snakexu.github.io/images/wangyi/app/1.1.4_4.png"><br>这里也会遇到浏览器报错的问题，解决的方法就是关闭本地浏览器的安全策略<br>3.扩展知识<br>3-1.浏览器兼容性<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.4_5.png"><br>3-2.message回调event事件对象<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.4_6.png"></p>
+
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/04/24/数据结构-线性表/" data-id="cka5080gi003hhyxqoqcg9ciw" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/05/28/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-4-跨文档消息通信/" data-id="ckb8s87vf00364zxq8bxfzl5y" class="article-share-link">Share</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据结构/">数据结构</a></li></ul>
+    </footer>
+  </div>
+  
+</article>
 
+
+  
+    <article id="post-网易微专业-移动端APP开发工程师-H5移动端开发-1-1-3-选择器-history-拖放" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/05/27/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-3-选择器-history-拖放/" class="article-date">
+  <time datetime="2020-05-27T07:12:13.000Z" itemprop="datePublished">2020-05-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/05/27/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-3-选择器-history-拖放/">网易微专业-移动端APP开发工程师-H5移动端开发-1.1.3-选择器/history/拖放</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.HTML5选择器<br>1-1.HTML5新增选择器<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.3_1.png"><br>1-2.CSS基础选择器<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.3_2.png"><br>1-3.选择器之层次选择器<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.3_3.png"><br>1-4.选择器之动态伪类选择器<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.3_4.png"><br>1-5.选择器之结构伪类选择器<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.3_5.png"><br>1-6.HTML5选择器之querySelector<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.3_6.png"><br>1-7.HTML5选择器之querySelectorAll<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.3_7.png"><br>2.HTML5拖放<br>2-1.定义和使用场景<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.3_8.png"><br>2-2.拖放主要事件<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.3_9.png"><br>2-3.HTML5拖放真实案例分析<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.3_10.png"><br>默认情况下，目标对象不接受ondrop方法，通过覆盖dragover方法，并且调用event对象的preventdefault方法来阻止默认的冒泡<br>3.HTML5 History<br>3-1.HTML5 History常用方法<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.3_11.png"><br>3-2.HTML5 History定义以及新特性<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.3_12.png"><br>3-3.pushState语法<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.3_13.png"><br>3-4.HTML5 History常用场景<br>3-4-1.最常用的场景之一:单页应用<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.3_14.png"><br>代码演示<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.3_15.png"><br>上面的代码会因为浏览器的安全策略而报错，我们在命令行(进入浏览器安装目录)执行下面的代码来解决<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.3_16.png"><br>HTML5的pushState并不会造成页面的刷新</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/05/27/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-3-选择器-history-拖放/" data-id="ckb8s87ve00344zxqznfzxais" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-移动端APP开发工程师-H5移动端开发-1-1-2-HTML5的新特性" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/05/27/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-2-HTML5的新特性/" class="article-date">
+  <time datetime="2020-05-27T02:46:13.000Z" itemprop="datePublished">2020-05-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/05/27/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-2-HTML5的新特性/">网易微专业-移动端APP开发工程师-H5移动端开发-1.1.2-HTML5的新特性</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.HTML5新增标签<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.2_1.png"><br>2.HTML5新增表单输入框的类型<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.2_2.png"><br>3.简单了解canvas，这里没做笔记，因为是非常初步的了解canvas，简单的定义画布，获取上下文<br>4.HTML5多媒体&amp;Audio<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.2_3.png"><br>这里老师还讲到，一个多媒体标签有时候因为遇到不同平台支持不同音/视频格式的原因，需要配置多个source，这里了解一下，更多内容看以后有没有讲解<br>5.HTML5的web存储功能<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.2_4.png"><br><img src="https://snakexu.github.io/images/wangyi/app/1.1.2_5.png"><br>6.HTML5的拖拽释放功能<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.2_6.png"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/05/27/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-2-HTML5的新特性/" data-id="ckb8s87vc00314zxq7vdfu51c" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-移动端APP开发工程师-H5移动端开发-1-1-1-HTML5简介" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/05/27/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-1-HTML5简介/" class="article-date">
+  <time datetime="2020-05-27T02:22:07.000Z" itemprop="datePublished">2020-05-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/05/27/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-1-HTML5简介/">网易微专业-移动端APP开发工程师-H5移动端开发-1.1.1-HTML5简介</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.HTML5发展历程<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.1_1.png"><br>2.HTML4和HTML5的区别<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.1_2.png"><br>3.HTML5简介<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.1_3.png"><br>4.HTML5设计目的<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.1_4.png"><br>5.HTML5已移除元素<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.1_5.png"><br>6.HTML5新增特性<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.1_6.png"><br>7.HTML5对我们什么作用<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.1_7.png"><br>8.HTML5浏览器支持<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.1_8.png"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/05/27/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-1-HTML5简介/" data-id="ckb8s87vb002z4zxqg4plysmw" class="article-share-link">Share</a>
+      
+      
     </footer>
   </div>
   
@@ -1719,7 +669,7 @@ class DoubleList{
 
   <nav id="page-nav">
     
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
   </nav>
 
 </section>
@@ -1733,7 +683,7 @@ class DoubleList{
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端路由/">前端路由</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/正则/">正则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端路由/">前端路由</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/正则/">正则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-node/">网易微专业 node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
     </div>
   </div>
 
@@ -1743,7 +693,7 @@ class DoubleList{
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/前端路由/" style="font-size: 10px;">前端路由</a> <a href="/tags/数据结构/" style="font-size: 13.33px;">数据结构</a> <a href="/tags/正则/" style="font-size: 10px;">正则</a> <a href="/tags/算法/" style="font-size: 20px;">算法</a> <a href="/tags/设计模式/" style="font-size: 16.67px;">设计模式</a>
+      <a href="/tags/前端路由/" style="font-size: 10px;">前端路由</a> <a href="/tags/数据结构/" style="font-size: 13.33px;">数据结构</a> <a href="/tags/正则/" style="font-size: 10px;">正则</a> <a href="/tags/算法/" style="font-size: 20px;">算法</a> <a href="/tags/网易微专业-node/" style="font-size: 10px;">网易微专业 node</a> <a href="/tags/设计模式/" style="font-size: 16.67px;">设计模式</a>
     </div>
   </div>
 
@@ -1752,7 +702,7 @@ class DoubleList{
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
     </div>
   </div>
 
@@ -1765,23 +715,23 @@ class DoubleList{
       <ul>
         
           <li>
-            <a href="/2020/05/13/es6-class-extends/">es6 class extends</a>
+            <a href="/2020/06/08/网易微专业-look直播，企业级全栈web应用搭建分享/">网易微专业-look直播，企业级全栈web应用搭建分享</a>
           </li>
         
           <li>
-            <a href="/2020/05/12/网易微专业-node-Koa源码分析-2-2-3-中间件机制剖析/">网易微专业-node-Koa源码分析-2.2.3-中间件机制剖析</a>
+            <a href="/2020/06/07/网易微专业-webpack实战演练-3-3-1-网易的webpack工程化实践/">网易微专业-webpack实战演练-3.3.1-网易的webpack工程化实践</a>
           </li>
         
           <li>
-            <a href="/2020/05/09/Web-前端路由原理解析和实现/">Web 前端路由原理解析和实现</a>
+            <a href="/2020/06/06/网易微专业-webpack实战演练-3-2-6-webpack打包速度优化/">网易微专业-webpack实战演练-3.2.6-webpack打包速度优化</a>
           </li>
         
           <li>
-            <a href="/2020/05/08/网易微专业-node-Koa源码分析-2-2-2-请求处理流程解读/">网易微专业-node-Koa源码分析-2.2.2-请求处理流程解读</a>
+            <a href="/2020/06/03/网易微专业-单页应用-1-4-1-项目全面深度优化及打包上线之网易实践/">网易微专业-单页应用-1-4-1-项目全面深度优化及打包上线之网易实践</a>
           </li>
         
           <li>
-            <a href="/2020/05/08/vue-cli了解/">vue-cli了解</a>
+            <a href="/2020/05/28/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-6-音频与视频/">网易微专业-移动端APP开发工程师-H5移动端开发-1.1.6-音频与视频</a>
           </li>
         
       </ul>

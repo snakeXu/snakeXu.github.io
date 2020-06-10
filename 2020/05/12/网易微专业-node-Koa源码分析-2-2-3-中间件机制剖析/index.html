@@ -7,14 +7,17 @@
   
   <title>网易微专业-node-Koa源码分析-2.2.3-中间件机制剖析 | 喵小喵的窝</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="article">
+  <meta name="description" content="1.is-generator-function2.koa-convert3.koa-composeemm……这节课老师是按着源代码讲的，讲了源代码里这三个函数，so……我没记笔记，但是讲完源码有写代码讲了剥洋葱模型的思想，还是很妙的，把整个老师模拟的源代码写在这里，自己慢慢体会吧lib/application.js  const http = require(&apos;http&apos;); const cont">
+<meta property="og:type" content="article">
 <meta property="og:title" content="网易微专业-node-Koa源码分析-2.2.3-中间件机制剖析">
 <meta property="og:url" content="http://yoursite.com/2020/05/12/网易微专业-node-Koa源码分析-2-2-3-中间件机制剖析/index.html">
 <meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="1.is-generator-function2.koa-convert3.koa-composeemm……这节课老师是按着源代码讲的，讲了源代码里这三个函数，so……我没记笔记，但是讲完源码有写代码讲了剥洋葱模型的思想，还是很妙的，把整个老师模拟的源代码写在这里，自己慢慢体会吧lib/application.js  const http = require(&apos;http&apos;); const cont">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-05-12T14:27:04.746Z">
+<meta property="og:updated_time" content="2020-05-14T07:41:42.441Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="网易微专业-node-Koa源码分析-2.2.3-中间件机制剖析">
+<meta name="twitter:description" content="1.is-generator-function2.koa-convert3.koa-composeemm……这节课老师是按着源代码讲的，讲了源代码里这三个函数，so……我没记笔记，但是讲完源码有写代码讲了剥洋葱模型的思想，还是很妙的，把整个老师模拟的源代码写在这里，自己慢慢体会吧lib/application.js  const http = require(&apos;http&apos;); const cont">
   
     <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
   
@@ -83,11 +86,166 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <p>1.is-generator-function<br>2.koa-convert<br>3.koa-compose<br>emm……这节课老师是按着源代码讲的，讲了源代码里这三个函数，so……我没记笔记，但是讲完源码有写代码讲了剥洋葱模型的思想，还是很妙的，把整个老师模拟的源代码写在这里，自己慢慢体会吧<br>lib/application.js</p>
+<pre>
+const http = require('http');
+const context = require('./context');
+const request = require('./request');
+const response = require('./response');
+
+class Application {
+    constructor() {
+        this.callbackFunc;
+        this.middlewares = [];
+        this.context = Object.create(context);
+        this.request = Object.create(request);
+        this.response = Object.create(response);
+    }
+
+    listen(...args) {
+        let server = http.createServer(this.callback());
+        server.listen(...args);
+    }
+
+    // 收集中间件
+    use(fn) {
+        this.middlewares.push(fn);
+    }
+    //剥洋葱模型思想就是这里了，先把所有函数push入栈，
+    //再倒序读出，把排在后面的代码作为next缓存，执行代码的时候，遇到next就执行下一个函数指令
+    //最后没有next()执行的时候，执行primose.resolve()
+    compose() {
+        return async ctx => {
+            let len = this.middlewares.length;
+            let next = async () => Promise.resolve();
+            for (let i = len - 1; i >= 0; i--) {
+                let curentMiddleware = this.middlewares[i];
+                next = createNext(curentMiddleware, next)
+            }
+            await next();
+            function createNext(middlewares, oldNext) {
+                return async () => await middlewares(ctx, oldNext);
+            }
+        }
+    }
+    callback() {
+        return (req, res) => {
+            let ctx = this.createContext(req, res);
+            // this.callbackFunc(ctx);
+            let respond = () => this.responseBody(ctx);
+            // 先处理中间件，然后去响应
+            let fn = this.compose();
+
+            return fn(ctx).then(respond);
+        };
+    }
+    // 构造 ctx对象
+    /**
+     * 用于构造ctx
+     * @param {Object} req   Node原生req实例
+     * @param {Object} res  Node 原生res实例
+     */
+    createContext(req, res) {
+        // 针对每一个请求
+        let ctx = Object.create(this.context);
+        ctx.request = Object.create(this.request);
+        ctx.response = Object.create(this.response);
+        ctx.req = ctx.request.req = req;
+        ctx.res = ctx.response.res = res;
+        return ctx;
+    }
+    responseBody(ctx) {
+        let content = ctx.body;
+        if (typeof content === 'string') {
+            ctx.res.end(content);
+        } else if (typeof content === 'object') {
+            ctx.res.end(JSON.stringify(content));
+        }
+    }
+}
+module.exports = Application;
+</pre>
+lib/context.js
+<pre>
+let proto = {};
+function delegateSet(property, name) {
+    proto.__defineSetter__(name, function (val) {
+        this[property][name] = val;
+    });
+}
+function delegateGet(property, name) {
+    proto.__defineGetter__(name, function () {
+        return this[property][name];
+    })
+}
+let requestSet = [];
+let requestGet = ['query'];
+let responseSet = ['body', 'status'];
+let responseGet = responseSet;
+requestGet.forEach(ele => delegateGet('request', ele));
+requestSet.forEach(ele => delegateSet('request', ele));
+responseSet.forEach(ele => delegateSet('response', ele));
+responseGet.forEach(ele => delegateGet('response', ele));
+module.exports = proto;
+</pre>
+lib/request.js
+<pre>
+const url = require('url');
+module.exports = {
+    get query() {
+        return url.parse(this.req.url).query;
+    }
+};
+</pre>
+lib/response.js
+<pre>
+module.exports = {
+    get body() {
+        return this._body;
+    },
+    set body(data) {
+        this._body = data;
+    },
+    get status() {
+        return this.res.statusCode;
+    },
+    set status(statusCode) {
+        if (typeof statusCode !== 'number'){
+            throw new Error('Something is wrong!');
+        } 
+        this.res.statusCode = statusCode;
+    }
+};
+</pre>
+这里response.js和request.js都是模拟了简单需要写的，也就说并不是写了所有情况的response/request
+demo.js
+<pre>
+const Koa = require('./lib/application');
+const app = new Koa();
+app.use(async (ctx, next) => {
+    console.log(1);
+    await next();
+    console.log(6);
+});
+app.use(async (ctx, next) => {
+    console.log(2);
+    await next();
+    console.log(5);
+});
+app.use(async ctx => {
+    console.log(3);
+    ctx.status = 404;
+    ctx.body = 'hello Onion!';
+    console.log(4);
+});
+app.listen(3000, () => {
+    console.log('hello Simple Koa');
+});
+</pre>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/05/12/网易微专业-node-Koa源码分析-2-2-3-中间件机制剖析/" data-id="cka5080ej002bhyxq5bvbrbid" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/05/12/网易微专业-node-Koa源码分析-2-2-3-中间件机制剖析/" data-id="ckb8s87uz002e4zxqezek20jl" class="article-share-link">Share</a>
       
       
     </footer>
@@ -127,7 +285,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端路由/">前端路由</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/正则/">正则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端路由/">前端路由</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/正则/">正则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-node/">网易微专业 node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
     </div>
   </div>
 
@@ -137,7 +295,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/前端路由/" style="font-size: 10px;">前端路由</a> <a href="/tags/数据结构/" style="font-size: 13.33px;">数据结构</a> <a href="/tags/正则/" style="font-size: 10px;">正则</a> <a href="/tags/算法/" style="font-size: 20px;">算法</a> <a href="/tags/设计模式/" style="font-size: 16.67px;">设计模式</a>
+      <a href="/tags/前端路由/" style="font-size: 10px;">前端路由</a> <a href="/tags/数据结构/" style="font-size: 13.33px;">数据结构</a> <a href="/tags/正则/" style="font-size: 10px;">正则</a> <a href="/tags/算法/" style="font-size: 20px;">算法</a> <a href="/tags/网易微专业-node/" style="font-size: 10px;">网易微专业 node</a> <a href="/tags/设计模式/" style="font-size: 16.67px;">设计模式</a>
     </div>
   </div>
 
@@ -146,7 +304,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
     </div>
   </div>
 
@@ -159,23 +317,23 @@
       <ul>
         
           <li>
-            <a href="/2020/05/13/es6-class-extends/">es6 class extends</a>
+            <a href="/2020/06/08/网易微专业-look直播，企业级全栈web应用搭建分享/">网易微专业-look直播，企业级全栈web应用搭建分享</a>
           </li>
         
           <li>
-            <a href="/2020/05/12/网易微专业-node-Koa源码分析-2-2-3-中间件机制剖析/">网易微专业-node-Koa源码分析-2.2.3-中间件机制剖析</a>
+            <a href="/2020/06/07/网易微专业-webpack实战演练-3-3-1-网易的webpack工程化实践/">网易微专业-webpack实战演练-3.3.1-网易的webpack工程化实践</a>
           </li>
         
           <li>
-            <a href="/2020/05/09/Web-前端路由原理解析和实现/">Web 前端路由原理解析和实现</a>
+            <a href="/2020/06/06/网易微专业-webpack实战演练-3-2-6-webpack打包速度优化/">网易微专业-webpack实战演练-3.2.6-webpack打包速度优化</a>
           </li>
         
           <li>
-            <a href="/2020/05/08/网易微专业-node-Koa源码分析-2-2-2-请求处理流程解读/">网易微专业-node-Koa源码分析-2.2.2-请求处理流程解读</a>
+            <a href="/2020/06/03/网易微专业-单页应用-1-4-1-项目全面深度优化及打包上线之网易实践/">网易微专业-单页应用-1-4-1-项目全面深度优化及打包上线之网易实践</a>
           </li>
         
           <li>
-            <a href="/2020/05/08/vue-cli了解/">vue-cli了解</a>
+            <a href="/2020/05/28/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-6-音频与视频/">网易微专业-移动端APP开发工程师-H5移动端开发-1.1.6-音频与视频</a>
           </li>
         
       </ul>

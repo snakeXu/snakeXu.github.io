@@ -62,10 +62,10 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-网易微专业-MV-组件化开发React专题-React进阶-2-2-6-常用组件库ant-d" class="article article-type-post" itemscope="" itemprop="blogPost">
+    <article id="post-网易微专业福利期-异步编程-3-1-理解异步" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2020/03/04/网易微专业-MV-组件化开发React专题-React进阶-2-2-6-常用组件库ant-d/" class="article-date">
-  <time datetime="2020-03-04T03:58:46.000Z" itemprop="datePublished">2020-03-04</time>
+    <a href="/2020/03/26/网易微专业福利期-异步编程-3-1-理解异步/" class="article-date">
+  <time datetime="2020-03-26T14:10:17.000Z" itemprop="datePublished">2020-03-26</time>
 </a>
     
   </div>
@@ -76,7 +76,50 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2020/03/04/网易微专业-MV-组件化开发React专题-React进阶-2-2-6-常用组件库ant-d/">网易微专业-MV*&amp;组件化开发React专题-React进阶-2.2.6-常用组件库ant-d</a>
+      <a class="article-title" href="/2020/03/26/网易微专业福利期-异步编程-3-1-理解异步/">网易微专业福利期-异步编程-3.1-理解异步</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.同步与异步<br>&lt;!–<br>+new Date() 会调用Date.prototype 上面的 valueOf方法，根据<br>MDN：developer.mozilla.org/en-US/docs/…</p>
+<p>new Date().getTime() === new Date().valueOf() //true</p>
+<p>下面的例子返回效果等同：</p>
+<p>+new Date();<br>new Date().getTime();<br>new Date().valueOf();<br>new Date()*1复制代码<br>转载于:<a href="https://juejin.im/post/5cd23b7bf265da03ab233f88" target="_blank" rel="noopener">https://juejin.im/post/5cd23b7bf265da03ab233f88</a><br>–&gt;<br>代码一：</p>
+<p><pre><br>const test = ()=&gt;{<br>    let t = +new Date();<br>    while(true){<br>        if(+new Date() - t &gt;=2000){<br>            console.log(4)<br>            break;<br>        }<br>    }<br>}<br>console.log(1);<br>test();<br>console.log(2);<br>console.log(3);<br></pre><br>执行结果为先打印1，两秒之后打印4，接着马上打印2 3<br><img src="https://snakexu.github.io/images/fuliqi/javascript/3.1_1.png"><br>代码二：</p>
+<p><pre><br>console.log(1);<br>setTimeout(()=&gt;{<br>    console.log(2);<br>},2000);<br>console.log(3);<br></pre><br>执行结果为先打印1 3，两秒后打印2<br><img src="https://snakexu.github.io/images/fuliqi/javascript/3.1_2.png"><br>代码一是我们所说的同步代码，代码二是我们所说的异步代码<br>同步：调用之后得到结果再做别的任务<br>异步：调用之后先不管结果继续做别的任务<br>我们先来了解一下进程与线程<br><img src="https://snakexu.github.io/images/fuliqi/javascript/3.1_3.png"><br>查看进程的常用命令，在Linux中为ps，是process status的缩写，可以查看进程的状态；还有一个命令是top，是top of processes的缩写，这个命令可以查看动态进程的变化<br>2.JavaScript单线程<br>js是单线程的，怎么实现异步？通过浏览器内核多线程实现异步<br><img src="https://snakexu.github.io/images/fuliqi/javascript/3.1_4.png"><br>下面这个图片简单描述了每个线程的作用<br>GUI线程：是渲染页面，html/css解析，构建DOM树/渲染树<br>js引擎线程：我们常听到的chrome V8就是一个js引擎，js引擎就是跑在js引擎线程，js引擎线程只有一个，也就是我们常说的js是单线程语言的原因。语言本身是没有单线程和多线程之说的，只是解释这个语言的线程是单线程还是多线程。js引擎也可以操作DOM，如果js引擎线程和GUI线程同时操作DOM会引起混乱，不知道以哪个线程为准。js引擎线程和GUI线程互斥，如果js操作的时间过长，页面的渲染就会受到影响，所以我们要控制js文件的大小，不要让js执行的时间过长。<br>定时触发器线程：在我们上面代码二中，为什么setTimeout没有阻塞console.log(3)，因为setTimeout是由定时触发线程完成的，不是js引擎线程完成的，所以是可以setTimeout和console是可以同时进行的。定时器触发线程会在定时任务完成后通知事件触发线程往任务队列中添加事件。<br>事件触发线程：将满足触发条件的事件放入任务队列，事件队列将会在event loop章节讲解，一些异步事件会放到任务队列中。<br>异步HTTP请求线程：用于处理ajax请求线程，当请求完成时如果有回调函数就会通知事件触发线程往任务队列中添加事件<br><img src="https://snakexu.github.io/images/fuliqi/javascript/3.1_5.png"><br>关于线程先讲到这里，下面是有哪些异步场景<br><img src="https://snakexu.github.io/images/fuliqi/javascript/3.1_6.png"><br>3.定时器<br><img src="https://snakexu.github.io/images/fuliqi/javascript/3.1_7.png"><br>(1).主线程有一个执行栈，代码是在执行栈中执行，首先是调用webAPI(webAPI可以理解为浏览器提供的一种能力，setTimeout就是一种webAPI)<br>(2).调用setTimeout定时器线程计数2s<br>(3).定时器线程计数2s这个任务结束之后，会通知事件触发线程。事件触发线程将定时器事件放入任务队列<br>(4).主线程通过EventLoop遍历任务队列(EventLoop是一个循环，主要是检查任务队列和主线程的调用栈)<br>下面通过一段代码来看一下定时器的执行过程<br><img src="https://snakexu.github.io/images/fuliqi/javascript/3.1_8.png"><br>定时器可能存在哪些问题：<br><img src="https://snakexu.github.io/images/fuliqi/javascript/3.1_9.png"></p>
+<p><pre><br>const test = ()=&gt;{<br>    let t = +new Date();<br>    while(true){<br>        if(+new Date() - t &gt;=5000){<br>            break;<br>        }<br>    }<br>}<br>setTimeout(()=&gt;{<br>    console.log(2)<br>},2000);<br>test();<br></pre><br>上面代码执行我们发现，5秒钟之后打印的2。经过前面内容的讲解我们知道，是因为在同步内容执行完成之后才执行的定时内容setTimeout，这就是定时器任务可能不会按时执行的一个例子了。<br>定时器应用场景：防抖/节流/倒计时/动画<br>这是一个经典的js执行问题，导致这个问题的原因是js没有块级作用域<br><img src="https://snakexu.github.io/images/fuliqi/javascript/3.1_10.png"><br>经过我们改造，打印了1到10<br><img src="https://snakexu.github.io/images/fuliqi/javascript/3.1_11.png"><br>还有一种达到我们预期的方法就是用es6的变量定义let，因为let是有块级作用域的<br><img src="https://snakexu.github.io/images/fuliqi/javascript/3.1_12.png"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/03/26/网易微专业福利期-异步编程-3-1-理解异步/" data-id="ckb8s87vk003e4zxqdx9x3mnn" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-VuePress项目实战-4-1-2-基本配置" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/03/26/网易微专业-VuePress项目实战-4-1-2-基本配置/" class="article-date">
+  <time datetime="2020-03-26T08:24:08.000Z" itemprop="datePublished">2020-03-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/03/26/网易微专业-VuePress项目实战-4-1-2-基本配置/">网易微专业-VuePress项目实战-4.1.2-基本配置</a>
     </h1>
   
 
@@ -88,7 +131,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/03/04/网易微专业-MV-组件化开发React专题-React进阶-2-2-6-常用组件库ant-d/" data-id="cka5080dd0018hyxqhg50gfjo" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/03/26/网易微专业-VuePress项目实战-4-1-2-基本配置/" data-id="ckb8s87ug001l4zxqdempjbf8" class="article-share-link">Share</a>
       
       
     </footer>
@@ -98,10 +141,10 @@
 
 
   
-    <article id="post-网易微专业-MV-组件化开发React专题-React进阶-2-2-5-数据管理Mobx" class="article article-type-post" itemscope="" itemprop="blogPost">
+    <article id="post-网易微专业-VuePress项目实战-4-1-1-设计-运行原理" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2020/03/02/网易微专业-MV-组件化开发React专题-React进阶-2-2-5-数据管理Mobx/" class="article-date">
-  <time datetime="2020-03-02T08:25:14.000Z" itemprop="datePublished">2020-03-02</time>
+    <a href="/2020/03/26/网易微专业-VuePress项目实战-4-1-1-设计-运行原理/" class="article-date">
+  <time datetime="2020-03-26T06:57:08.000Z" itemprop="datePublished">2020-03-26</time>
 </a>
     
   </div>
@@ -112,7 +155,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2020/03/02/网易微专业-MV-组件化开发React专题-React进阶-2-2-5-数据管理Mobx/">网易微专业-MV*&amp;组件化开发React专题-React进阶-2.2.5-数据管理Mobx</a>
+      <a class="article-title" href="/2020/03/26/网易微专业-VuePress项目实战-4-1-1-设计-运行原理/">网易微专业-VuePress项目实战-4.1.1-设计-运行原理</a>
     </h1>
   
 
@@ -120,12 +163,13 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>1.Mobx<br><img src="https://snakexu.github.io/images/wangyi/react/2.2.5_1.png"></p>
+        <p>1.什么是VuePress<br><img src="https://snakexu.github.io/images/wangyi/VuePress/4.1.1_1.png"><br><img src="https://snakexu.github.io/images/wangyi/VuePress/4.1.1_2.png"><br>2.快速上手VuePress<br><img src="https://snakexu.github.io/images/wangyi/VuePress/4.1.1_3.png"><br><img src="https://snakexu.github.io/images/wangyi/VuePress/4.1.1_4.png"><br>2-1.新建项目想换主题<br><img src="https://snakexu.github.io/images/wangyi/VuePress/4.1.1_5.png"><br><img src="https://snakexu.github.io/images/wangyi/VuePress/4.1.1_6.png"><br>如何使用一个主题</p>
+<p><pre><br>//.vuepress/config.js<br>module.exports = {<br>    theme:’vuepress-theme-xx’,<br>    themeConfig:{<br>        //…<br>    }<br>}<br></pre><br>3.VuePress主题<br>如何自定义一个主题<br><img src="https://snakexu.github.io/images/wangyi/VuePress/4.1.1_7.png"><br>上面是自定义一个主题的完整的目录结构<br>global-components：被自动注册为全局组件<br>components：vue组件存放的地方<br>layouts：本身是一个布局组件，是一个必须存在的目录结构，我们所有的页面将默认会使用layout.vue作为布局组件，对于那些匹配不到的，路由将会使用404.vue<br>styles：定义全局的样式/调色板<br>index.js：主题文件的入口文件<br><img src="https://snakexu.github.io/images/wangyi/VuePress/4.1.1_8.png"><br>老师用官网上介绍vuepress的模型讲述了vuepress，详情看官网 <a href="https://v1.vuepress.vuejs.org/zh/plugin/" target="_blank" rel="noopener">https://v1.vuepress.vuejs.org/zh/plugin/</a><br>4.插件<br>如何书写一个VuePress插件<br><img src="https://snakexu.github.io/images/wangyi/VuePress/4.1.1_9.png"><br>插件案例<br><img src="https://snakexu.github.io/images/wangyi/VuePress/4.1.1_10.png"></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/03/02/网易微专业-MV-组件化开发React专题-React进阶-2-2-5-数据管理Mobx/" data-id="cka5080dd0017hyxq8ec13z5f" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/03/26/网易微专业-VuePress项目实战-4-1-1-设计-运行原理/" data-id="ckb8s87uf001i4zxqv1zka8om" class="article-share-link">Share</a>
       
       
     </footer>
@@ -135,10 +179,10 @@
 
 
   
-    <article id="post-网易微专业-MV-组件化开发React专题-React进阶-2-2-4-数据管理Redux" class="article article-type-post" itemscope="" itemprop="blogPost">
+    <article id="post-网易微专业-VuePress项目实战-4-1-0-VuePress课程导学" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2020/03/01/网易微专业-MV-组件化开发React专题-React进阶-2-2-4-数据管理Redux/" class="article-date">
-  <time datetime="2020-03-01T05:38:25.000Z" itemprop="datePublished">2020-03-01</time>
+    <a href="/2020/03/26/网易微专业-VuePress项目实战-4-1-0-VuePress课程导学/" class="article-date">
+  <time datetime="2020-03-26T06:46:05.000Z" itemprop="datePublished">2020-03-26</time>
 </a>
     
   </div>
@@ -149,7 +193,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2020/03/01/网易微专业-MV-组件化开发React专题-React进阶-2-2-4-数据管理Redux/">网易微专业-MV*&amp;组件化开发React专题-React进阶-2.2.4-数据管理Redux</a>
+      <a class="article-title" href="/2020/03/26/网易微专业-VuePress项目实战-4-1-0-VuePress课程导学/">网易微专业-VuePress项目实战-4.1.0-VuePress课程导学</a>
     </h1>
   
 
@@ -157,12 +201,12 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>1.Redux简介<br><img src="https://snakexu.github.io/images/wangyi/react/2.2.4_1.png"><br><img src="https://snakexu.github.io/images/wangyi/react/2.2.4_2.png"><br>课程里老师一直是在用例子说明，等我梳理一下再将例子贴上来</p>
+        <p>1.什么是VuePress<br>VuePress由两部分组成:<br>·第一部分是一个极简静态网站生成器，它包含由Vue驱动的主题系统和插件API<br>·第二部分是为书写技术文档而优化的默认主题，它的诞生初衷是为了支持Vue及其子项目的文档需求</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/03/01/网易微专业-MV-组件化开发React专题-React进阶-2-2-4-数据管理Redux/" data-id="cka5080dc0016hyxqugnium5c" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/03/26/网易微专业-VuePress项目实战-4-1-0-VuePress课程导学/" data-id="ckb8s87ug001k4zxqqt3ig6hx" class="article-share-link">Share</a>
       
       
     </footer>
@@ -172,10 +216,10 @@
 
 
   
-    <article id="post-网易微专业-MV-组件化开发React专题-VUE最佳实践-1-4-2-s数据层的高级封装之网易实践" class="article article-type-post" itemscope="" itemprop="blogPost">
+    <article id="post-网易微专业-MV-组件化开发React专题-React生态-2-4-1-实现React-下-state" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2020/02/29/网易微专业-MV-组件化开发React专题-VUE最佳实践-1-4-2-s数据层的高级封装之网易实践/" class="article-date">
-  <time datetime="2020-02-29T04:35:44.000Z" itemprop="datePublished">2020-02-29</time>
+    <a href="/2020/03/20/网易微专业-MV-组件化开发React专题-React生态-2-4-1-实现React-下-state/" class="article-date">
+  <time datetime="2020-03-20T03:10:26.000Z" itemprop="datePublished">2020-03-20</time>
 </a>
     
   </div>
@@ -186,7 +230,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2020/02/29/网易微专业-MV-组件化开发React专题-VUE最佳实践-1-4-2-s数据层的高级封装之网易实践/">网易微专业-MV*&amp;组件化开发React专题-VUE最佳实践-1.4.2-s数据层的高级封装之网易实践</a>
+      <a class="article-title" href="/2020/03/20/网易微专业-MV-组件化开发React专题-React生态-2-4-1-实现React-下-state/">网易微专业-MV-组件化开发React专题-React生态-2.4.1-实现React(下)-state</a>
     </h1>
   
 
@@ -194,911 +238,269 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>1.数据层封装<br><img src="https://snakexu.github.io/images/wangyi/vue/1.4.2_1.png"><br>课程演示项目/src/views/modules.js里面有这样一段代码</p>
-<p><pre><br>export default getModules(<br>    require.context(‘./‘, true, /.\/([^/]*?)\/index.js$/),<br>    modulesOrder,<br>);<br></pre><br>这里用require.context主要是容易实现模块的热插拔，也就是说随时增加/删除模块非常方便，当然还有别的好处，慢慢发觉吧<br>1-1.直接在页面组件中请求<br>1-2.封装service层<br>1-3.JSON配置的方式<br>小结：<br><img src="https://snakexu.github.io/images/wangyi/vue/1.4.2_2.png"><br>emmm，这部分老师都是讲的代码，其实看一下项目大概也能了解了，就不再详细讲述了，项目地址 <a href="https://vusion-templates.github.io/cloud-admin-site/" target="_blank" rel="noopener">https://vusion-templates.github.io/cloud-admin-site/</a> 不过项目中可能没有数据，需要自己实现一下<br>2.路由相关<br>2-1.路由懒加载<br><img src="https://snakexu.github.io/images/wangyi/vue/1.4.2_3.png"></p>
-<p><pre><br>{ path: ‘detail’, component: () =&gt; import(/<em> webpackChunkName: ‘ingress’ </em>/ ‘./views/detail/index.vue’), meta: { title: ‘负载均衡详情’ }, children: [<br>    { path: ‘’, redirect: ‘info’ },<br>    { path: ‘info’, component: () =&gt; import(/<em> webpackChunkName: ‘ingress’ </em>/ ‘./views/detail/info.vue’) },<br>    { path: ‘securityGroups’, component: () =&gt; import(/<em> webpackChunkName: ‘ingress’ </em>/ ‘./views/detail/monitor.vue’) },<br>    { path: ‘monitor’, component: () =&gt; import(/<em> webpackChunkName: ‘ingress’ </em>/ ‘./views/detail/monitor.vue’) },<br>    { path: ‘logs’, component: () =&gt; import(/<em> webpackChunkName: ‘ingress’ </em>/ ‘./views/detail/monitor.vue’) },<br>] },<br></pre><br>上面代码中/<em> webpackChunkName: ‘ingress’ </em>/ 这部分是分组，可以看webpack或者vue-router了解<br>2-2.路由权限<br>一般从后台获取权限，路由有一个meta，我们可以做如下配置</p>
-<p><pre><br>meta: {<br>    title: ‘负载均衡’,<br>    crumb: ‘负载均衡’,<br>    auth(to, from, next) {<br>         if (!window.auth.ingress) {<br>             next(‘/‘);<br>         }<br>    },<br>    locks: [{<br>        params: [‘teamId’],<br>    }],<br>},<br></pre><br>在各个路由做了上述配置之后，还需要做如下更改</p>
-<p><pre><br>// 权限验证<br>router.beforeEach((to, from, next) =&gt; {<br>    let called = false;<br>    const _next = function (…args) {<br>        if (called) {<br>            return;<br>        }<br>        called = true;<br>        next(…args);<br>    };<br>    to.matched.every((item) =&gt; {<br>        item.meta &amp;&amp; item.meta.auth &amp;&amp; item.meta.auth(to, from, _next);<br>        return !called;<br>    });<br>    _next();<br>});<br></pre><br>2-3.把参数固定在路由上-路由锁<br>下面事件是一个select的触发事件</p>
-<p><pre><br>onTeamChange($event) {<br>    this.$routerLock({<br>        teamId: $event.value,<br>    });<br>}<br></pre><br>在页面路由加上locks</p>
-<p><pre><br>meta: {<br>    title: ‘负载均衡’,<br>    crumb: ‘负载均衡’,<br>    auth(to, from, next) {<br>        // if (!window.auth.ingress) {<br>        //     next(‘/‘);<br>        // }<br>    },<br>    locks: [{<br>        params: [‘teamId’],<br>    }],<br>},<br></pre><br>上面代码能如此实现，并不是vue原生的，而是因为</p>
-<p><pre><br>const routerLock = {<br>    beforeEach(to, from, next) {<br>        const matched = to.matched || [];<br>        const locks = [];<br>        matched.forEach((item) =&gt; {<br>            if (item.meta &amp;&amp; item.meta.locks) {<br>                const itemLocks = item.meta.locks;<br>                itemLocks.forEach((lock) =&gt; {<br>                    if (lock.params &amp;&amp; lock.params.length) {<br>                        locks.push(lock);<br>                    }<br>                });<br>            }<br>        });<br>        if (!locks.length) {<br>            next();<br>            return;<br>        }<br>        const includePath = function (path) {<br>            if (typeof path === ‘string’) {<br>                return path === to.name || path === to.path;<br>            }<br>            if (path instanceof RegExp) {<br>                return path.test(to.name) || path.test(to.path);<br>            }<br>            return false;<br>        };<br>        const fromQuery = from.query;<br>        const toQuery = to.query;<br>        let isChanged = false;<br>        locks.forEach((lock) =&gt; {<br>            // 没有 include 时全通过<br>            if (lock.include &amp;&amp; !lock.include.some(includePath))<br>                return;<br>            if (lock.exclude &amp;&amp; lock.exclude.some(includePath))<br>                return;<br>            lock.params.forEach((param) =&gt; {<br>                if (!(param in toQuery)) {<br>                    isChanged = true;<br>                    toQuery[param] = fromQuery[param];<br>                }<br>                if (toQuery[param] === ‘’) {<br>                    toQuery[param] = undefined;<br>                } // 美化路由<br>            });<br>        });<br>        if (isChanged) {<br>            next({<br>                path: to.path,<br>                query: toQuery,<br>            });<br>        } else {<br>            next();<br>        }<br>    },<br>    update(query, route, router) {<br>        if (Object.keys(query).some((key) =&gt; query[key] !== route.query[key])) {<br>            router.push({<br>                path: route.path,<br>                query: {<br>                    …route.query,<br>                    …query,<br>                },<br>            });<br>        }<br>    },<br>    install(Vue) {<br>        Vue.prototype.$routerLock = function (query) {<br>            return routerLock.update(query, this.$route, this.$router);<br>        };<br>    },<br>};<br>export default routerLock;<br></pre><br>3.数据管理和通信<br><img src="https://snakexu.github.io/images/wangyi/vue/1.4.2_4.png"><br>课程里老师项目封装了一种基于eventbus的组件 <a href="https://vusion.github.io/cloud-ui/components/m-pub-sub/examples" target="_blank" rel="noopener">https://vusion.github.io/cloud-ui/components/m-pub-sub/examples</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/02/29/网易微专业-MV-组件化开发React专题-VUE最佳实践-1-4-2-s数据层的高级封装之网易实践/" data-id="cka5080de0019hyxq0f7327kr" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-MV-组件化开发React专题-React进阶-2-2-3-React与Typescript" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/02/27/网易微专业-MV-组件化开发React专题-React进阶-2-2-3-React与Typescript/" class="article-date">
-  <time datetime="2020-02-27T10:33:33.000Z" itemprop="datePublished">2020-02-27</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/02/27/网易微专业-MV-组件化开发React专题-React进阶-2-2-3-React与Typescript/">网易微专业-MV*&amp;组件化开发React专题-React进阶-2.2.3-React与Typescript</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.TS基础<br>概念:Typescript是Javascript的一个超集，主要提供了类型系统和对ES6的支持，它由Microsoft开发，代码位于GitHub上<br>使用场景:生命周期较长，较稳定的大型项目<br>2.TS使用场景<br>3.TS语法<br><img src="https://snakexu.github.io/images/wangyi/react/2.2.3_1.png"><br><img src="https://snakexu.github.io/images/wangyi/react/2.2.3_2.png"><br><img src="https://snakexu.github.io/images/wangyi/react/2.2.3_3.png"><br><img src="https://snakexu.github.io/images/wangyi/react/2.2.3_4.png"><br><img src="https://snakexu.github.io/images/wangyi/react/2.2.3_5.png"><br>4.TS与React<br><img src="https://snakexu.github.io/images/wangyi/react/2.2.3_6.png"><br>4-1.数据的传递<br>index.tsx</p>
-<pre>
-import * as React from 'react'
-import * as ReactDOM from 'react-dom';
-import registerServiceWorker from './registerServiceWorker';
-import App_11 from './App_11';
-ReactDOM.render(
-  < App_11 name={'hello'}/>,
-  document.getElementById('root') as HTMLElement
-);
-registerServiceWorker();
-</pre>
-App_11.jsx
-<pre>
-import * as React from 'react'
-import * as ReactDOM from 'react-dom';
-interface IProps{
-     name:string
-}
-interface IState{
-    value:number
-}
-class App_11 extends React.Component< IProps,IState >{
-    public constructor(props:IProps){
-        super(props)
+        <pre>
+import React from 'react'
+import ReactDOM from 'react-dom'
+class  App extends React.Component{
+    constructor(props) {
+        super(props);
         this.state = {
-            value:10
+          num: 1,
         }
     }
-    render(){
-        const {
-            name
-        } = this.props
-        const {
-            value
-        } = this.state
-        return(
+    add(){
+        this.setState({num:3})
+        this.setState({num:4})
+        this.setState({num:5})
+        this.setState({num:8})
+    }
+    render() {
+        console.log("hello")
+        return (
             < div>
-                hello typescript{name}{value}
+            hello world {this.state.num} < button onClick={e => {
+            this.add()
+            } }>add< /button>
             < /div>
-        )
+        );
     }
 }
-export default App_11
+ReactDOM.render(< App/>,document.getElementById('root'))
 </pre>
-<img src="https://snakexu.github.io/images/wangyi/react/2.2.3_7.png">
-4-2.事件/生命周期
+看到上面的代码，在add中我们执行了四次setState，按照我们之前的理解，render的console.log('hello')会执行四次，但是实际上只执行了一次。
+<img src="https://snakexu.github.io/images/wangyi/react/2.4.2_1.png">
+<img src="https://snakexu.github.io/images/wangyi/react/2.4.2_2.png">
+在我们过去的理解中，当调用setState进行调用的时候，页面就会进行重绘，这里视图只重绘了一次，所以我们发现react的setState不会立即执行，而是把这些状态推到一个队列中去，在一定的时间之后才会执行，把队列里所有的数据做一次性处理。
+这里还有一个地方就是setState可以传入一个数据也可以传入一个函数
 <pre>
-import * as React from 'react'
-import * as ReactDOM from 'react-dom';
-interface IProps{
-    name:string
-}
-interface IState{
-    value:string
-}
-class App_11 extends React.Component< IProps,IState >{
-    public constructor(props:IProps){
-        super(props)
+import React from 'react'
+import ReactDOM from 'react-dom'
+class  App extends React.Component{
+    constructor(props) {
+        super(props);
         this.state = {
-            value:'a'
+          num: 1,
         }
     }
-    render(){
-        const {
-            name
-        } = this.props
-        const {
-            value
-        } = this.state
-        return(
-            < div>
-                hello typescript{name}{value}
-                < input value={value} onChange={(e:React.ChangeEvent< HTMLInputElement >)=>{
-                    this.setState({
-                        value:e.target.value
-                    })
-                }}/>
-                < button onClick={(e:React.MouseEvent< HTMLButtonElement >)=>{
-                    alert('hello')
-                }}>add< /button>
-            < /div>
-        )
-    }
-    public componentDidMount(){
-        console.log('hello')
-    }
-}
-export default App_11
-</pre>
-4-3.todolist
-App3.tsx
-<pre>
-import * as React from 'react';
-import List from './todolist/list'
-import Action from './todolist/action'
-import {
-  FriendItem
-} from './todolist/types'
-interface IState {
-  value: string,
-  list: Array< FriendItem >
-}
-class App extends React.Component< Object,IState > {
-  public constructor(props: Object){
-    super(props)
-    this.state = {
-      value:'a',
-      list: [
-        {
-          name: 'ryan',age:30,id:1
-        },
-        {
-          name: 'react',age:4,id:2
-        },
-        {
-          name: 'vue',age:3,id:3
-        }
-      ]
-    }
-  }
-  render() {
-    const {
-      value,
-      list
-    } = this.state
-    return (
-      < div>
-        < List list={list} onDel={(index:number) =>{
-          console.log(index)
-          list.splice(index,1)
-          this.setState({
-            list
-          })
-        }}/>
-        < Action value={value} onChange={(value: string) => {
-          this.setState({
-            value
-          })
-        }} onAdd={(value:string) => {
-          list.push({
-            name:value,
-            age:10,
-            id:4
-          })
-          this.setState({
-            list,
-            value:''
-          })
-        }}/>
-      < /div>
-    );
-  }
-  public componentDidMount() {
-    console.log('hello')
-  }
-}
-export default App;
-</pre>
-action/index.tsx
-<pre>
-import * as React from 'react';
-interface onAdd {
-  (index: string): void
-}
-interface onChange {
-  (index: string): void
-}
-interface IProps {
-  value: string,
-  onAdd: onAdd,
-  onChange: onChange
-}
-class Action extends React.Component< IProps >{
-  render() {
-    const {
-      value,
-      onAdd,
-      onChange
-    } = this.props
-    return (
-      < div>
-        < input value={value} onChange={(e: React.ChangeEvent< HTMLInputElement >)=> {
-          onChange(e.target.value)
-        }}/>
-        < button onClick={(e: React.MouseEvent< HTMLButtonElement >) => {
-          onAdd(value)
-        }}>add< /button>
-      < /div>
-    );
-  }
-}
-export default Action
-</pre>
-list/index.tsx
-<pre>
-import * as React from 'react';
-import {FriendItem} from "../types";
-interface onDel {
-  (index: number): void
-}
-interface IProps {
-  list: Array< FriendItem >,
-  onDel: onDel
-}
-class List extends React.Component< IProps >{
-  render() {
-    const {
-      list,
-      onDel
-    } = this.props
-    return (
-      < div>
-        {list.map((item: FriendItem,index: number) => < div>
-          {item.name} < button onClick={(e: React.MouseEvent< HTMLButtonElement>) => {
-          onDel(index)
-        }}>-< /button>
-        < /div>)}
-      < /div>
-    );
-  }
-}
-export default List
-</pre>
-types/index.jsx
-<pre>
-export interface FriendItem {
-  name: string,
-  age: number,
-  id: number
-}
-</pre>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/02/27/网易微专业-MV-组件化开发React专题-React进阶-2-2-3-React与Typescript/" data-id="cka5080db0015hyxquy334rsx" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-MV-组件化开发React专题-React进阶-2-2-2-React-Hooks" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/02/27/网易微专业-MV-组件化开发React专题-React进阶-2-2-2-React-Hooks/" class="article-date">
-  <time datetime="2020-02-27T05:35:56.000Z" itemprop="datePublished">2020-02-27</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/02/27/网易微专业-MV-组件化开发React专题-React进阶-2-2-2-React-Hooks/">网易微专业-MV*&amp;组件化开发React专题-React进阶-2.2.2-React Hooks</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>ReactHooks就是用函数式组件把class组件的方方面面实现的过程。组件包括(1)props、state，也就是组件的数据；(2)组件的生命周期<br>1.useState&amp;useEffect<br>简单例子:<br>1-1.了解如何定义数据<br>index.js</p>
-<pre>
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App_10 from './App_10';
-ReactDOM.render(
-  <app_10 name="func component">,
-  document.getElementById('root')
-);
-</app_10></pre>
-App_10.js
-<pre>
-import React,{useState,useEffect} from "react";
-const App_10 = (props)=>{
-    //下面两个变量相当于定义state，
-    //在这个定义过程中不允许if{}else{}的条件式定义，也就是每次执行的时候定义的变量数量不能变
-    let [time,setTime] = useState(0);//useState传入的是初始值，setTime是修改time事件
-    let [age,setAge] = useState(10);
-    return (
-        < div>
-            Hello World {props.name}< br/>
-            {time}
-            < button onClick={(e)=>{setTime(time+1)}}>add< /button>< br/>
-            {age}
-            < button onClick={(e)=>{setAge(age-1)}}>cut< /button>
-        < /div>
-    )
-}
-export default App_10
-<pre>
-<img src="https://snakexu.github.io/images/wangyi/react/2.2.2_1.png">
-<img src="https://snakexu.github.io/images/wangyi/react/2.2.2_2.png">
-1-2.了解如何定义生命周期
-<pre>
-import React,{useState,useEffect} from "react";
-const App_10 = (props)=>{
-    //下面两个变量相当于定义state，
-    //在这个定义过程中不允许if{}else{}的条件式定义，也就是每次执行的时候定义的变量数量不能变
-    let [time,setTime] = useState(0);//useState传入的是初始值，setTime是修改time事件
-    let [age,setAge] = useState(10);
-    //useEffect相当于componentDidMount和componentcomponentDidUpdate和在一起的作用
-    useEffect(()=>{
-        console.log('Hello')
-    })
-    return (
-        < div>
-            Hello World {props.name}< br/>
-            {time}
-            < button onClick={(e)=>{setTime(time+1)}}>add< /button>< br/>
-            {age}
-            < button onClick={(e)=>{setAge(age-1)}}>cut< /button>
-        < /div>
-    )
-}
-export default App_10
-</pre>
-当我们直接写入useEffect的时候我们发现，只要页面数据有变化useEffect函数就会执行
-<img src="https://snakexu.github.io/images/wangyi/react/2.2.2_3.png">
-因此我们给useEffect加入参数
-<pre>
-useEffect(()=>{
-    console.log('Hello')
-},[])//对，你没看错，就是加入了一个为空数组的参数
-</pre>
-<img src="https://snakexu.github.io/images/wangyi/react/2.2.2_4.png">
-<pre>
-useEffect(()=>{
-    console.log('Hello')
-},[age])
-</pre>
-如果我们给useEffect添加一个参数为我们之前定义的age，那么会发现，只有在age变化的时候useEffect才会执行，如果time变化useEffect没有执行
-<pre>
-useEffect(()=>{
-    console.log('Hello')
-    return ()=>{
-        console.log('status clear')
-    }
-},[age])
-</pre>
-老师说useEffect函数的return相当于componentWillUnMount，但是我发现还是在每次age变化的时候return里的函数就执行里，具体是怎么理解，我看接下来老师怎么讲吧
-1-3.todolist
-<pre>
-const Action = (props)=>{
-    const [value,setValue] = useState('js')
-    return (
-        < div>
-            < input value={value} onChange={(e)=>{setValue(e.target.value)}}/>
-            < button onClick={(e)=>{props.onAdd(value)}}>add< /button>
-        < /div>
-    )
-}
-const List = (props)=>{
-    return (
-        < div>
-            {props.data.map(item=>(
-                < div key={item.id}>< span>{item.name}< /span>< button>del< /button>< /div>
-            ))}
-        < /div>
-    )
-}
-const App_10 = (props)=>{
-    const [data,setData] = useState([
-        {name:'react',id:1},
-        {name:'vue',id:2},
-    ])
-    return (
-        < div>
-            < Action onAdd = {(name)=>{
-                data.push({name:name,id:Math.random()})
-                // setData(data)这样用不可以，js判断一个对象有没有变化的唯一依据和标准是他的内存地址有没有发生变化，
-                //push的时候改变的只是数据的值，并没有改变内存地址，所以js当作这个数据没有发生变化
-                setData([...data])
-            }}/>
-            < List data={data}/>
-        < /div>
-    )
-}
-export default App_10
-</pre>
-2.useReducer
-这个等学到redux的时候再讲解
-3.自定义hook
-自定义hook的主要用途就是实现组件的公共功能
-<pre>
-const useTitleHook = (title)=>{
-    useEffect(()=>{
-        document.title = title
-        return ()=>{
-            document.title = 'title'
-        }
-    })
-}
-const App_10 = (props)=>{
-    let [title,setTitle] = useState('hello');
-    useTitleHook(title);
-    return (
-        < div>
-            < input value={title} onChange={(e)=>{setTitle(e.target.value)}}/>
-        < /div>
-    )
-}
-export default App_10
-</pre></pre></pre>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/02/27/网易微专业-MV-组件化开发React专题-React进阶-2-2-2-React-Hooks/" data-id="cka5080da0014hyxqx54bau4g" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-MV-组件化开发React专题-VUE最佳实践-1-4-1-项目全面深度优化及打包上线之网易实践" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/02/26/网易微专业-MV-组件化开发React专题-VUE最佳实践-1-4-1-项目全面深度优化及打包上线之网易实践/" class="article-date">
-  <time datetime="2020-02-26T06:09:01.000Z" itemprop="datePublished">2020-02-26</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/02/26/网易微专业-MV-组件化开发React专题-VUE最佳实践-1-4-1-项目全面深度优化及打包上线之网易实践/">网易微专业-MV*&amp;组件化开发React专题-VUE最佳实践-1.4.1-项目全面深度优化及打包上线之网易实践</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>总述——优化方向<br>·效率<br>-开发效率(组件、指令、工具函数的优化和积累)<br>-部署效率(打包优化)<br>-协作效率(协作方式的优化)<br>·质量<br>-性能监控<br>-自动化测试(单元测试、端到端测试等)<br>·性能体验<br>-首屏性能<br>-页面加载性能、图片性能<br>1.工程优化<br>1-1.应用eslint团队统一代码格式<br>1-2.工程优化-其他Loader的演示<br>(1)@vusion/md-vue-loader<br>(2)css-sprite-loader<br>(3)icon-font-loader<br>1-3.工程优化-vue-cli-plugin的实现<br>在项目目录下新建一个文件夹(假设我们当前的项目目录名为my-app)，取名vue-cli-plugin-demo，新建文件index.js</p>
-<p><pre><br>const CSSSpritePlugin = require(‘css-sprite-loader’).Plugin;<br>function chainCSSOneOfs(config, chainOneOf) {<br>    // ‘postcss’ 留给用户自定义吧<br>    [‘css’, ‘scss’, ‘sass’, ‘less’, ‘stylus’].forEach((rule) =&gt; {<br>        const ruleCSS = config.module.rule(rule);<br>        chainOneOf(ruleCSS.oneOf(‘vue-modules’), true);<br>        chainOneOf(ruleCSS.oneOf(‘vue’), false);<br>        chainOneOf(ruleCSS.oneOf(‘normal-modules’), true);<br>        chainOneOf(ruleCSS.oneOf(‘normal’), false);<br>    });<br>}<br>module.exports = function (api)  {<br>    api.chainWebpack(config =&gt; {<br>        config.plugin(‘css-sprite’).use(CSSSpritePlugin, [])<br>        chainCSSOneOfs(config, (oneOf) =&gt; {<br>            oneOf.use(‘css-sprite-loader’)<br>                .loader(‘css-sprite-loader’)<br>                .end();<br>        });<br>    })<br>}<br></pre><br>这个文件的可以取代vue.config.js，在vue-cli-plugin-demo文件夹下建一个package.json文件，和平时package.json文件内容一样，在我们新建的package.json的devDependencies加入一项vue-cli-plugin-demo:’^0.1.0’，其实可以用npm publish发布包(npm publish的具体用法可以用这个命令为关键字进行百度)，这里我们为了方便调试包，使用另外一种方法<br>然后我们在命令行进入当前my-app项目的node_modules文件夹，输入命令ln -s ../vue-cli-plugin-demo，在输入ls命令我们看到vue-cli-plugin-demo与其他目录名称颜色不同，这是一个软链。通过命令ls -al vue-cli-plugin-demo可以看到指向上一级目录，这个命令和npm unlink功能差不多但是用软链的效果快一些，返回项目根目录，npm run serve启动项目，这个时候项目应该是没有报错的<br>2.部署优化<br>很多同学会遇到一个问题就是随着项目变大，项目打包速度越来越慢<br>首先我们了解一下发包的过程:如果想发包，要有一个npm账号，在npmjs.com网站注册一个账号，然后在命令行输入npm login登陆，进入需要发包的目录(目录中需要有package.json文件)，在命令行输入npm publish<br>2-1.部署流程<br><img src="https://snakexu.github.io/images/wangyi/vue/1.4.1_1.png"><br><img src="https://snakexu.github.io/images/wangyi/vue/1.4.1_2.png"><br>通过课程我们了解到可以通过jenkins(<a href="https://jenkins.io/zh/)/docker写脚本完成打包部署等工作" target="_blank" rel="noopener">https://jenkins.io/zh/)/docker写脚本完成打包部署等工作</a></p>
-<p><pre><br>const fs = require(‘fs’);<br>const path = require(‘path’);<br>const shell = require(‘shelljs’);<br>const crypto = require(‘crypto’);<br>const md5 = function (str, len = 16) {<br>    const md5 = crypto.createHash(‘md5’);<br>    return md5.update(str).digest(‘hex’).substr(0, len);<br>};<br>const cachePath = path.join(<strong>dirname, ‘./node_modules/.cache/package-lock.log’);<br>if (!fs.existsSync(path.join(cachePath, ‘../..’))) {<br>    fs.mkdirSync(path.join(cachePath, ‘../..’), {<br>        recursive: true,<br>    });<br>}<br>const lockHash = md5(fs.readFileSync(path.join(</strong>dirname, ‘./package-lock.json’)).toString());<br>let cache = false;<br>if (fs.existsSync(cachePath)) {<br>    if (lockHash === fs.readFileSync(cachePath).toString()) {<br>        cache = true;<br>        console.log(‘Installed from cache.’);<br>    }<br>}<br>if (!cache) {<br>    /**</pre></p>
-<pre><code> * Install npm packages
- */
-console.time(&apos;npm install&apos;);
-console.log(&apos;Installing npm packages ...&apos;);
-const result = shell.exec(&apos;npm --no-audit --progress=false --registry=https://registry.npm.taobao.org install&apos;);
-if (result.code)
-    throw new Error(String(result.stderr));
-/**
- * Log Versions
- */
-const nodeVersion = shell.exec(&apos;node -v&apos;, { silent: true }).stdout.trim();
-console.log(&apos;node version:&apos;, nodeVersion);
-const npmVersion = shell.exec(&apos;npm -v&apos;, { silent: true }).stdout.trim();
-console.log(&apos;npm version:&apos;, npmVersion);
-console.timeEnd(&apos;npm install&apos;);
-fs.writeFileSync(cachePath, lockHash);
-</code></pre><p>}<br><br>上面代码我们可以起名为npm.js，放在项目的根目录下，比如我们的my-app项目的根目录下。每次安装项目都会按照package-lock.json重新安装项目依赖，导致资源浪费，有了npm.js，我们执行node npm命令，此后每次安装项目，如果package.json文件没有变化，不会重新安装。<br>2-2.webpack.dll优化<br>这里主要利用webpack两个相关的plugin，一个是DllPlugin，另一个是DllReferencePlugin。我们可以在项目中配webpack.dll.config.js文件，然后通过配置把不经常需要更换的第三方依赖/库等打包，然后在vue.config.js中通过DllReferencePlugin引入，另外还需要一个AddAssetHtmlPlugin把我们通过dll打包的文件加入到html页面<br>用这个优化会比用commonschunks或者splitchunks某种程度上更节省时间，因为用dll优化不会每次都打包指定内容，但是用commonschunk或者是splitchunk其实每次还是打包的，所以对于一些极少更新的依赖，比如babel-polyfill等还是用dll优化<br>另外可以看一些别的打包优化方式，比如提取公共库等<br>3.组件优化<br>3-1.虚拟列表<br>vue文件，这里只写了页面代码，项目可以自己创建一个</p>
-<p><pre><br>&lt; template&gt;<br>&lt; div :class=”$style.list” ref=”list” @scroll=”onScroll”&gt;<br>    &lt; div :class=”$style.scroll” :style=”{ paddingTop: paddingTop + ‘px’, paddingBottom: paddingBottom + ‘px’ }”&gt;<br>        &lt; div :class=”$style.item” v-for=”item in viewItems” :key=”item.id” :even=”!!(item.id%2)”&gt;<br>            &lt; div v-for=”cnt in item.content” :key=”cnt”&gt;{ { cnt } }&lt; /div&gt;<br>        &lt; /div&gt;<br>    &lt; /div&gt;<br>&lt; /div&gt;<br>&lt; /template&gt;<br>&lt; script&gt;<br>export default {<br>    props: {<br>        list: Array,<br>        viewCount: { type: Number, default: 100 },<br>    },<br>    data() {<br>        return {<br>            minHeight: 20,<br>            viewIndex: 0,<br>            paddingTop: 0,<br>            paddingBottom: 0,<br>        }<br>    },<br>    computed: {<br>        viewItems() {<br>            return this.list.slice(this.viewIndex, this.viewIndex + this.viewCount);<br>        },<br>    },<br>    methods: {<br>        onScroll(e) {<br>            const listEl = e.target;<br>            // 记录当前 DOM 节点的高度<br>            const children = Array.from(listEl.children[0].children);<br>            children.forEach((childVM, index) =&gt; {<br>                if (this.list[this.viewIndex + index])<br>                    this.list[this.viewIndex + index].height = childVM.offsetHeight;<br>            });<br>            /<em> eslint-disable </em>/<br>            const scrollTop = listEl.scrollTop;<br>            let accHeight = 0;<br>            let viewIndex = this.viewIndex;<br>            for (let i = 0; i &lt; this.list.length; i++) {<br>                const item = this.list[i];<br>                accHeight += item.height || this.minHeight;<br>                if (accHeight &gt; scrollTop) {<br>                    viewIndex = i;<br>                    break;<br>                }<br>            }<br>            if (viewIndex - this.viewIndex &gt;= 0 &amp;&amp; viewIndex - this.viewIndex &lt; this.viewCount / 2)<br>                return;<br>            let paddingTop = 0;<br>            let paddingBottom = 0;<br>            for (let i = 0; i &lt; this.list.length; i++) {<br>                const item = this.list[i];<br>                if (i &lt; viewIndex) {<br>                    paddingTop += item.height || this.minHeight;<br>                } else if (i &gt;= viewIndex + this.viewCount) {<br>                    paddingBottom += item.height || this.minHeight;<br>                }<br>            }<br>            this.viewIndex = viewIndex;<br>            this.paddingTop = paddingTop;<br>            this.paddingBottom = paddingBottom;<br>        },<br>    },<br>}<br>&lt; /script&gt;<br>&lt; style module&gt;<br>.list {<br>    overflow: auto;<br>    width: 100%;<br>    height: 100%;<br>}<br>.item[even] {<br>    background: #c3c9d3;<br>}<br>&lt; /style&gt;<br></pre><br>3-2.mixins<br>3-3.指令</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/02/26/网易微专业-MV-组件化开发React专题-VUE最佳实践-1-4-1-项目全面深度优化及打包上线之网易实践/" data-id="cka5080gk003nhyxqfb6c902c" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-MV-组件化开发React专题-React进阶-2-2-1-高阶组件" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/02/24/网易微专业-MV-组件化开发React专题-React进阶-2-2-1-高阶组件/" class="article-date">
-  <time datetime="2020-02-24T08:46:12.000Z" itemprop="datePublished">2020-02-24</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/02/24/网易微专业-MV-组件化开发React专题-React进阶-2-2-1-高阶组件/">网易微专业-MV*&amp;组件化开发React专题-React进阶-2.2.1-高阶组件</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.渲染属性</p>
-<pre>
-import React from 'react';
-import ReactDOM from 'react-dom';
-class Provider extends React.Component{
-  render(){
-    return (
-      < div>
-        provider
-      < /div>
-    )
-  }
-}
-class User extends React.Component{
-  render(){
-    return (
-      < div>
-        user
-      < /div>
-    )
-  }
-}
-class App_8 extends React.Component{
-  render(){
-    return (
-      < Provider render={ (data)=>< User data={data}/>}>< /Provider>
-    )
-  }
-}
-export default App_8;
-</pre>
-上面就是用代码描述渲染属性，解决有状态组件的可复用问题
-<pre>
-import React from 'react';
-import ReactDOM from 'react-dom';
-class Provider extends React.Component{
-  constructor(props){
-    super(props)
-    this.state = {
-      name : 'provider-user'
-    }
-  }
-  render(){
-    return this.props.render(this.state.name)
-  }
-}
-class User extends React.Component{
-  render(){
-    return (
-      < div>
-        {this.props.data}
-      < /div>
-    )
-  }
-}
-class App_8 extends React.Component{
-  render(){
-    return (
-      < Provider render={(data)=>< User data={data}/>}/>
-    )
-  }
-}
-export default App_8;
-</pre>
-最后页面显示结果:provider-user
-从上面代码，我们注意到，User组件的数据是Provider组件提供的，这个数据并不是App_8组件的数据。
-<pre>
-import React from 'react';
-import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
-class Provider extends React.Component{
-  //定义上下文数据
-  getChildContext(){
-    return this.props.store
-  }
-  static childContextTypes={
-    name:PropTypes.string,
-    age : PropTypes.number
-  }
-  constructor(props){
-    super(props)
-    this.state = {
-      name : 'provider-user'
-    }
-  }
-  render(){
-    console.log(this.props)
-    return this.props.children
-  }
-}
-class BaseUser extends React.Component{
-  static contextTypes = {
-    name:PropTypes.string
-  }
-  render(){
-    return (
-      < div>
-        {this.context.name}
-      < /div>
-    )
-  }
-}
-class BasePost extends React.Component{
-  static contextTypes = {
-    age:PropTypes.number
-  }
-  render(){
-    return (
-      < div>
-        {this.context.age}
-      < /div>
-    )
-  }
-}
-const connect = ()=>{
-  //
-}
-const User = connect(BaseUser)
-const Post = connect(BasePost)
-const store = {
-  name : 'ryan',
-  age : 10,
-}
-class App_8 extends React.Component{
-  render(){
-    return (
-      < Provider store={store}>
-        < div>
-          < BaseUser/>
-          < BasePost/>
-        < /div>
-      < /Provider>
-    )
-  }
-}
-export default App_8;
-</pre>
-观察上面代码，我们发现static contextTypes是具有重复性的，我们抽离这段代码，也就是修改connect函数
-<pre>
-// import React from 'react';
-// import ReactDOM from 'react-dom';
-// class Provider extends React.Component{
-//   constructor(props){
-//     super(props)
-//     this.state = {
-//       name : 'provider-user'
-//     }
-//   }
-//   render(){
-//     // return (
-//     //   < div>
-//     //     provider
-//     //   < /div>
-//     // )
-//     return this.props.render(this.state.name)
-//   }
-// }
-// class User extends React.Component{
-//   render(){
-//     return (
-//       < div>
-//         {this.props.data}
-//       < /div>
-//     )
-//   }
-// }
-// class App_8 extends React.Component{
-//   render(){
-//     return (
-//       <provider render="{(data)="><user data="{data}/">}>< /Provider>
-//     )
-//   }
-// }
-// export default App_8;
-import React from 'react';
-import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
-class Provider extends React.Component{
-  //定义上下文数据
-  getChildContext(){
-    return this.props.store
-  }
-  static childContextTypes={
-    name:PropTypes.string,
-    age : PropTypes.number
-  }
-  constructor(props){
-    super(props)
-    this.state = {
-      name : 'provider-user'
-    }
-  }
-  render(){
-    return this.props.children
-  }
-}
-class BaseUser extends React.Component{
-  render(){
-    return (
-      < div>
-        {this.props.name}
-      < /div>
-    )
-  }
-}
-class BasePost extends React.Component{
-  render(){
-    return (
-      < div>
-        {this.props.age}
-      < /div>
-    )
-  }
-}
-const connect = (Com) => (types) => {
-  class ConnectComponent extends React.Component{
-    static contextTypes = types
-    displayName = Com.displayName
-    render(){
-      return(
-        < Com name = {this.context.name}/>
-      );
-    }
-  }
-  return ConnectComponent
-}
-const User = connect(BaseUser)({
-  name:PropTypes.string
-})
-const Post = connect(BasePost)({
-  age:PropTypes.number
-})
-const store = {
-  name : 'ryan',
-  age : 10,
-}
-class App_8 extends React.Component{
-  render(){
-    return (
-      < Provider store={store}>
-        < div>
-          < User/>
-          < Post/>
-        < /div>
-      < /Provider>
-    )
-  }
-}
-export default App_8;
-</user></provider></pre>
-运行后发现只显示了ryan，因为我们在connect函数中只给Com传递了name，并没有传递age，所以我们需要对代码进行一些修改，下面只写了需要修改的部分
-<pre>
-const connect = (Com) => {
-  class ConnectComponent extends React.Component{
-    static contextTypes = Provider.childContextTypes
-    displayName = Com.displayName
-    render(){
-      return(
-        < Com {...this.context}/>
-      );
-    }
-  }
-  return ConnectComponent
-}
-const User = connect(BaseUser)
-const Post = connect(BasePost)
-</pre>
-其实这些都是属性代理的范围，我们接着看下一个例子
-<pre>
-import React,{Component} from "react";
-import PropTypes from 'prop-types'
-// 用于预先 将业务组件，进行数据的封装，便于我们 方便获取数据
-// 反向继承
-const connect = key => Com  => {
-    class connectComponent extends Component {
-        constructor(props){
-            super(props)
-            this.state = {
-                [key]: store[key]
+    add(){
+        this.setState({num:3})
+        this.setState(function(preState){
+            return {
+                num : preState.num * 2
             }
-        }
-        render() {
-            return < Com {...this.state}/>
-        }
-        componentDidMount() {
-            let that = this
-            window.store = new Proxy(store, {
-                get: function (target, key, receiver) {
-                    return Reflect.get(target, key, receiver);
-                },
-                set: function (target, key, value, receiver) {
-                    that.setState({
-                        [key]:value
-                    })
-                    return Reflect.set(target, key, value, receiver);
-                }
-            })
-        }
+        })
     }
-    return connectComponent
-}
-let store = {
-    name: 'ryan',
-    age: 10
-}
-@connect('age')
-class User extends Component{
     render() {
-        return < div>{this.props.age}< /div>
+        console.log("hello")
+        return (
+            < div>
+            hello world {this.state.num} < button onClick={e => {
+            this.add()
+            } }>add< /button>
+            < /div>
+        );
     }
 }
-class App_9 extends Component{
-    render() {
-        return < User/>
-    }
-}
-export default App_9
+ReactDOM.render(< App/>,document.getElementById('root'))
 </pre>
-上面代码在浏览器中执行
-<img src="https://snakexu.github.io/images/wangyi/react/2.2.1_1.png">
-我们注意到两个点，第一：如何传递/注入age的；第二：为什么通过修改window.test.age=11就可以导致页面上的数据进行修改。通过上面代码我们分析User = connect(User)(age),connect函数相当于一个闭包函数:(Com)=>{},(types)=>{},在这里，connect函数就是高阶组件的属性代理
+下面我们实现react数据队列的更新。
+react-index.js
 <pre>
-import React,{Component} from "react";
-import PropTypes from 'prop-types'
-// 用于预先 将业务组件，进行数据的封装，便于我们 方便获取数据
-// 反向继承 交互的封装，
-const loading = Com  => {
-    class LoadingComponent extends Com { //注意这里，是extends Com，而不是extends React.Component
-        showLoading(){
-            console.log('loading')
+import setAttribute from './setAttribute'
+let setStateQueue = []//定义一个队列，当前变化的组件
+let renderQueue = []//页面上需要重绘的所有队列
+// reRender 只在 队列的最后，执行一次
+function defer( fn ) {
+    return Promise.resolve().then( fn );
+}
+// APp demo setState
+function enqueueSetState(stateChange, component) {
+    //stateChange描述新状态的一个参数，component组件
+    if(setStateQueue.length === 0){ 
+        defer(reRender)//这里是一个小技巧，当前同步队列执行完毕之后开始执行reRender
+    }
+    setStateQueue.push({
+        stateChange,
+        component
+    })
+    if(!renderQueue.some(item => item === component)) {
+        renderQueue.push(component)
+    }
+}
+function reRender(){
+    let item,component
+    while(item = setStateQueue.shift()){
+        const {stateChange,component} = item;
+        if(!component.prevState){
+            component.prevState = Object.assign({},component.state)
         }
-        hideLoading(){
-            console.log('hide')
+        if(typeof stateChange === 'function'){
+            Object.assign(component.state,stateChange(component.prevState))
+        }else{
+            Object.assign(component.state,stateChange)
+        }
+        component.prevState = component.state//stateChange可能是函数
+    }
+    while(component = renderQueue.shift()){
+        renderComponent(component)
+    }
+}
+function createElement( tag, attrs, ...children ) {
+  return {
+    tag,
+    attrs,
+    children
+  }
+}
+function render( vnode, container ) {
+  return container.appendChild( _render( vnode ) );
+}
+function _render( vnode ) {
+  if ( vnode === undefined || vnode === null || typeof vnode === 'boolean' ) vnode = '';
+  if ( typeof vnode === 'number' ) vnode = String( vnode );
+  if ( typeof vnode === 'string' ) {
+    let textNode = document.createTextNode( vnode );
+    return textNode;
+  }
+  if ( typeof vnode.tag === 'function' ) {
+    const component = createComponent( vnode.tag, vnode.attrs );
+    setComponentProps( component, vnode.attrs );
+    return component.base;
+  }
+  const dom = document.createElement( vnode.tag );
+  if ( vnode.attrs ) {
+    Object.keys( vnode.attrs ).forEach( key => {
+      const value = vnode.attrs[ key ];
+      setAttribute( dom, key, value );
+    } );
+  }
+  vnode.children.forEach( child => render( child, dom ) );    // 递归渲染子节点
+  return dom;
+}
+
+class Component {
+  constructor( props = {} ) {
+    this.state = {};
+    this.props = props;
+  }
+  setState( stateChange ) {
+    // 将修改合并到state
+    // Object.assign( this.state, stateChange );
+    // renderComponent( this );
+    enqueueSetState( stateChange, this );
+  }
+}
+function createComponent( component, props ) {
+  let inst;
+  // 如果是类定义组件，则直接返回实例
+  if ( component.prototype && component.prototype.render ) {
+    inst = new component( props );
+    // 如果是函数定义组件，则将其扩展为类定义组件
+  } else {
+    inst = new Component( props );
+    inst.constructor = component;
+    inst.render = function() {
+      return this.constructor( props );
+    }
+  }
+  return inst;
+}
+function setComponentProps( component, props ) {
+  if ( !component.base ) {
+    if ( component.componentWillMount ) component.componentWillMount();
+  } else if ( component.componentWillReceiveProps ) {
+    component.componentWillReceiveProps( props );
+  }
+  component.props = props;
+  renderComponent( component );
+}
+export function renderComponent( component ) {
+  let base;
+  const renderer = component.render();
+  if ( component.base && component.componentWillUpdate ) {
+    component.componentWillUpdate();
+  }
+  base = _render( renderer );
+  if ( component.base ) {
+    if ( component.componentDidUpdate ) component.componentDidUpdate();
+  } else if ( component.componentDidMount ) {
+    component.componentDidMount();
+  }
+  if ( component.base && component.base.parentNode ) {
+    component.base.parentNode.replaceChild( base, component.base );
+  }
+  component.base = base;
+  base._component = component;
+
+}
+export const React = {
+  createElement,
+  Component
+}
+export const ReactDOM = {
+  render: ( vnode, container ) => {
+    container.innerHTML = '';
+    return render( vnode, container );
+  }
+}
+export const tool = {
+  renderComponent
+}
+</pre>
+react.js
+<pre>
+import {React} from './react-index'
+export default React
+</pre>
+react-dom.js
+<pre>
+import {ReactDOM} from './react-index'
+export default ReactDOM
+</pre>
+index.js
+<pre>
+import React from './react';
+import ReactDOM from './react-dom';
+class  App extends React.Component{
+    constructor(props) {
+        super(props);
+        this.state = {
+          num: 1,
         }
     }
-    return LoadingComponent
-}
-@loading
-class User extends Component{
+    add(){
+        this.setState({num:3})
+        this.setState({num:4})
+        this.setState(function(preState){
+             console.log(preState.num)
+             return {
+                 num : preState.num * 2
+             }
+        })
+        this.setState(function(preState){
+             console.log(preState.num)
+             return {
+                 num : preState.num * 2
+             }
+        })
+    }
     render() {
-        return < div>user< /div>
-    }
-    componentDidMount() {
-        this.showLoading()
-        //http
-        this.hideLoading()
-    }
-}
-class App extends Component{
-    render() {
-        return <user>
+        console.log("hello")
+        return (
+            < div>
+            hello world {this.state.num} < button onClick={e => {
+            this.add()
+            } }>add< /button>
+            < /div>
+        );
     }
 }
-export default App
-</user></pre>
+ReactDOM.render(< App/>,document.getElementById('root'))
+</pre>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/02/24/网易微专业-MV-组件化开发React专题-React进阶-2-2-1-高阶组件/" data-id="cka5080da0013hyxq342xd900" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/03/20/网易微专业-MV-组件化开发React专题-React生态-2-4-1-实现React-下-state/" data-id="ckb8s87u300104zxqhttasdgi" class="article-share-link">Share</a>
       
       
     </footer>
@@ -1108,10 +510,10 @@ export default App
 
 
   
-    <article id="post-网易微专业-MV-组件化开发React专题-2-1-7-React基础-自定义组件-2" class="article article-type-post" itemscope="" itemprop="blogPost">
+    <article id="post-网易微专业-MV-组件化开发React专题-React生态-2-4-1-实现React" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2020/02/22/网易微专业-MV-组件化开发React专题-2-1-7-React基础-自定义组件-2/" class="article-date">
-  <time datetime="2020-02-22T02:07:21.000Z" itemprop="datePublished">2020-02-22</time>
+    <a href="/2020/03/18/网易微专业-MV-组件化开发React专题-React生态-2-4-1-实现React/" class="article-date">
+  <time datetime="2020-03-18T07:54:35.000Z" itemprop="datePublished">2020-03-18</time>
 </a>
     
   </div>
@@ -1122,7 +524,7 @@ export default App
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2020/02/22/网易微专业-MV-组件化开发React专题-2-1-7-React基础-自定义组件-2/">网易微专业-MV*&amp;组件化开发React专题-2.1.7-React基础-自定义组件-2</a>
+      <a class="article-title" href="/2020/03/18/网易微专业-MV-组件化开发React专题-React生态-2-4-1-实现React/">网易微专业-MV-组件化开发React专题-React生态-2.4.1-实现React</a>
     </h1>
   
 
@@ -1130,12 +532,15 @@ export default App
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>2.受控组件/非受控组件<br>这两个都是针对于表单来说的，最明显的区别就是value和defaultValue的区别，如下图<br><img src="https://snakexu.github.io/images/wangyi/react/2.1.7_2_1.png"><br>还有就是受控组件，必须写value和onChange，这时候挡在输入框写内容的时候才会发生变化；非受控组件，只写defaultValue就可以了(受控组件如果不写onChange那么输入框呈现的值是不会发生变化的，非受控组件即使不写onChange输入框呈现的值会根据输入内容进行改变)。对于受控组件，数据和onChange函数是严格绑定在一起的，很严谨，出错的可能性比较小，但是需要我们将value和onChange同时写出来；非受控组件自由性更大，但是出错的可能性更高。综上，更建议用受控组件，非受控组件只作为一个了解项。</p>
+        <p>因为这节课程没有给代码，所以不是太能猜测出来项目初始化都安装了什么依赖，就搜索了一下如何模拟react，搜索到这个 <a href="https://segmentfault.com/a/1190000019994139" target="_blank" rel="noopener">https://segmentfault.com/a/1190000019994139</a> ，个人觉得还不错，先放到这里<br>1.</p>
+<p><pre><br>function createElement(tag,attrs,…children){<br>    return {<br>        tag,<br>        attrs,<br>        children<br>    }<br>}<br>const React = {<br>    createElement<br>}<br>let vnode = {<br>    &lt; div&gt;<br>        actions<br>        &lt; span&gt;aa&lt; /span&gt;<br>        &lt; p&gt;bb&lt; /p&gt;<br>    &lt; /div&gt;<br>}<br>console.log(vnode)<br></pre><br>上面代码中我们并没有调用createElement这个函数，可是为什么会生效？原因是虚拟dom会自动传入这个函数中，我们通过实现createElement方法来实现react，控制台打印结果如下<br><img src="https://snakexu.github.io/images/wangyi/react/2.4.1_1.png"><br>打印出来的数据结构已经和react的很类似了，如果我们想通过ReactDOM.render(vnode,document.getElementById(‘root’))渲染到页面上，我们就需要完善ReactDOM</p>
+<p><pre><br>function createElement(tag,attrs,…children){<br>    return {<br>        tag,<br>        attrs,<br>        children<br>    }<br>}<br>function render(vnode,container){<br>    container.appendChild(_render(vnode));//把树形结构转换为真实DOM<br>}<br>function _render(vnode){<br>    //我们从之前的控制台打印可以看出vnode有多种形式，所以这里做一下判断<br>    if( vnode === undefined || vnode === null || typeof vnode === ‘boolean’ ) vnode =’’<br>    if( typeof vnode === ‘number’ ) vnode = String(vnode)<br>    if( typeof vnode === ‘string’ ){<br>        let textNode = document.createElement(vnode);<br>        return textNode<br>    }<br>    const dom = document.createElement(vnode.tag)<br>    vnode.children.forEach(child=&gt;{<br>        render(child,dom)//渲染子节点<br>    })<br>    return dom<br>}<br>const React = {<br>    createElement<br>}<br>const ReactDOM = {<br>    render(vnode,container)<br>}<br>let vnode = {<br>    &lt; div&gt;<br>        actions<br>        &lt; span&gt;aa&lt; /span&gt;<br>        &lt; p&gt;bb&lt; /p&gt;<br>    &lt; /div&gt;<br>}<br>ReactDOM.render(vnode,document.getElementById(‘root’))<br></pre><br><img src="https://snakexu.github.io/images/wangyi/react/2.4.1_2.png"><br>这时候已经能把虚拟dom渲染到页面上了，下面我们想渲染一个组件。</p>
+<p><pre><br>function setAttribute(dom,name,value){<br>    //如果属性名称是className，则改为class<br>    if(name === ‘className’) name=’class’;<br>    //如果属性名是onXXX，则是一个事件监听方法<br>    if(/on\w+/.test(name)){<br>        name = name.toLowerCase();<br>        dom[name] = value || ‘’;<br>        //如果属性名是style，则更新style对象<br>    }else if(name === ‘style’){<br>        if(!value || typeof value === ‘string’){<br>            dom.style.cssText = value || ‘’<br>        }else if( value &amp;&amp; typeof value === ‘object’){<br>            for(let name in value){<br>                //可以通过style={widht:20}这种形式来设置样式，可以省略掉单位px<br>                dom.style[name] = typeof value[name] === ‘number’ ? value[name] + ‘px’ : value[name]<br>            }<br>        }<br>        //普通属性则直接更新属性<br>    }else{<br>        if(name in dom){<br>            dom[name] = value || ‘’<br>        }<br>        if(value){<br>            dom.setAttribute(name,value)<br>        }else{<br>            dom.removeAttribute(name)<br>        }<br>    }<br>}<br>function createElement(tag,attrs,…children){<br>    return {<br>        tag,<br>        attrs,<br>        children<br>    }<br>}<br>function render(vnode,container){<br>    container.appendChild(_render(vnode));<br>}<br>function _render(vnode){<br>    if( vnode === undefined || vnode === null || typeof vnode === ‘boolean’ ) vnode =’’<br>    if( typeof vnode === ‘number’ ) vnode = String(vnode)<br>    if( typeof vnode === ‘string’ ){<br>        let textNode = document.createTextNode(vnode);<br>        return textNode<br>    }<br>    if( typeof vnode.tag === ‘function’){<br>        const component = createComponent(vnode.tag,vnode.attrs)//返回一个实例化组件<br>        setComponentProps(component,vnode.attrs)//更新属性，生命周期<br>        //为什么把创建组件和设置组件属性拆开？因为组件的属性在不断变化的时候会有componentreceiveprops这样一个过程，<br>        //在接收属性的时候一些相应的生命周期的方法需要触发<br>        return component.base<br>    }<br>    //console.log(typeof vnode.tag,vnode) //这行的控制台打印结果是下面的2.4.1_3<br>    const dom = document.createElement(vnode.tag)<br>    if(vnode.attrs){<br>        Object.keys(vnode.attrs).forEach(key=&gt;{<br>            const value = vnode.attrs[key]<br>            setAttribute(dom,key,value)<br>        })<br>    }<br>    vnode.children.forEach(child=&gt;{<br>        render(child,dom)//渲染子节点<br>    })<br>    return dom<br>}<br>function createComponent(component,props){<br>    console.log(component)<br>    console.log(new component(props))<br>    console.log(props)<br>    return new component(props)<br>}<br>function setComponentProps(component,props){<br>    //组件属性的变化的触发<br>    if(!component.base){<br>        //如果组件已经被创建<br>        if(component.componentWillMount){<br>            component.componentWillMount()<br>        }else if(component.componentWillReceiveProps){<br>            component.componentWillReceiveProps(props)<br>        }<br>    }<br>    component.props = props   //组件属性的变化的触发<br>    renderComponent(component)//组件的重绘<br>}<br>function renderComponent(component){<br>    let base;<br>    console.log(component)<br>    const renderer = component.render()//返回的是树状结构<br>    //判断组件是否被挂载到页面上<br>    if(component.base &amp;&amp; component.componentWillUpdate){<br>        component.componentWillUpdate();<br>    }<br>    base = _render(renderer)//base 当前虚拟dom转化成的真实dom<br>    if(component.base &amp;&amp; component.base.parentNode){<br>        //如果存在父节点，则把父节点替换成当前的dom结构<br>        component.base.parentNode.replaceChild(base,component.base)<br>    }<br>    component.base = base;<br>    base._component = component;<br>}<br>class Component{<br>    constructor(props){<br>        this.props = props<br>        this.state = {}<br>    }<br>    setState(stateChange){<br>        Object.assign(this.state,stateChange);//合并<br>        renderComponent(this)//组件重绘<br>    }<br>}<br>const React = {<br>    createElement,<br>    Component<br>}<br>const ReactDOM = {<br>    render(vnode,container){<br>        container.innerHtml = ‘’<br>        render(vnode,container)<br>    }<br>}<br>class Demo extends React.Component{<br>    state = {<br>        value:1<br>    }<br>    render(){<br>        return (<br>            &lt; div&gt;<br>                &lt; p&gt;{this.state.value}&lt; /p&gt;<br>                &lt; button onClick={(e)=&gt;{<br>                this.setState({value:2})<br>                }}&gt;aaa&lt; /button&gt;<br>                actions {this.props.name}<br>                &lt; span&gt;aa&lt; /span&gt;<br>                &lt; p&gt;bb&lt; /p&gt;<br>            &lt; /div&gt;<br>        )<br>    }<br>}<br>ReactDOM.render(&lt; Demo name=”aa”/&gt;,document.getElementById(‘root’))<br></pre><br><img src="https://snakexu.github.io/images/wangyi/react/2.4.1_3.png"><br><img src="https://snakexu.github.io/images/wangyi/react/2.4.1_4.png"><br><img src="https://snakexu.github.io/images/wangyi/react/2.4.1_5.png"><br>上面代码，我们的页面重绘是一个略粗暴的方法，整个页面dom的重绘，真实的react是有一个diff算法的；react的setState方法做了一个异步的优化，可以连续多次调用setState，可是最后在页面上只会调用执行一次，这里有一个优化项的操作。这些都是后面学习的内容。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/02/22/网易微专业-MV-组件化开发React专题-2-1-7-React基础-自定义组件-2/" data-id="cka5080d3000vhyxqg5mx6ygh" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/03/18/网易微专业-MV-组件化开发React专题-React生态-2-4-1-实现React/" data-id="ckb8s87u2000y4zxqp8eimo0r" class="article-share-link">Share</a>
       
       
     </footer>
@@ -1145,10 +550,10 @@ export default App
 
 
   
-    <article id="post-网易微专业-MV-组件化开发React专题-2-1-7-React基础-自定义组件" class="article article-type-post" itemscope="" itemprop="blogPost">
+    <article id="post-网易微专业-MV-组件化开发React专题-React生态-2-3-5-工程化与webpack" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2020/02/21/网易微专业-MV-组件化开发React专题-2-1-7-React基础-自定义组件/" class="article-date">
-  <time datetime="2020-02-21T07:04:14.000Z" itemprop="datePublished">2020-02-21</time>
+    <a href="/2020/03/17/网易微专业-MV-组件化开发React专题-React生态-2-3-5-工程化与webpack/" class="article-date">
+  <time datetime="2020-03-17T09:13:32.000Z" itemprop="datePublished">2020-03-17</time>
 </a>
     
   </div>
@@ -1159,7 +564,7 @@ export default App
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2020/02/21/网易微专业-MV-组件化开发React专题-2-1-7-React基础-自定义组件/">网易微专业-MV*&amp;组件化开发React专题-2.1.7-React基础-自定义组件</a>
+      <a class="article-title" href="/2020/03/17/网易微专业-MV-组件化开发React专题-React生态-2-3-5-工程化与webpack/">网易微专业-MV-组件化开发React专题-React生态-2.3.5-工程化与webpack</a>
     </h1>
   
 
@@ -1167,62 +572,166 @@ export default App
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>1.课程目标(参考ant-design)ant-design<br>实现button/input/select/table<br>2.首先实现基础的icon组件<br>icon.js</p>
-<pre>
-import React,{Component} from 'react'
-//React.PropTypes 提供很多验证器 (validator) 来验证传入数据的有效性。当向 props 传入无效数据时，JavaScript 控制台会抛出警告。
-//注意为了性能考虑，只在开发环境验证 propTypes。
-//https://blog.csdn.net/weixin_30776863/article/details/95419027 简介
-import PropTypes from 'prop-types'
-import '../../font-demo/iconfont.css'
-class Icon extends Component{
-  //生命属性类型
-  static propTypes = {
-    name:PropTypes.string
-  }
-  //生命默认属性
-  static defaultProps = {
-    name:'aaa'
-  }
-  /*上面两个static在写这种组件的时候一定要写，相当于给用户提供了一个说明*/
-  render(){
-    const {
-      name,
-      ...rest
-    } = this.props
-    return (
-      < span {...rest} className={`icon iconfont icon-${name}`}>< /span>
-    )
-  }
-}
-export default Icon
-</pre>
-App.js
-<pre>
-import React from 'react';
-import ReactDOM from 'react-dom';
-import Icon from './react-ui/Icon'
-class App_7 extends React.Component{
-  render(){
-    return (
-      < div>
-        app
-        < Icon
-        onClick = {()=>{
-          alert('hello')
-        }}
-         name={'jiadian-dianfanguo'} 
-         style={ {color:'red'} }>< /Icon>
-      < /div>
-    )
-  }
-}
-export default App_7;
-</pre>
+        <p>课程目标<br>一.独立实现一个工程化工具<br>二.阅读webpack相关配置代码<br>三.自定义实现webpack插件<br>1.工程化工具<br><img src="https://snakexu.github.io/images/wangyi/react/2.3.5_1.png"><br>使用npm init -y初始化简单项目，在项目的package.json文件中，有如下内容</p>
+<p><pre><br>{<br>    “name”:”mycli”,<br>    “version”:”1.0.0”,<br>    “description”:””,<br>    “main”:”index.js”,<br>    “bin”:”index.js”,//这里是手动添加的，指向当前的index.js，可执行文件的目录<br>    “script”:{<br>        “test”:”echo \”Error:no test specified\” &amp;&amp; exit 1”<br>    },<br>    “keywords”:[],<br>    “author”:””,<br>    “license”:”ISC”<br>}<br></pre><br>在项目中创建一个index.js，里面只有一行代码</p>
+<p><pre><br>console.log(‘hello world’);<br></pre><br>然后在命令行当前目录下敲入命令npm link，执行后再敲入命令mycli(因为package.json中的name是mycli)，windows系统会弹出如下弹窗<br><img src="https://snakexu.github.io/images/wangyi/react/2.3.5_2.png"><br>当我们敲入命令npm link的时候，在我们操作系统的环境变量的目录下生成一个类似于如下的目录<br><img src="https://snakexu.github.io/images/wangyi/react/2.3.5_3.png"><br>然后再敲mycli的时候就执行了这样的一个js文件，但是操作系统不知道如何执行js文件，那怎么让windows系统认识/执行js文件呢，对index.js文件进行如下修改</p>
+<p><pre></pre></p>
+<p>#!/usr/bin/env node //告诉操作系统我们以node来执行index.js文件<br>console.log(‘hello world’);<br><br>再次执行npm link，再执行mycli<br><img src="https://snakexu.github.io/images/wangyi/react/2.3.5_4.png"><br>假设我们现在有这样的需求：产品经理希望开发一个工具，这个工具在命令行中输入mycli create -t vue -n shop会创建一个会创建一个vue的模版项目名为shop</p>
+<p><pre><br>let program = require(‘commander’)//解析命令行的工具<br>program.version(‘0.0.0’)<br>.option(‘-t,–type &lt; name &gt;’,’project type’)<br>.option(‘-n,–type &lt; name &gt;’,’project type’)<br>program.command(‘create’).action(function(){<br>    console.log(program.name,program.type)<br>})<br>program.parse(process.argv)<br></pre><br>在命令行输入mycli create -t vue -n shop得到shop，对上面代码稍加修改</p>
+<p><pre><br>let program = require(‘commander’)<br>program.version(‘0.0.0’)<br>.option(‘-t,–type &lt; name &gt;’,’project type’)<br>program.command(‘create &lt; name &gt;’).action(function(name){<br>    console.log(name,program.type)<br>})<br>program.parse(process.argv)<br></pre><br>在命令行输入mycli create shop -t vue得到shop vue。接下来，我们要为我们的需求添砖加瓦了。首先做一个我们的需求的逻辑就是我们有一堆的模版，模版里面有vue/h5/react……各种项目类型，我们在命令行输入mycli create shop -t h5 ，就把h5模版的所有代码复制到本地。</p>
+<p><pre><br>let program = require(‘commander’)<br>let createProject = require(‘./create’)//引入了这个模块执行<br>program.version(‘0.0.0’)<br>.option(‘-t,–type &lt; name &gt;’,’project type’)<br>program.command(‘create &lt; name &gt;’).action(function(name){<br>    createProject(name,program.type)<br>    console.log(name,program.type)<br>})<br>program.parse(process.argv)<br></pre><br>createProject的内容(自己对着教程一行行敲下来也是不容易啊，自我感动下~~~)</p>
+<p><pre><br>let chalk = require(‘chalk’);<br>let fs = require(‘fs’);<br>let path = require(‘path’);<br>require(‘shelljs/global’)<br>var log = function(txt){<br>    console.log(chalk.magenta.bold(txt))<br>}<br>function createProject(name,type){<br>    var p = process.cwd();<br>    cd(p);<br>    if(fs.existsSync(name)){<br>        log(‘project exists,please rename it’)<br>        process.exit()<br>    }<br>}<br>var np = path.join(__dirname,’projects’,type);<br>cp(‘-R’,np+’/‘,name);<br>log(‘复制’+type+’项目源文件成功!’)<br>cd(name)<br>log(‘设置淘宝镜像—-npm config set registry <a href="http://registry.npm.taobao.org&#39;" target="_blank" rel="noopener">http://registry.npm.taobao.org&#39;</a>)<br>exec(‘npm config set registry <a href="http://registry.npm.taobao.org&#39;" target="_blank" rel="noopener">http://registry.npm.taobao.org&#39;</a>)<br>log(‘安装模块—-npm install’)<br>log(‘安装模块时间较长，请耐心等候，您也可以按CTRL+C停止安装，手动npm install 安装’)<br>log(‘安装模块中…’)<br>exex(‘npm install’)<br>if(type != ‘jquery’){<br>    log(‘正在启动项目’)<br>    exec(‘npm start’)<br>}<br>module.exports = createProject<br></pre><br>这是一个简单的执行过程，如果我们想让程序跟vue-cli一样和用户有交互，需要安装inquirer</p>
+<p><pre></pre></p>
+<p>#!/usr/bin/env node<br>let program = require(‘commander’)<br>let inquirer = require(‘inquirer’)<br>let promptList = [<br>{<br>    type:’input’,<br>    message:’设置一个用户名’,<br>    name:’name’,<br>    default:’test_user’,//默认值<br>},<br>{<br>    type:’confirm’,<br>    message:’是否使用监听’,<br>    name:’watch’,<br>    prefix:’前缀’,<br>},<br>{<br>    type:’list’,<br>    message:’请选择一种水果’,<br>    name:’fruit’,<br>    choices:[<br>    “Apple”,<br>    “Pear”,<br>    “Banana”<br>    ],<br>    filter:function(val){<br>        return val.toLowerCase()//使用filter将答案变为小写<br>    }<br>}<br>]<br>inquirer.prompt(promptList).then(answer=&gt;{<br>    console.log(answer)<br>})<br><br>在命令行执行mycli可以看到<br><img src="https://snakexu.github.io/images/wangyi/react/2.3.5_5.png"><br><img src="https://snakexu.github.io/images/wangyi/react/2.3.5_6.png"><br>是我们期待的交互了，稍微修改下，就可以作为我们项目的一个基础代码</p>
+<p><pre></pre></p>
+<p>#!/usr/bin/env node<br>let program = require(‘commander’)<br>let inquirer = require(‘inquirer’)<br>let createProject = require(‘./create’)<br>let path = require(‘path’)<br>let fs = require(‘fs’)<br>let promptList = [<br>{<br>    type:’input’,<br>    message:’设置一个项目名’,<br>    name:’name’,<br>    default:’project_name’,//默认值<br>},<br>{<br>    type:’confirm’,<br>    message:’是否使用监听’,<br>    name:’watch’,<br>    prefix:’前缀’,<br>},<br>{<br>    type:’list’,<br>    message:’请选择项目类型’,<br>    name:’type’,<br>    choices:fs.readdirSync(path.join(__dirname,’projects’)),//projects是一个路径，里面放着各种类型的模版<br>}<br>]<br>inquirer.prompt(promptList).then(answer=&gt;{<br>    console.log(answer)<br>    createProject(answer.name,answer.type)<br>})<br><br>可以丰富一下工具，比如异常的响应，比如-h提示<br>2.webpack相关配置<br>2-1.webpack核心概念<br>entry:入口;output:出口;loader:加载器;plugins:插件<br>2-2.webpack中相关的一些概念<br>在webpack中resolve中找依赖可以给指定依赖一个别名，举个例子</p>
+<p><pre><br>resolve:{<br>    extensions:[‘.js’,’.jsx’,’.json’],<br>    alias:{<br>        ‘@components’:’./src/component’//指定别名，import ‘./component/header’ =&gt; import ‘@components/header’<br>    },<br>    modules:[resolve(‘node_modules’)],//规定我们在引入资源的时候的一个空间范围，<br>    //我们可以自己添加路径，比如我们自己写组件在自己定义的目录’./src/components’<br>    //modules:[resolve(‘node_modules’),’./src/components’]<br>}<br></pre><br>3.自定义实现webpack插件<br>实现一个插件的需求:打包生成的文件自动传到云服务器(假设我们已知上传到服务器的接口)<br>首先写一个基本代码了解一下，以下代码是写在一个webpack文件中</p>
+<p><pre><br>class CustomPlugin{<br>    apply(complier){<br>        complier.plugin(‘emit’,(compilation,callback)=&gt;{<br>            for(let filename in compilation.assets){<br>                let content = compilation.assets[filename].[‘_source’].children<br>                console.log(filename,content)<br>            }<br>        })<br>    }<br>}<br>module.exports = {<br>    mode:’development’,<br>    entry:’./src/index.js’,<br>    plugins:[<br>    new CustomPlugin()<br>    ]<br>}<br></pre><br>通过上面代码，我们发现我们可以拿到文件名和文件内容，如果我们再写一个函数上传，就可以实现我们的需求了</p>
+
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/02/21/网易微专业-MV-组件化开发React专题-2-1-7-React基础-自定义组件/" data-id="cka5080d4000whyxqw3msx8ef" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/03/17/网易微专业-MV-组件化开发React专题-React生态-2-3-5-工程化与webpack/" data-id="ckb8s87ui001n4zxqa0nere11" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-MV-组件化开发React专题-React生态-2-3-2-React动画" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/03/16/网易微专业-MV-组件化开发React专题-React生态-2-3-2-React动画/" class="article-date">
+  <time datetime="2020-03-16T02:58:55.000Z" itemprop="datePublished">2020-03-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/03/16/网易微专业-MV-组件化开发React专题-React生态-2-3-2-React动画/">网易微专业-MV-组件化开发React专题-React生态-2.3.2-React动画</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><img src="https://snakexu.github.io/images/wangyi/react/2.3.1_1.png"><br>这是一个非常不好的例子，在setInterval中每执行一次this.setState，render函数都要重新执行一次，componentDidUpdate/componentWillUpdate等都会被执行，这时候性能是非常糟糕的。如果在一些无关紧要的状态在更新的时候触发了子组件的重绘，组件的性能会更加糟糕。如果我们真的需要div的宽度变化的时候，我们也不要把div的宽度设置为一个状态，我们要真实的拿到这个dom元素，可以对代码进行一些修改<br><img src="https://snakexu.github.io/images/wangyi/react/2.3.1_2.png"><br>虽然这样我们是直接在操作DOM，并没有那么遵循React的风格，但是这种方式是老师推荐的<br>1.列表动画<br>ani.js</p>
+<p><pre><br>import React,{ Component } from ‘react’<br>import ReactDOM from ‘react-dom’<br>import PropTypes from ‘prop-types’<br>export class AnimateList extends Component{<br>    mounted = false<br>    static childContextTypes={<br>        mountStyle:PropTypes.object,<br>        unMountStyle:PropTypes.object,<br>        parent:PropTypes.object,<br>        remove:PropTypes.object,<br>    }<br>    getChildContext(){<br>        return {<br>            mountStyle:this.props.mountStyle,<br>            unMountStyle:this.props.unMountStyle,<br>            parent:this,<br>            remove:this.props.remove,<br>        }<br>    }<br>    render(){<br>        return (<br>            &lt; &gt;<br>                {this.props.children}<br>            &lt; /&gt;<br>        )<br>    }<br>}<br>export class AnimateItem extends Component{<br>    static contextTypes={<br>        mountStyle:PropTypes.object,<br>        unMountStyle:PropTypes.object,<br>        parent:PropTypes.object,<br>        remove:PropTypes.object,<br>    }<br>    unMountAnimation = ()=&gt;{<br>    }<br>    remove = (index)=&gt;{<br>        const {<br>            unMountStyle<br>        } = this.context<br>        let dom = ReactDOM.findDOMNode(this)<br>        let move = ()=&gt;{<br>            this.context.remove(index)<br>        }<br>        dom.addEventListener(‘transitionend’,move,false)<br>        for(let key in unMountStyle){<br>            dom.style[key] = unMountStyle[key]<br>        }<br>    }<br>    render(){<br>        let {<br>            render<br>        } = this.props<br>        return (<br>            &lt; &gt;<br>                {render(this.remove)}<br>                {/<em> {this.props.children} </em>/}<br>            &lt; /&gt;<br>        )<br>    }<br>    run(index){<br>        const {<br>            mountStyle,<br>            parent<br>        } = this.context<br>        let dom = ReactDOM.findDOMNode(this)<br>        // dom.style.transition = <code>0.5s ${index * 0.2}s</code><br>        dom.style.transition = parent.mounted?’0.5s’:<code>0.5s ${index * 0.2}s</code><br>        parent.mounted = parent.props.children.length === index<br>        setTimeout(()=&gt;{<br>            for(let key in mountStyle){<br>                dom.style[key] = mountStyle[key]<br>            }<br>        },0)<br>    }<br>    componentDidMount(){<br>        const {<br>            index<br>        } = this.props<br>        this.run(index)<br>    }<br>}<br></pre><br>aniIndex.js</p>
+<p><pre><br>import React from ‘react’;<br>import {<br>  AnimateItem,<br>  AnimateList<br>} from ‘./ani’<br>class App extends React.Component{<br>  constructor(props) {<br>    super(props);<br>    this.state = {<br>      list :[<br>        ‘a’,<br>        ‘b’,<br>        ‘c’,<br>        ‘d’<br>      ],<br>      value: ‘’<br>    }<br>  }<br>  render() {<br>    const {<br>      list,<br>      value<br>    } = this.state<br>    return (<br>      &lt; div&gt;<br>        &lt; input value={value} onChange={e =&gt; this.setState({value: e.target.value})}/&gt;&lt; button onClick={e =&gt; {<br>          list.push(value)<br>          this.setState({<br>            list<br>          })<br>        }}&gt;add&lt; /button&gt;<br>      &lt; AnimateList<br>        delayTime=’0.2’<br>        runTime=’0.2’<br>        mountStyle={ {<br>          marginLeft: ‘15px’<br>        } }<br>        unMountStyle={ {<br>          marginLeft: 0<br>        } }<br>        remove={(index)=&gt;{<br>            list.splice(index,1)<br>                  this.setState({<br>                    list<br>                  })<br>        }}<br>      &gt;<br>        {<br>          this.state.list.map((item,index) =&gt; &lt; AnimateItem index={index+1} key={item} render={(remove)=&gt;(<br>            &lt; p&gt;hello {item} &lt; button onClick={e =&gt; {<br>                remove(index)<br>              }}&gt;delete&lt; /button&gt; &lt; /p&gt;<br>          )}&gt;<br>          &lt; /AnimateItem&gt;)<br>        }<br>      &lt; /AnimateList&gt;<br>      &lt; /div&gt;<br>    );<br>  }<br>}<br>export default App;<br></pre><br>2.<br>2-1.推荐一个animate的css框架<br><a href="https://github.com/daneden/animate.css" target="_blank" rel="noopener">https://github.com/daneden/animate.css</a></p>
+<p><pre><br>import React,{ Component } from ‘react’<br>import ReactDOM from ‘react-dom’<br>import ‘animate.css’<br>class Animate extends Component{<br>    render(){<br>        return (<br>            &lt; div&gt;<br>                {this.props.children }<br>            &lt; /div&gt;<br>        )<br>    }<br>    componentDidMount(){<br>        const element = ReactDOM.findDOMNode(this)<br>        element.classList.add(‘animated’,’bounceOutLeft’)<br>    }<br>}<br>class App extends Component{<br>    render(){<br>        return (<br>            &lt; div&gt;<br>                &lt; Animate in=’bounceInLeft’ out=’bounceOutDown’&gt;<br>                    &lt; p&gt;hello world&lt; /p&gt;<br>                &lt; /Animate&gt;<br>            &lt; /div&gt;<br>        )<br>    }<br>}<br>export default App<br></pre><br>这里我们注意到并没有把animate的classname写在组件内部的div标签上，写在div标签上不是不可以，但是不建议这么做，因为如果我们中间需要修改类名可能会触发生命周期的一些方法，引起性能下降<br>2-2.基于react的动画框架react-spring<br><a href="https://www.react-spring.io/docs/hooks/basics" target="_blank" rel="noopener">https://www.react-spring.io/docs/hooks/basics</a></p>
+<p><pre><br>import React,{ Component } from ‘react’<br>import ReactDOM from ‘react-dom’<br>import {useSpring,animated} from ‘react-spring’<br>function App(){<br>    const props = useSpring({<br>        to:async(next,cancel)=&gt;{<br>            await next({opacity:1,color:’#ffaaee’})<br>            await next({opacity:0.5,color:’rgb(14,26,19)’})<br>            await next({marginLeft:500,color:’rgb(14,26,19)’})<br>        },<br>        from:{opacity:0,color:’red’,marginLeft:0}<br>    })<br>    return &lt; animated.div style={props}&gt;hello world&lt; /animated.div&gt;<br>}<br>export default App<br></pre><br>后面陆续讲了这个框架的不同用法，这里我没有记录，这里已经有一个开头了，希望自己可以动脑思考。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/03/16/网易微专业-MV-组件化开发React专题-React生态-2-3-2-React动画/" data-id="ckb8s87u0000x4zxql3fj0tki" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-MV-组件化开发React专题-React生态-2-3-1-路由-React-Router-原理" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/03/15/网易微专业-MV-组件化开发React专题-React生态-2-3-1-路由-React-Router-原理/" class="article-date">
+  <time datetime="2020-03-15T03:59:40.000Z" itemprop="datePublished">2020-03-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/03/15/网易微专业-MV-组件化开发React专题-React生态-2-3-1-路由-React-Router-原理/">网易微专业-MV-组件化开发React专题-React生态-2.3.1-路由(React-Router)原理</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.hashhistory</p>
+<p><pre><br>import React,{ Component } from ‘react’</pre></p>
+<p>class Router extends Component{<br>    render(){<br>        return (<br>            &lt; &gt;<br>            {this.props.children}<br>            &lt;/&gt;<br>        )<br>    }<br>}<br>class Route extends Component{<br>    render(){<br>        const {<br>            path,<br>            component<br>        } = this.props;<br>        let instance = null;<br>        let hash = window.location.hash.replace(‘#’,’’)<br>        if(path === hash){<br>            instance = component<br>        }<br>        return (<br>            &lt; &gt;<br>            {instance}<br>            &lt;/&gt;<br>        )<br>    }<br>}<br>const AA = ()=&gt;&lt; div&gt;aa&lt; /div&gt;<br>const BB = ()=&gt;&lt; div&gt;bb&lt; /div&gt;<br>function App(){<br>    return (<br>        &lt; div&gt;<br>            &lt; Router&gt;<br>                &lt; header&gt;<br>                    &lt; div&gt;header&lt; /div&gt;<br>                    &lt; Route path=”/aa” component={AA}/&gt;<br>                    &lt; Route path=”/bb” component={BB}/&gt;<br>                &lt; /header&gt;<br>            &lt; /Router&gt;<br>        &lt; /div&gt;<br>    )<br>}<br>export default App<br><br>开启服务之后我们在浏览器中看到，并没有像我们预想的在/aa页面中展示aa，在/bb页面中展示bb<br><img src="https://snakexu.github.io/images/wangyi/react/2.3.1_1.png"><br>这是为什么？因为我们&lt; Route path=”./aa” component={AA}/&gt;在这里 component={AA}传的是AA类本身，在调用的时候instance = component也是类本身，而不是实例；如果我们在调用的时候instance = <aa> 则是通过标签实例化了(常规实例化是通过new关键字，在虚拟DOM中是通过标签实例化的)，所以如果想页面按照我们预想的效果展示，我们需要做一些简单的修改</aa></p>
+<p><pre><br>if(path === hash){<br>    //React.createElement(component,{name:’a’,age:2},children)，即第二个可以传组件需要参数，第三个参数是子组件<br>    instance = React.createElement(component,null,null);<br>}<br></pre><br>能看出来我们对哪里进行了修改么？是class Route extends Component这个组件中的部分内容。<br>但是我们发现我们对页面路由进行修改的时候，并不是每次(即使是不存在的路由)都很好的反馈我们想要的结果，这是因为我们没有给hashhistory绑定事件。我们在页面添加一个事件</p>
+<p><pre><br>window.onhashchange = (e)=&gt;{<br>    console.log(e);<br>}<br></pre><br>控制台打印如下内容<br><img src="https://snakexu.github.io/images/wangyi/react/2.3.1_2.png"><br>从而我们知道，可以通过一个方式捕捉hash的变化，变化以后的hash是什么呢？我们可以通过loaction.hash来获取到。 每次浏览器内容发生变化，可以通过上下文(context)传递给子组件，子组件捕捉到hashhistory发生变化来控制自身的渲染与否</p>
+<p><pre><br>import React,{ Component } from ‘react’<br>import PropTypes from ‘prop-types’<br>class Router extends Component{<br>    render(){<br>        return (<br>            &lt; &gt;<br>            {this.props.children}<br>            &lt;/&gt;<br>        )<br>    }<br>}<br>class Route extends Component{<br>    constructor(props){<br>        super(props);<br>        this.state = {<br>            hash:window.location.hash<br>        }<br>    }<br>    static contextTypes = {<br>        hash: PropTypes.string<br>    }<br>    getHash(){<br>        let url = window.location.hash.replace(‘#’,’’)<br>        return url<br>    }<br>    getChildContext(){<br>        return {<br>            hash:this.getHash()<br>        }<br>    }<br>    componentDidMount(){<br>        window.onhashchange = ()=&gt;{<br>            this.setState({<br>                hash:this.getHash()<br>            })<br>        }<br>    }<br>    render(){<br>        const {<br>            path,<br>            component<br>        } = this.props;<br>        let instance = null;<br>        //let hash = window.location.hash.replace(‘#’,’’)<br>        const {<br>            hash<br>        } = this.context<br>        if(path === hash){<br>            //React.createElement(component,{name:’a’,age:2},children)，即第二个可以传组件需要参数，第三个参数是子组件<br>            instance = React.createElement(component,null,null);<br>        }<br>        return (<br>            &lt; &gt;<br>            {instance}<br>            &lt;/&gt;<br>        )<br>    }<br>}<br>const AA = ()=&gt;&lt; div&gt;aa&lt; /div&gt;<br>const BB = ()=&gt;&lt; div&gt;bb&lt; /div&gt;<br>function App(){<br>    return (<br>        &lt; div&gt;<br>            &lt; Router&gt;<br>                &lt; header&gt;<br>                    &lt; div&gt;header&lt; /div&gt;<br>                    &lt; Route path=”/aa” component={AA}/&gt;<br>                    &lt; Route path=”/bb” component={BB}/&gt;<br>                &lt; /header&gt;<br>            &lt; /Router&gt;<br>        &lt; /div&gt;<br>    )<br>}<br>export default App<br></pre><br>经过一番改造，页面内容在我们修改地址栏地址的时候发生了变化。但是如果地址栏后面加上类似于?a=1的参数，页面就不能按照我们预想的反馈了，老师在这里对我们的要求是，尽量自己去实现获取参数等功能<br>2.browserhistory</p>
+<p><pre><br>import React,{ Component } from ‘react’<br>import PropTypes from ‘prop-types’<br>class Router extends Component{<br>    constructor(props){<br>        super(props);<br>        this.state = {<br>            hash:this.getHash()<br>        }<br>        this.history = window.history<br>    }<br>    static childContextTypes = {<br>        hash: PropTypes.string,<br>    }<br>    getHash(){<br>        let url = window.location.pathname;<br>        return url<br>    }<br>    getChildContext(){<br>        return {<br>            hash:this.state.hash<br>        }<br>    }<br>    componentDidMount(){<br>        this.history.route = (name) =&gt;{<br>            this.setState({<br>                hash:<code>${name}</code><br>            })<br>            window.history.pushState(null,null,name);//只是改变页面状态，没有做任何请求<br>        }<br>    }<br>    render(){<br>        return (<br>            &lt; &gt;<br>            {this.props.children}<br>            &lt;/&gt;<br>        )<br>    }<br>}<br>class Route extends Component{<br>    static contextTypes = {<br>        hash: PropTypes.string<br>    }<br>    render(){<br>        const {<br>            path,<br>            component<br>        } = this.props;<br>        let instance = null;<br>        const {<br>            hash<br>        } =this.context<br>        if(path === hash){<br>            //React.createElement(component,{name:’a’,age:2},children)，即第二个可以传组件需要参数，第三个参数是子组件<br>            instance = React.createElement(component,null,null);<br>        }<br>        return (<br>            &lt; &gt;<br>            {instance}<br>            &lt;/&gt;<br>        )<br>    }<br>}</pre></p>
+<p>const AA = ()=&gt;&lt; div&gt;aa&lt; /div&gt;<br>const BB = ()=&gt;&lt; div&gt;bb&lt; /div&gt;</p>
+<p>function App(){<br>    return (<br>        &lt; div&gt;<br>            &lt; Router&gt;<br>                &lt; header&gt;<br>                    &lt; div&gt;header&lt; /div&gt;<br>                    &lt; Route path=”/aa” component={AA}/&gt;<br>                    &lt; Route path=”/bb” component={BB}/&gt;<br>                &lt; /header&gt;<br>            &lt; /Router&gt;<br>        &lt; /div&gt;<br>    )<br>}<br>export default App<br><br>这里我们基本了解了browserhistory的实现原理，在这里我们发现，即使在url输入参数?a=1页面也能正常显示，是因为location.pathname是获取的不带参数的<br>3.简单看一下reactrouter的API，这里看的是reactrouter4的版本 <a href="https://reacttraining.com/react-router/web/guides/quick-start" target="_blank" rel="noopener">https://reacttraining.com/react-router/web/guides/quick-start</a><br>4.服务端渲染<br>通过配合服务端代码了解如何区分前后端路由，了解为何browserhistory需要后端支持。<br>4-1.如何区分前后端路由<br>如果url中既包含前端路由又包含后端路由，我们通常看到node端路由会有app.use(express为例)等指定路由，那么app.use中指定的就是后端路由<br>4-2.为何browserhistory需要后端支持：如果在后端路由拦截中找不到确定的前端路由会造成页面404，这时候就需要后端配合指定页面前端路由，或者找不到页面的指定app.use(*)等。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/03/15/网易微专业-MV-组件化开发React专题-React生态-2-3-1-路由-React-Router-原理/" data-id="ckb8s87u0000w4zxqjljfgmcm" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-webpack实战演练-3-2-4-代码分割-3-2-5-js代码大小控制" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/03/13/网易微专业-webpack实战演练-3-2-4-代码分割-3-2-5-js代码大小控制/" class="article-date">
+  <time datetime="2020-03-13T02:34:53.000Z" itemprop="datePublished">2020-03-13</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/03/13/网易微专业-webpack实战演练-3-2-4-代码分割-3-2-5-js代码大小控制/">网易微专业-webpack实战演练-3.2.4-代码分割-3.2.5-js代码大小控制</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.一切为了优化<br>要解决的问题：01.减少加载代码的大小；02.提取公共资源减少加载次数<br>2.代码分割<br>2-1.多页面应用<br>提取公共依赖：把几个页面之中都用到的依赖给打包为一个单独的文件<br>2-2.单页面应用<br>减少文件体积，拆分应用：把需要异步加载的内容改成异步加载<br>2-3.为了业务代码的纯净<br>有时不希望业务代码里混入第三方代码，或webpack配置代码：把第三方代码和webpack配置代码拆分为单独文件<br>当我们使用npm run build命令执行之后，发现会打包成三类文件：app.js——业务代码，vendor.js——第三方模块，manifest.js——webpack运行代码<br>2-4.所以一般这么打包<br>多页面应用：主业务代码+公共依赖+第三方包+webpack运行代码<br>单页面应用：主业务代码+异步模块+第三方包+webpack运行代码<br>3.如何进行代码分割<br><img src="https://snakexu.github.io/images/wangyi/webpack/3.2.4_1.png"><br>3-1.简单展示下webpack3的时候是如何处理的</p>
+<p><pre><br>new webpack.optimize.CommonsChunksPlugin({<br>    name:’vendor’,<br>    minChunks:’infinity’,<br>}),<br>new webpack.optimize.CommonsChunksPlugin({<br>    name:’manifest’,<br>    minChunks:’infinity’,<br>}),<br>new webpack.optimize.CommonsChunksPlugin({<br>    name:’app.js’,<br>    minChunks:2,<br>}),<br></pre><br>3-2.webpack4处理简介</p>
+<p><pre><br>var extractTextCss = require(‘extract-text-webpack-plugin’);<br>var htmlWebpackPlugin = require(‘html-webpack-plugin’);<br>const webpackSpriteSmith = require(‘webpack-spriteSmith’);<br>const webpack = require(‘webpack’);<br>const UglifyJs = require(‘uglifyjs-webpack-plugin’);<br>const { CleanWebpackPlugin } = require(‘clean-webpack-plugin’);<br>const path = require(‘path’);<br>module.exports={<br>    mode:’production’,<br>    entry:{<br>        app:’./src/app.js’,<br>        app2:’./src/app2.js’,//为了演示，我们做成了多页面入口<br>    },<br>    output:{<br>        path:__dirname+”/dist”,<br>        filename:”./[name].bundle.js”<br>    },<br>    module:{<br>        rules:[<br>            {<br>                test:/.css$/,<br>                use:extractTextCss.extract({<br>                    fallback:{<br>                           loader:’style-loader’,<br>                     },<br>                    use:[<br>                        {<br>                           loader:’css-loader’,<br>                        },<br>                    ]<br>                })<br>            },<br>            {<br>                test:/.(jpg|jpeg|gif|png)$/,<br>                use:{<br>                    loader:’file-loader’<br>                }<br>            }<br>        ]<br>    },<br>    plugin:[<br>        //如果是多页面入口应用，我们需要new多次htmlwebpackplugin，有几个入口就要new几个htmlwebpackplugin，但是不能重名<br>        new extractTextCss({<br>            filename:’[name].min.css’<br>        }),<br>        new htmlWebpackPlugin({<br>            filename:’index.html’,<br>            template:’./src/index.html’<br>        }),<br>        new htmlWebpackPlugin({<br>            filename:’index2.html’,<br>            template:’./src/index.html’<br>        })<br>    ]<br>}<br></pre><br>执行打包命令之后，我们可以看到<br><img src="https://snakexu.github.io/images/wangyi/webpack/3.2.4_2.png"><br>正常生成了我们想要的文件，但是我们发现在index2.html中我们引入了app和app2两个js，很明显我们不想要这样的结果<br><img src="https://snakexu.github.io/images/wangyi/webpack/3.2.4_3.png"></p>
+<p><pre><br>plugin:[<br>    new extractTextCss({<br>        filename:’[name].min.css’<br>    }),<br>    new htmlWebpackPlugin({<br>        filename:’index.html’,<br>        template:’./src/index.html’,<br>        chunks:[‘app’],//通过chunks指定html需要哪些内容<br>    }),<br>    new htmlWebpackPlugin({<br>        filename:’index2.html’,<br>        template:’./src/index.html’,<br>        chunks:[‘app2’]<br>    })<br>]<br></pre><br><img src="https://snakexu.github.io/images/wangyi/webpack/3.2.4_4.png"><br>现在我们看到，index2.html正确引入了需要的文件。<br>3-3.拆分公共模块<br>假设我们有以下内容(1)app.js</p>
+<p><pre><br>import ma from ‘./modulea.js’;<br>import mb from ‘./moduleb.js’;<br>import $ from ‘jquery’;<br>import _ from ‘loadsh’;<br>mb.a();<br></pre><br>(2)app2.js</p>
+<p><pre><br>import ma from ‘./modulea.js’;<br>import _ from ‘loadsh’;<br>console.log(23);<br></pre><br>这两个文件中，很明显modulea是公共模块，我们现在的目的是把modulea模块提取出来</p>
+<p><pre><br>module.exports={<br>    mode:’production’,<br>    entry:{<br>        app:’./src/app.js’,<br>        app2:’./src/app2.js’,<br>    },<br>    output:{<br>        path:__dirname+”/dist”,<br>        filename:”./[name].bundle.js”<br>    },<br>    optimization:{<br>        splitChunks:{<br>            //如何分割代码写在这里<br>            name:true,//拆分出来的包是怎么命名的，设置为true的意思是根据默认的方式去做，根据入口的名字<br>            chunks:’initial’,//initial-对所有的模块都进行公共提取，async-对异步模块进行公共提取，all-对所有入口模块进行公共提取<br>            minSize:5000,//对于大于多少的内容进行公共提取(如果很小的内容就进行公共提取，那么虽然可以对公共模块有了缓存，但是多了一次额外的http请求)，5000就是5kb<br>            automaticNameDelimiter:”.”,//打包生成文件名字的代码分割符<br>        }<br>    },<br>    ……<br>}<br></pre><br>打包之后能看到，文件命名分割符变成了我们规定的点分割符<br><img src="https://snakexu.github.io/images/wangyi/webpack/3.2.4_5.png"><br>如果我们想把包名改为具名命名，可以修改name选项</p>
+<p><pre><br>optimization:{<br>    splitChunks:{<br>        name:’common’,<br>        chunks:’initial’,<br>        minSize:5000,<br>        automaticNameDelimiter:”.”,<br>    }<br>},<br></pre><br><img src="https://snakexu.github.io/images/wangyi/webpack/3.2.4_6.png"></p>
+<p><pre><br>optimization:{<br>    splitChunks:{<br>        name:’common’,<br>        chunks:’initial’,<br>        minSize:5000,<br>        automaticNameDelimiter:”.”,<br>        cacheGroup:{<br>            jquery:{<br>                test:/jquery/,//指定匹配的正则<br>                name:’jquery’,//指定提取出来的文件也叫jquery<br>                /<em>priority:-20,//前面默认的优先级是-10，这里指定谁的优先级高，也就是如果和前面指定有冲突，那听谁的</em>/<br>            }<br>        },//进行指定分割，指定某个模块必须提取出来<br>    }<br>},<br></pre><br><img src="https://snakexu.github.io/images/wangyi/webpack/3.2.4_7.png"></p>
+<p><pre><br>optimization:{<br>    splitChunks:{<br>        name:’common’,<br>        chunks:’initial’,<br>        minSize:5000,<br>        automaticNameDelimiter:”.”,<br>        cacheGroup:{<br>            vendor:{//提取第三方模块<br>                test:/[\/]node_modules[\/]/,//node_modules目录下的都作为vendor来提取<br>                name:’vendor’,<br>                priority:-10,<br>            },<br>            jquery:{<br>                test:/jquery/,<br>                name:’jquery’,<br>            }<br>        },<br>    }<br>},<br></pre><br><img src="https://snakexu.github.io/images/wangyi/webpack/3.2.4_8.png"><br>下面我们就剩下运行代码没有提取了</p>
+<p><pre><br>optimization:{<br>    splitChunks:{<br>        //<br>    },<br>    runtimeChunk:{//拆分运行代码<br>        name:’runtim’,<br>    }<br>}<br></pre><br>3-4.单页面应用拆分(异步加载)<br>首先我们把刚才多页面应用改为单页面应用再做修改(纯粹是为了展示才这么改的，没有实际意义)</p>
+<p><pre><br>module.exports={<br>    mode:’production’,<br>    entry:{<br>        app:’./src/app.js’,<br>    },<br>    output:{<br>        path:__dirname+”/dist”,<br>        filename:”./[name].bundle.js”<br>    },<br>}<br></pre><br>然后我们修改app.js</p>
+<p><pre><br>import mb from ‘./moduleb.js’;<br>import $ from ‘jquery’;<br>import _ from ‘loadsh’;<br>import(‘./modulea.js’);//我们修改了modulea的引入<br>mb.a();<br></pre><br>执行webpack命令我们可以看到<br><img src="https://snakexu.github.io/images/wangyi/webpack/3.2.4_9.png"><br>生成的名字比较随机，我们怎么指定命名呢，用魔法注释</p>
+<p><pre><br>import(/<em>webpackChunkName:’modulea’</em>/“./modulea.js”);<br></pre><br><img src="https://snakexu.github.io/images/wangyi/webpack/3.2.4_10.png"></p>
+<p><pre><br>import(/<em>webpackChunkName:’modulea’</em>/“./modulea.js”).then(res=&gt;{<br>    //import返回一个promise，可以在then里进行一些想要的操作<br>    //res就是import ma中import过来的内容<br>    require(‘./modulea.js’)<br>})<br></pre><br>还有一种方式是</p>
+<p><pre><br>require.ensure([/<em>这里写要用到的依赖，就是回调里需要用到的模块，回调函数就会接收到这个模块</em>/],function(){<br>    //回调函数<br>})<br></pre><br><img src="https://snakexu.github.io/images/wangyi/webpack/3.2.4_11.png"><br>4.代码体积控制<br><img src="https://snakexu.github.io/images/wangyi/webpack/3.2.4_12.png"><br>或者webpack4中直接设置模式mode:’production’<br>4-1.关于tree-shaking(函数式编程更有利于tree-shaking)<br>moduleb.js</p>
+<p><pre><br>export const a=function(){<br>    console.log(‘i am a’)<br>}<br>export const b=function(){<br>    console.log(‘i am b’)<br>}<br></pre><br>app.js</p>
+<p><pre><br>import ma from ‘./modulea.js’;<br>import { a } from ‘./moduleb.js’;<br>import $ from ‘jquery’;<br>import _ from ‘loadsh’;<br>a();<br></pre><br>在moduleb.js里我们定义了两个方法，而在app.js中我们只使用了一个方法，那么tree-shaking会帮我们删除掉不用的方法，打包结果里不会包含mb.b，tree-shaking是基于export文档流，所以支持纯函数式(export const a = function(){})这样暴露出去和支持export default{a:function(){},b:function(){}}这样暴露出去。但是如果用面向对象的方式(比如挂载到class.prototype再export出去)这样的方式就不支持。webpack是支持AMD规范的，不支持CMD规范。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/03/13/网易微专业-webpack实战演练-3-2-4-代码分割-3-2-5-js代码大小控制/" data-id="ckb8s87xl00484zxq31qvolsq" class="article-share-link">Share</a>
       
       
     </footer>
@@ -1236,7 +745,7 @@ export default App_7;
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/4/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/6/">Next &raquo;</a>
+    <a class="extend prev" rel="prev" href="/page/4/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/6/">Next &raquo;</a>
   </nav>
 
 </section>
@@ -1250,7 +759,7 @@ export default App_7;
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端路由/">前端路由</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/正则/">正则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端路由/">前端路由</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/正则/">正则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-node/">网易微专业 node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
     </div>
   </div>
 
@@ -1260,7 +769,7 @@ export default App_7;
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/前端路由/" style="font-size: 10px;">前端路由</a> <a href="/tags/数据结构/" style="font-size: 13.33px;">数据结构</a> <a href="/tags/正则/" style="font-size: 10px;">正则</a> <a href="/tags/算法/" style="font-size: 20px;">算法</a> <a href="/tags/设计模式/" style="font-size: 16.67px;">设计模式</a>
+      <a href="/tags/前端路由/" style="font-size: 10px;">前端路由</a> <a href="/tags/数据结构/" style="font-size: 13.33px;">数据结构</a> <a href="/tags/正则/" style="font-size: 10px;">正则</a> <a href="/tags/算法/" style="font-size: 20px;">算法</a> <a href="/tags/网易微专业-node/" style="font-size: 10px;">网易微专业 node</a> <a href="/tags/设计模式/" style="font-size: 16.67px;">设计模式</a>
     </div>
   </div>
 
@@ -1269,7 +778,7 @@ export default App_7;
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
     </div>
   </div>
 
@@ -1282,23 +791,23 @@ export default App_7;
       <ul>
         
           <li>
-            <a href="/2020/05/13/es6-class-extends/">es6 class extends</a>
+            <a href="/2020/06/08/网易微专业-look直播，企业级全栈web应用搭建分享/">网易微专业-look直播，企业级全栈web应用搭建分享</a>
           </li>
         
           <li>
-            <a href="/2020/05/12/网易微专业-node-Koa源码分析-2-2-3-中间件机制剖析/">网易微专业-node-Koa源码分析-2.2.3-中间件机制剖析</a>
+            <a href="/2020/06/07/网易微专业-webpack实战演练-3-3-1-网易的webpack工程化实践/">网易微专业-webpack实战演练-3.3.1-网易的webpack工程化实践</a>
           </li>
         
           <li>
-            <a href="/2020/05/09/Web-前端路由原理解析和实现/">Web 前端路由原理解析和实现</a>
+            <a href="/2020/06/06/网易微专业-webpack实战演练-3-2-6-webpack打包速度优化/">网易微专业-webpack实战演练-3.2.6-webpack打包速度优化</a>
           </li>
         
           <li>
-            <a href="/2020/05/08/网易微专业-node-Koa源码分析-2-2-2-请求处理流程解读/">网易微专业-node-Koa源码分析-2.2.2-请求处理流程解读</a>
+            <a href="/2020/06/03/网易微专业-单页应用-1-4-1-项目全面深度优化及打包上线之网易实践/">网易微专业-单页应用-1-4-1-项目全面深度优化及打包上线之网易实践</a>
           </li>
         
           <li>
-            <a href="/2020/05/08/vue-cli了解/">vue-cli了解</a>
+            <a href="/2020/05/28/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-6-音频与视频/">网易微专业-移动端APP开发工程师-H5移动端开发-1.1.6-音频与视频</a>
           </li>
         
       </ul>

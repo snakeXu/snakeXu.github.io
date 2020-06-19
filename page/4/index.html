@@ -62,6 +62,556 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-网易微专业-node-1-2-2-异步编程的优势与难点" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/04/22/网易微专业-node-1-2-2-异步编程的优势与难点/" class="article-date">
+  <time datetime="2020-04-22T04:00:37.000Z" itemprop="datePublished">2020-04-22</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/04/22/网易微专业-node-1-2-2-异步编程的优势与难点/">网易微专业-node-1.2.2-异步编程的优势与难点</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.事件驱动<br>1-1.事件机制<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.2_1.png"><br>事件机制的实现<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.2_2.png"><br>2.异步I/O模型<br>2-1.异步I/O的必要性<br>2-1-1.实现I/O并行<br>(1)多线程单进程<br>多线程设计之初就是为了共享程序空间，例如java、c++等，但是缺点在于执行过程中要进行线程与线程之间的切换，即执行时上下文要交换，开销会比较大，还有就是两个线程操作同一个文件，如果两个线程对同一个文件的同一变量进行不同操作，产生了锁的机制同步状态，产生了状态同步的问题，使程序更加复杂化。<br>(2)单线程多进程<br>为了避免多线程使用不便的问题，就使用了单线程保持调用的简单，但是启动的时候会启动多个进程来达到充分利用cpu和整体并行能力的问题。但是缺点在于，业务逻辑复杂的时候，业务进程不能分布到多个进程之间，处理起来可能比多线程还要复杂。<br>2-1-2.异步I/O的必要性<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.2_4.png"><br>2-2.阻塞与非阻塞、异步与同步<br>2-2-1.I/O的阻塞与非阻塞<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.2_5.png"><br>2-2-2.I/O的异步与同步<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.2_6.png"><br>另：当进行非阻塞I/O调用时，要读取完整的数据，应用程序需要进行多次轮询，才能确保数据读取完成，以进行下一步操作。<br>2-3.理想的异步I/O<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.2_7.png"><br>2-4.Node.js中的异步I/O<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.2_8.png"><br><img src="https://snakexu.github.io/images/wangyi/node/1.2.2_9.png"><br>3.事件循环<br>3-1.高并发策略<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.2_10.png"><br>3-2.Node.js运行原理<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.2_11.png"><br>3-3.事件循环实现原理<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.2_12.png"><br><img src="https://snakexu.github.io/images/wangyi/node/1.2.2_13.png"><br><img src="https://snakexu.github.io/images/wangyi/node/1.2.2_14.png"><br><img src="https://snakexu.github.io/images/wangyi/node/1.2.2_15.png"><br>3-4.业务场景<br>·不适用场景<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.2_16.png"><br>·适用场景<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.2_17.png"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/04/22/网易微专业-node-1-2-2-异步编程的优势与难点/" data-id="ckbm7472v002db4xqw64ez54q" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-node-1-2-1-异步I-O实现现状" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/04/21/网易微专业-node-1-2-1-异步I-O实现现状/" class="article-date">
+  <time datetime="2020-04-21T07:34:37.000Z" itemprop="datePublished">2020-04-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/04/21/网易微专业-node-1-2-1-异步I-O实现现状/">网易微专业-node-1.2.1-异步I/O实现现状</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.模块化概述<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.1_1.png"><br><img src="https://snakexu.github.io/images/wangyi/node/1.2.1_2.png"><br>1-1.CommonJs特点<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.1_3.png"><br>a.js</p>
+<pre>
+let name = 'evan'
+let getName = function(name){
+    console.log(name)
+}
+module.exports = {
+    name:name,
+    getName:getName
+}
+</pre>
+b.js
+<pre>
+let person = require('a.js')
+console.log(person)
+console.log(person.name)
+person.getName('study163')
+person.name = 'updateName'
+console.log(person)
+</pre>
+执行结果
+<img src="https://snakexu.github.io/images/wangyi/node/1.2.1_4.png">
+2.module对象详解
+2-1.module对象的属性
+<img src="https://snakexu.github.io/images/wangyi/node/1.2.1_5.png">
+03-module.js
+<pre>
+module.exports = {
+    name:'evan',
+    getName:function(name){
+        console.log(name)
+    }
+}
+console.log(module)
+</pre>
+执行结果
+<img src="https://snakexu.github.io/images/wangyi/node/1.2.1_6.png">
+2-2.模块分类
+2-2-1.核心模块
+<img src="https://snakexu.github.io/images/wangyi/node/1.2.1_7.png">
+2-2-2.文件模块
+<img src="https://snakexu.github.io/images/wangyi/node/1.2.1_8.png">
+2-3.module.exports与exports
+<img src="https://snakexu.github.io/images/wangyi/node/1.2.1_9.png">
+04-exports-module-exports.js
+<pre>
+var module = {
+    exports:{}
+}
+var exports = module.exports
+function change(exports){
+    //通过形参的方式传入的exports
+    exports.name = 'evan';
+    exports={
+        age:18
+    }
+    console.log(exports)
+}
+change(exports)
+console.log(module.exports)
+</pre>
+执行结果
+<img src="https://snakexu.github.io/images/wangyi/node/1.2.1_10.png">
+要注意的是在change函数中exports={}，相当于改变了change函数中形参exports的指向；而如果用module.exports={}这样赋值就解决了(其实个人以为这就是对象指针指向问题，另外change函数对exports的赋值还说明了参数是传值而不是传引用的)
+3.require方法详解
+3-1.模块引入规则
+<img src="https://snakexu.github.io/images/wangyi/node/1.2.1_11.png">
+3-2.加载步骤
+(1)路径分析(模块标识符分析)
+·核心模块
+·以'./'或者'../'开始的相对路径文件模块
+·以/开始的绝对路径模块
+·非路径形式的模块
+(2)文件定位
+·扩展名分析
+·目标文件和包分析
+(3)编译执行
+3-3.
+<pre>
+//a、b引入同一个对象
+var a = require('aa.js');
+var b = require('aa.js')
+console.log(a===b)//true 
+//在a引入aa.js之后，aa.js会在缓存中，b=require('aa.js')再次引入则是在缓存中查找，所以a===b
+</pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/04/21/网易微专业-node-1-2-1-异步I-O实现现状/" data-id="ckbm7472u002cb4xqh2bsv3f9" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业福利期-3-2-Event-Loop机制" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/04/20/网易微专业福利期-3-2-Event-Loop机制/" class="article-date">
+  <time datetime="2020-04-20T09:28:59.000Z" itemprop="datePublished">2020-04-20</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/04/20/网易微专业福利期-3-2-Event-Loop机制/">网易微专业福利期-3.2-Event Loop机制</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.浏览器的Event Loop<br>异步实现:<br>(1)宏观:浏览器多线程<br>(2)微观:Event Loop事件循环</p>
+<p><pre><br>console.log(‘1’);<br>setTimeout(function(){<br>    console.log(‘2’)<br>},0)<br>Promise.resolve().then(function(){<br>    console.log(‘3’)<br>})<br>console.log(‘4’)<br>//143undefined2<br></pre><br><img src="https://snakexu.github.io/images/fuliqi/javascript/3.2_1.png"><br><img src="https://snakexu.github.io/images/fuliqi/javascript/3.2_2.png"><br><img src="https://snakexu.github.io/images/fuliqi/javascript/3.2_3.png"></p>
+<p><pre><br>console.log(‘start’);<br>setTimeout(()=&gt;{<br>    console.log(‘setTimeout’);<br>    new Promise(resolve=&gt;{<br>        console.log(‘promise inner1’);<br>        resolve();<br>    }).then(()=&gt;{<br>        console.log(‘promise then1’)<br>    })<br>},0)<br>new Promise(resolve=&gt;{<br>    console.log(‘promise inner2’);<br>    resolve();<br>}).then(()=&gt;{<br>        console.log(‘promise then2’)<br>})<br></pre><br>上面代码的运行结果<br><img src="https://snakexu.github.io/images/fuliqi/javascript/3.2_4.png"></p>
+<p><pre><br>async function async1(){<br>    console.log(‘async1 start’)<br>    await async2()<br>    console.log(‘async1 end’)<br>}<br>async function async2(){<br>    return Promise.resolve().then(_=&gt;{<br>        console.log(‘async2 promise’)<br>    })<br>}<br>console.log(‘start’)<br>setTimeout(function(){<br>    console.log(‘setTimeout’)<br>},0)<br>async1()<br>new Promise(function(resolve){<br>    console.log(‘promise1’)<br>    resolve()<br>}).then(function(){<br>    console.log(‘promise2’)<br>})<br></pre><br>上面代码的运行结果<br><img src="https://snakexu.github.io/images/fuliqi/javascript/3.2_5.png"><br>2.Node.js的Event Loop<br><img src="https://snakexu.github.io/images/fuliqi/javascript/3.2_6.png"><br><img src="https://snakexu.github.io/images/fuliqi/javascript/3.2_7.png"><br><img src="https://snakexu.github.io/images/fuliqi/javascript/3.2_8.png"><br><img src="https://snakexu.github.io/images/fuliqi/javascript/3.2_9.png"></p>
+<p><pre><br>const fs = require(‘fs’)<br>function someAsyncOperation(callback){<br>    fs.readFile(__dirname,callback);<br>}<br>const timeoutScheduled = Date.now()<br>setTimeout(()=&gt;{<br>    const delay = Date.now() - timeoutScheduled;<br>    console.log(<code>${delay}ms have passed since I was scheduled</code>)<br>},100)<br>someAsyncOperation(()=&gt;{<br>    const startCallback = Date.now();<br>    while(Date.now() - startCallback &lt; 200){<br>        //do something<br>    }<br>})<br></pre><br>上面代码执行结果<br><img src="https://snakexu.github.io/images/fuliqi/javascript/3.2_10.png"></p>
+<p><pre><br>const fs = require(‘fs’)<br>fs.readFile(__filename,<em>=&gt;{<br>    setTimeout(</em>=&gt;{<br>        console.log(‘setTimeout’)<br>    },0)<br>    setImmediate(_=&gt;{<br>        console.log(‘setImmediate’)<br>    })<br>})<br></pre><br>上面代码执行结果<br><img src="https://snakexu.github.io/images/fuliqi/javascript/3.2_11.png"><br><img src="https://snakexu.github.io/images/fuliqi/javascript/3.2_12.png"></p>
+<p><pre><br>const fs = require(‘fs’)<br>fs.readFile(__filename,<em>=&gt;{<br>    setTimeout(</em>=&gt;{<br>        console.log(‘setTimeout’)<br>    },0)<br>    setImmediate(<em>=&gt;{<br>        console.log(‘setImmediate’)<br>        process.nextTick(</em>=&gt;{<br>            console.log(‘nextTick2’)<br>        })<br>    })<br>    process.nextTick(_=&gt;{<br>        console.log(‘nextTick1’)<br>    })<br>})<br></pre><br>上面代码执行结果<br><img src="https://snakexu.github.io/images/fuliqi/javascript/3.2_13.png"><br>nextTick会让整个event loop停下来，先把nextTick中的callback执行完之后再继续event loop</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/04/20/网易微专业福利期-3-2-Event-Loop机制/" data-id="ckbm7473q003pb4xqdifunnvb" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业福利期-2-6-常用函数" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/04/19/网易微专业福利期-2-6-常用函数/" class="article-date">
+  <time datetime="2020-04-19T09:33:59.000Z" itemprop="datePublished">2020-04-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/04/19/网易微专业福利期-2-6-常用函数/">网易微专业福利期-2.6-常用函数</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.memozition<br>缓存函数:是指将上次的计算结果缓存起来，当下次调用时，如果遇到相同的参数，就直接返回缓存中的数据</p>
+<pre>
+let add = (a,b) => a+b;
+//假设memoize函数可以实现缓存
+let calculate = memoize(add);
+calculate(10,20);//30
+calculate(10,20);//相同的参数，第二次调用时，从缓存中取出，而非重新计算一次
+</pre>
+实现原理:把参数和对应的结果数据存到一个对象中，调用时，判断参数对应的数据是否存在，存在就返回对应的结果数据
+<pre>
+let memoize = function(func){
+    let cache = {}
+    return function(key){
+        if(!cache[key]){
+            cache[key] = function.apply(this,arguments);
+        }
+        return cache[key]
+    }
+}
+</pre>
+underscore.js中缓存函数的实现
+<pre>
+let memoize = function(func,hasher){
+    var memoize = function(key){
+        var cache = memoize.cahche;
+        var address = '' + (hasher ? hasher.apply(this,arguments) : key);
+        if(!cache[address]) cache[address] = func.apply(this,arguments);
+        return cache[address]
+    }
+    memoize.cache = {};
+    return memoize;
+}
+</pre>
+如果hasher存在，就用hasher计算key，否则就用func计算
+缓存函数适用于需要大量重复计算，或者大量计算又依赖于之前的结果
+2.curry
+柯里化函数:在数学和计算机科学中，柯里化是一种将使用多个参数的一个函数转化成一系列使用一个参数的函数的技术。
+普通函数:
+<pre>
+function girl(name,age,single){
+    return `我叫${name},我今年${age}岁，我${single}单身`;
+}
+let lincancan = girl('林灿灿',18，'不是')
+console.log(lincancan);//我叫林灿灿，我今年18岁，我不是单身
+</pre>
+柯里化函数
+<pre>
+function girl(name){
+    return function(age){
+        return function(single){
+            return `我叫${name},我今年${age}岁，我${single}单身`;
+        }
+    }
+}
+let rst = girl('林灿灿')(18)('不是')
+</pre>
+需求:检测字符串中是否包含正则
+<pre>
+let matching = (reg,str) => reg.test(str);
+matching(/\s+/g,'hello world');//true
+matching(/\s+/g,'abcdefg');//false
+</pre>
+如果我们有很多字符串需要校验，那么我们需要将reg参数复用，可以借助柯里化的思想实现这个需求
+<pre>
+let curry = (reg) =>{
+    return (str) =>{
+        return reg.test(str);
+    }
+}
+let hasSpace = curry(/\s+/g);
+hasSpace('hello world');//true
+hasSpace('abcdefg');//false
+hasSpace('I Love China');//true
+</pre>
+需求:请获取数组对象的age属性的值
+<pre>
+let persons = [
+    {'name':'Peter',age:21},
+    {'name':'Mark',age:28},
+    {'name':'Josn',age:19},
+    {'name':'Jane',age:31},
+    {'name':'Tony',age:35},
+]
+//不用柯里化
+let getAge = persons.map(item=>{
+    return item.age
+})
+console.log(getAge);//[21,28,19,31,35]
+</pre>
+Lodash:是一个一致性、模块化、高性能的JavaScript实用工具库；通过降低array、number、objects、string等等的使用难度从而让JavaScript变得简单
+Lodash的安装和使用:使用npm i lodash -S进行安装
+<pre>
+//lodash的curry
+const _ = require('lodash');
+let getProp = _.curry((key,obj)=>{
+    return obj[key]
+})
+let ages = persons.map(getProp('age'));
+console.log(ages);
+</pre>
+3.偏函数
+柯里化函数是将一个多参数函数转换成多个单参数函数，也就是将一个n元函数转换成n个一元函数；偏函数则是固定一个函数的一个或者多个参数，也就是将一个n元函数转换成一个n-x元函数
+柯里化:f(a,b,c) = f(a)(b)(c)
+偏函数:f(a,b,c) = f(a,b)(c)
+<pre>
+let add = (x,y)=>x+y;
+let rst = add.bind(null,1);
+rst(2);//3
+</pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/04/19/网易微专业福利期-2-6-常用函数/" data-id="ckbm7473q003ob4xqhohhf91l" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业福利期-2-5-高阶函数" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/04/19/网易微专业福利期-2-5-高阶函数/" class="article-date">
+  <time datetime="2020-04-19T07:36:47.000Z" itemprop="datePublished">2020-04-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/04/19/网易微专业福利期-2-5-高阶函数/">网易微专业福利期-2.5-高阶函数</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.高阶函数<br>js函数都指向某个变量，既然变量可以指向函数，函数的参数可以接收某个变量，那么一个函数就可以接收另一个函数作为参数，这种函数就称为高阶函数。<br>·高阶函数是对其他函数进行操作的函数，可以将它们作为参数或返回它们<br>·简单来说，高阶函数是一个函数，它接收函数作为参数或将函数作为输出返回<br>2.map/reduce/filter<br>2-1.map<br>需求:创建一个新数组，其中的值是原数组的值的两倍</p>
+<pre>
+const arr1 = [1,2,3,4];
+const arr2 = arr1.map(function(item,index,array){
+    return item*2;
+})
+const arr3 = arr1.map( item => item * 2 )
+</pre>
+2-2.reduce
+<pre>
+let arr = [1,2,3,4,5];
+let sum = arr.reduce((prev,cur)=>{
+    return prev + cur
+},0)
+</pre>
+这里传入了初始值0，所以开始时prev=0，cur=1(arr的第一项),0+1=1,1作为下一轮回调的prev值……prev表示上一次回调时返回的值，或者是我们传入的初始值。
+我们还可以通过reduce实现数组去重
+<pre>
+let arr = [1,2,3,4,5,5,6,6,7,7,8];
+let newArr = arr.reduce((prev,cur)=>{
+    prev.indexOf(cur) === -1 && prev.push(cur);
+    return prev;
+},[])
+</pre>
+2-3.filter
+filter主要用于对数组的过滤、筛选，它会创建一个新数组，新数组中的元素是通过检查指定数组中符合条件的所有元素
+需求:请将对象数组中年龄大于21的组成新的对象数组
+<pre>
+let persons = [
+    {'name':'Peter',age:21},
+    {'name':'Mark',age:28},
+    {'name':'Josn',age:19},
+    {'name':'Jane',age:31},
+    {'name':'Tony',age:35},
+]
+let newAge = persons.filter(item => item.age > 21);
+console.log(newAge)
+</pre>
+3.flat
+数组成员有时还是数组，flat方法用于把数组成员拉平，也就是数组扁平化，将多维数组变成一维数组，该方法会返回一个新数组，对原数据没有影响
+<pre>
+let arr = [1,2,3,4,[5,6,7]];
+let arr1 = arr.flat();
+console.log(arr1);//[1,2,3,4,5,6,7]
+</pre>
+flat默认只能拉平一层，也就是如果数组是[1,2,3,4,[5,6,7,[8,9]]]，那么[8，9]是不能被拉平的，会变成[1,2,3,4,5,6,7,[8,9]]。如果想要拉平多层数组嵌套，可以传入一个整数参数，它的默认值为1
+<pre>
+let arr = [1,2,3,4,[5,6,[7,8]]];
+let arr1 = arr.flat(3);
+console.log(arr1);//[1,2,3,4,5,6,7,8]
+</pre>
+如果我们不确定有多少嵌套，都需要转成一维数组，可以使用Infinity关键字作为参数
+<pre>
+let arr = [1,2,3,4,[5,6,[7,8,[9,10,[11,12]]]]];
+let arr1 = arr.flat(Infinity);
+console.log(arr1);//[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+</pre>
+但是大家要注意，目前flat方法还没有在所有浏览器被兼容(包括node.js上)
+4.高阶函数的意义
+高阶函数的意义：函数可以作为参数；函数可以作为返回值
+4-1.参数为函数的高阶函数
+<pre>
+function foo(f){
+    //判断参数是否为函数
+    if((typeof f) === 'function'){
+        f();
+    }
+}
+//调用
+foo(function(){})
+</pre>
+4-2.返回值为函数的高阶函数
+<pre>
+function foo(){
+    return function(){}
+}
+//调用
+let f = foo()
+</pre>
+4-3.高阶函数的实际作用
+<pre>
+//回调函数
+let callback = (value) => {
+    console.log(value)
+}
+let foo = (value,fn) => {
+    if(typeof callback === 'function'){
+        fn(value);
+    }
+}
+foo('hello',callback);
+</pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/04/19/网易微专业福利期-2-5-高阶函数/" data-id="ckbm7473p003mb4xqijtf7nme" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业福利期-2-4-compose函数和pipe函数" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/04/17/网易微专业福利期-2-4-compose函数和pipe函数/" class="article-date">
+  <time datetime="2020-04-17T08:42:34.000Z" itemprop="datePublished">2020-04-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/04/17/网易微专业福利期-2-4-compose函数和pipe函数/">网易微专业福利期-2.4-compose函数和pipe函数</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.compose函数<br>·将需要嵌套执行的函数平铺<br>·嵌套执行指的是，一个函数的返回值将作为另一个函数的参数<br>实现函数式编程中的Pointfree，使我们专注于转换而不是数据：我们可以把数据处理的过程定义成一种与参数无关的合成运算，不需要用到代表数据的参数，只需要把一些简单的运算步骤合成在一起即可；而pointfree指的是不使用所要处理的值，只合成运算过程，即我们所指的无参数分隔。<br>假设我们现在有一个需求:一个数加上10之后再乘以10，那么我们首先想到的就是</p>
+<p><pre><br>let calculate = x =&gt; (x+10)*10<br>console.log(calculate(10))<br></pre><br>这样写是没有问题的，但是这样写是典型的命令式编程，这样的代码也不具备复用性。作为一个函数式编程开发者，会对这段代码进行抽象来实现简化代码的目的，而且函数式编程就是将我们的程序分解为一些更可充用更可靠性更易于理解的部分，然后再将他们组合起来，形成一个更易于推理的需求整体。以上面加上10再乘以10的需求为例，我们关注的是他的动作——先加上10，再乘以10，我们可以写出两个函数</p>
+<p><pre><br>let add = x =&gt; x+10;<br>let multiply = y =&gt; y*10;<br>console.log(multiply(add(10)))<br></pre><br>这样也能实现我们的需求，但是根据复合函数的定义，我们需要将上述代表动作的两个函数合成一个函数。我们分析两个函数的特性：第一，这两个函数都有一个共同的参数；第二， 函数的执行顺序是从右到左；第三，前面函数的执行结果交由后面的函数处理。根据特性，我们可以这样来实现</p>
+<p><pre><br>let add = x =&gt; x+10;<br>let multiply = y =&gt; y*10;<br>let compose = (f,g)=&gt;{<br>    return function(x){<br>        return f(g(x))<br>    }<br>}<br>let calculate = compose(multiply,add)<br>console.log(calculate(10))<br></pre><br>但是这样的compose没有通用性，因为只能处理两个函数，接下来就看如何实现通用的compose函数</p>
+<p><pre><br>let add = x =&gt; x+10;<br>let multiply = y =&gt; y*10;<br>let compose = function(){<br>    //将我们传入的函数当作参数收集起来，所以将arguments转化成数组<br>    let args = [].slice.call(arguments);<br>    return function(x){<br>        //因为需要把上一次执行结果当作参数传递给下一次执行，所以可以使用reduce来实现<br>        //reduce方法可以接收一个函数作为累加器，也就是说reduce会将数组中的每一个元素依次执行传入的函数<br>        //复合函数的执行顺序是从右到左依次执行的，reduce是从左向右累加，reduceRight是从右向左累加<br>        return args.reduceRight(function(res,cb){<br>            return cb(res);<br>        },x)<br>    }<br>}<br>let calculate = compose(multiply,add)<br>console.log(calculate(10))<br></pre><br>array.reduceRight(function(total, currentValue, currentIndex, arr), initialValue)<br>function(total,currentValue, index,arr)    必需。用于执行每个数组元素的函数。<br>total    必需。初始值, 或者计算结束后的返回值。<br>currentValue    必需。当前元素<br>currentIndex    可选。当前元素的索引<br>arr    可选。当前元素所属的数组对象。<br>initialValue    可选。传递给函数的初始值<br>用es6重写componse函数</p>
+<p><pre><br>const compose = (…args) =&gt; x =&gt; args.reduceRight((res,cb) =&gt; cb(res),x)<br></pre><br>2.pipe函数<br>compose和pipe都是函数组合，组合是函数式编程中非常重要的思想，就是将多个函数组合在一起，以便能构建出一个新函数。在函数式编程中纯函数应该只做一件事，如果想实现多个功能，可以通过函数的组合来实现。pipe函数是compose函数的复制品，唯一修改的是数据流方向，它做的事和compose函数相同，只不过交换了数据流方向</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/04/17/网易微专业福利期-2-4-compose函数和pipe函数/" data-id="ckbm7473p003lb4xqniyyqtbg" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-node-1-1-9-通信协议" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/04/16/网易微专业-node-1-1-9-通信协议/" class="article-date">
+  <time datetime="2020-04-16T08:24:42.000Z" itemprop="datePublished">2020-04-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/04/16/网易微专业-node-1-1-9-通信协议/">网易微专业-node-1.1.9-通信协议</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.计算机网络协议<br>1-1.概念<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.9_1.png"><br>1-2.网络协议三要素<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.9_2.png"><br>2.开放系统互连参考模型<br>2-1.OSI/RM模型分层<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.9_3.png"><br><img src="https://snakexu.github.io/images/wangyi/node/1.1.9_4.png"><br><img src="https://snakexu.github.io/images/wangyi/node/1.1.9_5.png"><br>2-1-1.物理层<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.9_6.png"><br>2-1-2.链路层<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.9_7.png"><br><img src="https://snakexu.github.io/images/wangyi/node/1.1.9_8.png"><br>2-1-3.网络层<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.9_9.png"><br>2-1-4.传输层<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.9_10.png"><br>(1)TCP三次握手<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.9_11.png"><br>(2)TCP四次挥手<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.9_12.png"><br>2-1-5.会话层<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.9_13.png"><br>2-1-6.表示层<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.9_14.png"><br>2-1-7.应用层<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.9_15.png"><br>3.HTTP协议详解<br>3-1.概念<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.9_16.png"><br>3-2.原理<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.9_17.png"><br>3-3.消息结构<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.9_18.png"><br>3-4.工作流程<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.9_19.png"><br>3-5.HTTP请求方法<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.9_20.png"><br>get请求与post请求的区别<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.9_21.png"><br>3-6.请求报文<br>(1)get请求报文<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.9_23.png"><br>(2)post请求报文<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.9_22.png"><br>3-7.HTTP状态码<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.9_24.png"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/04/16/网易微专业-node-1-1-9-通信协议/" data-id="ckbm7472u002bb4xqqc3s8w0f" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-网易微专业-node-1-1-8-MySQL入门与应用" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/04/15/网易微专业-node-1-1-8-MySQL入门与应用/" class="article-date">
@@ -89,7 +639,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/04/15/网易微专业-node-1-1-8-MySQL入门与应用/" data-id="ckb8s87uu00244zxqq056teoc" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/04/15/网易微专业-node-1-1-8-MySQL入门与应用/" data-id="ckbm7472t002ab4xqllf5bluc" class="article-share-link">Share</a>
       
       
     </footer>
@@ -128,7 +678,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/04/14/网易微专业-node-1-1-7-MongoDB入门与应用/" data-id="ckb8s87ut00224zxqfnem0kzh" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/04/14/网易微专业-node-1-1-7-MongoDB入门与应用/" data-id="ckbm7472t0029b4xq4teyfeqz" class="article-share-link">Share</a>
       
       
     </footer>
@@ -165,772 +715,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/04/13/网易微专业-node-1-1-6-Redis入门及应用/" data-id="ckb8s87uq00204zxqasewtmnf" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-node-1-1-5-Nginx反向代理-静态资源服务" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/04/12/网易微专业-node-1-1-5-Nginx反向代理-静态资源服务/" class="article-date">
-  <time datetime="2020-04-12T06:55:28.000Z" itemprop="datePublished">2020-04-12</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/04/12/网易微专业-node-1-1-5-Nginx反向代理-静态资源服务/">网易微专业-node-1.1.5-Nginx反向代理 静态资源服务</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.Nginx简介<br>1-1.简介<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.5_1.png"><br>1-2.选择Nginx的理由<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.5_2.png"><br>2.Nginx安装与配置<br>2-1.Nginx安装前准备<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.5_3.png"><br><a href="http://nginx.org/" target="_blank" rel="noopener">http://nginx.org/</a> Nginx官网<br>2-2.Nginx编译安装<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.5_4.png"><br>2-3.Nginx配置与优化<br>·配置文件结构<br>·虚拟主机配置<br>·日志配置与切割<br>·压缩输出配置<br>···<br>基本配置文件位于cd /usr/local/nginx/conf/，下面列表的nginx的主配置文件是vim nginx.conf(vim是查看文件内容命令)，下面几个图是关于nginx.conf的介绍<br>(1)全局区域<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.5_5.png"><br>在全局区域可以做一些全局的设置，比如#user nobody是一个用户和一个组，user www(一个用户) www(一个组);(这个分号是nginx配置文件后面要加分号结尾)</p>
-<pre>
-#使用的用户和组
-#user nobody;
-#指定工作衍生的进程
-worker_processes 1;
-#指定错误日志的存放路径
-#error_log logs/error.log;
-#error_log logs/error.log notice;
-#error_log logs/error.log info;
-#pid nginx启动起来之后的主进程ID
-#pid       logs/nginx.pid;
-#指定使用的网络I/O模型
-events {
-    worker_connections 1024;//允许的最大连接数
-}
-</pre>
-(2)event区域
-<img src="https://snakexu.github.io/images/wangyi/node/1.1.5_6.png">
-(3)http区域(http区域其实是从event区域下面开始到最后，这里截图只有一部分)
-<img src="https://snakexu.github.io/images/wangyi/node/1.1.5_7.png">
-log_format是用来设置日志的格式，放在http中是全局的，如下图；如果放在http中的server中则表示单个的server的作用
-<img src="https://snakexu.github.io/images/wangyi/node/1.1.5_8.png">
-access_log是用来指定日志的格式、存放路径、缓存大小
-2-4.gzip压缩
-nginx采用的是gzip的压缩，gzip可以压缩到原来大小的30%。进行gzip压缩需要浏览器和服务端都支持。首先由服务端进行压缩，把压缩文件传输到浏览器，浏览器对gizp文件进行解压并且解析，目前为止大部分的浏览器对gzip都是支持的。
-关于配置gzip，首先在上面nginx.conf文件中开启gzip on
-<pre>
-gzip on;//开启gzip支持
-gzip_min_length 1k;//gzip的最小长度
-gzip_buffers 4 16k;
-gzip_http_version 1.1;//gzip默认支持的http协议是1.0版本
-gzip_comp_level 2;
-gzip_types text/plain application/x-javascript text/css application/xml;//设置gzip支持的压缩文件类型
-gzip_vary on;
-</pre>
-3.Nginx高级应用
-3-1.Rewrite重写
-<img src="https://snakexu.github.io/images/wangyi/node/1.1.5_9.png">
-首先还是打开conf/nginx.conf文件，找到location
-<pre>
-location / {
-    root html;
-    rewrite ^(.*).htmp$ /rewrite.html;//把htmp结尾的文件重定向到rewrite.html
-    index index.html index.htm;
-}
-</pre>
-3-2.代理与反向代理
-代理就是代理的是客户端；反向代理代理的是服务端
-<img src="https://snakexu.github.io/images/wangyi/node/1.1.5_10.png">
-反向代理配置
-打开文件 /usr/local/nginx/conf/nginx.conf
-<pre>
-server {
-    #端口
-    listen 80;
-    #主机名
-    server_name daili.com;
-    location / {
-        //http地址也可以写下面upstream中的名字http://myserver，这样相当于一个域名配置多个服务器，即负载均衡
-        proxy_pass http://192.168.2.114:8080;
-        index index.html index.php;
-    }
-}
-</pre>
-<!--执行nginx -t命令-->
-3-3.负载均衡
-<img src="https://snakexu.github.io/images/wangyi/node/1.1.5_11.png">
-nginx自带的负载均衡是轮寻的方式。负载均衡就是一个服务器别名可以放多个服务器
-配置负载均衡
-打开文件 /usr/local/nginx/conf/nginx.conf，在http中配置下面代码
-<pre>
-upstream myserver {
-    server 192.168.2.114:8080
-    server 192.168.2.114:8081
-}
-</pre>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/04/12/网易微专业-node-1-1-5-Nginx反向代理-静态资源服务/" data-id="ckb8s87ur00214zxqu5vlhdzj" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-node-1-1-3-Linux快速上手玩转典型应用" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/04/11/网易微专业-node-1-1-3-Linux快速上手玩转典型应用/" class="article-date">
-  <time datetime="2020-04-11T02:40:28.000Z" itemprop="datePublished">2020-04-11</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/04/11/网易微专业-node-1-1-3-Linux快速上手玩转典型应用/">网易微专业-node-1.1.3-Linux快速上手玩转典型应用</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.Linux简介<br>1-1.Linux简介<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.3_1.png"><br>1-2.Linux应用领域<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.3_2.png"><br>1-3.Linux安装<br>1-3-1.安装虚拟机<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.3_3.png"><br>1-3-2.安装CentOS-7<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.3_4.png"><br>2.常用命令<br>2-1.查看ip<br>ifconfig mini版没有安装此命令，需要自己安装<br>ip addr  显示ip信息<br>2-2.yum命令<br>·yum是一个在CentOS中shell前端软件包管理器<br>·yum update  更新所有的软件<br>·yum install 安装指定的软件<br>·yum remove  删除指定的软件<br>···<br>yum install net-tools可以安装上面提到过的ifconfig(ifconfig包含在net-tools中)。但是执行安装程序需要连网，在虚拟机里就是要设置网络和IP等，需要设置一个文件，再在虚拟机选项中选择桥接模式，再重启虚拟机。<br>2-3.vi/vim命令<br>·命令模式<br> ·i 切换到输入模式<br> ·x 删除当前光标所在处字符<br> ·: 切换到底线命令模式<br>·输入模式<br>·底线命令模式<br> ·q 推出程序<br> ·w 保存文件<br> ·set number 显示行号<br> 2-4.系统信息<br> ·free -m 内存信息<br> ·df -h   硬盘信息<br> ·cat/proc/cpuinfo cpu信息<br> ···<br> 2-5.文件系统<br> ·cd 进入目录<br> ·ls 列出目录信息，ls-al(ll)列出详细信息<br> ·touch 新建文件<br> ·mkdir 新建目录<br> ·rm 删除文件或目录<br> ·cp 复制<br> ·mv 移动(重命名)<br> ···<br> 2-6.搜索、查找、读取<br> ·tail 从文件尾部读取<br> ·head 从文件头部读取<br> ·cat  读取整个文件<br> ·more/less 分页读取<br> ·grep 搜索关键字<br> ·find 查找文件<br> ·| 通过管道传递命令<br> ···<br> 2-7.压缩和解压<br> ·tar 用于压缩和解压<br> ·tar -czvf 打包压缩<br> ·tar -tzvf 列出压缩文件内容<br> ·tar -xzvf 解压文件<br> ···<br> 2-8.用户操作<br> ·useradd/adduser 添加用户<br> ·passwd 设置密码<br> ·userdel 删除用户<br> ·sudo 提权<br> 2-9.更换yum源<br> <img src="https://snakexu.github.io/images/wangyi/node/1.1.3_5.png"><br> 这里需要通过wget将cent-os下载到本地，如果没有安装wget需要先安装wget，那么上面图中第一步的备份就先不要做，要先安装wget<br> <a href="http://mirrors.163.com/.help/centos.html" target="_blank" rel="noopener">http://mirrors.163.com/.help/centos.html</a> 网易Cent-OS的镜像<br>3.玩转典型应用<br>3-1.防火墙<br>3-1-1.服务设置<br>(1)安装 yum install firewalld<br>(2)启动 service firewalld start<br>(3)检查服务状态 service firewalld status<br>(4)关闭/禁用 service firewalld stop/disabled<br>3-1-2.防火墙设置<br>·查询服务 firewall-cmd –list-services<br>·查询开放端口 firewall-cmd –list-ports<br>·查询端口 firewall-cmd –quert-port=80/tcp<br>·添加开放端口 firewall-cmd –add-port=3306/tcp<br>3-2.Apache<br>3-2-1.服务设置<br>·安装 yum install httpd<br>·启动 service httpd start<br>·检查服务状态 service httpd status<br>·关闭/重启 service httpd stop/restart<br>ps -ef 可以查看正在运行的进程<br>ps -ef | grep httpd 查看http进程<br>3-2-2.Apache设置<br>·虚拟主机设置<br>·伪静态操作<br>cd /etc/httpd<br>cd conf<br>vim httpd.conf<br>可以另外开一个窗口，看一下http服务相关的<br>cd /etc/httpd/<br>ll<br>可以看到列表中conf.modules.d是所有模块<br>这里还教了如何配置虚拟主机，也就是一个服务器上可以放置多个网站<br>伪静态就是类似于我们看到的博客详细页面是.html结尾的，但是这只是在服务器上设置的，并非是真的每篇文章一个静态.html文件，这个设置需要在服务器上设置，本节课也有讲到<br>3-2-3.PHP<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.3_6.png"><br>3-3.MySQL<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.3_7.png"></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/04/11/网易微专业-node-1-1-3-Linux快速上手玩转典型应用/" data-id="ckb8s87uq001z4zxqtmgy6vjg" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-node-1-1-2-Node-js原理-基础API-搭建静态服务器" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/04/10/网易微专业-node-1-1-2-Node-js原理-基础API-搭建静态服务器/" class="article-date">
-  <time datetime="2020-04-10T07:28:16.000Z" itemprop="datePublished">2020-04-10</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/04/10/网易微专业-node-1-1-2-Node-js原理-基础API-搭建静态服务器/">网易微专业-node-1.1.2-Node.js原理/基础API/搭建静态服务器</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.Node.js原理<br>1-1.Node.js简介<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.2_1.png"><br><img src="https://snakexu.github.io/images/wangyi/node/1.1.2_2.png"><br>1-2.开发平台<br>什么是开发平台<br>·有对应的编程语言<br>·要有语言运行时<br>·必须要有实现特定功能API<br>1-3.Node.js特点<br>·事件驱动<br>·非阻塞I/O模型<br>·单线程<br>·拥有世界上最大的开源系统(NPM)<br>另外，node.js开发的网站应用是不需要web容器的，因为它本身就是一个web容器<br>1-4.Node安装与管理<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.2_3.png"><br>2.基础API<br>2-1.path(路径)<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.2_4.png"><br>2-2.fs(文件系统)<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.2_5.png"><br>2-3.http(HTTP服务)<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.2_6.png"><br>3.搭建静态服务器<br>3-1.开启http服务步骤<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.2_7.png"></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/04/10/网易微专业-node-1-1-2-Node-js原理-基础API-搭建静态服务器/" data-id="ckb8s87uq001y4zxqum54ks0p" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-node-1-1-1-es6快速入门" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/04/09/网易微专业-node-1-1-1-es6快速入门/" class="article-date">
-  <time datetime="2020-04-09T03:38:24.000Z" itemprop="datePublished">2020-04-09</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/04/09/网易微专业-node-1-1-1-es6快速入门/">网易微专业-node-1.1.1-es6快速入门</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.初识ECMAScript6.0<br>1-1.ES6初识<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.1_1.png"><br>1-2.ES6新增变化<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.1_2.png"><br>2.ES6快速入门<br>2-1.let、const以及变量解构赋值<br>这里说一下，虽然较新版本的chrome等浏览器支持es6，但是一般还是会用babel解析成es5<br>2-1-1.let<br>·ES6新增了let命令，用于声明变量，只在其所在的代码块内有效<br>·let不允许在相同的作用域内重复声明同一个变量<br>·let声明变量的方式实际上就是为JavaScript新增了块级作用域</p>
-<pre>
-var name = 'Evan';
-function foo(){
-    console.log(name);
-    if(false){
-        let name = 'Bob'
-    }
-}
-foo()
-</pre>
-这里需要注意，var定义变量会有变量提升，比如
-<pre>
-console.log(x)
-var x = 10
-</pre>
-控制台会输出undefined，因为变量提升，所以在console.log之前会定义变量x，即var x;在console之后再赋值，但是对于let定义是不会变量提升的
-<pre>
-console.log(y)
-let y = 10
-</pre>
-用let定义，在定义之前console的话，控制台会报错，因为let不会变量提升，相当于没有定义先使用变量，所以报错
-<pre>
-function foo(){
-    let x = 10;
-    let x = 20;
-}
-</pre>
-如果在同一作用域中用var重复定义，后定义的变量值开辟的内存会起作用，先定义变量开辟的内存被放弃，但是如果用let在同一作用域中重复定义变量，像上面代码重复定义，浏览器会报错    
-2-1-2.const
-·const用来声明常量
-·const声明变量必须立即初始化，并且其值不能再改变
-<p>
-const PI = 3.14 //常量定义名字一般大写
-</p>
-另外const和let一样，都是有块级作用域的
-如果想改变常量的值，浏览器会报错，如下代码，浏览器会报错
-<p>
-const PI = 3.14 
-PI = 3.15
-console.log(PI)
-</p>
-2-1-3.全局对象的属性
-- var命令和function命令声明的全局变量依旧是全局对象的属性
-- let命令、const命令和class命令声明的全局变量不属于全局对象的属性
-<pre>
-var x = 10;
-let y = 20;
-console.log(window.x)  //10
-console.log(window.y)  //undefined
-</pre>
-2-1-4.变量的解构赋值
--ES6允许按照一定的模式，从数组或对象中提取值，对变量进行赋值
-(1)数组的解构赋值
-<pre>
-let [x,y,z] = [10,20,30]
-x //10
-y //20
-z //30
-</pre>
-(2)对象的解构赋值
-<pre>
-let {x,y} = {x:10,y:20}
-x //10
-y //20
-</pre>
-2-2.字符串新增方法
-includes():返回布尔值，表示是否找到了参数字符串
-starstWith():返回布尔值，表示参数字符串是否在源字符串的开始位置
-endsWith():返回布尔值，表示参数字符串是否在源字符串的结尾位置
-这三个方法都支持第2个参数，表示开始匹配的位置
-<pre>
-let s = 'Hello world!';
-s.includes('o');        //true
-s.startsWith('Hello');  //true
-s.endsWith('!');        //true
-s.includes('o',8);      //false
-s.startsWith('world',6);//true
-s.endsWith('Hello',5);  //true
-</pre>
-2-3.模版字符串
-·模版字符串是增强版的字符串，用反引号(`)标识
-·模版字符串可以当作普通字符串使用，也可以用来定义多行字符串
-·在模版字符串中可以嵌入变量，只需要将变量名字写入${}中
-<pre>
-var name = 'Evan' , age = 18;
-`My name is ${name}, I'm ${age} years old.`
-</pre>
-2-4.箭头函数
-箭头函数的特点:
-1.如果参数只有一个，可以省略小括号
-2.如果函数体只有一行，可以不写大括号
-3.箭头函数中没有arguments变量
-4.不会改变this指向(箭头函数根本没有自己的this，导致内部的this就是外层代码块的this)
-<pre>
-let sum = (n1,n2)=>n1+n2
-等价于
-let sum = (n1,n2)=>{return n1+n2}
-
-
-
-let f = v=>v
-等价于
-let f = v=>return v
-</pre>
-<pre>
-let getTempItem = id=>{id:id,name:'temp'};//这里本身是想返回一个对象，但是会报错，因为大括号会被解释成代码块
-let getTempItem = id=>({id:id,name:'temp'})//上面一行代码，如果想返回一个对象，这样写才对
-</pre>
-箭头函数中this指向被固化
-<pre>
-var person = {
-    name:'Evan',
-    age:18,
-    func:function(){
-        console.log(this)
-    }
-}
-person.func();//person对象
-</pre>
-<pre>
-var person = {
-    name:'Evan',
-    age:18,
-    func:()=>{
-        console.log(this)
-    }
-}
-person.func();//window对象
-</pre>
-关于this，ES5中谁调用，this指向谁；在ES6中定义时候的环境决定了this的指向。所以根据需要灵活运用
-2-5.对象属性和方法的简洁表示法
-·ES6允许直接写入变量和函数作为对象的属性和方法。
-<pre>
-//简洁表示法
-function(x,y){
-    return {x,y}
-}
-//常规写法
-function(x,y){
-    return {x:x,y:y}
-}
-</pre>
-<pre>
-//简洁表示法
-var o = {
-    method(){
-        return "Hello"
-    }
-}
-//常规写法
-var o = {
-    method:function(){
-        return "Hello"
-    }
-}
-</pre>
-2-6.ES6中的面向对象
-使用class构造对象，示例代码
-<img src="https://snakexu.github.io/images/wangyi/node/1.1.1_3.png">
-2-7.Promise对象
-·Promise是异步编程的一种解决方案，比传统的解决方案(回调函数和事件)更合理、更强大
-·有了Promise对象，就可以将异步操作以同步操作的流程表达出来，避免了层层嵌套的回调函数
-·Promise对象提供统一的接口，使得控制异步操作更加容易
-<pre>
-const promiseObj = new Promise(function(resolve,reject){
-    //...some code
-    if(/*异步操作成功*/){
-        resolve(value)
-    }else{
-        reject(error)
-    }
-})
-</pre>
-·Promise构造函数接受一个函数作为参数，该函数的两个参数分别是resolve和reject
-·Promise实例生成后，可以用then方法分别指定resolved和rejected状态的回调函数
-<pre>
-promiseObj.then(function(value){
-    //success
-},function(error){
-    //failure
-})
-</pre>
-·then方法的两个回调函数都接受Promise对象传出的值作为参数
-·then方法的第一个回调函数是Promise对象的状态变为resolved时调用
-·then方法的第二个回调函数是Promise对象的状态变为rejected时调用，该函数是可选的，不一定要提供
-<pre>
-function timeout(ms){
-    return new Promise(resolve,reject){
-        setTimeout(resolve,ms,'完成')
-    }
-}
-timeout(1000).then(value=>console.log(value))
-</pre>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/04/09/网易微专业-node-1-1-1-es6快速入门/" data-id="ckb8s87up001w4zxq4c84lxjb" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-js实现重载和重写" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/04/01/js实现重载和重写/" class="article-date">
-  <time datetime="2020-04-01T09:02:12.000Z" itemprop="datePublished">2020-04-01</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/04/01/js实现重载和重写/">js实现重载和重写</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>重载<br>函数名相同，函数的参数列表不同(包括参数个数和参数类型)，根据参数的不同去执行不同的操作。在JavaScript中，同一个作用域，出现两个名字一样的函数，后面的会覆盖前面的，所以 JavaScript 没有真正意义的重载。</p>
-<p><pre><br>// 可以跟据arguments个数实现重载<br>function fn(){<br>    switch(arguments.length){<br>        case 0:<br>        addFn(arguments.length)<br>        break<br>        case 1:<br>        deleteFn(arguments.length)<br>    }<br>}<br>function addFn(n){<br>    console.log(<code>fn函数参数个数为${n+1}个</code>)<br>}<br>function deleteFn(n){<br>    console.log(<code>fn函数参数个数为${n-1}个</code>)<br>}<br>fn()  // fn函数参数个数为1个<br>fn(1) // fn函数参数个数为0个<br></pre><br>重写<br>“实例中的指针仅指向原型，而不是指向构造函数”。<br>“重写原型对象切断了现有原型与任何之前已经存在的对象实例之间的关系；它们引用的仍然是最初的原型”。</p>
-<p><pre><br>var parent = function(name,age){<br>    this.name = name;<br>    this.age = age;<br>}<br>parent.prototype.showProper = function(){<br>    console.log(this.name+”:”+this.age);<br>}<br>var child = function(name,age){<br>    parent.call(this,name,age);<br>}<br>// inheritance<br>child.prototype = Object.create(parent.prototype);<br>// child.prototype = new parent();<br>child.prototype.constructor = child;<br>// rewrite function<br>child.prototype.showProper = function(){<br>    console.log(‘I am ‘+this.name+”:”+this.age);<br>}<br>var obj = new child(‘wozien’,’22’);<br>obj.showProper();<br></pre><br>上面这段代码通过使用寄生组合继承，实现子类私有继承父类私有，子类公有继承父类公有，达到重写父类的showProper</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/04/01/js实现重载和重写/" data-id="ckb8s87tk00074zxqzj9b7y39" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-MV-组件化开发React专题-React生态-2-4-3-Redux源码解析分享" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/04/01/网易微专业-MV-组件化开发React专题-React生态-2-4-3-Redux源码解析分享/" class="article-date">
-  <time datetime="2020-04-01T08:45:38.000Z" itemprop="datePublished">2020-04-01</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/04/01/网易微专业-MV-组件化开发React专题-React生态-2-4-3-Redux源码解析分享/">网易微专业-MV-组件化开发React专题-React生态-2.4.3-Redux源码解析分享</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/04/01/网易微专业-MV-组件化开发React专题-React生态-2-4-3-Redux源码解析分享/" data-id="ckb8s87u2000z4zxqn2i7yi6o" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-MV-组件化开发React专题-React生态-2-4-2-实现React-下-so-diff" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/03/29/网易微专业-MV-组件化开发React专题-React生态-2-4-2-实现React-下-so-diff/" class="article-date">
-  <time datetime="2020-03-29T11:52:59.000Z" itemprop="datePublished">2020-03-29</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/03/29/网易微专业-MV-组件化开发React专题-React生态-2-4-2-实现React-下-so-diff/">网易微专业-MV-组件化开发React专题-React生态-2.4.2-实现React(下)-so-diff</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>diff算法原理:将虚拟DOM与真实DOM进行比较，得到需要改变的部分然后进行重绘。这其中vnode(虚拟DOM是已知的，因为React.render(&lt; APP /&gt;)，这个语法就是虚拟DOM)，我们真实DOM是未知的，所以需要通过某种手段获取真实DOM，进行比较。需要比较:(1)文本节点(2)组件(3)子元素(4)属性，这之中(1)(2)(4)相对而言都是比较简单的，最难的是(3)子元素的比较，因为子元素的比较还涉及到key，当然还可能有别的需要比较的，可以自行斟酌。实现这些就是写一个diff(vnode,dom)，两个参数分别为虚拟DOM和真实DOM，这个函数得到的体现是得到需要改变的地方进行重绘。</p>
-<pre>
-/*
-将虚拟dom 和真实dom 进行比较，得到需要改变的部分。重绘。
-vnode
-reactDOM.render(< App />,container)
-1. 文本节点。
-2. 比较组件
-3. 比较子元素 key
-4. 比较属性
-diff (vnode, dom)
-明确了 实现diff算法了 实现diff函数，参数是 vnode,真实dom.  需要改变的部分。重绘。
- */
-import { Componet } from '../react'
-import { setAttribute } from './dom'
-/**
- * @param {HTMLElement} dom 真实DOM
- * @param {vnode} vnode 虚拟DOM
- * @param {HTMLElement} container 容器
- * @returns {HTMLElement} 更新后的DOM
- */
-export const preDomTree = () => {
-    let domTree = null
-    return {
-        set(tree){
-            domTree = tree
-        },
-        get(){
-            return domTree
-        }
-    }
-}
-export function diff(vnode, container ) {
-    const ret = diffNode( preDomTree().get(), vnode );
-    if ( ret.parentNode !== container ) {
-        container.appendChild( ret );
-    }
-    preDomTree().set(ret)
-    return ret;
-}
-function diffNode( dom, vnode ) {
-    let out = dom;
-    if ( vnode === undefined || vnode === null || typeof vnode === 'boolean' ) vnode = '';
-    if ( typeof vnode === 'number' ) vnode = String( vnode );
-    // diff text node
-    if ( typeof vnode === 'string' ) {
-        // 如果当前的DOM就是文本节点，则直接更新内容
-        if ( dom && dom.nodeType === 3 ) {    // nodeType: https://developer.mozilla.org/zh-CN/docs/Web/API/Node/nodeType
-            if ( dom.textContent !== vnode ) {
-                dom.textContent = vnode;
-            }
-        // 如果DOM不是文本节点，则新建一个文本节点DOM，并移除掉原来的
-        } else {
-            out = document.createTextNode( vnode );
-            if ( dom && dom.parentNode ) {
-                dom.parentNode.replaceChild( out, dom );
-            }
-        }
-        return out;
-    }
-    if ( typeof vnode.tag === 'function' ) {
-        return diffComponent( dom, vnode );
-    }
-    //
-    if ( !dom || !isSameNodeType( dom, vnode ) ) {
-        out = document.createElement( vnode.tag );
-
-        if ( dom ) {
-            //展开运算符可以将一个类数组对象变成一个真正的数组对象:
-            //var list=document.getElementsByTagName('div');
-            //var arr=[..list];
-            [ ...dom.childNodes ].map( out.appendChild );    // 将原来的子节点移到新节点下
-            if ( dom.parentNode ) {
-                dom.parentNode.replaceChild( out, dom );    // 移除掉原来的DOM对象
-            }
-        }
-    }
-    if ( vnode.children && vnode.children.length > 0 || ( out.childNodes && out.childNodes.length > 0 ) ) {
-        diffChildren( out, vnode.children );
-    }
-    diffAttributes( out, vnode );
-    return out;
-}
-function diffChildren( dom, vchildren ) {
-      let keyedLen = 0
-    const domChildren = dom.childNodes;
-    const children = [];
-    const keyed = {};
-    if ( domChildren.length > 0 ) {
-        for ( let i = 0; i < domChildren.length; i++ ) {
-            const child = domChildren[ i ];
-            const key = child.key;
-            if ( key ) {
-                keyedLen++;
-                keyed[ key ] = child;
-            } else {
-                children.push( child );
-            }
-        }
-    }
-    if ( vchildren && vchildren.length > 0 ) {
-        let min = 0;
-        let childrenLen = children.length;
-        for ( let i = 0; i < vchildren.length; i++ ) {
-            const vchild = vchildren[ i ];
-            const key = vchild.key;
-            let child;
-            if ( key ) {
-                if ( keyed[ key ] ) {
-                    child = keyed[ key ];
-                    keyed[ key ] = undefined;
-                }
-            } else if ( min < childrenLen ) {
-                for ( let j = min; j < childrenLen; j++ ) {
-                    let c = children[ j ];
-                    if ( c && isSameNodeType( c, vchild ) ) {
-                        child = c;
-                        children[ j ] = undefined;
-                        if ( j === childrenLen - 1 ) childrenLen--;
-                        if ( j === min ) min++;
-                        break;
-                    }
-                }
-            }
-            child = diffNode( child, vchild );
-            const f = domChildren[ i ];
-            if ( child && child !== dom && child !== f ) {
-                if ( !f ) {
-                    dom.appendChild(child);
-                } else if ( child === f.nextSibling ) {
-                    removeNode( f );
-                } else {
-                    dom.insertBefore( child, f );
-                }
-            }
-        }
-    }
-}
-function diffComponent( dom, vnode ) {
-    let c = dom && dom._component;
-    let oldDom = dom;
-    // 如果组件类型没有变化，则重新set props
-    if ( c && c.constructor === vnode.tag ) {
-        setComponentProps( c, vnode.attrs );
-        dom = c.base;
-    // 如果组件类型变化，则移除掉原来组件，并渲染新的组件
-    } else {
-        if ( c ) {
-            unmountComponent( c );
-            oldDom = null;
-        }
-        c = createComponent( vnode.tag, vnode.attrs );
-        setComponentProps( c, vnode.attrs );
-        dom = c.base;
-        if ( oldDom && dom !== oldDom ) {
-            oldDom._component = null;
-            removeNode( oldDom );
-        }
-    }
-    return dom;
-}
-function setComponentProps( component, props ) {
-    if ( !component.base ) {
-        if ( component.componentWillMount ) component.componentWillMount();
-    } else if ( component.componentWillReceiveProps ) {
-        component.componentWillReceiveProps( props );
-    }
-    component.props = props;
-    renderComponent( component );
-}
-export function renderComponent( component ) {
-    let base;
-    const renderer = component.render();
-    if ( component.base && component.componentWillUpdate ) {
-        component.componentWillUpdate();
-    }
-    base = diffNode( component.base, renderer );
-    if ( component.base ) {
-        if ( component.componentDidUpdate ) component.componentDidUpdate();
-    } else if ( component.componentDidMount ) {
-        component.componentDidMount();
-    }
-    component.base = base;
-    base._component = component;
-
-}
-function createComponent( component, props ) {
-    let inst;
-    if ( component.prototype && component.prototype.render ) {
-        inst = new component( props );
-    } else {
-        inst = new Component( props );
-        inst.constructor = component;
-        inst.render = function() {
-            return this.constructor( props );
-        }
-    }
-    return inst;
-}
-function unmountComponent( component ) {
-    if ( component.componentWillUnmount ) component.componentWillUnmount();
-    removeNode( component.base);
-}
-function isSameNodeType( dom, vnode ) {
-    if ( typeof vnode === 'string' || typeof vnode === 'number' ) {
-        return dom.nodeType === 3;
-    }
-    if ( typeof vnode.tag === 'string' ) {
-        return dom.nodeName.toLowerCase() === vnode.tag.toLowerCase();
-    }
-    return dom && dom._component && dom._component.constructor === vnode.tag;
-}
-function diffAttributes( dom, vnode ) {
-    const old = {};    // 当前DOM的属性
-    const attrs = vnode.attrs;     // 虚拟DOM的属性
-    for ( let i = 0 ; i < dom.attributes.length; i++ ) {
-        const attr = dom.attributes[ i ];
-        old[ attr.name ] = attr.value;
-    }
-    // 如果原来的属性不在新的属性当中，则将其移除掉（属性值设为undefined）
-    for ( let name in old ) {
-        if ( !( name in attrs ) ) {
-            setAttribute( dom, name, undefined );
-        }
-    }
-    // 更新新的属性值
-    for ( let name in attrs ) {
-        if ( old[ name ] !== attrs[ name ] ) {
-            setAttribute( dom, name, attrs[ name ] );
-        }
-    }
-}
-function removeNode( dom ) {
-    if ( dom && dom.parentNode ) {
-        dom.parentNode.removeChild( dom );
-    }
-}
-</pre>
-
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/03/29/网易微专业-MV-组件化开发React专题-React生态-2-4-2-实现React-下-so-diff/" data-id="ckb8s87xh003z4zxqwpv0by3m" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/04/13/网易微专业-node-1-1-6-Redis入门及应用/" data-id="ckbm7472s0028b4xq60eh8kzv" class="article-share-link">Share</a>
       
       
     </footer>
@@ -944,7 +729,7 @@ function removeNode( dom ) {
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/3/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/5/">Next &raquo;</a>
+    <a class="extend prev" rel="prev" href="/page/3/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/5/">Next &raquo;</a>
   </nav>
 
 </section>
@@ -958,7 +743,7 @@ function removeNode( dom ) {
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端路由/">前端路由</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/正则/">正则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-node/">网易微专业 node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-babel/">react babel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端路由/">前端路由</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/拉勾-手写Promise源码/">拉勾  手写Promise源码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/拉勾-JavaScript异步编程/">拉勾 JavaScript异步编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/拉勾-函数式编程/">拉勾 函数式编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/拉勾-函数式编程范式/">拉勾 函数式编程范式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/正则/">正则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-Flutter/">网易微专业 Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-node/">网易微专业 node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
     </div>
   </div>
 
@@ -968,7 +753,7 @@ function removeNode( dom ) {
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/前端路由/" style="font-size: 10px;">前端路由</a> <a href="/tags/数据结构/" style="font-size: 13.33px;">数据结构</a> <a href="/tags/正则/" style="font-size: 10px;">正则</a> <a href="/tags/算法/" style="font-size: 20px;">算法</a> <a href="/tags/网易微专业-node/" style="font-size: 10px;">网易微专业 node</a> <a href="/tags/设计模式/" style="font-size: 16.67px;">设计模式</a>
+      <a href="/tags/react-babel/" style="font-size: 10px;">react babel</a> <a href="/tags/前端路由/" style="font-size: 10px;">前端路由</a> <a href="/tags/拉勾-手写Promise源码/" style="font-size: 10px;">拉勾  手写Promise源码</a> <a href="/tags/拉勾-JavaScript异步编程/" style="font-size: 10px;">拉勾 JavaScript异步编程</a> <a href="/tags/拉勾-函数式编程/" style="font-size: 10px;">拉勾 函数式编程</a> <a href="/tags/拉勾-函数式编程范式/" style="font-size: 10px;">拉勾 函数式编程范式</a> <a href="/tags/数据结构/" style="font-size: 13.33px;">数据结构</a> <a href="/tags/正则/" style="font-size: 10px;">正则</a> <a href="/tags/算法/" style="font-size: 20px;">算法</a> <a href="/tags/网易微专业-Flutter/" style="font-size: 10px;">网易微专业 Flutter</a> <a href="/tags/网易微专业-node/" style="font-size: 10px;">网易微专业 node</a> <a href="/tags/设计模式/" style="font-size: 16.67px;">设计模式</a>
     </div>
   </div>
 
@@ -990,23 +775,23 @@ function removeNode( dom ) {
       <ul>
         
           <li>
-            <a href="/2020/06/08/网易微专业-look直播，企业级全栈web应用搭建分享/">网易微专业-look直播，企业级全栈web应用搭建分享</a>
+            <a href="/2020/06/18/拉勾-手写Promise源码/">拉勾-手写Promise源码</a>
           </li>
         
           <li>
-            <a href="/2020/06/07/网易微专业-webpack实战演练-3-3-1-网易的webpack工程化实践/">网易微专业-webpack实战演练-3.3.1-网易的webpack工程化实践</a>
+            <a href="/2020/06/17/拉勾-JavaScript异步编程/">拉勾-JavaScript异步编程</a>
           </li>
         
           <li>
-            <a href="/2020/06/06/网易微专业-webpack实战演练-3-2-6-webpack打包速度优化/">网易微专业-webpack实战演练-3.2.6-webpack打包速度优化</a>
+            <a href="/2020/06/15/网易微专业-移动端APP开发工程师-移动UI框架Flutter-2-1-1-Flutter概述及开发环境/">网易微专业-移动端APP开发工程师-移动UI框架Flutter-2.1.1-Flutter概述及开发环境</a>
           </li>
         
           <li>
-            <a href="/2020/06/03/网易微专业-单页应用-1-4-1-项目全面深度优化及打包上线之网易实践/">网易微专业-单页应用-1-4-1-项目全面深度优化及打包上线之网易实践</a>
+            <a href="/2020/06/14/拉勾-函数式编程范式/">拉勾-函数式编程范式</a>
           </li>
         
           <li>
-            <a href="/2020/05/28/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-6-音频与视频/">网易微专业-移动端APP开发工程师-H5移动端开发-1.1.6-音频与视频</a>
+            <a href="/2020/06/14/拉勾-函数式编程范式-5-高阶函数-函数作为参数/">拉勾-函数式编程范式-5-高阶函数-函数作为参数</a>
           </li>
         
       </ul>

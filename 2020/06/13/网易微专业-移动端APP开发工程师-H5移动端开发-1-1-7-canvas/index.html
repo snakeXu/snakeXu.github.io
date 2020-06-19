@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>网易微专业-移动端APP开发工程师-H5移动端开发-1.1.7-canvas | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1.canvas概念2.基础API和用法2-1.兼容性内容替换2-2.canvas2d模版骨架2-3.canvas2d形状绘制3.样式与颜色3-1.canvas2d色彩(colors)3-2.canvas2d线型(line styles)4.曲线和高级路径4-1.贝塞尔曲线4-2.高级路径之Path2D5.状态、变形以及动画5-1.canvas的状态控制5-2.动画的基本步骤">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网易微专业-移动端APP开发工程师-H5移动端开发-1.1.7-canvas">
+<meta property="og:url" content="http://yoursite.com/2020/06/13/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-7-canvas/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="1.canvas概念2.基础API和用法2-1.兼容性内容替换2-2.canvas2d模版骨架2-3.canvas2d形状绘制3.样式与颜色3-1.canvas2d色彩(colors)3-2.canvas2d线型(line styles)4.曲线和高级路径4-1.贝塞尔曲线4-2.高级路径之Path2D5.状态、变形以及动画5-1.canvas的状态控制5-2.动画的基本步骤">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/app/1.1.7_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/app/1.1.7_2.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/app/1.1.7_3.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/app/1.1.7_4.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/app/1.1.7_5.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/app/1.1.7_6.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/app/1.1.7_7.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/app/1.1.7_8.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/app/1.1.7_9.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/app/1.1.7_10.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/app/1.1.7_11.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/app/1.1.7_12.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/app/1.1.7_13.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/app/1.1.7_14.png">
+<meta property="og:image" content="https://snakexu.github.io/images/wangyi/app/1.1.7_15.png">
+<meta property="og:updated_time" content="2020-06-13T08:30:21.781Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="网易微专业-移动端APP开发工程师-H5移动端开发-1.1.7-canvas">
+<meta name="twitter:description" content="1.canvas概念2.基础API和用法2-1.兼容性内容替换2-2.canvas2d模版骨架2-3.canvas2d形状绘制3.样式与颜色3-1.canvas2d色彩(colors)3-2.canvas2d线型(line styles)4.曲线和高级路径4-1.贝塞尔曲线4-2.高级路径之Path2D5.状态、变形以及动画5-1.canvas的状态控制5-2.动画的基本步骤">
+<meta name="twitter:image" content="https://snakexu.github.io/images/wangyi/app/1.1.7_1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-网易微专业-移动端APP开发工程师-H5移动端开发-1-1-7-canvas" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/13/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-7-canvas/" class="article-date">
+  <time datetime="2020-06-13T07:32:02.000Z" itemprop="datePublished">2020-06-13</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      网易微专业-移动端APP开发工程师-H5移动端开发-1.1.7-canvas
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.canvas概念<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.7_1.png"><br>2.基础API和用法<br>2-1.兼容性内容替换<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.7_2.png"><br>2-2.canvas2d模版骨架<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.7_3.png"><br>2-3.canvas2d形状绘制<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.7_4.png"><br>3.样式与颜色<br>3-1.canvas2d色彩(colors)<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.7_5.png"><br><img src="https://snakexu.github.io/images/wangyi/app/1.1.7_6.png"><br>3-2.canvas2d线型(line styles)<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.7_7.png"><br>4.曲线和高级路径<br>4-1.贝塞尔曲线<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.7_8.png"><br><img src="https://snakexu.github.io/images/wangyi/app/1.1.7_9.png"><br><img src="https://snakexu.github.io/images/wangyi/app/1.1.7_10.png"><br>4-2.高级路径之Path2D<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.7_11.png"><br><img src="https://snakexu.github.io/images/wangyi/app/1.1.7_12.png"><br>5.状态、变形以及动画<br>5-1.canvas的状态控制<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.7_13.png"><br><img src="https://snakexu.github.io/images/wangyi/app/1.1.7_14.png"><br>5-2.动画的基本步骤<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.7_15.png"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/13/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-7-canvas/" data-id="ckbm7473n003gb4xqm6a9er6k" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/06/14/拉勾-函数式编程范式-5-高阶函数-函数作为参数/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          拉勾-函数式编程范式-5-高阶函数-函数作为参数
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/06/10/学习手动创建react项目过程中/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">学习手动创建react项目过程中</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-babel/">react babel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端路由/">前端路由</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/拉勾-手写Promise源码/">拉勾  手写Promise源码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/拉勾-JavaScript异步编程/">拉勾 JavaScript异步编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/拉勾-函数式编程/">拉勾 函数式编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/拉勾-函数式编程范式/">拉勾 函数式编程范式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/正则/">正则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-Flutter/">网易微专业 Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-node/">网易微专业 node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/react-babel/" style="font-size: 10px;">react babel</a> <a href="/tags/前端路由/" style="font-size: 10px;">前端路由</a> <a href="/tags/拉勾-手写Promise源码/" style="font-size: 10px;">拉勾  手写Promise源码</a> <a href="/tags/拉勾-JavaScript异步编程/" style="font-size: 10px;">拉勾 JavaScript异步编程</a> <a href="/tags/拉勾-函数式编程/" style="font-size: 10px;">拉勾 函数式编程</a> <a href="/tags/拉勾-函数式编程范式/" style="font-size: 10px;">拉勾 函数式编程范式</a> <a href="/tags/数据结构/" style="font-size: 13.33px;">数据结构</a> <a href="/tags/正则/" style="font-size: 10px;">正则</a> <a href="/tags/算法/" style="font-size: 20px;">算法</a> <a href="/tags/网易微专业-Flutter/" style="font-size: 10px;">网易微专业 Flutter</a> <a href="/tags/网易微专业-node/" style="font-size: 10px;">网易微专业 node</a> <a href="/tags/设计模式/" style="font-size: 16.67px;">设计模式</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/06/18/拉勾-手写Promise源码/">拉勾-手写Promise源码</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/17/拉勾-JavaScript异步编程/">拉勾-JavaScript异步编程</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/15/网易微专业-移动端APP开发工程师-移动UI框架Flutter-2-1-1-Flutter概述及开发环境/">网易微专业-移动端APP开发工程师-移动UI框架Flutter-2.1.1-Flutter概述及开发环境</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/14/拉勾-函数式编程范式/">拉勾-函数式编程范式</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/14/拉勾-函数式编程范式-5-高阶函数-函数作为参数/">拉勾-函数式编程范式-5-高阶函数-函数作为参数</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

@@ -62,6 +62,706 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-张容铭-设计模式-第四篇-行为设计模式" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/02/16/张容铭-设计模式-第四篇-行为设计模式/" class="article-date">
+  <time datetime="2020-02-16T10:50:35.000Z" itemprop="datePublished">2020-02-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/02/16/张容铭-设计模式-第四篇-行为设计模式/">张容铭-设计模式-第四篇-行为设计模式</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>其实本来还没看到这里的，但是最近学习的东西有些与观察者模式相关，所以这里先记录观察者模式。<br>一、观察者模式<br>观察者模式:又被称作发布-订阅者模式或消息机制，定义了一种依赖关系，解决了主体对象于观察者之间功能的耦合。<br>假设我们现在有一颗卫星(观察者)，可以接收飞机飞行的信息，并且把这些信息发布到需要(订阅者)这个消息的地方。观察者对象有一个消息容器，和三个方法，分别是订阅消息方法，取消订阅的消息方法，发送订阅的消息方法。</p>
+<p><pre><br>//将观察者放在闭包中，当页面加载就立即执行<br>var Observer = (<br>    function(){<br>        //防止消息队列暴露而被篡改故意将消息容器作为静态私有变量保存<br>        var _messages = {};<br>        return {<br>            //注册信息接口<br>            regist : function(){},<br>            //发布信息接口<br>            fire : fuction(){},<br>            //移除信息接口<br>            remove : function(){}<br>        }<br>    }<br>)();<br></pre><br>消息注册方法，该方法的作用是将订阅者注册的消息推入到消息队列中，因此我们需要接受两个参数:消息类型以及相应的处理动作，在推入到消息队列时如果此消息不存在则应创建一个该消息类型并将该消息放入消息队列中，如果此消息存在则应该将该消息执行方法推入该消息对应的执行方法队列中，这么做的目的也是保证多个模块注册同一则消息时能顺利执行。</p>
+<p><pre><br>regist : function(type,fn){<br>    //如果此消息不存在则应该创建一个该消息类型<br>    if(typeof _messages[type] === ‘undefined){<br>        //将动作推入到该消息对应的动作执行队列中<br>        _messages[type] = [fn];<br>    //如果此消息存在<br>    }else{<br>        //将动作方法推入该消息对应的动作执行序列中<br>        _messages[type].push(fn)<br>    }<br>}<br></pre><br>对于发布消息方法，其功能是当观察者发布一个消息时将所有订阅者订阅的消息一次执行。故应接收两个参数，消息类型以及动作执行时需要传递的参数，当然在这里消息类型过是必须的。在执行消息动作队列之前校验消息的存在是很有必要的。然后遍历消息执行方法队列，并依次执行。然后将消息类别以及传递的参数打包后依次传入消息执行方法中。</p>
+<p><pre><br>fire : function(type,args){<br>    //如果该消息没有被注册，则返回<br>    if(!_messages[type]){<br>        return;<br>    }<br>    //定义消息信息<br>    var events = {<br>        type : type,                      //消息类型<br>        args : args || {}                 //消息携带数据<br>    },<br>    i = 0,                               //消息动作循环变量<br>    len = _messages[type].length;        //消息动作长度<br>    //遍历消息动作<br>    for( ; i &lt; len ; i++){<br>        //依次执行注册的消息对应的动作序列<br>        _messages[type][i].call(this, events)<br>    }<br>}<br></pre><br>最后是消息注销方法，其功能是将订阅者注销的消息从消息队列中清除，因此我们也需要两个参数，即消息类型以及执行的某一动作。当然为了避免删除消息动作时消息不存在的情况的出现，对消息队列中消息的存在性校验也是很有必要的</p>
+<p><pre><br>remove : function(type,fn){<br>    //如果消息动作队列存在<br>    if(_message[type] instanceof Array){<br>        //从最后一个消息动作遍历<br>        var i = _messages[type].length - 1;<br>        for( ; i &gt;=0 ; i–){<br>            //如果存在该动作则在消息动作序列中移除相应动作<br>            _messages[type][i] === fn &amp;&amp; _message[type].splice(i,1)<br>        }<br>    }<br>}<br></pre><br>观察者对象或者说消息系统创建成功之后，我们先简单测试一下，首先我们订阅一条消息</p>
+<p><pre><br>Observer.regist(‘test’,function(e){<br>    console.log(e.type,e.args.msg)<br>})<br></pre><br>然后我们发布这则消息</p>
+<p><pre><br>Observer.fire(‘test’,{msg:’传递参数’})            //test传递参数<br></pre><br>上面我们初步了解了观察者模式。但是观察者模式有什么作用？观察者模式有一个作用是解耦代码。下面我们更详细的了解一下<br>如果有一个这样的需求:一个新闻评论模块，当用户发布评论时，会在评论展示模块末尾处追加新的评论，与此同时用户的消息模块的消息数量也会递增。如果用户删除留言区的信息时，用户的消息模块消息数量也会递减，但是这些模块是三位不同的工程师写的，也就是说都写在自己独立闭包的模块里。如果要完成现在的需求，又不想将他们的模块合并到一起，该如何解决？<br>同一模块内的功能应该放在一起，这样管理起来菜会更加方便。所以对于追加留言的功能就应放在之前开发过的留言模块里；对于用户消息递增功能应当放在之前开发过的用户信息模块里。对于留言的提交，理应放在提交模块里。不过，既然我们选择观察者模式来解决问题，首先就要分析那些模块应该注册消息，那些模块应该发布消息。<br>发布留言与删除留言功能需求是用户主动触发，所以应该是观察者发布消息，而评论的追加以及用户消息的增减是被动触发的，所以他们应该是订阅者去注册消息。这样的话用户信息模块既是信息的发送者，也是信息的接收者，提交模块是信息的发送者，浏览模块是信息的接收者。<br>首先实现用户追加评论的功能，如下</p>
+<p><pre><br>//外观模式 简化获取元素<br>function $(id){<br>    return document.getElementById(id);<br>}<br>//工程师A<br>(function(){<br>    //追加一则消息<br>    function addMsgItem(e){<br>        var text = e.arg.text,                //获取消息中用户添加的文本内容<br>            ul = $(‘msg’),                        //留言容器元素<br>            li = document.createElement(‘span’),  //创建内容容器元素<br>            span = document.createElement(‘span’);//删除按钮<br>        li.innerHTML = text;                      //写入评论<br>        //关闭按钮<br>        span.onclick = function(){<br>            ul.removeChild(li);                  //移除留言<br>            //发布删除留言消息<br>            Observer.fire(‘removeCommentMessage’,{num:-1});<br>        }<br>        //添加删除按钮<br>        li.appendChild(span);<br>        //添加留言节点<br>        ul.appendChild(li);<br>    }<br>    //注册添加评论信息<br>    Observer.regist(‘addCommentMessage’,addMsgItem);<br>})();<br></pre><br>实现递增用户信息功能，只需要在原信息数目基础上加一即可。</p>
+<p><pre><br>//工程师B<br>(function(){<br>    //更改用户消息数目<br>    function changeMsgNum(e){<br>        //获取需要增加的用户消息数目<br>        var num = e.args.num;<br>        //增加用户消息数目并写入页面中<br>        $(‘msg_num’).innerHTML = parseInt($(‘msg_num’).innerHTML) + num;<br>    }<br>    //注册添加评论信息<br>    Observer.regist(‘addCommentMessage’,changeMsgNum)<br>            .regist(‘removeCommentMessage’,changeMsgNum);<br>})()<br></pre><br>最后对于一个用户来说，当他提交信息时，就要触发消息发布功能</p>
+<p><pre><br>//工程师C<br>(function(){<br>    //用户点击提交按钮<br>    $(‘user_submit’).onclick = function(){<br>        //获取用户输入框中输入的信息<br>        var text = $(‘user_input’);<br>        //如果消息为空则提交失败<br>        if(text.value === ‘’){<br>            return<br>        }<br>        //发布一则评论消息<br>        Observer.fire(‘addCommentmessage’,{<br>            text:text.value,          //消息评论内容<br>            num:1                     //消息评论数目<br>        })<br>        text.value = ‘’;              //将输入框置为空<br>    }<br>})()<br></pre><br>观察者模式就这样轻松的解决了模块之间的耦合问题，那么观察者模式能不能解决类或对象之间的耦合呢？我们举个例子：课堂老师提问学生。我们首先创建学生类，学生是被提问对象，因此他们是订阅者。同时学生也有对问题的思考结果，以及回答问题的动作。</p>
+<p><pre><br>//学生类<br>var Student = function(result){<br>    var that = this<br>    //学生回答结果<br>    that.result = result;<br>    //学生回答问题动作<br>    that.say = function(){<br>        console.log(that.result)<br>    }<br>}<br>//学生回答问题的方法<br>Student.prototype.answer = function(question){<br>    //注册参数问题<br>    Observer.regist(question,this.say);<br>}<br>//如果有睡着的学生，此时不能回答问题<br>Student.prototyp.sleep = function(question){<br>    console.log(this.result+’ ‘+question+’已被注销’)<br>    Observer.remove(question,this.say);<br>}<br></pre><br>对于教师，他会提问学生，所以他是一个观察者。所以他需要有一个提问问题的方法</p>
+<p><pre><br>//教师类<br>var Teacher = function(){}<br>//教师提问问题的方法<br>Teacher.prototype.ask = function(question){<br>    console.log(‘问题是’+question);<br>    //发布提问消息<br>    Observer.fire(question)<br>}<br></pre><br>学生与教师类创建完成了，接下来我们模拟创建处三位听课学生</p>
+<p><pre><br>var student1 = new Student(‘学生1回答问题’),<br>    student2 = new Student(‘学生2回答问题’),<br>    student3 = new Student(‘学生3回答问题’);<br>//三位同学订阅(监听)了老师提出的两个问题<br>student1.answer(‘什么是设计模式’);<br>student1.answer(‘简述观察者模式’);<br>student2.answer(‘什么是设计模式’);<br>student3.answer(‘什么是设计模式’);<br>student3.answer(‘简述观察者模式’);<br>//同学3睡着了，所以对于订阅的第二个问题’简述观察者模式’消息就注销了<br>student3.sleep(‘简述观察者模式’);<br>//创建一个教师类<br>var teacher = new Teacher();<br>//提问两个问题<br>teacher.ask(‘什么是设计模式’)<br>teacher.ask(‘简述观察者模式’)<br></pre><br>浏览器输出结果：<br>//学生3回答问题 简述观察者模式 已被注销<br>//问题是： 什么是设计模式<br>//学生1 回答问题<br>//学生2 回答问题<br>//学生3 回答问题<br>//问题是： 简述观察者模式<br>//学生1 回答问题<br>观察者模式最主要的作用是解决类或对象之间的耦合，解耦两个相互依赖的对象，使其依赖于观察者的消息机制。这样对于任意一个订阅者对象来说，其他订阅者对象的改变不会影响到自身。对于每一个订阅者来说，其自身既可以是消息的发出者也可以是消息的执行者，这都依赖于调用观察者对象的三种方法(订阅消息，注销消息，发布消息)中的哪一种。<br>团队开发中，尤其大型项目的模块开发中，每个人很难做到熟知项目中的每个模块，此时为完成一个涉及多个模块调用的需求，观察者模式的优势就显而易见了，模块间的信息传递不必要相互引用其他模块，只需要通过观察者模式注册或者发布消息即可。通过观察者模式，工程师间对功能的开发只需要按照给定的消息格式开发各自功能即可，而不必去担忧其他人的模块。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/02/16/张容铭-设计模式-第四篇-行为设计模式/" data-id="ckbm7475f003zb4xq9uos5zdb" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-MV-组件化开发React专题-2-1-2-React基础-ReactDOM与表单" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/02/16/网易微专业-MV-组件化开发React专题-2-1-2-React基础-ReactDOM与表单/" class="article-date">
+  <time datetime="2020-02-16T09:15:51.000Z" itemprop="datePublished">2020-02-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/02/16/网易微专业-MV-组件化开发React专题-2-1-2-React基础-ReactDOM与表单/">网易微专业-MV*&amp;组件化开发React专题-2.1.5-React基础-ReactDOM与表单</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.ReactDOM.render()&amp;ReactDOM.unmountComponentAtNode()<br>ReactDOM.render():简单的说，就是挂载<br>ReactDOM.unmountComponentAtNode():简单的说就是卸载<br>2.例子<br>App.js</p>
+<p><pre><br>import React from ‘react’;<br>import ReactDOM from ‘react-dom’;<br>import Loading from ‘./Loading’<br>class App extends React.Component{<br>  constructor(props){<br>    super(props)<br>    this.state = {<br>      data:[],<br>      loading:false,<br>    }<br>  }<br>  render(){<br>    return (<br>      &lt; div&gt;<br>        App<br>        {this.state.data.map((item)=&gt;&lt; p key={item.id}&gt;{item.name}&lt; /p&gt;)}<br>        {this.state.loading &amp;&amp; &lt; Loading&gt;&lt; /Loading&gt;}<br>      &lt; /div&gt;<br>    )<br>  }<br>  componentDidMount(){<br>    //loading show<br>    this.setState({<br>      loading:true<br>    })<br>    setTimeout(()=&gt;{<br>      this.setState({<br>        data:[{name:’a’,id:’a’},{name:’b’,id:’b’},{name:’c’,id:’c’}],<br>        loading:false<br>      })<br>    },3000)<br>    //loading hide<br>  }<br>}<br>export default App;<br></pre><br>Loading.js</p>
+<p><pre><br>import React from ‘react’;<br>import ReactDOM from ‘react-dom’;<br>class Loading extends React.Component{<br>  constructor(props){<br>    super(props)<br>    this.state = {<br>    }<br>  }<br>  render(){<br>    return (<br>      &lt; div&gt;<br>        loading<br>      &lt; /div&gt;<br>    )<br>  }<br>  componentDidMount(){<br>  }<br>}<br>export default Loading;<br></pre><br>index.js</p>
+<p><pre><br>import React from ‘react’;<br>import ReactDOM from ‘react-dom’;<br>import App from ‘./App’;<br>ReactDOM.render(<br>  &lt; App&gt;&lt; /App&gt;,<br>  document.getElementById(‘root’)<br>);<br></pre><br>上面代码我们看到用到loading一个功能，我们分别在app.js的render和componentDidMount两个地方写了代码，代码耦合度比较高，显然对于代码来说，并不是最优解，我们对loading.js和app.js略作修改<br>loading.js</p>
+<p><pre><br>import React from ‘react’;<br>import ReactDOM from ‘react-dom’;<br>class Loading extends React.Component{<br>  constructor(props){<br>    super(props)<br>    this.state = {<br>    }<br>  }<br>  render(){<br>    return (<br>      &lt; div&gt;<br>        loading<br>      &lt; /div&gt;<br>    )<br>  }<br>  componentDidMount(){<br>  }<br>}<br>//下面是修改对地方<br>let node = null<br>const loading={<br>  show(){<br>    node = document.createElement(‘div’)<br>    document.body.appendChild(node)<br>    ReactDOM.render(&lt; Loading&gt;&lt; /Loading&gt;,node)<br>  },<br>  hide(){<br>    if(node){<br>      ReactDOM.unmountComponentAtNode(node)<br>      document.body.removeChild(node)<br>    }<br>  }<br>}<br>export default loading;<br></pre><br>app.js</p>
+<p><pre><br>import React from ‘react’;<br>import ReactDOM from ‘react-dom’;<br>import Loading from ‘./Loading’<br>class App extends React.Component{<br>  constructor(props){<br>    super(props)<br>    this.state = {<br>      data:[],<br>    }<br>  }<br>  render(){<br>    return (<br>      &lt; div&gt;<br>        App<br>        {this.state.data.map((item)=&gt;&lt; p key={item.id}&gt;{item.name}&lt; /p&gt;)}<br>        {/<em> {this.state.loading &amp;&amp; &lt; Loading&gt;&lt; /Loading&gt;} </em>/}<br>      &lt; /div&gt;<br>    )<br>  }<br>  //修改了loading组件，显示和隐藏loading的方法变了<br>  componentDidMount(){<br>    Loading.show()<br>    setTimeout(()=&gt;{<br>      this.setState({<br>        data:[{name:’a’,id:’a’},{name:’b’,id:’b’},{name:’c’,id:’c’}],<br>      })<br>      Loading.hide()<br>    },3000)<br>  }<br>}<br>export default App;<br></pre><br>我们可以把修改后的loading组件叫做方法组件，当然这个方法组件的名字，是教程老师自己起的，所以试图百度这个关键词怕是找不到想要的答案，但是我们要的是理解和应用。下面例子是结合了input组件的<br>App.js</p>
+<p><pre><br>import React from ‘react’;<br>import ReactDOM from ‘react-dom’;<br>import Loading from ‘./Loading’<br>import input from ‘./Input’<br>class App extends React.Component{<br>  constructor(props){<br>    super(props)<br>    this.state = {<br>      data:[],<br>    }<br>  }<br>  render(){<br>    return (<br>      &lt; div&gt;<br>        App<br>        {this.state.data.map((item)=&gt;&lt; p key={item.id}&gt;{item.name}&lt; /p&gt;)}<br>      &lt; /div&gt;<br>    )<br>  }<br>  componentDidMount(){<br>    input.show({<br>      onOk:(value)=&gt;{<br>        alert(value)<br>      }<br>    })<br>  }<br>}<br>export default App;<br></pre><br>Input.js</p>
+<p><pre><br>import React from ‘react’;<br>import ReactDOM from ‘react-dom’;<br>let node = null;<br>class Input extends React.Component{<br>  constructor(props){<br>    super(props)<br>    this.state = {<br>      value:’’<br>    }<br>  }<br>  render(){<br>    const {onOk} = this.props<br>    return (<br>      &lt; div&gt;<br>        &lt; input value={this.state.value} onChange={(e)=&gt;this.setState({value:e.target.value})}/&gt;<br>        &lt; button onClick={(e)=&gt;{<br>          onOk(this.state.value)<br>          this.setState({value:’’})<br>          hide()<br>        }}&gt;确定&lt; /button&gt;<br>      &lt; /div&gt;<br>    )<br>  }<br>  componentDidMount(){<br>  }<br>}<br>export const show = (obj)=&gt;{<br>  node = document.createElement(‘div’)<br>  document.body.appendChild(node)<br>  ReactDOM.render(&lt; Input onOk={obj.onOk}&gt;&lt; /Input&gt;,node)<br>}<br>export const hide = ()=&gt;{<br>  if(node){<br>    ReactDOM.unmountComponentAtNode(node)<br>    document.body.removeChild(node)<br>  }<br>}<br>export default {<br>  show,<br>  hide<br>}<br></pre><br>2.组件的挂载与卸载<br>需求:页面的初始化<br>根据用户信息-&gt;查询系统公告-&gt;查询文章列表-&gt;渲染公告和文章<br><img src="https://snakexu.github.io/images/wangyi/react/2.1.5_1.png"><br>3.todo list的部分实现<br>index.js</p>
+<p><pre><br>import React from ‘react’;<br>import ReactDOM from ‘react-dom’;<br>import App from ‘./App’;<br>ReactDOM.render(<br>  &lt; App/&gt;,<br>  document.getElementById(‘root’)<br>);<br></pre><br>App.js</p>
+<p><pre><br>import React from ‘react’;<br>import ReactDOM from ‘react-dom’;<br>import Todolist from ‘./Todolist’<br>import Action from ‘./Action’<br>class App extends React.Component{<br>  constructor(props){<br>    super(props)<br>    this.state = {<br>      data:[]<br>    }<br>  }<br>  render(){<br>    return (<br>      &lt; div&gt;<br>        &lt; Action onAdd={(name)=&gt;{<br>          let data = this.state.data<br>          data.push(name)<br>          this.setState({data})<br>        }}/&gt;<br>        &lt; Todolist data={this.state.data}<br>        onDelete={(index)=&gt;{<br>          let data = this.state.data<br>          data.splice(index,1)<br>          this.setState({data})<br>        }}<br>        /&gt;<br>      &lt; /div&gt;<br>    )<br>  }<br>  componentDidMount(){<br>  }<br>}<br>export default App;<br></pre><br>Todolist.js</p>
+<p><pre><br>import React from ‘react’;<br>import ReactDOM from ‘react-dom’;<br>class App extends React.Component{<br>  constructor(props){<br>    super(props)<br>    this.state = {<br>    }<br>  }<br>  render(){<br>    const {data,onDelete} = this.props<br>    return (<br>      &lt; div&gt;<br>        {data.map((item,index)=&gt;(<br>          &lt; ol&gt;<br>            &lt; li&gt;<br>              &lt; p&gt;{item}&lt; /p&gt;<br>              &lt; button onClick={(e)=&gt;{<br>                onDelete(index)<br>              }}&gt;删除&lt; /button&gt;<br>            &lt; /li&gt;<br>          &lt; /ol&gt;<br>        ))}<br>      &lt; /div&gt;<br>    )<br>  }<br>  componentDidMount(){<br>  }<br>}<br>export default App;<br></pre><br>Action.js</p>
+<p><pre><br>import React from ‘react’;<br>import ReactDOM from ‘react-dom’;<br>class Action extends React.Component{<br>  constructor(props){<br>    super(props)<br>    this.state = {<br>      value:’’<br>    }<br>  }<br>  render(){<br>    const {onAdd} = this.props<br>    return (<br>      &lt; div&gt;<br>        &lt; input value={this.state.value} onChange={(e)=&gt;{<br>          this.setState({value:e.target.value})<br>        }}/&gt;<br>        &lt; button onClick={(e)=&gt;{onAdd(this.state.value)}}&gt;提交&lt; /button&gt;<br>      &lt; /div&gt;<br>    )<br>  }<br>  componentDidMount(){<br>  }<br>}<br>export default Action;<br></pre><br>4.作业<br>有随堂作业哦，开不开心<br>(1)方法组件:confirm/tooltip/message<br>(2)todolist的编辑功能<br>大概看了下，react相关内容还有二十多节课，作业是3月8号要提交的，所以要加油啊，不然跟不上呢</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/02/16/网易微专业-MV-组件化开发React专题-2-1-2-React基础-ReactDOM与表单/" data-id="ckbm7471s000wb4xqzopwjqd2" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-MV-组件化开发React专题-2-1-2-React基础-组件通信" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/02/16/网易微专业-MV-组件化开发React专题-2-1-2-React基础-组件通信/" class="article-date">
+  <time datetime="2020-02-16T05:10:53.000Z" itemprop="datePublished">2020-02-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/02/16/网易微专业-MV-组件化开发React专题-2-1-2-React基础-组件通信/">网易微专业-MV*&amp;组件化开发React专题-2.1.2-React基础-组件通信</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.<br><img src="https://snakexu.github.io/images/wangyi/react/2.1.4_1.png"><br>兄弟组件一般都有共同的父组件，兄弟组件之间的通信，可以通过获取父组件信息通信。<br>2.如何实现一个完整有功能的组件<br>例如：闹钟组件——9:00通知我们起床，21:00通知我们休息</p>
+<pre>
+important React,{Component} from 'react'
+class Clock extends Component{
+    render(){
+        let {onWakeup,onSleep,time} = this.props   
+        if(time === 9){
+            onWakeup()
+        }
+        if(time === 21){
+            onSleep()
+        }
+        return (
+            < div>clock< /div>
+        )
+    }
+}
+class App extends Component{
+    render(){
+        return (
+            < div>
+                < Clock time = {12} onWakeup = {()=>{alert('wake up')} onSleep = {()=>{alert('sleep')}} />
+            < /div>
+        )
+    }
+}
+</pre>
+另外一个实例，帮助我们更多的了解组件之间的关系
+<pre>
+important React,{Component} from 'react'
+class Action extends Component{
+    constructor(props){
+        super(props);
+        this.state = {
+            value:''
+        }
+    }
+    render(){
+        return (
+            < div>
+                < input value={this.state.value} onChange={(e)=>this.setState({e.target.value})}/>
+                < button onClick={()=>{
+                    this.props.onAdd(this.state.value)
+                    this.setState({value:''})
+                }}>提交< /button>
+            < /div>
+        )
+    }
+}
+class List extends Component{
+    render(){
+        return (
+            < div>
+               {this.props.data.map((item)=>{
+                   < p key={item.id}>{item.name}< /p>
+               })}
+            < /div>
+        )
+    }
+}
+class App extends Component{
+    render(){
+        constructor(props){
+            super(props);
+            this.state = {
+                data:[
+                    {name:'a',id:0},
+                    {name:'b',id:1},
+                    {name:'c',id:2}
+                ]
+            }
+        }
+        return (
+            < div>
+                < Action
+                onAdd = {(name)=>{
+                    let {data} = {this.state}
+                    data.push({name,id:name})
+                    this.setState({data})
+                }}
+                />
+                < List data={this.state.data}/>
+            < /div>
+        )
+    }
+}
+</pre>
+上面例子的实现效果是在输入框中输入内容，点击添加之后，在list中加入新添加的内容 
+3.组件之间的关系
+父组件向子组件通信:面向对象的风格，父组件拿到子组件的实例 ，调用子组件的方法
+子组件向父组件通信:函数式风格，父组件把调用的方法传过去，子组件在合适的地方调用
+兄弟组件之间的通信:
+观察者模式:看下面的代码
+<pre>
+import React,{Component} from 'react';
+class EventComponent extends Component{
+    cb = {}
+    on(name,cb) {
+        this.cb[name] = cb
+    }
+    off(name) {
+        delete this.cb[name]
+    }
+    trigger(name,arg) {
+        this.cb[name](arg)
+    }
+}
+class List extends EventComponent{
+    constructor(props) {
+        super(props);
+        this.state = {
+            data: [
+                {name: 'a',id:0},
+                {name: 'b',id:1},
+                {name: 'c',id:2}
+            ],
+        }
+    }
+    render() {
+        return (
+            < div>
+                {this.state.data.map(item => < p key={item.id}>{item.name}< /p>)}
+            < /div>
+        );
+    }
+
+    clear() {
+        this.setState({
+            data: []
+        })
+    }
+
+    add(name) {
+        let {
+            data
+        } = this.state
+        data.push({
+            name,
+            id:name
+        })
+        this.setState({data})
+    }
+}
+class Action extends EventComponent{
+    constructor(props) {
+        super(props);
+        this.state = {
+            value: ''
+        }
+    }
+
+    render() {
+        return (
+            < div>
+                < input value={this.state.value} onChange={(e) => this.setState({value: e.target.value })}/>
+                < button onClick={(e) =>{
+                    this.trigger('add', this.state.value)
+                }}>add< /button>
+            < /div>
+        );
+    }
+}
+class App extends EventComponent{
+    render() {
+        return (
+            < div>
+                 < List ref='list' />
+                < Action ref='action'/>
+            < /div>
+        );
+    }
+
+    componentDidMount() {
+        let listInstance = this.refs.list
+        let actionInstance = this.refs.action
+        actionInstance.on('add',(name) => {
+            listInstance.add(name)
+        })
+        window.app = this
+
+        // this.refs.list.clear()
+    }
+
+}
+export default App;
+</pre>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/02/16/网易微专业-MV-组件化开发React专题-2-1-2-React基础-组件通信/" data-id="ckbm7471t000xb4xq9kuqpxvk" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-MV-组件化开发React专题-2-1-2-React基础-生命周期与数据操作" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/02/14/网易微专业-MV-组件化开发React专题-2-1-2-React基础-生命周期与数据操作/" class="article-date">
+  <time datetime="2020-02-14T04:34:44.000Z" itemprop="datePublished">2020-02-14</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/02/14/网易微专业-MV-组件化开发React专题-2-1-2-React基础-生命周期与数据操作/">网易微专业-MV*&amp;组件化开发React专题-2.1.3-React基础-生命周期与数据操作</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>引出:<br>假设我们需要一个列表刷新，列表初识数据是a=[‘a’,’b’,’c’],需要变成b=[‘b’,’c’,’d’]，那么tree diff算法需要经历的阶段为:<br>(1)删除a(2)b,c更新(3)d创建<br>1.生命周期<br>(1)创建期<br><img src="https://snakexu.github.io/images/wangyi/react/2.1.3_1.png"><br>react创建时继承react的基类React.component，react官方提供了component类，component里实现了一些列生命周期和方法(上图中的生命周期和方法)。<br>(2)存在期<br>组件已经挂载成功，但是需要一些重绘/更新<br><img src="https://snakexu.github.io/images/wangyi/react/2.1.3_2.png"><br>(2)销毁期<br><img src="https://snakexu.github.io/images/wangyi/react/2.1.3_3.png"><br>2.例子<br>2-1.创建期探索<br>demo2.js</p>
+<p><pre><br>import React,{Component} from ‘react’<br>class App extends Component{<br>    render(){<br>        return (&lt; div &gt;App&lt; Son1/&gt;&lt; /div &gt;)<br>    }<br>    componentDidMount(){<br>        console.log(‘App mount’)<br>    }<br>}<br>class Son1 extends Component{<br>    render(){<br>        return (&lt; div &gt;Son1&lt; GrandSon1/&gt;&lt; /div &gt;)<br>    }<br>    componentDidMount(){<br>        console.log(‘Son1 mount’)<br>    }<br>}<br>class GrandSon1 extends Component{<br>    render(){<br>        return (&lt; div &gt;GrandSon1&lt; /div &gt;)<br>    }<br>    componentDidMount(){<br>        console.log(‘GrandSon1 mount’)<br>    }<br>}<br>export default App<br></pre><br>index.js</p>
+<p><pre><br>import React from ‘react’;<br>import ReactDOM from ‘react-dom’;<br>import App from ‘./demo2’;<br>import * as serviceWorker from ‘./serviceWorker’;<br>ReactDOM.render(&lt; App/&gt;,document.getElementById(‘root’));<br>serviceWorker.unregister();<br></pre><br>启动项目，打开浏览器我们可以看到，console打印到控制台上的效果如下：<br><img src="https://snakexu.github.io/images/wangyi/react/2.1.3_4.png"><br>也就是说，只有在某一个组件被挂载完全之后，这个组件才被挂载完，才会往上去调用父组件的componentDidMount。<br>接下来，我们看render函数，我们将demo2.js做一些简单修改(render函数同时存在于三个周期的每一个阶段)<br>demo2.js</p>
+<p><pre><br>import React,{Component} from ‘react’<br>class App extends Component{<br>    render(){<br>        console.log(‘App rerender’)<br>        return (&lt; div &gt;App&lt; Son1/&gt;&lt; /div &gt;)<br>    }<br>    componentDidMount(){<br>        console.log(‘App mount’)<br>    }<br>}<br>class Son1 extends Component{<br>    render(){<br>        console.log(‘Son1 rerender’)<br>        return (&lt; div &gt;Son1&lt; GrandSon1/&gt;&lt; /div &gt;)<br>    }<br>    componentDidMount(){<br>        console.log(‘Son1 mount’)<br>    }<br>}<br>class GrandSon1 extends Component{<br>    render(){<br>        console.log(‘GrandSon1 rerender’)<br>        return (&lt; div &gt;GrandSon1&lt; /div &gt;)<br>    }<br>    componentDidMount(){<br>        console.log(‘GrandSon1 mount’)<br>    }<br>}<br>export default App<br></pre><br>控制台打印效果如下<br><img src="https://snakexu.github.io/images/wangyi/react/2.1.3_5.png"><br>2-2.存在期探索<br>接下来，我们探索存在期的变化<br>demo2.js</p>
+<p><pre><br>import React,{Component} from ‘react’<br>class App extends Component{<br>    constructor(props){<br>        super(props)<br>        this.state = {<br>            name : ‘react’<br>        }<br>    }<br>    render(){<br>        console.log(‘App rerender’)<br>        return (&lt; div &gt;App&lt; Son1 name={this.state.name + ‘-son’}/&gt;&lt; /div &gt;)<br>    }<br>    componentDidMount(){<br>        window.app = this<br>        console.log(‘App mount’)<br>    }<br>    componentWillUpdate(nextProps,nextState){<br>        console.log(‘App will update’)<br>    }<br>    componentDidUpdate(prevProps,prevState){<br>        console.log(‘App did update’)<br>    }<br>}<br>class Son1 extends Component{<br>    render(){<br>        console.log(‘Son1 rerender’)<br>        return (&lt; div &gt;{this.props.name}&lt; GrandSon1 name={this.state.name + ‘-grandson’}/&gt;&lt; /div &gt;)<br>    }<br>    componentDidMount(){<br>        console.log(‘Son1 mount’)<br>    }<br>    componentWillUpdate(nextProps,nextState){<br>        console.log(‘Son1 will update’)<br>    }<br>    componentDidUpdate(prevProps,prevState){<br>        console.log(‘Son1 did update’)<br>    }<br>}<br>class GrandSon1 extends Component{<br>    render(){<br>        console.log(‘GrandSon1 rerender’)<br>        return (&lt; div &gt;{this.props.name}&lt; /div &gt;)<br>    }<br>    componentDidMount(){<br>        console.log(‘GrandSon1 mount’)<br>    }<br>    componentWillUpdate(nextProps,nextState){<br>        console.log(‘GrandSon1 will update’)<br>    }<br>    componentDidUpdate(prevProps,prevState){<br>        console.log(‘GrandSon1 did update’)<br>    }<br>}<br>export default App<br></pre><br>props是组件被实例化的时候传的一个值属性，在浏览器中，我们进行了一些修改，展示效果如下<br><img src="https://snakexu.github.io/images/wangyi/react/2.1.3_6.png"><br>2-3.销毁期<br>还是之前的代码，稍微进行一些修改<br>demo2.js</p>
+<p><pre><br>import React,{Component} from ‘react’<br>class App extends Component{<br>    constructor(props){<br>        super(props)<br>        this.state = {<br>            name : ‘react’<br>        }<br>    }<br>    render(){<br>        console.log(‘App rerender’)<br>        return (<br>            &lt; div &gt;<br>                {this.state.name}<br>                {this.state.name &amp;&amp; &lt; Son1 name={this.state.name + ‘-son’}/&gt;}<br>            &lt; /div &gt;<br>        )<br>    }<br>    componentDidMount(){<br>        window.app = this<br>        console.log(‘App mount’)<br>    }<br>    componentWillUpdate(nextProps,nextState){<br>        console.log(‘App will update’)<br>    }<br>    componentDidUpdate(prevProps,prevState){<br>        console.log(‘App did update’)<br>    }<br>}<br>class Son1 extends Component{<br>    render(){<br>        console.log(‘Son1 rerender’)<br>        return (<br>            &lt; div &gt;<br>                {this.props.name}<br>                &lt; GrandSon1 name={this.state.name + ‘-grandson’}/&gt;<br>            &lt; /div &gt;<br>        )<br>    }<br>    componentDidMount(){<br>        console.log(‘Son1 mount’)<br>    }<br>    componentWillUpdate(nextProps,nextState){<br>        console.log(‘Son1 will update’)<br>    }<br>    componentDidUpdate(prevProps,prevState){<br>        console.log(‘Son1 did update’)<br>    }<br>    componentWillUnmount(){<br>        console.log(‘Son1 unmount’)<br>    }<br>}<br>class GrandSon1 extends Component{<br>    render(){<br>        console.log(‘GrandSon1 rerender’)<br>        return (&lt; div &gt;{this.props.name}&lt; /div &gt;)<br>    }<br>    componentDidMount(){<br>        console.log(‘GrandSon1 mount’)<br>    }<br>    componentWillUpdate(nextProps,nextState){<br>        console.log(‘GrandSon1 will update’)<br>    }<br>    componentDidUpdate(prevProps,prevState){<br>        console.log(‘GrandSon1 did update’)<br>    }<br>    componentWillUnmount(){<br>        console.log(‘GrandSon1 unmount’)<br>    }<br>}<br>export default App<br></pre><br><img src="https://snakexu.github.io/images/wangyi/react/2.1.3_7.png"><br>可以看出，删除阶段，是从上往下删除的<br>3.数据操作<br><img src="https://snakexu.github.io/images/wangyi/react/2.1.3_8.png"><br>state和props都是比较简单的，还有一个知识点，是上下文，一般用在组件嵌套比较深的地方，解决的痛点是嵌套层次比较深的时候，如何从最外层传到最内层 </p>
+<p><pre><br>import React from ‘react’<br>import PropTypes from “prop-types”;<br>class App extends React.Component{<br>    getChildContext() {<br>        return {color: “purple”};<br>    }<br>    constructor(props) {<br>        super(props);<br>        this.state = {<br>            name: ‘react’<br>        }<br>    }<br>    render() {<br>        return (<br>            &lt; div&gt;<br>                {this.state.name}<br>                <son><br>            &lt; /div&gt;<br>        );<br>    }<br>}<br>App.childContextTypes = {<br>    color: PropTypes.string<br>}<br>class Son extends React.Component{<br>    render() {<br>        return (<br>            &lt; div&gt;<br>                <grandson><br>            &lt; /div&gt;<br>        );<br>    }<br>}<br>class GrandSon  extends React.Component{<br>    render() {<br>        return (<br>            &lt; div&gt;<br>                <grandsongrandson><br>            &lt; /div&gt;<br>        );<br>    }<br>}<br>class GrandSonGrandSon extends React.Component{<br>    render() {<br>        return (<br>            &lt; div&gt;<br>                {this.context.color}<br>            &lt; /div&gt;<br>        );<br>    }<br>}<br>GrandSonGrandSon.contextTypes = {<br>    color: PropTypes.string<br>};<br>export default App<br></grandsongrandson></grandson></son></pre><br><img src="https://snakexu.github.io/images/wangyi/react/2.1.3_9.png"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/02/14/网易微专业-MV-组件化开发React专题-2-1-2-React基础-生命周期与数据操作/" data-id="ckbm7471w0011b4xqwy24falx" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-MV-组件化开发React专题-2-1-2-React基础-虚拟DOM和JSX" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/02/13/网易微专业-MV-组件化开发React专题-2-1-2-React基础-虚拟DOM和JSX/" class="article-date">
+  <time datetime="2020-02-13T08:46:26.000Z" itemprop="datePublished">2020-02-13</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/02/13/网易微专业-MV-组件化开发React专题-2-1-2-React基础-虚拟DOM和JSX/">网易微专业-MV*&amp;组件化开发React专题-2.1.2-React基础-虚拟DOM和JSX</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.JSX的写法<br>1-1.es6组件<br><img src="https://snakexu.github.io/images/wangyi/react/2.1.2_1.png"><br>在react中，我们用class componentname extends Component{}来声明一个组件，而不是类似于const componentname = &lt; div &gt;component&lt; /div &gt;这样去声明，是因为在react中第一种class声明的方式相当于组件的实例化，每次调用组件不互相影响；另外用第一种class声明的方式，还可以用props给组件传递数据。<br>1-2.函数式组件<br><img src="https://snakexu.github.io/images/wangyi/react/2.1.2_2.png"><br>1-3.JS与HTML的混写<br><img src="https://snakexu.github.io/images/wangyi/react/2.1.2_3.png"><br>1-4.实战演示<br>代码<br><img src="https://snakexu.github.io/images/wangyi/react/2.1.2_4.png"><br>效果<br><img src="https://snakexu.github.io/images/wangyi/react/2.1.2_5.png"><br>从上面代码我们可以看出react代码可以渲染多种数据形式，比如字符/节点/数组等，但是如果你试着渲染对象形式的数据，如{a:1,b:2},会发现react会报错<br>如果你已经创建了一个react项目，不妨试试下面的代码：<br><img src="https://snakexu.github.io/images/wangyi/react/2.1.2_6.png"><br>以上介绍了一些react基础的JSX的写法<br>2.虚拟DOM原理<br>分为三个步骤:<br>步骤1.把JSX编译成JS<br>步骤2.把过去构建DOMS浏览器的工作交给JS，由JS构建DOMS<br>步骤3.把结构数据传入react.render方法<br>举例1.</p>
+<p><pre><br>&lt; div classname=”cn”&gt;content!&lt; /div &gt;<br></pre><br>react将上面的html代码转换成下面的</p>
+<p><pre><br>React.createElement(‘div’,{className:’cn’},’content!’)<br></pre><br>举例2.<br>其实就是比上面的例子代码稍微复杂一些</p>
+<p><pre><br>&lt; div classname=”cn”&gt;content 1!&lt; br &gt;content 2!&lt; /div &gt;<br></pre></p>
+<p><pre><br>React.createElement(‘div’,{className:’cn’},’content 1!’,React.createElement(‘br’),’content 2!’)<br></pre><br>3.Tree Diff算法<br>3-1.引起DOM树发生变化的三种情况<br>(1)标签的变化<br>renderA:&lt; div/ &gt;<br>renderB:&lt; span/ &gt;<br>[removeNode &lt; div/ &gt;],[insertNode &lt; span/ &gt;]<br>(2)组件的变化:不同的组件一般会产生不一样的DOM结构<br>renderA:&lt; Header/ &gt;<br>renderB:&lt; Content/ &gt;<br>[removeNode &lt; Header/ &gt;],[Content &lt; span/ &gt;]<br>(3)key的优化<br>old:a,b,c,d<br>new:b,a,d,c<br>另外，给元素添加key在很多情况下，可以在性能上得到优化，key元素必须是唯一的不能再key里面赋值一个变量<br>3-2.逐层进行节点比较(1)<br><img src="https://snakexu.github.io/images/wangyi/react/2.1.2_7.png"><br><img src="https://snakexu.github.io/images/wangyi/react/2.1.2_8.png"><br><img src="https://snakexu.github.io/images/wangyi/react/2.1.2_9.png"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/02/13/网易微专业-MV-组件化开发React专题-2-1-2-React基础-虚拟DOM和JSX/" data-id="ckbm7471t000yb4xquexpktce" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-react官网教程起步案例" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/02/11/react官网教程起步案例/" class="article-date">
+  <time datetime="2020-02-11T04:08:09.000Z" itemprop="datePublished">2020-02-11</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/02/11/react官网教程起步案例/">react官网教程起步案例</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>报的培训课最近要学习react，因为之前的技术栈主要是vue，所以看了一下react官网粗略先看一下。这个案例是react官网教程的起步案例，里面简单的讲到了react的一些东西。因为教程是一点点对项目进行修改的，所以注释掉的部分可能是一开始的代码，留下来只是方便对比历史修改。要运行这个案例，需要新建一个react项目，然后在src文件夹下放入下面两个文件，npm start启动项目。如果安装了react-devtools更方便查看并理解项目。<br>index.js</p>
+<pre>
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+// class Square extends React.Component {
+//   // constructor(props){
+//   //   super(props);
+//   //   this.state = {
+//   //     value:null
+//   //   };
+//   // }
+//   render() {
+//     return (
+//       < button 
+//       className="square" 
+//       onClick={()=>{this.props.onClick()}}
+//       >
+//         {this.props.value}
+//       < /button>
+//     );
+//   }
+// }
+function Square(props){
+  return (
+    < button className="square" onClick={props.onClick}>
+    {props.value}
+    < /button>
+  )
+}
+
+class Board extends React.Component {
+  renderSquare(i) {
+    return < Square 
+    value={this.props.squares[i]}
+    onClick = {()=>{this.props.onClick(i)}}
+    />;
+  }
+
+  render() {
+    // const winner = calculateWinner(this.state.squares);
+    // let status;
+    // if(winner){
+    //   status = 'Winner: ' + winner
+    // }else{
+    //   status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+    // }
+
+    return (
+      < div>
+        < div className="board-row">
+          {this.renderSquare(0)}
+          {this.renderSquare(1)}
+          {this.renderSquare(2)}
+        < /div>
+        < div className="board-row">
+          {this.renderSquare(3)}
+          {this.renderSquare(4)}
+          {this.renderSquare(5)}
+        < /div>
+        < div className="board-row">
+          {this.renderSquare(6)}
+          {this.renderSquare(7)}
+          {this.renderSquare(8)}
+        < /div>
+      < /div>
+    );
+  }
+}
+
+class Game extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      history:[{
+        squares:Array(9).fill(null)
+      }],
+      stepNumber:0,
+      xIsNext:true,
+    }
+  }
+  jumpTo(step) {
+    this.setState({
+      stepNumber: step,
+      xIsNext: (step % 2) === 0,
+    });
+  }
+  handleClick(i){
+    const history = this.state.history.slice(0, this.state.stepNumber + 1);
+    const current = history[history.length - 1];
+    const squares = current.squares.slice();
+    if (calculateWinner(squares) || squares[i]) {
+      return;
+    }
+    squares[i] = this.state.xIsNext ? 'X' : 'O';
+    // console.log(squares)
+    this.setState({
+      history: history.concat([{
+        squares: squares,
+      }]),
+      stepNumber: history.length,
+      xIsNext:!this.state.xIsNext,
+    })
+  }
+  render() {
+    const history = this.state.history;
+    const current = history[this.state.stepNumber];
+    const winner = calculateWinner(current.squares);
+
+    const moves = history.map((step,move)=>{
+      const desc = move ? 'Go to move #' + move : 'Go to game start';
+      return (
+        < li key = {move}>
+        < button onClick={() => this.jumpTo(move)}>{desc}< /button>
+        < /li>
+      )
+    })
+
+    let status;
+    if (winner) {
+      status = 'Winner: ' + winner;
+    } else {
+      status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+    }
+    return (
+      < div className="game">
+        < div className="game-board">
+          < Board 
+          squares = {current.squares}
+          onClick = {(i)=>{this.handleClick(i)}}
+          />
+        < /div>
+        < div className="game-info">
+          < div>{status}< /div>
+          < ol>{moves}< /ol>
+        < /div>
+      < /div>
+    );
+  }
+}
+
+function calculateWinner(squares){
+  const lines = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+  ];
+  for(let i=0;i < lines.length;i++){
+    const [a,b,c] = lines[i];
+    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+      return squares[a];
+    }
+  }
+  return null;
+}
+
+// ========================================
+
+ReactDOM.render(
+  < Game />,
+  document.getElementById('root')
+);
+</pre>
+index.css
+<pre>
+body {
+  font: 14px "Century Gothic", Futura, sans-serif;
+  margin: 20px;
+}
+
+ol, ul {
+  padding-left: 30px;
+}
+
+.board-row:after {
+  clear: both;
+  content: "";
+  display: table;
+}
+
+.status {
+  margin-bottom: 10px;
+}
+
+.square {
+  background: #fff;
+  border: 1px solid #999;
+  float: left;
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 34px;
+  height: 34px;
+  margin-right: -1px;
+  margin-top: -1px;
+  padding: 0;
+  text-align: center;
+  width: 34px;
+}
+
+.square:focus {
+  outline: none;
+}
+
+.kbd-navigation .square:focus {
+  background: #ddd;
+}
+
+.game {
+  display: flex;
+  flex-direction: row;
+}
+
+.game-info {
+  margin-left: 20px;
+}
+</pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/02/11/react官网教程起步案例/" data-id="ckbm7471k000ib4xqs00ebc0b" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-MV-组件化开发React专题-2-1-1-React介绍与React代码规范" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/02/07/网易微专业-MV-组件化开发React专题-2-1-1-React介绍与React代码规范/" class="article-date">
+  <time datetime="2020-02-07T12:20:37.000Z" itemprop="datePublished">2020-02-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/02/07/网易微专业-MV-组件化开发React专题-2-1-1-React介绍与React代码规范/">网易微专业-MV*&amp;组件化开发React专题-2.1.1-React介绍与React代码规范</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.React初识<br>1-1.开发环境<br><img src="https://snakexu.github.io/images/wangyi/react/2.1.1_1.png"><br>1-2.react开发工具react devtools<br>原地址是 <a href="https://github.com/facebook/react-devtools" target="_blank" rel="noopener">https://github.com/facebook/react-devtools</a> ,但是现在看到页面已经说明项目被迁移了，具体细节见页面。按照课程内容，我选择了v3版本链接，下载zip文件后，解压缩，在命令行进入解压缩的文件夹。<br>(1)npm config set registry <a href="http://registry.npm.taobao.org/" target="_blank" rel="noopener">http://registry.npm.taobao.org/</a><br>(2)npm install<br>(3)进入文件夹，找到shells/chrome/build/unpacked文件夹<br>(4)打开chrome浏览器扩展，将步骤3的文件夹移到扩展页面<br>至此react-devtools安装完成，打开本地react项目的浏览器开发工具可以看到在console/network···后有了react，如图<br><img src="https://snakexu.github.io/images/wangyi/react/2.1.1_2.png"><br>1-3.示例代码</p>
+<p><pre><br>import React from ‘react’;<br>import ReactDOM from ‘react-dom’;<br>class HelloWorld extends Component{<br>    render(){<br>        return (<br>            <div classname="App"><br>                hello world<br>            </div><br>        )<br>    }<br>}<br>ReactDOM.render(<br>  <helloworld>,<br>  document.getElementById(‘root’)<br>);<br></helloworld></pre><br>1-4.浏览器上的react示例代码<br><img src="https://snakexu.github.io/images/wangyi/react/2.1.1_3.png"><br>上图里的代码中 type=”text/babel” 方便于书写es6的代码，两个script引入的包是react和react-dom，和1-3的代码中import功能是一样的<br>1-5.模块化示例代码<br><img src="https://snakexu.github.io/images/wangyi/react/2.1.1_4.png"><br>2.react生态<br>react生态在github上有一个项目<a href="https://github.com/enaqx/awesome-react" target="_blank" rel="noopener">https://github.com/enaqx/awesome-react</a><br><img src="https://snakexu.github.io/images/wangyi/react/2.1.1_5.png"><br>2-1.UI组件库<br><img src="https://snakexu.github.io/images/wangyi/react/2.1.1_6.png"><br>3.react代码规范<br>3-1.开发规范<br>3-1-1.standard.js<br><img src="https://snakexu.github.io/images/wangyi/react/2.1.1_7.png"><br>其中第三步是帮助我们在提交项目之前对项目进行一次格式化检测<br>另外老师讲了如何在webstorm中配置standard.js，如果使用别的编辑器，那么可自行查看如何配置，这里也不在对课程里如何在webstorm中配置进行赘述，如需要自行查询配置方法。<br>3-1-2.bem css规范<br><img src="https://snakexu.github.io/images/wangyi/react/2.1.1_8.png"><br>在bem中，b-block，e-element，m-行为,在上图例子中，双下划线__表示子元素，双中横线–表示某种状态</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/02/07/网易微专业-MV-组件化开发React专题-2-1-1-React介绍与React代码规范/" data-id="ckbm7471r000ub4xql1xftz85" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-网易微专业-webpack实战演练-3-2-2-webpack原理解析" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/01/29/网易微专业-webpack实战演练-3-2-2-webpack原理解析/" class="article-date">
@@ -96,7 +796,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/01/29/网易微专业-webpack实战演练-3-2-2-webpack原理解析/" data-id="ckb8s87v0002h4zxqg46li8ka" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/01/29/网易微专业-webpack实战演练-3-2-2-webpack原理解析/" data-id="ckbm7472z002nb4xq6xtisgnp" class="article-share-link">Share</a>
       
       
     </footer>
@@ -144,7 +844,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/01/20/网易微专业-webpack实战演练-3-2-1-webpack-dev-server的使用/" data-id="ckb8s87uz002g4zxqq1pz0kih" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/01/20/网易微专业-webpack实战演练-3-2-1-webpack-dev-server的使用/" data-id="ckbm7472z002mb4xqtdjn0dwy" class="article-share-link">Share</a>
       
       
     </footer>
@@ -181,943 +881,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/01/18/网易微专业-jq源码解析-2-7-1-动画队列-动画设计-动画实现/" data-id="ckb8s87v4002n4zxqjksdpr96" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-js运算符优先级" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/01/18/js运算符优先级/" class="article-date">
-  <time datetime="2020-01-18T01:20:15.000Z" itemprop="datePublished">2020-01-18</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/01/18/js运算符优先级/">js运算符优先级</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><img src="https://snakexu.github.io/images/others/operator_1.png"><br><img src="https://snakexu.github.io/images/others/operator_2.png"><br><img src="https://snakexu.github.io/images/others/operator_3.png"><br>以上截图自<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Operator_Precedence" target="_blank" rel="noopener">https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Operator_Precedence</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/01/18/js运算符优先级/" data-id="ckb8s87tr000h4zxqt4bx1dam" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-单页应用-1-3-2-VUE编译器原理探秘二" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/01/17/网易微专业-单页应用-1-3-2-VUE编译器原理探秘二/" class="article-date">
-  <time datetime="2020-01-17T03:25:13.000Z" itemprop="datePublished">2020-01-17</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/01/17/网易微专业-单页应用-1-3-2-VUE编译器原理探秘二/">网易微专业-单页应用-1.3.2-VUE编译器原理探秘二</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>这节课主要是分析了vue解析模版的过程，如何把页面的HTML字符串，例如&lt; div id=”app” &gt;{ {message} }&lt; /div &gt;内容解析成AST抽象语法树，还是先奉上老师的专栏链接<a href="https://zhuanlan.zhihu.com/p/88363312" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/88363312</a><br>解析出来的AST对象例子如下</p>
-<pre>
-var template = "< div id='app' >{ {message} }< span >< /span >< /div >";
-//解析单个标签
-var initAst = {
-    type: 1,
-    tag: "div",
-    attrs: [{
-        name: "id",
-        value: "app",
-    }],
-    attrsList: [{
-        name: "id",
-        value: "app"
-    }],
-    attrsMap: {
-        id: "app"
-    },
-    parent: undefined,
-    plain: false,
-    static: false,
-    staticRoot: false
-} 
-//完整的模板抽象描述对象(AST)
-var AST = {
-    type: 1,
-    tag: "div",
-    attrs: [{
-        name: "id",
-        value: "app",
-    }],
-    attrsList: [{
-        name: "id",
-        value: "app"
-    }],
-    attrsMap: {
-        id: "app"
-    },
-    children: [{
-            type: 2,
-            expression: "_s(message)",
-            token: [{
-                "@binding": "message"
-            }],
-            text: "{ {message} }",
-            static: false
-        },
-        {
-            type: 1,
-            tag: "span",
-            attrsList: [],
-            attrsMap: {},
-            parent: {type: 1,tag: "div",attrsList: [{name: "id",value: "app"}] …},
-            children: [],
-            plain: true,
-            static: true
-            staticInFor: false
-            staticRoot: false
-            pre: undefined
-        }
-    ],
-    parent: undefined,
-    plain: false,
-    static: false,
-    staticRoot: false
-}
-</pre>
-这里主要是为了明确parseHTML的参数start/end/chars/comment的含义，comment是注释
-<pre>
-function parse(template, options) {
-    warn$2 = options.warn || baseWarn;
-    parseHTML(template, {
-        start: function() {
-            console.log("开始标签的钩子函数")
-        },
-        end: function() {},
-        chars: function() {
-            console.log("纯文本的钩子函数")
-        },
-        comment: function() {}
-    });
-}
-</pre>
-<pre>
-function parseHTML(html, options) {
-    var stack = [];//检测非一元标签是否缺少闭合标签，比如< div >< span > < a href="" >< /a >< /span > < /div >
-                   //stack数组内依次为['div','span','a']
-    var expectHTML = options.expectHTML; //布尔值 默认为false
-    var isUnaryTag$$1 = options.isUnaryTag || no; //是不是单标签
-    var canBeLeftOpenTag$$1 = options.canBeLeftOpenTag || no; //是不是可以省略闭合标签的双标签
-    var index = 0; //解析过程字符流读入的位置
-    var last, lastTag; //last 剩余为解析的html字符串   lastTag 始终存储 stack 栈顶的元素名称
-
-    //while (html){   //< /div > 
-    //其实这里的while是有用的，至于while循环的判断html是在循环中html陆续被解析token操作(通过正则文法)，最终会为空结束循环
-    if (!lastTag || !isPlainTextElement(lastTag)) {//第一次进入循环lastTag为undefined,第二次进入循环，存储的是stack栈顶的元素，会有值
-    //isPlainTextElement限定不能为script/style/textarea标签
-        var textEnd = html.indexOf('<'); 考虑很多边界情况，比如各种注释方式="" <="" !----=""> <![]> 或者<!doctype>
-        if (textEnd === 0) {
-            // Start tag:
-            var startTagMatch = parseStartTag();
-            console.log(startTagMatch)
-            if (startTagMatch) {
-                handleStartTag(startTagMatch);
-                //忽略< pre > 标签 < textarea > 标签的内容中第一个换行符
-                if (shouldIgnoreFirstNewline(startTagMatch.tagName, html)) {
-                    advance(1);
-                }
-            }
-
-            //continue
-        }
-        var text = (void 0),
-            rest = (void 0),
-            next = (void 0);
-        if (textEnd >= 0) { //解析纯文本
-            rest = html.slice(textEnd);
-            while (
-                !endTag.test(rest) &&
-                !startTagOpen.test(rest) &&
-                !comment.test(rest) &&
-                !conditionalComment.test(rest)
-            ) {
-                // < in plain text, be forgiving and treat it as text
-                next = rest.indexOf('<', 1);="" if="" (next="" <="" 0)="" {="" break="" }="" textend="" +="next;" 重置字符流解析的位置="" rest="html.slice(textEnd);" 纯文本后面的内容="" div="">
-            }
-            text = html.substring(0, textEnd);
-            advance(textEnd);
-        }
-        //调用处理纯文本的钩子函数
-        if (options.chars && text) {
-            options.chars(text);
-        }
-    }
-    //}
-
-    function advance(n) {
-        index += n;
-        html = html.substring(n);
-    }
-
-    function parseStartTag() {
-        var start = html.match(startTagOpen); //startTagOpen  正则文法   token
-        if (start) {
-            var match = {
-                tagName: start[1],
-                attrs: [],
-                start: index,//解析开始标签字符流起始位置
-            };
-            advance(start[0].length);
-            var end, attr;//end 分析当前标签是否一元标签 id="value" v-pre ... >  />
-            //startTagClose  检测标签是否是一个完整的开始标签   "/> || >"
-            while (!(end = html.match(startTagClose)) && (attr = html.match(attribute))) {
-                advance(attr[0].length);
-                match.attrs.push(attr);
-            }
-            if (end) {
-                match.unarySlash = end[1]; //unarySlash 属性 是否有值  判断元素是否为一元标签
-                advance(end[0].length);
-                match.end = index;
-                return match
-            }
-
-        }
-    }
-
-    //handleStartTag 处理开始标签的解析结果
-    function handleStartTag(match) {
-        var tagName = match.tagName; //开始标签的名称
-        var unarySlash = match.unarySlash; // 一元或非一元标签
-
-        var unary = isUnaryTag$$1(tagName) || !!unarySlash; //非一元标签
-        console.log(match.attrs)
-        var l = match.attrs.length; //数组 [" id='app'", "id", "=", undefined, "app", undefined, index: 0]
-        var attrs = new Array(l);
-        for (var i = 0; i < l; i++) {
-            var args = match.attrs[i];
-            var value = args[3] || args[4] || args[5] || ''; //value
-            //
-            var shouldDecodeNewlines = tagName === 'a' && args[1] === 'href' ?
-                options.shouldDecodeNewlinesForHref :
-                options.shouldDecodeNewlines;
-            attrs[i] = {
-                name: args[1],
-                value: value //decodeAttr(value, shouldDecodeNewlines)
-            };
-        }
-
-        if (!unary) { //true
-            stack.push({
-                tag: tagName,
-                lowerCasedTag: tagName.toLowerCase(),
-                attrs: attrs
-            });
-            lastTag = tagName;
-        }
-        //调用开始标签的钩子函数
-        if (options.start) {
-            options.start(tagName, attrs, unary, match.start, match.end);
-        }
-    }
-
-}
-</',></');></pre>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/01/17/网易微专业-单页应用-1-3-2-VUE编译器原理探秘二/" data-id="ckb8s87v6002q4zxqocyyi01o" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-单页应用-1-3-1-VUE编译器原理探秘一" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/01/14/网易微专业-单页应用-1-3-1-VUE编译器原理探秘一/" class="article-date">
-  <time datetime="2020-01-14T03:03:42.000Z" itemprop="datePublished">2020-01-14</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/01/14/网易微专业-单页应用-1-3-1-VUE编译器原理探秘一/">网易微专业-单页应用-1.3.1-VUE编译器原理探秘一</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.由一个思维导图开始<br><img src="https://snakexu.github.io/images/wangyi/vue/0113_1.png"><br>思维导图源地址<a href="https://www.processon.com/view/link/5cb4b6dce4b02a2858ed34a3" target="_blank" rel="noopener">https://www.processon.com/view/link/5cb4b6dce4b02a2858ed34a3</a><br>max老师专栏地址<a href="https://www.zhihu.com/people/li-qiang-5-3-60/posts" target="_blank" rel="noopener">https://www.zhihu.com/people/li-qiang-5-3-60/posts</a><br>这个思维导图大概讲述了我们在一个vue项目里，是如何一步步把我们写的代码编译为浏览器语言的过程(我这么说应该是没有问题)，并不是我们在项目代码里写了一个div标签，就能在浏览器里看到一个div标签，这其中经过了编译过程。<br>首先我们看一下官网中的生命周期图示<a href="https://cn.vuejs.org/v2/guide/instance.html" target="_blank" rel="noopener">https://cn.vuejs.org/v2/guide/instance.html</a><br>我们主要看这一部分<br><img src="https://snakexu.github.io/images/wangyi/vue/0113_2.png"><br>这一部分对应思维导图的template模版部分。<br>max老师关于这部分的描述<a href="https://zhuanlan.zhihu.com/p/84827482" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/84827482</a><br>非常感谢max老师抽丝剥茧的分析了代码，但是说实话，真是看了四五遍才理清一部分脉络，只想说代码写的真是太优秀了，环环相扣。在我目前看来，这是把vue编译的主脉络剥离出来，分析编译的过程的主脉络代码。</p>
-<pre>
-(function(root) {
-    //Vue编译器默认配置项
-    var baseOptions = {
-        // expectHTML: true,
-        // modules: modules$1,
-        // directives: directives$1,
-        // isPreTag: isPreTag,
-        // isUnaryTag: isUnaryTag,
-        // mustUseProp: mustUseProp,
-        // canBeLeftOpenTag: canBeLeftOpenTag,
-        // isReservedTag: isReservedTag,
-        // getTagNamespace: getTagNamespace,
-        // staticKeys: genStaticKeys(modules$1)
-    };
-
-    function extend(to, _from) {
-        for (var key in _from) {
-            to[key] = _from[key];
-        }
-        return to
-    }
-
-    //渲染函数
-    function createFunction(code, errors) {
-        try {
-            return new Function(code)
-        } catch (err) {
-            errors.push({
-                err: err,
-                code: code
-            });
-            return noop
-        }
-    }
-
-
-    function createCompileToFunctionFn(compile) {
-        var cache = Object.create(null); //缓存对象  优化处理
-
-        return function compileToFunctions(template, options, vm) {
-            options = extend({}, options);
-            // options.warn 编译错误  警告信息的收集
-            {
-                // detect possible CSP restriction
-                try {
-                    new Function('return 1');
-                } catch (e) {
-                    if (e.toString().match(/unsafe-eval|CSP/)) {
-                        warn$$1(
-                            'It seems you are using the standalone build of Vue.js in an ' +
-                            'environment with Content Security Policy that prohibits unsafe-eval. ' +
-                            'The template compiler cannot work in this environment. Consider ' +
-                            'relaxing the policy to allow unsafe-eval or pre-compiling your ' +
-                            'templates into render functions.'
-                        );
-                    }
-                }
-            }
-
-            // check cache
-            var key = options.delimiters ?
-                String(options.delimiters) + template :
-                template;
-            if (cache[key]) {
-                return cache[key] //res   render
-            }
-
-            // compile
-            var compiled = compile(template, options); // 编译以结束
-
-            // check compilation errors/tips
-            {
-                if (compiled.errors && compiled.errors.length) { //错误信息
-                    warn$$1(
-                        "Error compiling template:\n\n" + template + "\n\n" +
-                        compiled.errors.map(function(e) {
-                            return ("- " + e);
-                        }).join('\n') + '\n',
-                        vm
-                    );
-                }
-                if (compiled.tips && compiled.tips.length) { //警告信息
-                    compiled.tips.forEach(function(msg) {
-                        return tip(msg, vm);
-                    });
-                }
-            }
-
-            // turn code into functions
-            var res = {};
-            var fnGenErrors = []; //渲染函数调用时的错误新收集
-            //compiled.render  渲染函数所需的字符串
-            res.render = createFunction(compiled.render, fnGenErrors);
-            res.staticRenderFns = compiled.staticRenderFns.map(function(code) { //标注的静态节点 最终也呈现成渲染函数的格式
-                return createFunction(code, fnGenErrors)
-            });
-
-            { //呈现渲染函数中的错误
-                if ((!compiled.errors || !compiled.errors.length) && fnGenErrors.length) {
-                    warn$$1(
-                        "Failed to generate render function:\n\n" +
-                        fnGenErrors.map(function(ref) {
-                            var err = ref.err;
-                            var code = ref.code;
-
-                            return ((err.toString()) + " in\n\n" + code + "\n");
-                        }).join('\n'),
-                        vm
-                    );
-                }
-            }
-
-            return (cache[key] = res)
-        }
-    }
-
-    function createCompilerCreator(baseCompile) {
-        return function createCompiler(baseOptions) {
-            function compile(template, options) { //正在编译
-                //finalOptions  最终的配置对象
-                var finalOptions = Object.create(baseOptions); //{}.__proto__  baseOptions
-                var errors = [];
-                var tips = [];
-                finalOptions.warn = function(msg, tip) { //错误 警告信息的收集
-                    (tip ? tips : errors).push(msg);
-                };
-
-                if (options) { //extend
-                    // merge custom modules    是否有要处理特殊的属性或者标签
-                    if (options.modules) {
-                        finalOptions.modules =
-                            (baseOptions.modules || []).concat(options.modules);
-                    }
-                    // merge custom directives    合并自定义的指令
-                    if (options.directives) {
-                        finalOptions.directives = extend(
-                            Object.create(baseOptions.directives || null),
-                            options.directives
-                        );
-                    }
-                    // copy other options
-                    for (var key in options) {
-                        if (key !== 'modules' && key !== 'directives') {
-                            finalOptions[key] = options[key];
-                        }
-                    }
-                }
-
-                var compiled = baseCompile(template, finalOptions);
-                compiled.errors = errors;
-                compiled.tips = tips;
-                return compiled
-
-            }
-            return {
-                compile: compile,
-                compileToFunctions: createCompileToFunctionFn(compile)
-            }
-        }
-    }
-
-    var createCompiler = createCompilerCreator(function baseCompile(
-        template, //模板
-        options //配置对象
-    ) {
-        var ast = parse(template.trim(), options); //功能划分区域   模板解析操作  ast对象
-        if (options.optimize !== false) {
-            optimize(ast, options); //标注静态节点
-        }
-        var code = generate(ast, options); //渲染函数所需的字符串
-        return {
-            ast: ast,
-            render: "code.render",
-            staticRenderFns: []
-        }
-    });
-
-
-    var ref$1 = createCompiler(baseOptions);
-    //var compile = ref$1.compile;
-    var compileToFunctions = ref$1.compileToFunctions;
-    //=createCompiler(baseOptions)=createCompilerCreator(baseCompile)(baseOptions).compileToFunctions(template调用函数的时候传进来的)
-     //compileToFunctions = createCompileToFunctionFn(compile){return compileToFunctions(template,options,vm)}
-
-     //编译器解析的工作
-    function parse(template, options) {
-         console.log(template)
-    }
-
-    function optimize() {
-
-    }
-
-    function generate() {
-
-    }
-
-    root.compiler = compileToFunctions;
-})(this);
-</pre>
-调用
-<pre>
-var ref = compiler("< div id='app' >{ { message } }< /div >");
-</pre>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/01/14/网易微专业-单页应用-1-3-1-VUE编译器原理探秘一/" data-id="ckb8s87v4002m4zxq1l3u4dpk" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业福利期-2-2-如何保证你的代码质量" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/01/11/网易微专业福利期-2-2-如何保证你的代码质量/" class="article-date">
-  <time datetime="2020-01-11T06:51:33.000Z" itemprop="datePublished">2020-01-11</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/01/11/网易微专业福利期-2-2-如何保证你的代码质量/">网易微专业福利期-2.2-如何保证你的代码质量</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.单元测试<br>·测试是一种验证我们的代码是否可以按预期工作的方法<br>·单元测试是指对软件中的最小可测试单元进行检查和验证<br>1-1.前端单元测试的意义<br>(1)检测出潜在的bug<br>(2)快速反馈功能输出，验证代码是否达到预期<br>(3)保证代码重构的安全性<br>(4)方便协作开发<br>2.单元测试代码<br>2-1.被测试对象<br>被测试对象为程序中最小组成单元，可以是一个函数/方法集/类等</p>
-<p><pre><br>// 被测试对象<br>let add = (a,b)=&gt;a+b;<br>// 测试代码<br>let expect = (res)=&gt;{<br>    return {<br>        toBe:(actual)=&gt;{<br>            if(res !== actual){<br>                throw new Error(‘期望值与预期值不符’)<br>            }<br>        }<br>    }<br>}<br></pre><br>3.jest的基础使用<br>3-1.jest的安装<br>(1)安装node<br>(2)npm i -D jest或yarn add -D jest进行安装<br>(3)通过npm ls jest查看是否安装成功 </p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/01/11/网易微专业福利期-2-2-如何保证你的代码质量/" data-id="ckb8s87vf00354zxq4iyzq58h" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业福利期-2-1-JavaScript内存管理" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/01/10/网易微专业福利期-2-1-JavaScript内存管理/" class="article-date">
-  <time datetime="2020-01-10T07:52:37.000Z" itemprop="datePublished">2020-01-10</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/01/10/网易微专业福利期-2-1-JavaScript内存管理/">网易微专业福利期-2.1-JavaScript内存管理</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.前端为什么要关注内存<br>任何一个程序的运行都要分配内存空间，对于一个页面来说，如果一些不需要使用的内存没有得到及时释放，我们称这种现象为内存泄漏。一次内存泄漏似乎不会有太大影响，但是内存泄漏的堆积会造成内存的溢出(内存溢出简单来说就是我们所需要使用的内存空间大于可用内存，此时我们的程序就会出现内存溢出错误)，在浏览器的表现就是浏览器长时间无响应或者浏览器崩溃。作为前端程序员我们需要给用户良好的用户体验，因为我们需要<br>·防止页面占用内存过大，引起客户端卡顿甚至无响应<br>·Node.js使用V8引擎，内存对于后台服务的性能至关重要，因为后端服务的持久性，后端更容易造成内存溢出<br>2.js数据类型与js内存机制<br>2-1.数据类型<br>·原始数据类型:字符串(string)、数字(number)、布尔(boolean)、空对象(null)、为定义(undefined)、symbol<br>·引用数据类型:object<br>·内存空间:栈内存(stack)、堆内存(heap)<br>JavaScript原始数据类型都有固定的大小，保存在栈内存中，由系统自动分配存储空间我们可以进行操作，因此原始数据都是按值访问的。栈是一种运算受限的线性表，其限制是仅允许在表的一端进行插入和删除运算。<br>var a=10;这个赋值过程都发生了什么？首先，将10存入内存空间，之后在我们当前的作用域中声明一个变量a,此时a的值为undefined，然后将变量a与我们刚才存入内存空间的10关联，变量定义到此结束。<br>js中的引用数据类型大小是不固定的，存储在堆内存空间，js不允许直接访问堆内存，我们操作对象时是在操作对象的引用而不是操作实际对象。我们可以粗浅理解操作引用就是操作保存在栈内存中的一个内存地址，该地址与堆内存的实际值相关联。引用数据的值是保存在堆内存中的对象。<br>当我们定义一个函数的时候，会在堆内存先开辟一个内存空间，将函数体中的代码以字符串的形式存储到内存中去，这块空间会有一个十六进制的内存地址，会把这个内存地址赋值给函数名(此时函数名与内存地址类似于原始数据类型存储在栈内存中)<br>3.垃圾回收<br>JavaScript的垃圾回收机制<br>垃圾回收:找出那些不再继续使用的变量，然后释放其所占用的内存，垃圾回收器会按照固定的时间间隔周期性的执行这一操作。(也就是说垃圾回收是自动执行的、不可见的)<br>JavaScript使用垃圾回收机制来自动管理内存，垃圾回收是一把双刃剑:优势——可以大幅简化程序的内存管理代码，降低程序员的负担，减少因长时间内存运转带来的内存泄漏问题；不足——意味着程序员将无法掌控内存，JavaScript没有暴露任何关于内存的API，我们无法强迫其进行垃圾回收，更无法干预内存管理。<br>3-1.垃圾回收策略<br>3-1-1.引用计数<br>引用计数:跟踪记录每个值被引用的次数，如果有一个值的引用次数为0，就表示这个值不再用到了，因此可以将这块内存释放。<br>原理:每次引用加一，被释放时减一，当这个值当引用次数变成0时，就可以将其内存空间回收。<br>示例:<br>const obj = {a:10};      //引用+1<br>const obj1 = {a:10};     //引用+1<br>const obj = {};          //引用-1<br>const obj = null;        //引用为0<br>·声明了一个变量并将一个引用类型的值赋值给这个变量，这个引用类型的值的引用次数是1<br>·同一个值又被赋值给另外一个变量，这个引用类型值的引用次数加1<br>·当包含这个引用类型值的变量又被赋值成另外一个值了，难么这个引用类型值的引用次数减1<br>·当引用次数变成0时，说明没办法访问这个值了<br>·当垃圾收集器下一次运行时，它就会释放引用次数是0的值所占用的内存<br>引用计数的bug——循环引用(也就是相互引用),会造成js垃圾回收机制无法回收内存，浪费大量性能<br>function fn(){<br>    var objA = {a:10};<br>    var objB = {a:10};<br>    objA.c = objA;<br>    objB.d = objB;<br>}<br>在采用引用策略的实现中，当函数执行完毕后，objA和objB还将继续存在，因为它们的引用次数永远不会是0，假如这个函数被多次重复调用就会导致大量内存得不到回收。这个问题主要出现在IE8以及以前的时代，现在浏览器更多采用标记清除垃圾回收机制。<br>3-1-2.标记清除<br>(1)标记清除指的是当变量进入环境时，这个变量标记为“进入环境”；而当变量离开环境时，则将其标记为“离开环境”，最后，垃圾收集器完成内存清楚工作，销毁那些带标记的值并回收它们所占用的内存空间。<br>(2)上面说到的环境即为执行环境，执行环境:执行环境定义了变量或函数有权访问的其他数据，决定了它们各自的行为。每个执行环境都有一个与之关联的变量对象(variable object)，环境中定义的所有变量和函数都保存在这个对象中。<br>执行环境分为全局执行环境和局部执行环境，虽然我们在编程时无法访问这个变量，但解析器在处理数据时，会在后台使用它。<br>(2-1)全局执行环境<br>·最外围的一个执行环境<br>·根据宿主环境不同表示执行环境的对象也不一样。在浏览器中，全局的执行环境被认为是window对象(node环境是global)<br>·全局变量和函数都是作为window对象的属性和方法创建的<br>·某个执行环境中的所有代码执行完毕后，该环境被销毁，保存在其中的所有变量和函数定义也随之销毁(例如关闭网页或浏览器)<br>(2-2)环境栈(局部)<br>每个函数都有自己的执行环境。当执行流进入一个函数时，函数的环境就会被推入一个环境栈中。而在函数执行之后，栈将其环境弹出，把控制权返回给之前的执行环境。ECMAScript程序中的执行流正是由这个方便的机制控制着。<br>示例<br>function foo(){<br>    var a = 10;        //被标记进入环境<br>    var b = ‘Hello’;   //被标记进入环境<br>}<br>foo();      //执行完毕，a和b被标记离开环境，内存被回收<br>目前主流浏览器都使用标记清除垃圾回收策略<br>4.V8内存管理机制<br>4-1.V8限制内存的原因<br>·V8最初为浏览器而设计，不太可能遇到大量内存的使用场景<br>·防止因为垃圾回收所导致的线程暂停执行的时间过长<br>4-2.V8的回收策略<br>·V8采用了一种分代回收的策略，将内存分为两个生代:新生代和老生代<br>·V8分别对新生代和老生代使用不同的垃圾回收算法来提升垃圾回收的效率<br>(1-1)新生代垃圾回收<br><img src="https://snakexu.github.io/images/fuliqi/javascript/2.1_1.png"><br>(1-2)新生代对象的晋升<br>·在新生代垃圾回收的过程中，当一个对象经过多次复制后依然存活，它将被认为是生命周期较长的对象，随后会被移动到老生代中，采用新的算法进行管理。<br>·在From空间和To空间进行反转的过程中，如果To空间中的使用量已经超过了25%，那么就将From中的对象直接晋升到老生代内存空间中<br>(1-3)老生代垃圾回收<br>老生代内存空间是一个连续的结构<br>(1-4)老生代垃圾清除<br>·标记清除(Mark Sweep):是将需要被回收的对象进行标记，在垃圾回收运行时直接释放相应的地址空间<br>·标记合并(Mark Compact):将存活的对象移动到一边，将需要被回收的对象移动到另一边，然后对需要被回收的对象区域进行整体的垃圾回收</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/01/10/网易微专业福利期-2-1-JavaScript内存管理/" data-id="ckb8s87vh00384zxqyitm029t" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-张容铭-设计模式-第三篇-结构型设计模式" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/01/09/张容铭-设计模式-第三篇-结构型设计模式/" class="article-date">
-  <time datetime="2020-01-09T02:07:49.000Z" itemprop="datePublished">2020-01-09</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/01/09/张容铭-设计模式-第三篇-结构型设计模式/">张容铭-设计模式-第三篇-结构型设计模式</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>一、外观模式<br>外观模式:为一组复杂的子系统借口提供一个更高级的统一接口，通过这个接口使得对子系统接口的访问更容易。在JavaScript中有时也会用于对底层结构兼容性做统一封装用来简化用户使用。<br>当我们用如下代码为页面添加点击事件</p>
-<p><pre><br>document.onclick = funcrtion(e){<br>    e.preventDefault();<br>    if(e.target !== document.getElementById(‘myinput’)){<br>        hidePageAlert();<br>    }<br>}<br>function hidePageAlert(){<br>    //…<br>}<br></pre><br>为document绑定了onclick事件，但是onclick是DOM0级事件，也就是说这种方式绑定的事件相当于为元素绑定了一个事件方法，所以如果这时团队中有人再次通过这种方式为document绑定click事件时，就相当于重新定义了一个方法，会将上面定义的click事件方法覆盖。因此我们应该用DOM2级事件处理程序提供的方法addEventListener来实现，然而你知道老版本的IE浏览器(低于IE9)是不支持这个方法的，所以你要用attachEvent，当然如果有不支持DOM2级事件处理程序的浏览器，你只能用onclick事件方法绑定事件。外观模式可以用来封装他们，兼容所有浏览器。</p>
-<p><pre><br>//外观模式实现<br>function addEvent(dom,type,fn){<br>    //对于支持DOM2级事件处理程序addEventListener方法的浏览器<br>    if(dom.addEventListener){<br>        dom.addEventListener(type,fn,false);<br>    //对于不支持addEventListener方法但支持attachEvent方法的浏览器<br>    }else if(dom.attachEvent){<br>        dom.attachEvent(‘on’+type,fn);<br>    //对于不支持addEventListener方法也不支持attachEvent方法，但支持’on’+事件名称的浏览器<br>    }else{<br>        dom[‘on’+type] = fn<br>    }<br>}<br>var myInput = document.getElementById(‘myinput’);<br>addEvent(myInput,’click’,function(){<br>    console.log(‘绑定第一个事件’)<br>})<br>addEvent(myInput,’click’,function(){<br>    console.log(‘绑定第二个事件’)<br>})<br>addEvent(myInput,’click’,function(){<br>    console.log(‘绑定第三个事件’)<br>})<br></pre><br>这样我们对于支持addEventListener或者attachEvent方法的浏览器就可以放心地绑定多个事件了。另外我们发现，在一开始的代码中，IE低版本浏览器中不兼容e.preventDefault()和e.target,我们也可以通过外观模式来解决。</p>
-<p><pre><br>//获取事件对象<br>var getEvent = function(event){<br>    //标准浏览器返回event,IE下window.event<br>    return event || window.event;<br>}<br>//获取元素<br>var getTarget = function(event){<br>    var event = getEvent(event);<br>    //标准浏览器下event.target,IE下event.srcElement<br>    return event.getTarget || event.srcElement<br>}<br>//阻止默认行为<br>var preventDefault = function(event){<br>    var event = getEvent(event);<br>    //标准浏览器<br>    if(event.preventDefault){<br>        event.preventDefault();<br>    //IE浏览器<br>    }else{<br>        event.returnValue = false;<br>    }<br>}<br></pre><br>然后我们可以重写开始的代码</p>
-<p><pre><br>document.onclick = function(e){<br>    //阻止默认行为<br>    preventDefault(e);<br>    //获取事件源目标对象<br>    if(getTarget(e) !== document.getElementById(‘myinput’)){<br>        hideInputSug();<br>    }<br>}<br></pre><br>外观模式可以将浏览器不兼容的方法变得简单而又兼容各个浏览器，然而这只是外观模式应用的一部分，很多代码库中都是通过外观模式来封装多个功能，简化底层操作方法，比如我们简单实现获取元素的属性样式的简单方法库。</p>
-<p><pre><br>//简约版属性样式方法库<br>var A = {<br>    //通过ID获取元素<br>    g:function(id){<br>        return document.getElementById(id);<br>    },<br>    //设置元素css属性<br>    css:function(id,key,value){<br>        document.getElementById(id).style[key] = value;<br>    },<br>    //设置元素的属性<br>    attr:function(id,key,value){<br>        document.getElementById(id)[key] = value;<br>    },<br>    html:function(id,html){<br>        document.getElementById(id).innerHTML = html;<br>    },<br>    //为元素绑定事件<br>    on:function(){<br>        document.getElementById(id)[‘on’+type] = fn;<br>    }<br>}<br>A.css(‘box’,’background’,’red’);   //设置css样式<br>A.attr(‘box’,’className’,’box’);   //设置class<br>A.html(‘box’,’这是新添加的内容’);     //设置内容<br>A.on(‘box’,’click’,function(){     //绑定事件<br>    A.css(‘box’,’width’,’500px’);<br>})<br></pre><br>二、适配器模式<br>适配器模式:将一个类(对象)的接口(方法或属性)转化成另外一个接口，以满足用户需求，使类(对象)之间的接口的不兼容问题通过适配器得以解决。<br>假如我们现在用公司内部开发的框架A已经写了一部分需求了，这时候发现公司内部的框架不能完全满足现在的需求，我们又引入了jQuery，那现在就有问题了，怎么解决A和jQuery的兼容，毕竟重写之前的需求并不是一个明智的决定。如果框架A和jQuery相似程度很高，那么就可以用一行代码解决问题</p>
-<p><pre><br>window.A = A = jQuery;<br></pre><br>但是如果框架A与jQuery差异很大，那情况就要复杂很多了。我们这里用两个事件举例，一个是页面加载事件，一个是点击事件。</p>
-<p><pre><br>//定义框架<br>var A = A || {};<br>//通过ID获取元素<br>A.g = function(id){<br>    return document.getElementById(id);<br>}<br>//为元素绑定事件<br>A.on = function(id,type,fn){<br>    //如果传递参数是字符串则以id处理，否则以元素对象处理<br>    var dom = typeof id === ‘string’?this.g(id):id;<br>    //标准DOM2级添加事件方式<br>    if(dom.addEventListener){<br>        dom.addEventListener(type,fn,false);<br>    //IE DOM2级添加事件方式<br>    }else if(dom.attachEvent){<br>        dom.attachEvent(‘on’+type,fn);<br>    //简易添加事件方式<br>    }else{<br>        dom[‘on’+type,fn];<br>    }<br>}<br>//窗口加载完成事件<br>A.on(window,’load’,function(){<br>    //按钮点击事件<br>    A.on(‘mybutton’,’click’,function(){<br>        //do something<br>    })<br>})<br></pre><br>现在，如果我们想引入jQuery来换原有的A库，该怎么做？首先g方法是通过id获取元素，所以通过$(jQuery的简写名称)方法直接获取jQuery对象然后通过get获取第一个成员即可，不过on的方法有些复杂，我们不能直接替换，因为jQuery和我们的A库在通过id获取元素时是有区别的，jQuery的id前面要加#。所以异类框架的适配器做法如下</p>
-<p><pre><br>A.g = function(id){<br>    //通过jQuery获取jQuery对象，然后返回第一个成员<br>    return $(id).get(0);<br>}<br>A.on = function(id,type,fn){<br>    //如果传递参数是字符串则以id处理，否则以元素对象处理<br>    var dom = typeof id === ‘string’?$(‘#’+id):$(id);<br>    dom.on(type,fn);<br>}<br></pre><br>除此之外，适配器还有很多用途，比如方法需要传递多个参数，例如……</p>
-<p><pre><br>function doSomething(name,title,age,color,size,prize){}<br></pre><br>我们记住上面的代码参数的顺序是很困难的，所以我们经常以一个参数对象的方式传入，如</p>
-<p><pre><br>/<strong><br><em>obj.name:name
-</em>obj.title:title<br><em>obj.age:age
-</em>obj.color:color<br><em>obj.size:size
-</em>obj.prize:prize
-</strong>/<br>function doSomething(obj){}<br></pre><br>当调用它的时候又不知道传递的参数是否完整，如果有一些必须参数没有传入，一些参数是有默认值的等待，此时我们通常的做法是用适配器来适配传入的这个参数对象，如下</p>
-<p><pre><br>function doSomething(obj){<br>    var _adapter = {<br>        name : ‘雨夜清荷’,<br>        title : ‘设计模式’,<br>        age : 24,<br>        color : ‘pink’,<br>        size : 100,<br>        prize : 50<br>    };<br>    for(var i in _adapter){<br>        _adapter[i] = obj[i] || _adapter[i];<br>    }<br>    //或者extend(_adapter,obj) 注:此时可能会多添加属性<br>    //do things<br>}<br></pre><br>对于这类对参数的适配又有衍生性，比如对数据的适配，比如这里有一个数组</p>
-<p><pre><br>var arr = [‘JavaScript’,’book’,’前端编程语言’,’8月1日’];<br></pre><br>我们发现数组中每个成员代表的意义不同，所以这种数据结构语义不好，我们通常会将其适配成对象形式，比如下面这种对象数据结构</p>
-<p><pre><br>var obj = {<br>    name:’’,<br>    title:’’,<br>    type:’’,<br>    time:’’<br>}<br></pre><br>我们就可以像下面这样适配</p>
-<p><pre><br>function arrToObjAdapter(arr){<br>    return {<br>        name:arr[0],<br>        type:arr[1],<br>        title:arr[2],<br>        data:arr[3]<br>    }<br>}<br>var adapterData = arrToObjAdapter(arr);<br>console.log(adapterData);         //[name:’JavaScript’,type:’book’,title:’前端编程语言’,data:’8月1日’]<br></pre><br>它解决了前后端数据依赖，如果后端架构改变导致传递数据结构发生变化，前端只需要写个适配器就好了。</p>
-<p><pre><br>//为简化模型，这里使用jQuery的ajax方法 理想数据是一个一维数组<br>function ajaxAdapter(data){<br>    //处理数据并返回新数据<br>    return [data[‘key1’],data[‘key2’],data[‘key3’]]<br>}<br>$.ajax({<br>    url:’someAddress.php’,<br>    success:function(data,status){<br>        if(data){<br>            //使用适配后的数据-返回的对象<br>            doSomething(ajaxAdapter(data))<br>        }<br>    }<br>})<br></pre><br>这样以后后端如果有任何数据变化，我们只需要相应的更改ajaxAdapter适配器转换格式就可以了。<br>三、代理模式<br>代理模式:由于一个对象不能直接引用另一个对象，所以需要通过代理对象在这两个对象之间起到中介的作用<br>如果我们想让跨域两端的对象之间实现通信，就需要找个代理对象来实现它们之间的通信。<br>1.代理对象一:img标签<br>img之类的标签通过src属性可以向其他域下的服务器发送请求，不过这类请求是get请求，并且是单向的，它不会有响应数据。可以用于统计，比如：一些站长平台会有对于你的页面统计项，其实现原理就是在你的页面触发一些动作的时候向站长平台发送这类img的get请求，然后它们会对你发送的请求做统计，然而你并不知道统计的相关信息。</p>
-<p><pre><br>//统计代理<br>var Count = (function(){<br>    //缓存图片<br>    var _img = new Image();<br>    //返回统计函数<br>    return function(param){<br>        //统计请求字符串<br>        var str = ‘<a href="http://www.count.com/a.gif?&#39;" target="_blank" rel="noopener">http://www.count.com/a.gif?&#39;</a>;<br>        //拼接请求字符串<br>        for(var i in param){<br>            str += i + ‘=’ + param[i];<br>        }<br>        //发送统计请求<br>        _img.src = str;<br>    }<br>})()<br>Count({num:10})<br></pre><br>2.代理对象二:script标签(JSONP)<br>我们知道通过src属性可实现get请求，因此我们可以在src指向的url(请求地址)上面添加一些字段信息，然后服务器端获取这些字段，再相应地生成一份内容</p>
-<p><pre><br>//前端浏览器页面<br>&lt; script type=”text/javascript” &gt;<br>//回调函数，打印出请求数据与响应数据<br>function jsonpCallBack(res,req){<br>    console.log(res,req);<br>}<br>&lt; /script &gt;<br>&lt; script type=”text/javascript” src=”<a href="http://localhost/test/jsonp.php?callback=jsonp_CallBack&amp;data=getJsonPData&quot;" target="_blank" rel="noopener">http://localhost/test/jsonp.php?callback=jsonp_CallBack&amp;data=getJsonPData&quot;</a> &gt;&lt; /script &gt;<br>&lt;?php<br>/<em>后端获取请求字段数据，并生成返回内容</em>/<br>$data = $_GET[‘data’];<br>$callback = $_GET[“callback”];<br>echo $callback.”(‘success’,’”.$data.”‘)”;<br>?&gt;<br></pre><br>3.代理对象三:代理模版<br>代理模版的解决思路是这样的:既然不同域之间互相调用对方的页面是有限制的，那么自己域中的两个页面相互之间的调用是可以的，即代理页面B调用被代理页面A中对象的方式是可以的。那么要实现这种方式我们只需要在被访问页面的域中，请求返回的Header重定向到代理页面，并在代理页面中处理被代理的页面A就可以了。<br>比如我们将自己的域称为X域，另外的域称为Y域，X域中要有一个被代理页面，即A页面。在A页面中应该具备三个部分，第一个部分是发送请求的模块，如form表单提交，负责向Y域发送请求，并提供额外两组数据，其一是要执行的回调函数名称，其二是X域中代理模版所在的路径，并将target目标指向内嵌框架。第二个部分是一个内嵌框架，如iframe，负责提供第一个部分中form表单的响应目标target的指向，并将迁入X域中的代理页面作为子页面，即B页面。第三个部分是一个回调函数，负责处理返回的数据。</p>
-<p><pre><br>//X域中被代理页面A<br>&lt; script type=”text/javascript” &gt;<br>function callback(data){<br>    console.log(‘成功接收数据’,data);<br>}<br>&lt; /script &gt;<br>&lt; iframe name=”proxyIframe” id=”proxyIframe” src=”” &gt;&lt; /iframe &gt;<br>&lt; form  action=”<a href="http://loacalhost/test/proxy.php&quot;" target="_blank" rel="noopener">http://loacalhost/test/proxy.php&quot;</a> method=”post” target=”proxyIframe”&gt;<br>    &lt; input type=”text” name=”callback” value=”callback” &gt;<br>    &lt; input type=”text” name=”proxy” value=”<a href="http://localhost:8080/proxy.html&quot;" target="_blank" rel="noopener">http://localhost:8080/proxy.html&quot;</a> &gt;<br>    &lt; input type=”submit” value=”提交” &gt;<br>&lt; /form &gt;<br></pre><br>其次在X域中我们也要有一个代理页面，主要负责将自己的页面URL中searcher部分的数据解析出来，如 <a href="http://www.a.com?type=1&amp;title=aa" target="_blank" rel="noopener">http://www.a.com?type=1&amp;title=aa</a> 这个URL中searcher部分指的就是?type=1&amp;title=aa 。将数据重新组装好，调用A页面里的回调函数，将组装好的数据作为参数传入父页面中定义的回调函数中并执行。</p>
-<p><pre><br>//X域中被代理页面B<br>&lt; script type=”text/javascript” &gt;<br>//页面加载后执行<br>window.onload = function(){<br>    //如果不在A页面中返回，不执行<br>    if(top == self) return;<br>    //获取并解析searcher中的数据<br>    var arr = location.search.substr(1).split(‘&amp;’);<br>    //预定义函数名称以及参数集<br>    fn,args;<br>    for(var i = 0, len = arr.length, item; i &lt; len; i++){<br>        //解析searcher中的每组数据<br>        item = arr[i].split(‘=’);<br>        //判断是否为回调函数<br>        if(item[0] == ‘callback’){<br>            //设置回调函数<br>            fn = item[1];<br>        //判断是否是参数集<br>        }else if(item[0] == ‘arg’){<br>            //设置参数集<br>            args = item[1];<br>        }<br>    }<br>    try{<br>        //执行A页面中预设的回调函数<br>        eval(‘top.’+fn+’(“‘+args+’”)’);<br>    }cache(e){}<br>}<br>&lt; /script &gt;<br></pre><br>最后是Y域中的被请求的接口文件C，它的主要工作是将从X域过来的请求的数据解析并获取回调函数字段与代理模版路径字段数据，并打包返回，并将自己的Header重定向为X域的代理模版B所在路径</p>
-<p><pre><br>&lt;?php<br>$proxy = $_POST[“proxy”];<br>$callback = $_POST[“callback”];<br>header(“Location: “.$proxy.”?callback=”.$callback.”&amp;arg=success”);<br>?&gt;<br>测试结果<br>控制台输出依次是<br>成功接收数据success<br></pre><br>四、装饰者模式<br>装饰者模式:在不改变原对象的基础上，通过对其进行包装拓展(添加属性或方法)使原有对象可以满足用户对更复杂需求</p>
-<p><pre><br>//装饰者<br>var decorator = function(input,fn){<br>    //获取事件源<br>    var input = document.getElementById(input);<br>    //若事件源已经绑定事件<br>    if(typeof input.onclick === ‘function’){<br>        //缓存事件源原有回调函数<br>        var oldClickFn = input.onclick;<br>        //为事件源定义新的事件<br>        input.onclick = function(){<br>            //事件源原有回调函数<br>            oldClickFn();<br>            //执行事件源新增回调函数<br>            fn();<br>        }<br>    }else{<br>        //事件源未绑定事件，直接为事件源添加新增回调函数<br>        input.onclick = fn;<br>    }<br>    //做其他事情<br>}<br>//电话输入框功能装饰<br>decorator(‘tel_input’,function(){<br>    document.getElementById(‘tel_demo_text’).style.display = ‘none’;<br>})<br></pre><br>装饰器模式与适配器模式的不同:适配器模式进行拓展很多时候是对对象内部结构的重组，因此了解其自身结构是必须的，而装饰者模式对对象的拓展是一种良性循环，不用了解其具体实现，只是在外部进行了一次封装拓展，这又是对原有功能完整性的一种保护。<br>五、桥接模式<br>桥接模式:在系统沿着多个维度变化的同时，又不增加其复杂度并已达到解耦。<br>写代码时一定要注意对相同的逻辑做抽象提取处理，这样很重要，并且重用率也会很大，可读性更高。<br>假设我们现在有如下需求：<br>给页面上的用户信息部分添加一些鼠标滑过的特效，对于用户名，鼠标滑过直接改变背景颜色，但是用户等级、用户消息等只能改变里面的数字内容。如果作为小白，我们的代码可能是这样的</p>
-<p><pre><br>var spans = document.getElemenentsByTagName(‘span’);<br>//为用户名绑定特效<br>spans[0].onmouseover = function(){<br>    this.style.color = ‘red’;<br>    this.style.background = ‘#ddd’;<br>}<br>spans[0].onmouseout = function(){<br>    this.style.color = ‘#333’;<br>    this.style.background = ‘#f5f5f5’;<br>}<br>//为等级绑定特效<br>spans[1].onmouseover = function(){<br>    this.getElementsByTagName(‘strong’)[0].style.color = ‘red’;<br>    this.getElementsByTagName(‘strong’)[0].style.background = ‘#ddd’;<br>}<br>spans[1].onmouseout = function(){<br>    this.getElementsByTagName(‘strong’)[0].style.color = ‘#333’;<br>    this.getElementsByTagName(‘strong’)[0].style.background = ‘#f5f5f5’;<br>}<br>……<br></pre><br>明显看出来，上面代码非常冗余，问题出在哪儿呢？应该对事件的回调函数再做处理——在写代码时一定要注意对相同的逻辑做抽象提取处理，这一点很重要。对于用户信息模块的每一个部分鼠标滑过与鼠标离开两个事件的执行函数有很大一部分是相似的，比如他们两个都处理每个部件中的某个元素，他们都是处理该元素的字体颜色和背景颜色。所以对于这个相似点的抽象提取是很有必要的，因此你可以创建下面这样一个函数，让它解除与事件中的this的耦合。</p>
-<p><pre><br>//抽象<br>function changeColor(dom,color,bg){<br>    //设置元素的字体颜色<br>    dom.style.color = color;<br>    //设置元素的背景颜色<br>    dom.style.background = bg;<br>}<br></pre><br>剩下你要做的就是对元素绑定事件了，但是有一点你要明白，仅仅知道元素事件绑定与抽象提取的设置样式方法changeColor还是不够，你需要用一个方法将他们链接起来。那么这个方法就是桥接方法，这种模式就是桥接模式。对于事件的桥接方法，我们可以用一个匿名函数代替，否则直接将changeColor作为事件的回掉函数，那么我们刚才所做的事情就白做了，因为他们还将耦合在一起。如下面的为用户名绑定事件</p>
-<p><pre><br>var spans = document.getElementByTagName(‘span’);<br>spans[0].onmouseover = function(){<br>    changeColor(this,’red’,’#ddd’)<br>}<br></pre><br>changeColor方法中dom实质上是事件回调函数中的this，那么我们想解除他们之间的耦合，我们就需要一个桥接方法——匿名回掉函数。通过这个回掉函数，我们将获取到的this传递到changeColor函数中，即可实现需求。同样对于用户名模块的鼠标移开事件用同样的方式即可。</p>
-<p><pre><br>spans[0].onmouseout = function(){<br>    changeColor(this,’#333’,’#f5f5f5’)<br>}<br></pre><br>既然用户名模块的this在桥接匿名函数中获取，那么也应该是同样的道理应用在用户等级上，通过桥接函数来获取数字元素，然后传入changeColor就可以了吧。</p>
-<p><pre><br>spans[1].onmouseover = function(){<br>    changeColor(this.getElementsByTagName(‘strong’)[0],’red’,’#ddd’);<br>}<br>spans[1].onmouseout = function(){<br>    changeColor(this.getElementsByTagName(‘strong’)[0],’#333’,’#f5f5f5’);<br>}<br></pre><br>桥接模式对于多维的变化也同样适用。比如我们写一个canvas跑步游戏，对于游戏中的人、小精灵、小球等一系列的实物都有动作单元，而他们的每个动作实现起来方式又都是统一的，比如人和精灵和球的运动其实就是位置坐标x和y的变化过程，球的颜色与精灵的色彩的绘制方式都相似等，这样我们可以将这些多维化部分，提取出来作为一个抽象运动单元进行保存，而当我们创建实体时，将需要的每个抽象动作单元通过桥接，链接在一起运作。这样他们之间不会相互影响并且该方式降低了他们之间的耦合</p>
-<p><pre><br>//多维变量类<br>//运动单元<br>function Speed(x,y){<br>    this.x = x<br>    this.y = y<br>}<br>Speed.prototype.run = function(){<br>    console.log(‘运动起来’)<br>}<br>//着色单元<br>function Color(cl){<br>    this.color = cl;<br>}<br>Color.prototype.draw = function(){<br>    console.log(‘绘制色彩’)<br>}<br>//变形单元<br>function Shape(sp){<br>    this.shape = sp<br>}<br>Shape.prototype.change = function(){<br>    console.log(‘改变形状’)<br>}<br>//说话单元<br>function Speek(wd){<br>    this.word = wd<br>}<br>Speek.prototype.say = function(){<br>    console.log(‘书写字体’)<br>}<br></pre><br>于是我们想创建一个球类，并且他可以运动可以着色</p>
-<p><pre><br>function Ball(x,y,c){<br>    //实现运动单元<br>    this.speed = new Speed(x,y);<br>    //实现着色单元<br>    this.color = new Color(c);<br>}<br>Ball.prototype.init = function(){<br>    //实现运动<br>    this.speed.run()<br>    //实现着色<br>    this.speed.dras()<br>}<br></pre><br>同样我们想创建一个人物类，他可以运动以及说话</p>
-<p><pre><br>function People(x,y,f){<br>    this.speed = new Speed(x,y)<br>    this.font = new Speek(f)<br>}<br></pre><br>当然我们也可以创建一个精灵类，让他可以运动可以着色可以改变形状</p>
-<p><pre><br>function Spirite(x,y,c,s){<br>    this.speed = new Speed(x,y);<br>    this.color = new Color(c);<br>    this.shape = new Shape(s);<br>}<br>Spirite.prototype.init = function(){<br>    this.speed.run();<br>    this.color.draw();<br>    this.shape.change();<br>}<br></pre><br>当我们想实现一个人物时，我们直接实例化一个人物对象，这样他就可以有用运动和说话的动作了</p>
-<p><pre><br>var p = new People(10,12,16);<br>p.init();<br></pre><br>桥接模式最主要的特点是将实现层(如元素绑定的事件)与抽象层(如修饰页面UI逻辑)解耦分离，使两部分可以独立变化。由此可以看出桥接模式主要是对结构之间的解构。而前面学过的抽象工厂模式与创建者模式主要业务在于创建。通过桥接模式实现的解耦，使实现层与抽象层分开处理，避免需求的改变造成对象内部的修改，体现了面向对象拓展的开放及对修改的关闭原则，这是很有用的。当然由于侨联的添加，有时也造成开发成本的添加。有时性能上也会受影响。<br>六、组合模式<br>组合模式:又称部分-整体模式，将对象组合成树形结构以表示”部分整体”的层次结构。组合模式使得用户对单个对象和组合对象的使用具有一致性。<br>需求:为强化首页用户体验，要求在用户首页添加一个新闻模块，新闻的内容是根据用户平时关注的内容挖掘的，因此有的人可能会显示文字新闻，有的人会是图片新闻，甚至有的人显示的新闻是一个直播链接，方便用户观看比赛……如果一会儿添加一条文字新闻，一会儿添加一条带有直播图标的文字新闻，一会儿添加一条图片新闻……等各种不同的新闻形式的要求。其实我们可以整理出，这些新闻大致可以分为相互独立的几种类型，而对某类新闻修改时又不会影响到其他类新闻，所以可以将每一类新闻抽象成面向对象编程中的一个类，这样日后对某类新闻修改只需针对这类新闻做相应的修改即可。而对于那些不同新闻类型的需求，我们仅需在新闻类中挑选一些组合成需要的模块，也就是说建议用组合模式来完成这个需求。<br>对于每个新闻类这个“部分”，要接口统一，在JavaScript中我们可以通过继承同一个虚拟类来实现，比如这个需求中我们可以让所有的新闻都继承一个新闻虚拟父类News，如下</p>
-<p><pre><br>var News = function(){<br>    //子组件容器<br>    this.children = [];<br>    //当前组件元素<br>    this.element = null;<br>}<br>News.prototype = {<br>    init : function(){<br>        throw new Error(‘请重写你的方法’)<br>    },<br>    add : function(){<br>        throw new Error(‘请重写你的方法’)<br>    },<br>    getElement : function(){<br>        throw new Error(‘请重写你的方法’)<br>    }<br>}<br></pre><br>我们在虚拟父类的构造函数中声明了一些特权变量——虽然通常虚拟类是定义而不实现的，但是我们在虚拟类的构造函数中定义两个特权变量是因为后面的所有继承子类都要声明这两个变量，为了简化子类我们也可以将这些共有变量提前声明在父类中。<br>另外要注意，组合模式不仅仅是单层次组合，也可以是一个多层次的，比如需求中的将图片新闻和文字新闻放在一行的条件就是说，我们将组合后的整体作为一个部分，继续组合。这样你就应该在拆分整体后还要确定他们的层次关系，比如最顶层是一个新闻模块的容器，再往下面是每一行新闻成员集合，每一行还可能有新闻组合体，当然最后一层组合体里面的成员就是新闻对象了。也就是说对象的上一层是可以有子成员的，最底层中的对象是没有子成员的。组合模式中用到了继承，所以我们要把以前学过的继承相关的知识拿出来用在组合模式中，比如应用及省组合式继承，像下面这样显现新闻模块容器类。</p>
-<p><pre><br>//容器类构造函数<br>var Container = function(id,parent){<br>    //构造函数继承父类<br>    News.call(this);<br>    //模块id<br>    this.id = id;<br>    //模块的父容器<br>    this.parent = parent;<br>    //构建方法<br>    this.init();<br>}<br>//寄生式继承父类原型的方法<br>inheritPrototype(Container,News);<br>//构建方法<br>Container.prototype.init = function(){<br>    this.element = document.createElement(‘ul’);<br>    this.element.id = this.id;<br>    this.element.className = ‘new-container’<br>}<br>//添加子元素方法<br>Container.prototype.add = function(child){<br>    //在子元素容器中插入子元素<br>    this.children.push(child);<br>    //插入当前组件元素树中<br>    this.element.appendChild(child.getElement());<br>    return this;<br>}<br>//获取当前元素方法<br>Container.prototype.getElement = function(){<br>    return this.element;<br>}<br>//显示方法<br>Container.prototype.show = function(){<br>    this.parent.appentChild(this.element);<br>}<br></pre><br>同样下一层级的行成员集合类以及后面的新闻组合体类实现的方式与之类似</p>
-<p><pre><br>var Item = function(classname){<br>    News.call(this);<br>    this.calssname = classname || ‘’<br>    this.init();<br>}<br>inheritPrototype(Item,News);<br>Item.prototype.init = function(){<br>    this.element = document.createElement(‘li’);<br>    this.element.className = this.classname;<br>}<br>Item.prototype.add = function(child){<br>    //在子元素容器中插入子元素<br>    this.children.push(child);<br>    //插入当前组件元素树中<br>    this.element.appendChild(child.getElement());<br>    return this;<br>}<br>Item.prototype.getElement = function(){<br>    return this.element;<br>}<br>var NewsGroup = function(classname){<br>    News.call(this);<br>    this.classname = classname || ‘’;<br>    this.init()<br>}<br>inheritPrototype(NewsGroup,News);<br>NewsGroup.prototype.init = function(){<br>    this.element = document.createElement(‘div’);<br>    this.element.className = this.classname;<br>}<br>NewsGroup.prototype.add = function(child){<br>    //在子元素容器中插入子元素<br>    this.children.push(child);<br>    //插入当前组件元素树中<br>    this.element.appendChild(child.getElement());<br>    return this;<br>}<br>NewsGroup.prototype.getElement = function(){<br>    retrun this.element;<br>}<br></pre><br>上面已经把所有子成员类创建出来了，不过光有这些新闻容器类是不行的，我们还需要有更底层的新闻类，但是注意这些新闻成员类是不能拥有子成员的，但是他们继承了父类，所以对于add方法最好声明一下，比如我们创建图片新闻类。</p>
-<p><pre><br>var ImageNews = function(url,href,classname){<br>    News.call(this);<br>    this.url = url || ‘’;<br>    this.href = href || ‘#’;<br>    this.classname = classname || ‘normal’;<br>    this.init();<br>}<br>inheritPrototype(ImageNews,News);<br>ImageNews.prototype.init = function(){<br>    this.element = document.crateElement(‘a’);<br>    var img = new Image();<br>    img.src = this.url;<br>    this.element.appendChild(img);<br>    this.element.className = ‘image-news’ + this.classname;<br>    this.element.href = this.href;<br>}<br>ImageNews.prototype.add = function(){}<br>ImageNews.prototype.getElement = function(){<br>    return this.element;<br>}<br></pre><br>新闻类与上面的容器类很像，也很简单吧，那么下面你把剩下的基类新闻自己动手创建一下吧</p>
-<p><pre><br>var IconNews = function(text,href,type){<br>    News.call(this);<br>    this.text = text || ‘’;<br>    this.href = href || ‘#’;<br>    this.type = type || ‘video’;<br>    this.init();<br>}<br>inheritPrototype(IconNews,News);<br>IconNews.prototype.init = function(){<br>    this.element = document.createElement(‘a’);<br>    this.element.innerHTML = this.text;<br>    this.element.href = this.href;<br>    this.element.className = ‘icon ‘+ this.type;<br>}<br>IconNews.prototype.add = function(){}<br>IconNews.prototype.getElement = function(){<br>    return this.element;<br>}<br>var EasyNews = function(text,href){<br>    News.call(this);<br>    this.text = text || ‘’;<br>    this.href = href || ‘#’;<br>    this.init();<br>}<br>inheritPrototype(EasyNews,News);<br>EasyNews.prototype.init = function(){<br>    this.element = document.createElement(‘a’);<br>    this.element.innerHTML = this.text;<br>    this.element.href = this.href;<br>    this.element.className = ‘text’;<br>}<br>EasyNews.prototype.add = function(){}<br>EasyNews.prototype.getElement = function(){<br>    return this.element;<br>}<br>var TypeNews = function(text,href,type,pos){<br>    News.call(this);<br>    this.text = text || ‘’;<br>    this.href = href || ‘#’;<br>    this.type = type || ‘’;<br>    this.pos = pos || ‘left’;<br>    this.init();<br>}<br>inheritPrototype(TypeNews,News);<br>TypeNews.prototype.init = function(){<br>    this.element = document.createElement(‘a’);<br>    if(this.pos === ‘left’){<br>        this.element.innerHTML = ‘[‘+this.type+’]’+this.text;<br>    }else{<br>        this.element.innerHTML = this.text + ‘[‘+this.type+’]’<br>    }<br>    this.element.href = this.href;<br>    this.element.className = ‘text’;<br>}<br>TypeNews.prototype.add = function(){}<br>TypeNews.prototype.getElement = function(){<br>    return this.element;<br>}<br></pre><br>现在新闻类都创建了，通过add方法像一棵树一样一层一层创建新闻就可以了</p>
-<p><pre><br>var news1 = new Container(‘news’,document.body);<br>news1.add(<br>    new Item(‘normal’).add(<br>        new IconNews(‘梅西不拿金球也伟大’,’#’,’video’)<br>    )<br>).add(<br>    new Item(‘normal’).add(<br>        new IconNews(‘保护强国强队用意明显’,’#’,’live’)<br>    )<br>).add(<br>    new Item(‘normal’).add(<br>        new NewsGroup(‘has-img’).add(<br>            new ImageNews(‘img/1.jpg’,’#’,’small’)<br>        ).add(<br>            new EasyNews(‘从240斤的胖子成功变型男’,’#’)<br>        ).add(<br>            new EasyNews(‘五大雷人跑步机’,’#’)<br>        )<br>    )<br>).add(<br>    new Item(‘normal’).add(<br>        new TypeNews(‘AK47不愿为费城打球’,’#’,’NBA’,’left’);<br>    )<br>).add(<br>    new Item(‘normal’).add(<br>        new TypeNews(‘火炮飚6三分创新高’,’#’,’CBA’,’right’);<br>    )<br>).show();<br></pre><br>这样创建的每一条新闻都是一个独立的个体，互不影响，避免相互间的耦合，也增强了组合后的模块的复杂性。日后不论再有什么样的需求，做相应的组合就可以轻松完成。<br>其实在页面中，组合模式更常用在创建表单上，比如注册页面可能有不同的表单提交模块。对于这些需求我们只需要有基本的个体，然后通过一定的组合即可实现。<br>对于日常我们登陆注册常用到的页面，例如：<br>用户名:<intpu type="text"> 4到6位数字或字母<br>密码:<intpu type="password">6到12位数字或密码<br>昵称:<intpu type="text"><br>状态:<intpu type="text"><br>我们如何用组合模式实现呢？我们可以模仿上面创建新闻模块那样创建基类Base，然后3个组合类FormItem、FieldsetItem、Group，以及成员类InputItem、LabelItem、SpanItem、TextItem，创建完成之后</intpu></intpu></intpu></intpu></p>
-<p><pre><br>var form = new FormItem(‘FormItem’,document.body);<br>form.add(<br>    new Group().add(<br>        new LabelItem(‘user_name’,’用户名:’)<br>    ).add(<br>        new InputItem(‘user_name’);<br>    ).add(<br>        new SpanItem(‘4到6位数字或字母’)<br>    )<br>).add(<br>    new Group().add(<br>        new labelItem(‘user_password’,’密码:’)<br>    ).add(<br>        new InputItem(‘user_password’)<br>    ).add(<br>        new SpanItem(‘6到12位数字或密码’)<br>    )<br>).add(<br>    //…<br>).show();<br></pre><br>组合模式能够给我们提供一个清晰的组成结构。组合对象类通过继承同一个父类使其具有统一的方法，这样也方便了我们统一管理与使用，当然此时单体成员与组合体成员行为表现就比较一致了。这样就模糊了简单对象与组合对象的区别。有时这也是一种对数据的分级式处理。清晰而又方便我们对数据的管理与使用。<br>当然组合模式有时在实现需求上给我们带来更多的选择方式，虽然对于单体对象的实现简单而又单一，但是通过对其组合将会给我们带来更多的使用形式。<br>七、享元模式<br>享元模式:运用共享技术有效地支持大量的细粒度的对象，避免对象间拥有相同内容造成多余的开销。<br>我们上面介绍组合模式的时候，做了一个新闻模块，可是随着内容的增多，单页面已经无法容纳所有的新闻了，所以需要采取分页显示所有的新闻。<br>如果我们不了解享元模式，我们的代码很可能是这样的</p>
-<p><pre><br>var dom = null,                   //缓存创建的新闻标题元素<br>    paper = 0,                    //当前页数<br>    num = 5,                      //每页显示新闻数目<br>    i = 0,                        //创建新闻元素时保存变量<br>    len = article.length;         //新闻数据长度<br>for( ;i &lt; len;i++){<br>    dom = document.createElement(‘div’);           //创建包装新闻标题元素<br>    dom.innerHTML = article[i];                    //向元素中添加新闻标题<br>    if(i &gt;= num){                                  //默认显示第一页<br>        dom.style.display = ‘none’;                //超出第一页新闻隐藏<br>    }<br>    document.getElementById(‘container’).appendChild(dom);   //添加到页面中<br>}<br>//下一页绑定事件<br>document.getElementById(‘next_page’).onclick = function(){<br>    var div = document.getElementById(‘container’).getElementByTagName(‘div’),<br>    //获取所有新闻标题包装元素<br>    j = k = n = 0;       //j,k循环变量，n当前页显示的第一个新闻序号<br>    n = ++paper % Math.ceil(len/num) * num; //获取当前页显示的第一个新闻序号<br>    for(;j &lt; len;j++){<br>        div[j].style.display = ‘none’;     //隐藏所有新闻<br>    }<br>    for(;k &lt; 5;k++){<br>        if(div[n+k])<br>            div[n+k].style.display = ‘block’ //显示当前页新闻<br>    }<br>}<br></pre><br>我们会发现代码在IE浏览器下会有卡顿现象，因为大量相同结构的新闻同时插入页面并造成多余的开销必然会影响浏览器性能。对于相同结构造成的多余开销问题，我们可以用享元模式来解决。<br>享元模式主要还是对其数据、方法共享分离，他将数据和方法分成内部数据、内部方法和外部数据、外部方法。内部方法与内部数据指的是相似或者共有的数据和方法，所以将这一部分提取出来减少开销，以提高性能。<br>在我们的案例里，新闻个体都有共同的结构，所以它们应该作为内部的数据，而‘下一页’按钮绑定的事件已经不能再抽象提取里，所以应该就是外部的方法。<br>既然这些内部的数据提取出来了，为了能使用它们，我们还需要提供一个操作方法，像下面这样:</p>
-<p><pre><br>var Flyweight = function(){<br>    //已创建的元素<br>    var created = [];<br>    //创建一个新闻包装容器<br>    function create(){<br>        var dom = document.crateElement(‘div’);<br>        //将容器插入新闻列表容器中<br>        document.getElementById(‘container’).appendChild(dom);<br>        //缓存新创建的元素<br>        created.push(dom);<br>        //返回创建的新元素<br>        return dom;<br>    }<br>    return {<br>        //获取创建新闻元素方法<br>        getDiv : function(){<br>            //如果已创建的元素小于当前页元素总个数，则创建<br>            if(created.length &lt; 5){<br>                return create()<br>            }else{<br>                //获取第一个元素，并插入最后面<br>                var div = created.shift();<br>                created.push(div);<br>                return div;<br>            }<br>        }<br>    }<br>}<br></pre><br>首先，创建一个享元类，由于我们每页只能显示5条新闻，所以我们创建5个元素，保存在享元类的内部，我们可以通过享元类为我们提供的方法getDiv来获取创建的元素。内部的数据和内部的方法提取出来之后我们就要实现外部的数据和外部的方法，外部的数据就是我们要显示的所有新闻内容，每个内容都不一样，所以它们不能被共享。当然，为下一页绑定的事件是独立的，它只绑定一次。然后我们需要做两件事，第一件事情，我们需要根据新闻的内容实例化页面，第二件事情，对下一页绑定一个点击事件，显示下一页，显示过程中我们可以优化一个策略，就是如果当前页显示的新闻数据不够5条，那么我们可以在所有新闻数据中起始处获取，这样，就要求我们新闻数据的总条数大于页面显示最多的条数——5条。首先我们初始化页面。</p>
-<p><pre><br>var paper = 0,<br>    num = 5,<br>    len = article.length;<br>//添加5条新闻<br>for(var i = 0;i &lt; 5;i++){<br>    if(article[i]){<br>        //通过享元类获取创建的元素并写入新闻内容<br>        Flyweight.getDiv().innerHTML = article[i];<br>    }<br>}<br></pre><br>现在生成新闻界面很简单了，我们还要给’下一页’元素绑定一个事件，像下面这样</p>
-<p><pre><br>document.getElementById(‘next_page’).onclick = function(){<br>    //如果新闻内容不足5条则返回<br>    if(article.length &lt; 5){<br>        return;<br>    }<br>    var n = ++paper * num % len,  //获取当前页的第一条新闻索引<br>        j = 0;                    //循环变量<br>    //插入5条新闻<br>    for(;j &lt; 5;j++){<br>        //如果存在第n+j条则插入<br>        if(article[n+j]){<br>            Flyweight.getDiv().innerHTML = article[n+j];<br>        //否则插入起始位置第n+j-len条<br>        }else if(article[n+j-len]){<br>            Flyweight.getDiv().innerHTML = article[n+j-len];<br>        //如果都不存在则插入空字符串<br>        }else{<br>            Flyweight.getDiv().innerHTML = ‘’<br>        }<br>    }<br>}<br></pre><br>通过享元模式对页面重构之后每次操作只需要操作那5个元素，与之前需要操作几百个元素的性能相比，提高了许多。<br>组合模式还有那些用途呢？我们在面向对象编程上还是很常用的，比如说一个游戏中我们可能创建一些人、精灵等角色，那么它们都会有运动这个动作，其实这一动作在所有角色中实现的方式都是相同的。对此我们可以创建一个通用的享元类，让它可以实现横向移动以及纵向移动，举例如下：</p>
-<p><pre><br>var Flyweight = {<br>    moveX : function(x){<br>        this.x = x<br>    },<br>    moveY : function(y){<br>        this.y = y<br>    }<br>}<br></pre><br>其他任何角色都可以通过继承的方式来实现这些方法，比如让人继承移动方法</p>
-<p><pre><br>var Player = function(x,y,c){<br>    this.x = x;<br>    this.y = y;<br>    this.color = c;<br>}<br>Player.prototype = Flyweight;<br>Player.prototype.changeC = function(c){<br>    this.color = c<br>}<br></pre><br>让精灵继承移动的方法</p>
-<p><pre><br>var Spirit = function(x,y,r){<br>    this.x = x;<br>    this.y = y;<br>    this.r = r;<br>}<br>Spirit.prototype = Flyweight;<br>Spirit.prototype.changeR = function(r){<br>    this.r = r<br>}<br></pre><br>那么我们创建一个人</p>
-<p><pre><br>var player1 = new Player(5,6,’red’);<br>console.log(player1); //Player {x:5,y:6,color:’red’,moveX:function,moveY:function……}<br></pre><br>让这个人移动起来</p>
-<p><pre><br>player1.moveX(6);<br>player1.moveY(7);<br>player1.changeC(‘pink’);<br>console.log(player1); //Player {x:6,y:7,color:’pink’,moveX:function,moveY:function……}<br></pre><br>我们创建一个精灵</p>
-<p><pre><br>var spirit1 = new Spirit(2,3,4);<br>console.log(spirit);//Spirit {x:2,y:3,r:4,moveX:function,moveY:function……}<br></pre><br>让精灵移动起来</p>
-<p><pre><br>spirit1.moveX(3);<br>spirit1.moveY(4);<br>spirit1.changeR(5);//Spirit {x:3,y:4,r:5,moveX:function,moveY:function……}<br></pre><br>于是我们可以看出，不论是游戏中的人还是游戏中的精灵都拥有了运动这一方法，这样我们就可以将本来在人物类以及精灵类中的内部方法(移动方法)提取出来，实现了公用，减少其他类重写时造成的不必要的开销，类似这样的提取在页面中也是很常见的，所以我们要善于观察提取相似可共享的数据与方法来优化我们的应用。<br>享元模式的应用目的是为了提高程序的执行效率与系统的性能。因此在大型系统开发中应用是比较广泛的，百分之一的效率提成有时可以发生质的改变。它可以避免程序中的数据重复。有时系统内存在大量对象，会造成大量内存占用，所以应用享元模式来减少内存消耗是很有必要的。不过应用时一定要找准内部状态(数据与方法)与外部状态(数据与方法)，这样你才能更合理的提取分离。当然在一些小程序中，性能与内存的消耗对程序的执行影响不大时，强行应用享元模式而引入复杂的代码逻辑，往往会收到负效应。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/01/09/张容铭-设计模式-第三篇-结构型设计模式/" data-id="ckb8s8829004j4zxqywboc75n" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-现代前端工程实践方案-解锁webpack-3-1-8-webpack的环境，webpack实战演练" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/01/07/网易微专业-现代前端工程实践方案-解锁webpack-3-1-8-webpack的环境，webpack实战演练/" class="article-date">
-  <time datetime="2020-01-07T07:52:20.000Z" itemprop="datePublished">2020-01-07</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/01/07/网易微专业-现代前端工程实践方案-解锁webpack-3-1-8-webpack的环境，webpack实战演练/">网易微专业-现代前端工程实践方案 解锁webpack-3.1.8-webpack的环境，webpack实战演练</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.webpack的环境系统<br>1-1.为什么要区分环境<br>因为在不同的场景下可能需要不同的配置，使用不同的功能，所以要区分环境，比如：<br>·开发模式：会额外用到一些调试功能，比如webpack-dev-server,但是为了加快调试速度，可能不会去用上压缩，tree-shaking之类的功能<br>·生产模式：为了减少文件体积，会使用压缩，tree-shaking等功能，但是不要入webpack-dev-server或者eslint这样的调试工具<br>1-2.具体列举一下生产环境和开发环境的不同(仅为例子，不代表每个公司一定会这么做)<br>production:去除无用代码；图片压缩，转码base64，雪碧图；提取共用代码<br>development:webpack-dev-server;source-map;代码风格检查<br>1-3.如何告诉webpack当前环境<br>webpack –env envname<br>1-4.实战<br>应该还有test.less，test2.less,index.html,app.js,这些文件与之前内容相似，在此不在赘述，如有修改，在下面需要的地方会说明<br>在这里，我们的配置文件是webpack.common.js</p>
-<pre>
-const pro = require('webpack');
-const extractTextWebpackPlugin = require('extract-text-webpack-plugin');
-module.exports = env => {
-    var common = {
-        entry : './app.js',
-        output : {
-            filename : 'bundle.js'
-        },
-        module : {
-            rules : []
-        },
-        plugins : []
-    }
-    return common
-}
-</pre>
-2.不同环境下的配置编写
-2-1.如何编写不同的配置文件来区分环境
-01.编写一个开发环境下的配置文件
-02.编写一个生产环境下的配置文件
-03.在基础配置引入开发和生产配置
-04.判断env参数，合并对应的配置 
-2-2.实战
-配置文件webpack.common.js
-<pre>
-const webpack = require('webpack');
-const extractTextCss = require('extract-text-webpack-plugin');
-const htmlWebpackPlugin = require('html-webpack-plugin');
-const dev = require('./webpack.dev.js');//引入开发模式下的配置
-const pro = require('./webpack.pro.js');//引入生产模式下的配置
-const merge = reuqire('webpack-merge');//用来合并不同模式下的配置，自行下载安装
-module.exports = env => {
-    //配置对象
-    var common = {
-        entry : {
-            app : './app'
-        },
-        output : {
-            path : __dirname + '/src/dist',
-            filename : './[name].bundle.js'
-        },
-        modules : {
-            rules : [{
-                test : /\.less$/,
-                use : extractTextCss.extract({
-                    fallback : {
-                        loader : 'style-loader',
-                        options : {
-                            singleton : true,
-                        }
-                    },
-                    use : [
-                        {
-                            loader : 'css-loader',
-                            options : {
-                                module : {
-                                    localIdentName:'[path][name]_[local]_[hash:4]'
-                                }
-                            }
-                        },
-                        {
-                            loader : 'postcss-loader',
-                            options : {
-                                ident : 'postcss',
-                                plugin : [
-                                    require('autoprefixer')({
-                                        "overrideBrowserslist":[//属性名，webpack3和webpack4有差异
-                                        ">1%","last 2 versions"
-                                        ]
-                                    }),
-                                    require('postcss-cssnext')()
-                                ]
-                            }
-                        },
-                        {
-                            loader : 'less-loader'
-                        }
-                    ]
-                })
-            }]
-        },
-        plugins:[
-            new extractTextCss({
-                filename : env === 'production' ? 'app.bundle.css' : 'app.dev.css'
-            })
-        ]
-    }
-    //返回配置对象
-    return merge(common,env === 'production' ? pro : dev)
-}
-</pre>
-webpack.dev.js为开发模式准备的配置
-<pre>
-const webpack = reuqire('webpack');
-module.exports = {
-    devtool:'cheap-module-source-map',
-    devServer:{
-        port:9001,
-        overlay:true,
-        hot:true,
-        hotOnly:true,
-    },
-    plugins:[
-        new webpack.HotModuleReplacementPlugin(),
-        new webpack.NamedModulesPlugin(),
-    ]
-}
-</pre>
-webpack.pro.js为生产模式准备的配置
-<pre>
-var webpack = reuqire('webpack');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
-module.exports = {
-    optimization:{
-        minimize:false,
-    },
-    plugins:[
-        new HtmlWebpackPlugin({
-            filename:'index.html',
-            template:'./index.html',
-            minify:{
-                collapseWhitespace:true
-            },
-            inject:true,
-        })
-    ]
-}
-</pre>
-在package.json中配置两行自定义命令build&dev
-<pre>
-"scripts": {
-    "test": "echo\"Error: no test specified\" && exit 1",
-    "build":"webpack --env production --config webpack.common.js",
-    "dev":"webpack-dev-server --env development --config webpack.common.js"
-},
-</pre>
-对于生产环境和开发环境需要配置不同内容，比如开发环境不需要配置雪碧图，但是生产环境需要配置雪碧图，这样的配置，在webpack.common.js里需要如何配置呢?雪碧图也是postcss支持的，所以主要修改postcss相关loader
-<pre>
-const webpack = require('webpack');
-const extractTextCss = require('extract-text-webpack-plugin');
-const htmlWebpackPlugin = require('html-webpack-plugin');
-const dev = require('./webpack.dev.js');//引入开发模式下的配置
-const pro = require('./webpack.pro.js');//引入生产模式下的配置
-const merge = reuqire('webpack-merge');//用来合并不同模式下的配置，自行下载安装
-module.exports = env => {
-    var postPlugins = [require('autoprefixer')(),require('postcss-cssnext')()]
-    postPlugins.concat(env === 'production'?[require('postcss-sprites')({spritePath:'dist/sprite',retina:true})]:[])
-    //配置对象
-    var common = {
-        entry : {
-            app : './app'
-        },
-        output : {
-            path : __dirname + '/src/dist',
-            filename : './[name].bundle.js'
-        },
-        modules : {
-            rules : [{
-                test : /\.less$/,
-                use : extractTextCss.extract({
-                    fallback : {
-                        loader : 'style-loader',
-                        options : {
-                            singleton : true,
-                        }
-                    },
-                    use : [
-                        {
-                            loader : 'css-loader',
-                            options : {
-                                module : {
-                                    localIdentName:'[path][name]_[local]_[hash:4]'
-                                }
-                            }
-                        },
-                        {
-                            loader : 'postcss-loader',
-                            options : {
-                                ident : 'postcss',
-                                plugin : postPlugins
-                            }
-                        },
-                        {
-                            loader : 'less-loader'
-                        }
-                    ]
-                })
-            }]
-        },
-        plugins:[
-            new extractTextCss({
-                filename : env === 'production' ? 'app.bundle.css' : 'app.dev.css'
-            })
-        ]
-    }
-    //返回配置对象
-    return merge(common,env === 'production' ? pro : dev)
-}
-</pre>
-3.webpack中的环境区分
-webpack4中更简便的环境区分:webpack --mode production/development/none
-默认生产环境打包是压缩代码的，开发模式不压缩代码。如果不指定开发模式，打包的时候会有警告，可以直接在配置文件中指定mode:'development'
-<pre>
-module.exports = {
-    mode:'production',
-    entry:'./app.js',
-    output:{
-        filename:'bundle.js',
-    },
-    module:{
-        rules:[]
-    },
-    plugins:[]
-}
-</pre>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/01/07/网易微专业-现代前端工程实践方案-解锁webpack-3-1-8-webpack的环境，webpack实战演练/" data-id="ckb8s87vd00324zxqa72v7ds4" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/01/18/网易微专业-jq源码解析-2-7-1-动画队列-动画设计-动画实现/" data-id="ckbm7472n0022b4xqezwjkat2" class="article-share-link">Share</a>
       
       
     </footer>
@@ -1131,7 +895,7 @@ module.exports = {
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/7/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/9/">Next &raquo;</a>
+    <a class="extend prev" rel="prev" href="/page/7/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/9/">Next &raquo;</a>
   </nav>
 
 </section>
@@ -1145,7 +909,7 @@ module.exports = {
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端路由/">前端路由</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/正则/">正则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-node/">网易微专业 node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-babel/">react babel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端路由/">前端路由</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/拉勾-手写Promise源码/">拉勾  手写Promise源码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/拉勾-JavaScript异步编程/">拉勾 JavaScript异步编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/拉勾-函数式编程/">拉勾 函数式编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/拉勾-函数式编程范式/">拉勾 函数式编程范式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/正则/">正则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-Flutter/">网易微专业 Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-node/">网易微专业 node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
     </div>
   </div>
 
@@ -1155,7 +919,7 @@ module.exports = {
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/前端路由/" style="font-size: 10px;">前端路由</a> <a href="/tags/数据结构/" style="font-size: 13.33px;">数据结构</a> <a href="/tags/正则/" style="font-size: 10px;">正则</a> <a href="/tags/算法/" style="font-size: 20px;">算法</a> <a href="/tags/网易微专业-node/" style="font-size: 10px;">网易微专业 node</a> <a href="/tags/设计模式/" style="font-size: 16.67px;">设计模式</a>
+      <a href="/tags/react-babel/" style="font-size: 10px;">react babel</a> <a href="/tags/前端路由/" style="font-size: 10px;">前端路由</a> <a href="/tags/拉勾-手写Promise源码/" style="font-size: 10px;">拉勾  手写Promise源码</a> <a href="/tags/拉勾-JavaScript异步编程/" style="font-size: 10px;">拉勾 JavaScript异步编程</a> <a href="/tags/拉勾-函数式编程/" style="font-size: 10px;">拉勾 函数式编程</a> <a href="/tags/拉勾-函数式编程范式/" style="font-size: 10px;">拉勾 函数式编程范式</a> <a href="/tags/数据结构/" style="font-size: 13.33px;">数据结构</a> <a href="/tags/正则/" style="font-size: 10px;">正则</a> <a href="/tags/算法/" style="font-size: 20px;">算法</a> <a href="/tags/网易微专业-Flutter/" style="font-size: 10px;">网易微专业 Flutter</a> <a href="/tags/网易微专业-node/" style="font-size: 10px;">网易微专业 node</a> <a href="/tags/设计模式/" style="font-size: 16.67px;">设计模式</a>
     </div>
   </div>
 
@@ -1177,23 +941,23 @@ module.exports = {
       <ul>
         
           <li>
-            <a href="/2020/06/08/网易微专业-look直播，企业级全栈web应用搭建分享/">网易微专业-look直播，企业级全栈web应用搭建分享</a>
+            <a href="/2020/06/18/拉勾-手写Promise源码/">拉勾-手写Promise源码</a>
           </li>
         
           <li>
-            <a href="/2020/06/07/网易微专业-webpack实战演练-3-3-1-网易的webpack工程化实践/">网易微专业-webpack实战演练-3.3.1-网易的webpack工程化实践</a>
+            <a href="/2020/06/17/拉勾-JavaScript异步编程/">拉勾-JavaScript异步编程</a>
           </li>
         
           <li>
-            <a href="/2020/06/06/网易微专业-webpack实战演练-3-2-6-webpack打包速度优化/">网易微专业-webpack实战演练-3.2.6-webpack打包速度优化</a>
+            <a href="/2020/06/15/网易微专业-移动端APP开发工程师-移动UI框架Flutter-2-1-1-Flutter概述及开发环境/">网易微专业-移动端APP开发工程师-移动UI框架Flutter-2.1.1-Flutter概述及开发环境</a>
           </li>
         
           <li>
-            <a href="/2020/06/03/网易微专业-单页应用-1-4-1-项目全面深度优化及打包上线之网易实践/">网易微专业-单页应用-1-4-1-项目全面深度优化及打包上线之网易实践</a>
+            <a href="/2020/06/14/拉勾-函数式编程范式/">拉勾-函数式编程范式</a>
           </li>
         
           <li>
-            <a href="/2020/05/28/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-6-音频与视频/">网易微专业-移动端APP开发工程师-H5移动端开发-1.1.6-音频与视频</a>
+            <a href="/2020/06/14/拉勾-函数式编程范式-5-高阶函数-函数作为参数/">拉勾-函数式编程范式-5-高阶函数-函数作为参数</a>
           </li>
         
       </ul>

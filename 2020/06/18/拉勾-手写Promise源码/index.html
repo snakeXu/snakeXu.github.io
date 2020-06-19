@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>拉勾-手写Promise源码 | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1.Promise类核心逻辑的实现首先我们来分析一下Promise的一些特性:·Promise就是一个类，在执行这个类的时候需要传递一个执行器进去，执行器会立即执行·Promise中有三种状态，分别为 等待-pending 成功-fulfilled 失败-rejected  pending -&amp;gt; fulfilled  pending -&amp;gt; rejected  一旦状态确定就不可更改·r">
+<meta name="keywords" content="拉勾  手写Promise源码">
+<meta property="og:type" content="article">
+<meta property="og:title" content="拉勾-手写Promise源码">
+<meta property="og:url" content="http://yoursite.com/2020/06/18/拉勾-手写Promise源码/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="1.Promise类核心逻辑的实现首先我们来分析一下Promise的一些特性:·Promise就是一个类，在执行这个类的时候需要传递一个执行器进去，执行器会立即执行·Promise中有三种状态，分别为 等待-pending 成功-fulfilled 失败-rejected  pending -&amp;gt; fulfilled  pending -&amp;gt; rejected  一旦状态确定就不可更改·r">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-06-19T12:07:12.604Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="拉勾-手写Promise源码">
+<meta name="twitter:description" content="1.Promise类核心逻辑的实现首先我们来分析一下Promise的一些特性:·Promise就是一个类，在执行这个类的时候需要传递一个执行器进去，执行器会立即执行·Promise中有三种状态，分别为 等待-pending 成功-fulfilled 失败-rejected  pending -&amp;gt; fulfilled  pending -&amp;gt; rejected  一旦状态确定就不可更改·r">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-拉勾-手写Promise源码" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/18/拉勾-手写Promise源码/" class="article-date">
+  <time datetime="2020-06-18T00:56:08.000Z" itemprop="datePublished">2020-06-18</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      拉勾-手写Promise源码
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.Promise类核心逻辑的实现<br>首先我们来分析一下Promise的一些特性:<br>·Promise就是一个类，在执行这个类的时候需要传递一个执行器进去，执行器会立即执行<br>·Promise中有三种状态，分别为 等待-pending 成功-fulfilled 失败-rejected<br>  pending -&gt; fulfilled<br>  pending -&gt; rejected<br>  一旦状态确定就不可更改<br>·resolve和reject函数是用来更改状态的<br>  resolve:fulfilled<br>  reject:rejected<br>·then方法内部做的事情就是判断状态。如果状态是成功，调用成功的回调函数；如果状态是失败，调用失败的回调函数。then方法是被定义在原型对象中的<br>·then成功回调有一个参数，表示成功之后的值；then失败回调有一个参数，表示失败后的原因<br>下面开始用代码实现这些功能(也就是模拟promise的实现)<br>myPromise.js</p>
+<pre>
+//把状态定义成常量，编辑器会有提示，同时也有利于代码的复用
+const PENDING = 'pending' //等待
+const FULFILLED = 'fulfilled' //成功
+const REJECTED = 'rejected' //失败
+class myPromise{
+    constructor(executor){
+        //接收执行器，并且这个执行器是立即执行的
+        executor(this.resolve,this.reject)
+    }
+    //promise状态
+    status = PENDING;
+    //每一个promise对象成功之后都有自己成功的值
+    value = undefined;
+    //每一个promise对象失败之后都有自己失败的原因
+    reason = undefined;
+    //定义成箭头函数是因为箭头函数在定义的时候就确定this的指向
+    resolve = value => {
+        //如果状态不是等待，阻止程序向下执行
+        if(this.status !== PENDING) return ;
+        //将状态更改为成功
+        this.status = FULFILLED
+        //保存成功之后的值
+        this.value = value
+    }
+    reject = reason => {
+        //如果状态不是等待，阻止程序向下执行
+        if(this.status !== PENDING) return ;
+        //将状态更改为失败
+        this.status = REJECTED
+        //保存失败之后的原因
+        this.reason = reason
+    }
+    then(successCallback,failCallback){
+        //判断状态
+        if(this.status === FULFILLED){
+            successCallback(this.value)
+        }else if(this.status === REJECTED){
+            failCallback(this.reason)
+        }
+    }
+}
+module.exports = myPromise;
+</pre>
+index.js
+<pre>
+const myPromise = require('./myPromise')
+const promise = new myPromise((resolve,reject)=>{
+    //resolve('成功')
+    reject('失败')
+})
+promise.then(value=>{
+    console.log(value)
+},reason =>{
+    console.log(reason)
+})
+</pre>
+2.在Promise类中加入异步逻辑
+myPromise.js
+<pre>
+//把状态定义成常量，编辑器会有提示，同时也有利于代码的复用
+const PENDING = 'pending' //等待
+const FULFILLED = 'fulfilled' //成功
+const REJECTED = 'rejected' //失败
+class myPromise{
+    constructor(executor){
+        //接收执行器，并且这个执行器是立即执行的
+        executor(this.resolve,this.reject)
+    }
+    //promise状态
+    status = PENDING;
+    //每一个promise对象成功之后都有自己成功的值
+    value = undefined;
+    //每一个promise对象失败之后都有自己失败的原因
+    reason = undefined;
+    //成功回调
+    successCallback = undefined;
+    //失败回调
+    failCallback = undefined;
+    //定义成箭头函数是因为箭头函数在定义的时候就确定this的指向
+    resolve = value => {
+        //如果状态不是等待，阻止程序向下执行
+        if(this.status !== PENDING) return ;
+        //将状态更改为成功
+        this.status = FULFILLED
+        //保存成功之后的值
+        this.value = value
+        //判断成功回调是否存在，如果存在就调用
+        this.successCallback && this.successCallback(this.value)
+    }
+    reject = reason => {
+        //如果状态不是等待，阻止程序向下执行
+        if(this.status !== PENDING) return ;
+        //将状态更改为失败
+        this.status = REJECTED
+        //保存失败之后的原因
+        this.reason = reason
+        //判断失败回调是否存在，如果存在就调用
+        this.failCallback && this.failCallback(this.reason)
+    }
+    then(successCallback,failCallback){
+        //判断状态
+        if(this.status === FULFILLED){
+            successCallback(this.value)
+        }else if(this.status === REJECTED){
+            failCallback(this.reason)
+        }else{
+            //走到这里证明当前状态是等待pending
+            //将成功回调和失败回调存储起来
+            this.successCallback = successCallback
+            this.failCallback = failCallback
+        }
+    }
+}
+module.exports = myPromise;
+</pre>
+index.js
+<pre>
+const myPromise = require('./myPromise')
+const promise = new myPromise((resolve,reject)=>{
+    setTimeout(()=>{
+        resolve('成功')
+    },2000)
+    // reject('失败')
+})
+promise.then(value=>{
+    console.log(value)
+},reason =>{
+    console.log(reason)
+})
+</pre>
+3.实现then方法多次调用添加多个处理函数
+同一个promise对象下面的then方法是可以被多次调用的，当then方法被多次调用，每一次then方法当中传递的回调函数都是要被执行的，如何执行呢？
+myPromise.js
+<pre>
+//把状态定义成常量，编辑器会有提示，同时也有利于代码的复用
+const PENDING = 'pending' //等待
+const FULFILLED = 'fulfilled' //成功
+const REJECTED = 'rejected' //失败
+class myPromise{
+    constructor(executor){
+        //接收执行器，并且这个执行器是立即执行的
+        executor(this.resolve,this.reject)
+    }
+    //promise状态
+    status = PENDING;
+    //每一个promise对象成功之后都有自己成功的值
+    value = undefined;
+    //每一个promise对象失败之后都有自己失败的原因
+    reason = undefined;
+    //成功回调
+    successCallback = [];//数组才可以存储多个可能的then方法的回调函数，failCallback同理
+    //失败回调
+    failCallback = [];
+    //定义成箭头函数是因为箭头函数在定义的时候就确定this的指向
+    resolve = value => {
+        //如果状态不是等待，阻止程序向下执行
+        if(this.status !== PENDING) return ;
+        //将状态更改为成功
+        this.status = FULFILLED
+        //保存成功之后的值
+        this.value = value
+        //判断成功回调是否存在，如果存在就调用
+        //this.successCallback && this.successCallback(this.value)//用数组存储回调事件，这里就不能再用了
+        while(this.successCallback.length){
+            this.successCallback.shift()(this.value)
+        }
+    }
+    reject = reason => {
+        //如果状态不是等待，阻止程序向下执行
+        if(this.status !== PENDING) return ;
+        //将状态更改为失败
+        this.status = REJECTED
+        //保存失败之后的原因
+        this.reason = reason
+        //判断失败回调是否存在，如果存在就调用
+        //this.failCallback && this.failCallback(this.reason)
+        while(this.failCallback.length){
+            this.failCallback.shift()(this.reason)
+        }
+    }
+    then(successCallback,failCallback){
+        //判断状态
+        if(this.status === FULFILLED){
+            successCallback(this.value)
+        }else if(this.status === REJECTED){
+            failCallback(this.reason)
+        }else{
+            //走到这里证明当前状态是等待pending
+            //将成功回调和失败回调存储起来
+            this.successCallback.push(successCallback)
+            this.failCallback.push(failCallback)
+        }
+    }
+}
+module.exports = myPromise;
+</pre>
+index.js
+<pre>
+const myPromise = require('./myPromise')
+const promise = new myPromise((resolve,reject)=>{
+    // setTimeout(()=>{
+    //     resolve('成功')
+    // },2000)
+    resolve('成功')
+    // reject('失败')
+})
+promise.then(value=>{
+    console.log(1)
+    console.log(value)
+},reason => {
+    console.log(reason)
+})
+promise.then(value=>{
+    console.log(2)
+    console.log(value)
+},reason => {
+    console.log(reason)
+})
+promise.then(value=>{
+    console.log(3)
+    console.log(value)
+},reason => {
+    console.log(reason)
+})
+</pre>
+4.实现then方法的链式调用(一) && 5.实现then方法的链式调用(二)
+myPromise.js
+<pre>
+//把状态定义成常量，编辑器会有提示，同时也有利于代码的复用
+const PENDING = 'pending' //等待
+const FULFILLED = 'fulfilled' //成功
+const REJECTED = 'rejected' //失败
+class myPromise{
+    constructor(executor){
+        //接收执行器，并且这个执行器是立即执行的
+        executor(this.resolve,this.reject)
+    }
+    //promise状态
+    status = PENDING;
+    //每一个promise对象成功之后都有自己成功的值
+    value = undefined;
+    //每一个promise对象失败之后都有自己失败的原因
+    reason = undefined;
+    //成功回调
+    successCallback = [];//数组才可以存储多个可能的then方法的回调函数，failCallback同理
+    //失败回调
+    failCallback = [];
+    //定义成箭头函数是因为箭头函数在定义的时候就确定this的指向
+    resolve = value => {
+        //如果状态不是等待，阻止程序向下执行
+        if(this.status !== PENDING) return ;
+        //将状态更改为成功
+        this.status = FULFILLED
+        //保存成功之后的值
+        this.value = value
+        //判断成功回调是否存在，如果存在就调用
+        //this.successCallback && this.successCallback(this.value)//用数组存储回调事件，这里就不能再用了
+        while(this.successCallback.length){
+            this.successCallback.shift()(this.value)
+        }
+    }
+    reject = reason => {
+        //如果状态不是等待，阻止程序向下执行
+        if(this.status !== PENDING) return ;
+        //将状态更改为失败
+        this.status = REJECTED
+        //保存失败之后的原因
+        this.reason = reason
+        //判断失败回调是否存在，如果存在就调用
+        //this.failCallback && this.failCallback(this.reason)
+        while(this.failCallback.length){
+            this.failCallback.shift()(this.reason)
+        }
+    }
+    then(successCallback,failCallback){
+        let promise2 = new myPromise((resolve,reject) => {
+            //判断状态
+            if(this.status === FULFILLED){
+                let  x = successCallback(this.value);
+                //resolve(x)
+                //判断x的值是普通值还是promise对象
+                //如果是普通值，直接resolve
+                //如果是promise对象，查看promise对象返回的结果
+                //再根据promise对象返回的结果，决定调用resolve还是reject
+                resolvePromise(x, resolve, reject)
+            }else if(this.status === REJECTED){
+                failCallback(this.reason)
+            }else{
+                //走到这里证明当前状态是等待pending
+                //将成功回调和失败回调存储起来
+                this.successCallback.push(successCallback)
+                this.failCallback.push(failCallback)
+            }
+        });
+        return promise2 
+    }
+}
+function resolvePromise(x, resolve, reject){
+    if(x instanceof myPromise){
+        //promise对象
+        //x.then(value=>resolve(value),reason=>reject(reason))
+        x.then(resolve,reject)
+    }else{
+        //普通值
+        resolve(x)
+    }
+}
+module.exports = myPromise;
+</pre>
+index.js
+<pre>
+const myPromise = require('./myPromise')
+const promise = new myPromise((resolve,reject)=>{
+    resolve('成功')
+    // reject('失败')
+})
+function other(){
+    return new myPromise((resolve,reject)=>{
+        resolve('other')
+    })
+}
+promise.then(value=>{
+    console.log(value)
+    return other()
+}).then(value =>{
+    console.log(value)
+})
+</pre>
+6.then方法链式调用识别Promise对象返回自
+如果循环调用本身的promise对象，如下面代码
+<pre>
+var promise = new Promise(function(resolve,reject){
+    resolve(100)
+})
+var p1 = promise.then(function(value)=>{
+    console.log(value)
+    p1
+})
+</pre>
+那么程序是会报错的，我们如何判断这种情况呢
+<pre>
+//把状态定义成常量，编辑器会有提示，同时也有利于代码的复用
+const PENDING = 'pending' //等待
+const FULFILLED = 'fulfilled' //成功
+const REJECTED = 'rejected' //失败
+class myPromise{
+    constructor(executor){
+        //接收执行器，并且这个执行器是立即执行的
+        executor(this.resolve,this.reject)
+    }
+    //promise状态
+    status = PENDING;
+    //每一个promise对象成功之后都有自己成功的值
+    value = undefined;
+    //每一个promise对象失败之后都有自己失败的原因
+    reason = undefined;
+    //成功回调
+    successCallback = [];//数组才可以存储多个可能的then方法的回调函数，failCallback同理
+    //失败回调
+    failCallback = [];
+    //定义成箭头函数是因为箭头函数在定义的时候就确定this的指向
+    resolve = value => {
+        //如果状态不是等待，阻止程序向下执行
+        if(this.status !== PENDING) return ;
+        //将状态更改为成功
+        this.status = FULFILLED
+        //保存成功之后的值
+        this.value = value
+        //判断成功回调是否存在，如果存在就调用
+        //this.successCallback && this.successCallback(this.value)//用数组存储回调事件，这里就不能再用了
+        while(this.successCallback.length){
+            this.successCallback.shift()(this.value)
+        }
+    }
+    reject = reason => {
+        //如果状态不是等待，阻止程序向下执行
+        if(this.status !== PENDING) return ;
+        //将状态更改为失败
+        this.status = REJECTED
+        //保存失败之后的原因
+        this.reason = reason
+        //判断失败回调是否存在，如果存在就调用
+        //this.failCallback && this.failCallback(this.reason)
+        while(this.failCallback.length){
+            this.failCallback.shift()(this.reason)
+        }
+    }
+    then(successCallback,failCallback){
+        let promise2 = new myPromise((resolve,reject) => {
+            //判断状态
+            if(this.status === FULFILLED){
+                //在所有同步代码执行完毕后再执行，能顺利获取promise2
+                setTimeout(()=>{
+                    let  x = successCallback(this.value);
+                    //resolve(x)
+                    //判断x的值是普通值还是promise对象
+                    //如果是普通值，直接resolve
+                    //如果是promise对象，查看promise对象返回的结果
+                    //再根据promise对象返回的结果，决定调用resolve还是reject
+                    resolvePromise(promise2, x, resolve, reject)
+                },0)
+            }else if(this.status === REJECTED){
+                failCallback(this.reason)
+            }else{
+                //走到这里证明当前状态是等待pending
+                //将成功回调和失败回调存储起来
+                this.successCallback.push(successCallback)
+                this.failCallback.push(failCallback)
+            }
+        });
+        return promise2 
+    }
+}
+function resolvePromise(promise2, x, resolve, reject){
+    if(promise2 === x){
+        return reject(new TypeError('Chaining cycle detected for promise #< promise >'))
+    }
+    if(x instanceof myPromise){
+        //promise对象
+        //x.then(value=>resolve(value),reason=>reject(reason))
+        x.then(resolve,reject)
+    }else{
+        //普通值
+        resolve(x)
+    }
+}
+module.exports = myPromise;
+</pre>
+index.js
+<pre>
+const myPromise = require('./myPromise')
+const promise = new myPromise((resolve,reject)=>{
+    resolve('成功')
+    // reject('失败')
+})
+function other(){
+    return new myPromise((resolve,reject)=>{
+        resolve('other')
+    })
+}
+let p1 = promise.then(value=>{
+    console.log(value)
+    return p1
+})
+p1.then(value =>{
+    console.log(value)
+},reason=>{
+    console.log(reason.message)
+})
+</pre>
+7.捕获错误及then链式调用其他状态代码补充
+8.将then方法变成可选参数(确认参数是否存在，不存在设置默认参数返回)
+9.Promise.all方法的实现
+首先我们了解下Promise.all方法的主要特点，以我们下面的代码为例
+<pre>
+function p1(){
+    return new Promise(function(resolve,reject){
+        setTimeout(function(){
+            resolve('p1')
+        },2000)
+    })
+}
+function p2(){
+    return new Promise(function(resolve,reject){
+        resolve('p2')
+    })
+}
+Promise.all(['a','b',p1(),p2(),'c']).then(function(result){
+    //result->['a','b','p1','p2','c']
+})
+</pre>
+Promise.all主要是解决异步代码的并发问题，允许我们按照异步代码调用的顺序得到异步代码执行的结果，上面代码，如果先调用p1，再调用p2，那么p2会先执行，因为p1有setTimeout定时器延时，但是如果我们把p1，p2放入Promise.all方法，会按放入的先后顺序执行，也就是先放入p1就执行p1。
+Promise.all方法接收一个数组作为参数，在数组中我们可以放入任何值，包括普通值和promise对象，数组中值的顺序一定是我们得到的结果中的顺序。Promise.all的返回值也是一个Promise对象，所以我们也可以链式调用then方法。如果all方法中所有promise对象的状态都是成功的，则all方法最好的结果也是成功的，如果有一个失败的，那么all方法就是失败的。
+myPromise.js
+<pre>
+//把状态定义成常量，编辑器会有提示，同时也有利于代码的复用
+const PENDING = 'pending' //等待
+const FULFILLED = 'fulfilled' //成功
+const REJECTED = 'rejected' //失败
+class myPromise{
+    constructor(executor){
+        //捕获执行过程中的错误
+        try{
+            //接收执行器，并且这个执行器是立即执行的
+            executor(this.resolve,this.reject)
+        } catch(e){
+            this.reject(e)
+        }
+    }
+    //promise状态
+    status = PENDING;
+    //每一个promise对象成功之后都有自己成功的值
+    value = undefined;
+    //每一个promise对象失败之后都有自己失败的原因
+    reason = undefined;
+    //成功回调
+    successCallback = [];//数组才可以存储多个可能的then方法的回调函数，failCallback同理
+    //失败回调
+    failCallback = [];
+    //定义成箭头函数是因为箭头函数在定义的时候就确定this的指向
+    resolve = value => {
+        //如果状态不是等待，阻止程序向下执行
+        if(this.status !== PENDING) return ;
+        //将状态更改为成功
+        this.status = FULFILLED
+        //保存成功之后的值
+        this.value = value
+        //判断成功回调是否存在，如果存在就调用
+        //this.successCallback && this.successCallback(this.value)//用数组存储回调事件，这里就不能再用了
+        while(this.successCallback.length){
+            this.successCallback.shift()()
+        }
+    }
+    reject = reason => {
+        //如果状态不是等待，阻止程序向下执行
+        if(this.status !== PENDING) return ;
+        //将状态更改为失败
+        this.status = REJECTED
+        //保存失败之后的原因
+        this.reason = reason
+        //判断失败回调是否存在，如果存在就调用
+        //this.failCallback && this.failCallback(this.reason)
+        while(this.failCallback.length){
+            this.failCallback.shift()()
+        }
+    }
+    then(successCallback,failCallback){
+        successCallback = successCallback ? successCallback : value => value ;
+        failCallback = failCallback ? failCallback : reason => {throw reason} ;
+        let promise2 = new myPromise((resolve,reject) => {
+            //判断状态
+            if(this.status === FULFILLED){
+                //在所有同步代码执行完毕后再执行，能顺利获取promise2
+                setTimeout(()=>{
+                    try{
+                        let  x = successCallback(this.value);
+                        //resolve(x)
+                        //判断x的值是普通值还是promise对象
+                        //如果是普通值，直接resolve
+                        //如果是promise对象，查看promise对象返回的结果
+                        //再根据promise对象返回的结果，决定调用resolve还是reject
+                        resolvePromise(promise2, x, resolve, reject)
+                    }catch(e){
+                        reject(e)
+                    }
+                },0)
+            }else if(this.status === REJECTED){
+                setTimeout(()=>{
+                    try{
+                        let  x = failCallback(this.reason);
+                        //resolve(x)
+                        //判断x的值是普通值还是promise对象
+                        //如果是普通值，直接resolve
+                        //如果是promise对象，查看promise对象返回的结果
+                        //再根据promise对象返回的结果，决定调用resolve还是reject
+                        resolvePromise(promise2, x, resolve, reject)
+                    }catch(e){
+                        reject(e)
+                    }
+                },0)
+            }else{
+                //走到这里证明当前状态是等待pending
+                //将成功回调和失败回调存储起来
+                this.successCallback.push(()=>{
+                    setTimeout(()=>{
+                        try{
+                            let  x = successCallback(this.value);
+                            //resolve(x)
+                            //判断x的值是普通值还是promise对象
+                            //如果是普通值，直接resolve
+                            //如果是promise对象，查看promise对象返回的结果
+                            //再根据promise对象返回的结果，决定调用resolve还是reject
+                            resolvePromise(promise2, x, resolve, reject)
+                        }catch(e){
+                            reject(e)
+                        }
+                    },0)
+                })
+                this.failCallback.push(()=>{
+                    setTimeout(()=>{
+                        try{
+                            let  x = failCallback(this.reason);
+                            //resolve(x)
+                            //判断x的值是普通值还是promise对象
+                            //如果是普通值，直接resolve
+                            //如果是promise对象，查看promise对象返回的结果
+                            //再根据promise对象返回的结果，决定调用resolve还是reject
+                            resolvePromise(promise2, x, resolve, reject)
+                        }catch(e){
+                            reject(e)
+                        }
+                    },0)
+                })
+            }
+        });
+        return promise2 
+    }
+    //类相当于实例的原型，所有在类中定义的方法，都会被实例继承。
+    //如果在一个方法前，加上static关键字，就表示该方法不会被实例继承，
+    //而是直接通过类来调用（通过类调用指在该类之外调用），这就称为“静态方法”。
+    static all(array){
+        let result = []
+        let index = 0
+        return new myPromise((resolve,reject)=>{
+            function addData(key, value){
+                result[key] = value;
+                index++
+                if(index === array.length){
+                    resolve(result)
+                }
+            }
+            for(let i=0;i<array.length;i++){ let="" current="array[i];" if(current="" instanceof="" mypromise){="" 是一个promise对象，要执行这个对象="" current.then(value=""> addData(i,value),reason => reject(reason))
+                }else{
+                    //current 是一个普通值
+                    addData(i,array[i])
+                }
+            }
+            //resolve(result)
+        })
+    }
+}
+function resolvePromise(promise2, x, resolve, reject){
+    if(promise2 === x){
+        return reject(new TypeError('Chaining cycle detected for promise #<promise>'))
+    }
+    if(x instanceof myPromise){
+        //promise对象
+        //x.then(value=>resolve(value),reason=>reject(reason))
+        x.then(resolve,reject)
+    }else{
+        //普通值
+        resolve(x)
+    }
+}
+module.exports = myPromise;
+</promise></array.length;i++){></pre>
+index.js
+<pre>
+const myPromise = require('./myPromise')
+function p1(){
+    return new myPromise(function(resolve,reject){
+        setTimeout(function(){
+            resolve('p1')
+        },2000)
+    })
+}
+function p2(){
+    return new myPromise(function(resolve,reject){
+        resolve('p2')
+    })
+}
+myPromise.all(['a','b',p1(),p2(),'c'])
+.then(function(result){
+    //result->['a','b','p1','p2','c']
+    console.log(result)
+})
+</pre>
+10.Promise.resolve方法的实现
+Promise.resolve方法的作用是将给定的值转换为promise对象
+这个代码并不复杂，所以就不把整段myPromise代码都展示在这里了
+<pre>
+static resolve(value){
+    if(value instanceof myPromise) return value;
+    return new myPromise(resolve => resolve(value))
+}
+</pre>
+11.finally方法的实现
+promise最终的状态无论是成功还是失败，finally方法都会被执行一次；在finally对象的后面我们还可以链式调用then方法拿到最终返回的结果。并且在finally中如果返回一个异步函数，是会等待异步对象执行完成的。
+<pre>
+finally(callback){
+        return this.then(value=>{
+            // callback()
+            // return value//注释掉的两行是不考虑finally中return一个异步函数的情况
+            return myPromise.resolve(callback()).then(() => value)//考虑finally中return一个异步函数的情况
+        },reason=>{
+            // callback()
+            // throw reason
+            return myPromise.resolve(callback()).then(() => {throw reason})
+        })
+    }
+</pre>
+12.catch方法的实现
+用来处理当前promise对象最终为失败的情况
+<pre>
+catch(failCallback){
+    return this.then(undefined, failCallback)
+}
+</pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/18/拉勾-手写Promise源码/" data-id="ckbm7478j004wb4xq8ko8tifh" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/拉勾-手写Promise源码/">拉勾  手写Promise源码</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2020/06/17/拉勾-JavaScript异步编程/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">拉勾-JavaScript异步编程</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-babel/">react babel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端路由/">前端路由</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/拉勾-手写Promise源码/">拉勾  手写Promise源码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/拉勾-JavaScript异步编程/">拉勾 JavaScript异步编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/拉勾-函数式编程/">拉勾 函数式编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/拉勾-函数式编程范式/">拉勾 函数式编程范式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/正则/">正则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-Flutter/">网易微专业 Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-node/">网易微专业 node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/react-babel/" style="font-size: 10px;">react babel</a> <a href="/tags/前端路由/" style="font-size: 10px;">前端路由</a> <a href="/tags/拉勾-手写Promise源码/" style="font-size: 10px;">拉勾  手写Promise源码</a> <a href="/tags/拉勾-JavaScript异步编程/" style="font-size: 10px;">拉勾 JavaScript异步编程</a> <a href="/tags/拉勾-函数式编程/" style="font-size: 10px;">拉勾 函数式编程</a> <a href="/tags/拉勾-函数式编程范式/" style="font-size: 10px;">拉勾 函数式编程范式</a> <a href="/tags/数据结构/" style="font-size: 13.33px;">数据结构</a> <a href="/tags/正则/" style="font-size: 10px;">正则</a> <a href="/tags/算法/" style="font-size: 20px;">算法</a> <a href="/tags/网易微专业-Flutter/" style="font-size: 10px;">网易微专业 Flutter</a> <a href="/tags/网易微专业-node/" style="font-size: 10px;">网易微专业 node</a> <a href="/tags/设计模式/" style="font-size: 16.67px;">设计模式</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/06/18/拉勾-手写Promise源码/">拉勾-手写Promise源码</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/17/拉勾-JavaScript异步编程/">拉勾-JavaScript异步编程</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/15/网易微专业-移动端APP开发工程师-移动UI框架Flutter-2-1-1-Flutter概述及开发环境/">网易微专业-移动端APP开发工程师-移动UI框架Flutter-2.1.1-Flutter概述及开发环境</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/14/拉勾-函数式编程范式/">拉勾-函数式编程范式</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/14/拉勾-函数式编程范式-5-高阶函数-函数作为参数/">拉勾-函数式编程范式-5-高阶函数-函数作为参数</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

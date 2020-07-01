@@ -62,6 +62,360 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-学习手动创建react项目过程中" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/10/学习手动创建react项目过程中/" class="article-date">
+  <time datetime="2020-06-10T09:49:05.000Z" itemprop="datePublished">2020-06-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/10/学习手动创建react项目过程中/">学习手动创建react项目过程中</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a href="https://www.shangmayuan.com/a/c9392696e58e4aa1bedcef39.html" target="_blank" rel="noopener">https://www.shangmayuan.com/a/c9392696e58e4aa1bedcef39.html</a> 一个不错的自己搭建react开发环境的教程<br>学习用最传统的npm iniy -y来创建一个react项目，中间一点点学习到的东西<br>1.webpack/webpack-cli是必须安装的<br>2.babel在安装的过程中<br>2-1.@babel/preset-react和babel-preset-react-app个人以为babel-preset-react-app是用npx默认创建react项目中做了更适应于react的一些操作<br>babel-preset-react-app:<a href="https://github.com/facebook/create-react-app/tree/master/packages/babel-preset-react-app" target="_blank" rel="noopener">https://github.com/facebook/create-react-app/tree/master/packages/babel-preset-react-app</a><br>而@babel/preset-react是babel提供的关于react的预设<a href="https://babel.docschina.org/docs/en/babel-preset-react#docsNav" target="_blank" rel="noopener">https://babel.docschina.org/docs/en/babel-preset-react#docsNav</a><br>2-2.babel-loader:<a href="https://www.webpackjs.com/loaders/babel-loader/" target="_blank" rel="noopener">https://www.webpackjs.com/loaders/babel-loader/</a><br>babel和webpack之间的桥梁，允许使用Babel和webpack来转译JavaScript文件。上面关于babel-loader的webpack介绍中，目前来看值得注意的有<br>(1)cacheDirectory:默认值为 false。当有设置时，指定的目录将用来缓存 loader 的执行结果。通过使用cacheDirectory提升打包速度<br>(2)给出了babel-loader很慢的解决方案，其中exclude: /(node_modules|bower_components)/适用于很多可以指定打包目录的loader，也算是一种优化方式。<br>(3)另外，babel 在每个文件都插入了辅助代码，使代码体积过大 这个目录中提到了babel-plugin-transform-runtime，随着babel的升级这个plugin有一些变化我将在接下来的内容中看能补充多少。<br>2-3.babel-plugin-transform-runtime:<a href="https://babel.docschina.org/docs/en/babel-plugin-transform-runtime#docsNav" target="_blank" rel="noopener">https://babel.docschina.org/docs/en/babel-plugin-transform-runtime#docsNav</a><br>一个插件，可重新使用Babel注入的帮助程序代码以节省代码大小。<br>安装babel-plugin-transform-runtime作为开发环境的依赖<br>安装@babel/runtime作为生产环境的依赖<br>下面两篇文章解决了我的疑问，polyfill/transform-runtime/corejs的配置<br><a href="https://segmentfault.com/a/1190000020237790" target="_blank" rel="noopener">https://segmentfault.com/a/1190000020237790</a> Babel7 转码（四）- polyfill 还是 transform-runtime<br><a href="https://segmentfault.com/a/1190000020237817" target="_blank" rel="noopener">https://segmentfault.com/a/1190000020237817</a> 关于介绍Babel7 转码（五）- corejs3 的更新(polyfill和按需加载语法编译在corejs3下的更新)<br><a href="https://segmentfault.com/a/1190000018358854" target="_blank" rel="noopener">https://segmentfault.com/a/1190000018358854</a> 一文读懂 babel7 的配置文件加载逻辑(关于babel配置文件的一些介绍)<br>3.webpack的loader和plugin<br>3-1.html-webpack-plugin把打包的文件插入到html中</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/10/学习手动创建react项目过程中/" data-id="ckc3140b8000mbgxqt7o2w471" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/react-babel/">react babel</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-look直播，企业级全栈web应用搭建分享" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/08/网易微专业-look直播，企业级全栈web应用搭建分享/" class="article-date">
+  <time datetime="2020-06-08T11:54:49.000Z" itemprop="datePublished">2020-06-08</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/08/网易微专业-look直播，企业级全栈web应用搭建分享/">网易微专业-look直播，企业级全栈web应用搭建分享</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>SPA &amp;&amp; SSR<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_1.png"><br>问题<br>两端代码复用<br>两端的渲染保持一致<br>两端的fallback设计<br>node端降级方案<br>1.工程架构<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_2.png"><br>1-1.组件分割<br>根据路由分割js，避免js bundle过大<br>(演示代码)</p>
+<p><pre><br>//webpack的import方法分割js返回一个promise，会有一个异步等待过程，<br>// baseLoadable等待promise完成之后才会去渲染组件<br>import baseLoadable from ‘@loadable/component’<br>const loading = () =&gt; {<br>    &lt; div classname = “m-loading” &gt;加载中…&lt; /div&gt;<br>}<br>const loadable = loader =&gt; baseLoadable(loader,{<br>    fallback:&lt; loading /&gt;<br>}<br>const Home = loadable(()=&gt;import(‘./views/home’))<br>const List = loadable(()=&gt;import(‘./views/list’))<br>const Detail = loadable(()=&gt;import(‘./views/detail’))<br></pre><br>1-2.路由<br>采用配置式路由为了方便node端获取对应组件</p>
+<p><pre><br>&lt; Switch &gt;<br>&lt; Route exact path=’/list’ component={List} /&gt;<br>&lt; Route exact path=’/detail/:id’ component={Detail} /&gt;<br>&lt; Route exact path=’/‘ component={Home} /&gt;<br>&lt; /Switch &gt;<br></pre><br>上面代码 组件式配置化</p>
+<p><pre><br>const config = [<br>{<br>    path:’/list’,<br>    exact:true,<br>    component:List<br>},<br>{<br>    path:’/detail/:id’,<br>    exact:true,<br>    component:Detail<br>},<br>{<br>    path:’/‘,<br>    exact:true,<br>    component:Home<br>},<br>]<br>export default config;<br></pre><br>1-3.获取组件<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_3.png"><br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_4.png"><br>1-4.请求方法<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_5.png"><br>1-5.两端数据一致</p>
+<p><pre><br>&lt; script &gt;<br>window.CURRENT_STATE = &lt; %- state% &gt;<br>&lt; /script &gt;<br>import {createStore} from ‘redux’<br>…<br>const store = createStore(rootReducer,window.CURRENT_STATE)<br></pre><br>保证首屏的css和js加载完</p>
+<p><pre><br>import { loadableReady } from ‘@loadable/component’;<br>loadableReady(()=&gt;{<br>    ReactDOM.hydrate(<br>        &lt; APP /&gt;,<br>        document.getElementById(‘j-app’)<br>    );<br>})<br></pre><br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_6.png"><br>1-6.async标签<br>提前执行script脚本<br>&lt; script async src=”/public/app.js” &gt;&lt; /script &gt;<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_7.png"><br>1-8.SEO<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_8.png"><br>1-9.webpack<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_9.png"><br>1-10.缓存<br>没有接口请求，则认为是静态可缓存<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_10.png"><br>新建Map存储上次的html<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_11.png"><br>1-11.降级<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_12.png"><br>2.状态管理<br>2-1.redux<br>只有碰到react实在解决不了的问题，你才需要redux<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_13.png"><br>2-2.思考<br>·繁琐的代码且重复<br>·开发体验不友好<br>·可读性差，不便于维护<br>2-3.改进<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_14.png"><br>·设置modal类<br>·自定义一个中间件<br>·充分利用redux数据流<br>扩展dispatch支持字符串方式<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_15.png"><br>3.异步任务<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_16.png"><br>问题<br>·数据的来源多，ajax、websocket、事件<br>·数据的依赖关系<br>·礼物消息的处理<br>3-1.rxjs<br>为了解决上面的问题，引入了rxjs<br>一种编程模型<br>针对异步数据流的编程<br>将一切数据包装成流<br>提供强大的操作符处理<br>3-2.Observable<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_17.png"><br>Publisher<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_18.png"></p>
+<p><pre><br>const Publisher = (observer) =&gt; {<br>    let count = 0;<br>    const inter = setIntrerval(()=&gt;{<br>        count+=1;<br>        observer.next(count);<br>        if(count&gt;=5){<br>            observer.complete();<br>            clearInterval(inter);<br>        }<br>    },1000);<br>}<br>const ob$ = Observable.create(Publisher);<br>const scp = ob$.subscribe((v)=&gt;{<br>    console.log(v)<br>})<br>setTimeout(()=&gt;{<br>    const scp1 = ob$.subscribe((v)=&gt;{<br>        console.log(v)<br>    })<br>},1000)<br>/<em><br>const observer = {<br>    next:(val)=&gt;{},<br>    complete:()=&gt;{},<br>    error:()=&gt;{}<br>}
+</em>/<br></pre><br>Subject<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_19.png"><br>Subject-多播<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_20.png"><br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_21.png"><br>3-3.数据的统一<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_22.png"><br>3-4.数据的依赖关系<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_23.png"><br>3-5.礼物消息<br>项目是一个直播项目，有一个需求是30s内同一用户同一礼物数目进行累加<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_24.png"><br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_25.png"><br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_26.png"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/08/网易微专业-look直播，企业级全栈web应用搭建分享/" data-id="ckc3140c80024bgxqi9o40gld" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-webpack实战演练-3-3-1-网易的webpack工程化实践" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/07/网易微专业-webpack实战演练-3-3-1-网易的webpack工程化实践/" class="article-date">
+  <time datetime="2020-06-07T03:29:11.000Z" itemprop="datePublished">2020-06-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/07/网易微专业-webpack实战演练-3-3-1-网易的webpack工程化实践/">网易微专业-webpack实战演练-3.3.1-网易的webpack工程化实践</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.eslint<br>1-1.eslint相关包<br>01.eslint+eslint-loader核心内容<br>02.eslint-plugin-html/eslint-plugin-vue<br>03.eslint-friendly-fromatter 友好提示<br>04.eslint-config-standard 代码风格标准<br>webpack.base.conf.js</p>
+<pre>
+const createLiningRult = ()=>({
+    test:/\.(js|vue)$/,
+    loader:'eslint-loader',
+    enforce:'pre',
+    include:[resolve('src'),resolve('test')],
+    options:{
+        formatter:require('eslint-friendly-formatter'),
+        emitWarning:!config.dev.showEslintErrorsInOverlay
+    }
+})
+</pre>
+.eslintrc.js 这里并不是全部配置，截取部分老师讲的内容
+<pre>
+rules:{
+    'generator-star-spacing':'off',
+    //1-开启，以警告提示；2-开启，以报错提示；0-等价于off，即关闭这条检查规则
+    'no-console':'off',
+    'no-alert':1,
+    'no-implicit-globals':1,//不准在全局定义function、var
+    'no-debugger':process.env.NODE_ENV === 'production'?'error':'off'
+}
+</pre>
+2.一些特别的plugins和loader
+webpack.DefinePlugin:将当前环境代码传到业务代码(比如业务代码不能获取process.env，可以通过这个方法获取环境代码)
+<pre>
+plugins:[
+    new webpack.DefinePlugin({
+        'process.env':require('../config/dev.env');
+    })
+]
+</pre>
+webpack.ProvidePlugin:避免开发过程中频繁引入同一个库
+<pre>
+plugins:[
+    new webpack.ProvidePlugin({
+        ax:'axios'
+    })
+]
+</pre>
+webpack.NoEmitOnErrorsPlugin:编译出现错误的时候，跳过错误继续编译
+copy-webpack-plugin:拷贝文件，需要安装，作用于某文件夹中文件并没有在项目中全部被引用，但是项目中需要某文件夹中全部文件的情况
+<pre>
+//是的，这里老师并没有给完整的例子
+plugins:[
+    new copyWebpackPlugin({
+        from:……
+    })
+]
+</pre>
+mini-css-extract-plugin:这个使用的时候，要先定义引入，再在plugin中写入，另外定义处理css的时候，也不能用style-loader了，要用这个插件
+3.环境区分
+<img src="https://snakexu.github.io/images/wangyi/node/3.3.1_1.png">
+4.项目问题解决
+4-1.不要把配置当配置，当成一个程序(项目中的一些配置可以写成方法，以应对灵活多变的业务需求)
+4-2.解决方案归纳
+·如果要是对模块内容进行处理
+loader是第一解决方案
+·如果要增加一些特殊的功能
+可以自定义增加插件
+·项目上的打包简化，可变性配置等
+通过编写相应的操作函数
+
+自己写一个plugin
+下面是老师示例的自己编写plugin
+<pre>
+const path = require('path');
+const fs = require('fs');
+const readFileAsync = require("util").promisify(fs.readFile);
+const writeFileAsync = require("util").promisify(fs.writeFile);
+class AddStaticServer {
+    constructor(options) {
+        this.options = options || {
+            serverPath: '//kc.stu.126.net'
+        };
+        this.serverPath = this.options.serverPath;
+    }
+    apply(compiler) {
+        // 等 html-webpack-plugin 解决多页面构建速度慢的问题可以使用此方法
+        // compiler.hooks.compilation.tap('AddStaticServer', compilation => {
+        //     compilation.hooks.htmlWebpackPluginBeforeHtmlProcessing.tap(
+        //         'AddStaticServer',
+        //         data => {
+        //             data.html =
+        //             data.html.replace(/\/static\/css/g, `${this.serverPath}res/css`)
+        //                 .replace(/\/static\/js/g, `${this.serverPath}res/js`)
+        //                 .replace(/\/static\/img/g, `${this.serverPath}res/img`);
+        //         }
+        //     );
+        // });
+        compiler.hooks.done.tap('AddStaticServer', compilation => {
+            let context = compiler.options.context;
+            let publicPath = path.resolve(context, 'dist');
+            compilation.toJson().assets.forEach((ast) => {
+                let {dir, base, ext} = path.parse(ast.name);
+                if (ext === '.ftl') {
+                    readFileAsync(path.resolve(publicPath, dir, base), {encoding: 'utf-8'}).then((cnt) => {
+                        cnt = cnt.replace(/\/static\/css/g, `${this.serverPath}res/css`)
+                                .replace(/\/static\/js/g, `${this.serverPath}res/js`)
+                                .replace(/\/static\/img/g, `${this.serverPath}res/img`);
+                        writeFileAsync(path.resolve(publicPath, dir, base), cnt);
+                    });
+                }
+            });
+        });
+    }
+}
+module.exports = AddStaticServer;
+</pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/07/网易微专业-webpack实战演练-3-3-1-网易的webpack工程化实践/" data-id="ckc3140cp002sbgxqoanf714u" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-webpack实战演练-3-2-6-webpack打包速度优化" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/06/网易微专业-webpack实战演练-3-2-6-webpack打包速度优化/" class="article-date">
+  <time datetime="2020-06-06T03:02:23.000Z" itemprop="datePublished">2020-06-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/06/网易微专业-webpack实战演练-3-2-6-webpack打包速度优化/">网易微专业-webpack实战演练-3.2.6-webpack打包速度优化</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.打包结果分析<br>1-1.chunks和module<br>chunks:即代码块，即webpack把js分割成了几块代码<br>module:模块，每一个文件即一个模块<br>1-2.如何可视化的获取打包结果分析<br>·官方版本<br>Mac:webpack –profile –json &gt;stats.json<br>Window:webpack –profile –json &gt;stats.json<br>在项目中执行上述命令之后，打开下面的网站<br><a href="http://webpack.github.io/analyse/" target="_blank" rel="noopener">http://webpack.github.io/analyse/</a><br>选择刚才打包生成的stats.json<br><img src="https://snakexu.github.io/images/wangyi/node/3.2.6_1.png"><br>·社区版本<br>(1)webpack-bundle-analyzer<br>2.优化打包速度<br>2-1.有哪些可以优化的点<br>·项目本身<br>(1)减少依赖嵌套深度<br>(2)使用尽可能少的处理<br>·webpack层面<br>(1)Dll处理<br>(2)通过include减少loader范围<br>(3)HappyPack<br>(4)Uglify优化<br>(5)减少resolve、sourcemap、cache-loader，用新版本的node和webpack</p>
+<p>webpack.dll.js</p>
+<pre>
+const webpack = require('webpack')
+module.exports = {
+    entry:{
+        vendor:['jquery','loadsh']
+    },
+    output:{
+        path:__dirname+'/src/dll',
+        filename:"./[name].js",
+        library:"[name]_library"//引用名
+    },
+    plugins:[
+        new webpack.DllPlugin({
+            path:__dirname+"/src/dll/[name].json",
+            name:"[name]_library",//这里要与引用名一致(也就是与output.library一致)
+        })//告诉打包命令，我们已经处理过jquery和lodash文件了
+    ]
+}
+</pre>
+保存之后，在命令行项目文件夹下，输入webpack --config webpack.dll.js，我们可以看到项目src文件夹下生成了一个dll文件夹，里面有vendor.js和vendor.json文件，vendor.json文件会给到真正的打包配置中。
+在webpack.config.js文件的plugin中添加:
+<pre>
+new webpack.DllReferencePlugin({
+     manifest:require('./src/dll/vendor.json')
+}),
+</pre>
+到这里，我们只是完成了dll打包，但是我们dll打包的文件并没有被引入到html页面中，我们可以通过
+<pre>
+new htmlWebpackPlugin({
+    filename:"index.html",
+    template:"./src/index.html",
+    vendorPath:"../src/dll/vendor.js",//在这里引入dll生成的文件
+    chunks:['app','runtime']
+})
+</pre>
+并且在html页面通过模版字符串的方式引入
+<pre>
+< script type="text/javascript" src="${htmlWebpackPlugin.options.vendorPath}">< /script >
+</pre>
+
+<p>HappyPack由于webpack是node编写的，而node可以开工作进程，所以通过这个思路，HappyPack开启多线程。HappyPack是要通过npm下载的，假设我们要用happypack处理vue文件</p>
+<pre>
+rules:[
+{
+    test:/\.vue$/,
+    loader:'happypack/loader?id=happyvue'
+}
+]
+</pre>
+在配置生产环境的配置文件中
+<pre>
+const HappyPack = require('happypack');
+const os = require('os')
+const happyThreadpool = HappyPack.ThreadPool({size:os.cpus().length})//根据cpu决定建几个线程
+const vueLoaderConfig = require('./vue-loader.conf.js')
+//这里只是需要修改plugins中的内容，并不是说plugins在文件中层级关系
+plugins:[
+    new HappyPack({
+        id:'happyvue',//对应我们在上面定义的id
+        loaders:[
+        {
+            path:"vue-loader",
+            cache:true,
+            options:vueLoaderConfig
+        }
+        ],
+        threadPool:happyThreadPool
+    })
+]
+</pre>
+其实在webpack中任何操作都是需要增加打包时间的(包括优化操作)，所以在运用优化操作的时候，尽可能却确定优化操作比直接打包更值得
+3.长缓存优化
+3-1.把hash改为chunkhash
+我们在用webpack打包项目的时候，输出文件名通常会加hash，而每次项目中页面有内容变化，整个项目再次打包生成的文件hash代码会改变，影响浏览器生成缓存，我们可以将hash改成chunkhash
+<pre>
+output:{
+    path:__dirname+"/dist",
+    filename:"./[name].[chunkhash].js",
+}
+</pre>
+3-2.NamedChunksPlugin和NamedModulesPlugin
+上面的把hash改为chunkhash并不完美，当模块发生变动的时候，并不能保证hash的稳定。我们用3-2的方案完善
+在webpack配置文件中做如下修改
+<pre>
+plugins:[
+    new webpack.NamedChunksPlugin(),
+    new webpack.NamedModulesPlugin()
+]
+</pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/06/网易微专业-webpack实战演练-3-2-6-webpack打包速度优化/" data-id="ckc3140co002rbgxqjixy7qxz" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-网易微专业-单页应用-1-4-1-项目全面深度优化及打包上线之网易实践" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/06/03/网易微专业-单页应用-1-4-1-项目全面深度优化及打包上线之网易实践/" class="article-date">
@@ -118,7 +472,7 @@ fs.writeFileSync(cachePath, lockHash);
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/03/网易微专业-单页应用-1-4-1-项目全面深度优化及打包上线之网易实践/" data-id="ckbm7ibwd002wd5xqt0vkrq31" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/06/03/网易微专业-单页应用-1-4-1-项目全面深度优化及打包上线之网易实践/" data-id="ckc3140cs002wbgxqu81rai13" class="article-share-link">Share</a>
       
       
     </footer>
@@ -155,7 +509,7 @@ fs.writeFileSync(cachePath, lockHash);
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/05/28/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-6-音频与视频/" data-id="ckbm7ibx3003fd5xq8ieph0hd" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/05/28/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-6-音频与视频/" data-id="ckc3140dg003gbgxq7n3oyuca" class="article-share-link">Share</a>
       
       
     </footer>
@@ -192,7 +546,7 @@ fs.writeFileSync(cachePath, lockHash);
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/05/28/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-5-地理信息、本地存储、离线存储/" data-id="ckbm7ibx1003ed5xqr6mpwjdm" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/05/28/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-5-地理信息、本地存储、离线存储/" data-id="ckc3140df003fbgxq6xfiwxx0" class="article-share-link">Share</a>
       
       
     </footer>
@@ -229,7 +583,7 @@ fs.writeFileSync(cachePath, lockHash);
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/05/28/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-4-跨文档消息通信/" data-id="ckbm7ibwy003cd5xqxudgrr5l" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/05/28/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-4-跨文档消息通信/" data-id="ckc3140de003ebgxq2g10nbhy" class="article-share-link">Share</a>
       
       
     </footer>
@@ -266,7 +620,7 @@ fs.writeFileSync(cachePath, lockHash);
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/05/27/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-3-选择器-history-拖放/" data-id="ckbm7ibx0003dd5xqzv43ccff" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/05/27/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-3-选择器-history-拖放/" data-id="ckc3140dd003dbgxqjnycdiul" class="article-share-link">Share</a>
       
       
     </footer>
@@ -303,229 +657,7 @@ fs.writeFileSync(cachePath, lockHash);
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/05/27/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-2-HTML5的新特性/" data-id="ckbm7ibwy003bd5xqwt542qjp" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-移动端APP开发工程师-H5移动端开发-1-1-1-HTML5简介" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/05/27/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-1-HTML5简介/" class="article-date">
-  <time datetime="2020-05-27T02:22:07.000Z" itemprop="datePublished">2020-05-27</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/27/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-1-HTML5简介/">网易微专业-移动端APP开发工程师-H5移动端开发-1.1.1-HTML5简介</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.HTML5发展历程<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.1_1.png"><br>2.HTML4和HTML5的区别<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.1_2.png"><br>3.HTML5简介<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.1_3.png"><br>4.HTML5设计目的<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.1_4.png"><br>5.HTML5已移除元素<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.1_5.png"><br>6.HTML5新增特性<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.1_6.png"><br>7.HTML5对我们什么作用<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.1_7.png"><br>8.HTML5浏览器支持<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.1_8.png"></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/05/27/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-1-HTML5简介/" data-id="ckbm7ibwx003ad5xqxam079xz" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-node-Koa源码分析-3-1-1-Egg-vs-Koa" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/05/16/网易微专业-node-Koa源码分析-3-1-1-Egg-vs-Koa/" class="article-date">
-  <time datetime="2020-05-16T07:23:00.000Z" itemprop="datePublished">2020-05-16</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/16/网易微专业-node-Koa源码分析-3-1-1-Egg-vs-Koa/">网易微专业-node-Koa源码分析-3.1.1-Egg vs Koa</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.Egg是什么<br>egg.js为企业级框架和应用而生，基于koa.js二次开发，进行一些扩展。<br>1-1.Node在阿里<br><img src="https://snakexu.github.io/images/wangyi/node/3.1.1_1.png"><br><img src="https://snakexu.github.io/images/wangyi/node/3.1.1_2.png"><br>1-2.Egg设计原则<br><img src="https://snakexu.github.io/images/wangyi/node/3.1.1_3.png"><br>1-3.Egg特性<br><img src="https://snakexu.github.io/images/wangyi/node/3.1.1_4.png"><br>2.Egg和Koa<br>2-1.回顾koa<br><img src="https://snakexu.github.io/images/wangyi/node/3.1.1_5.png"><br>2-2.Egg继承于Koa<br><img src="https://snakexu.github.io/images/wangyi/node/3.1.1_6.png"><br>2-3.Egg与Koa的版本关系<br><img src="https://snakexu.github.io/images/wangyi/node/3.1.1_7.png"><br>3.快速初始化<br>3-1.快速初始化<br><img src="https://snakexu.github.io/images/wangyi/node/3.1.1_8.png"></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/05/16/网易微专业-node-Koa源码分析-3-1-1-Egg-vs-Koa/" data-id="ckbm7ibw6002kd5xqc7nxpxvf" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-node-Koa源码分析-2-3-1-异常捕获和错误处理" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/05/16/网易微专业-node-Koa源码分析-2-3-1-异常捕获和错误处理/" class="article-date">
-  <time datetime="2020-05-16T01:57:54.000Z" itemprop="datePublished">2020-05-16</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/16/网易微专业-node-Koa源码分析-2-3-1-异常捕获和错误处理/">网易微专业-node-Koa源码分析-2.3.1-异常捕获和错误处理</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.中间件层处理<br>2.框架层处理<br>3.总结</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/05/16/网易微专业-node-Koa源码分析-2-3-1-异常捕获和错误处理/" data-id="ckbm7ibw5002jd5xq0vr0sxbq" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/网易微专业-node/">网易微专业 node</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-es6-class-extends" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/05/13/es6-class-extends/" class="article-date">
-  <time datetime="2020-05-13T02:58:52.000Z" itemprop="datePublished">2020-05-13</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/13/es6-class-extends/">es6 class extends</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>继承 inherit<br>class 是对原型继承的一种语法糖的包装。那相对于原型继承，它有什么优点呢？<br>我们来先看一个典型的基于原型链继承的例子。部分内容来自“Javascript高级程序设计”</p>
-<p><pre><br>function SuperType() {<br>    this.property = true;<br>}</pre></p>
-<p>SuperType.prototype.getSuperValue = function() {<br>    return this.property;<br>}</p>
-<p>function SubType() {<br>    this.subProperty = false;<br>}</p>
-<p>SubType.prototype = new SuperType();</p>
-<p>SubType.prototype.getSubValue = function() {<br>    return this.subProperty;<br>}</p>
-<p>var instance = new SubType();<br>console.log(instance.getSuperValue());  // true<br>console.log(instance instanceof Object);  // true<br>console.log(instance instanceof SuperType);  // true<br>console.log(instance instanceof SubType);  // true<br><br>问题，当包含引用类型的值。</p>
-<p><pre><br>function SuperType() {<br>    this.colors = [“red”, “blue”, “green”];<br>}</pre></p>
-<p>function SubType() {</p>
-<p>}</p>
-<p>SubType.prototype = new SuperType();</p>
-<p>var instance = new SubType();<br>instance.colors.push(“black”);<br>var instance1 = new SubType();<br>instance1.colors.push(“white”);<br>console.log(instance.colors);  // [ ‘red’, ‘blue’, ‘green’, ‘black’, ‘white’ ]<br>console.log(instance1.colors);  // [ ‘red’, ‘blue’, ‘green’, ‘black’, ‘white’ ]<br><br>解决方案：</p>
-<p>借用构造函数</p>
-<p><pre><br>function SuperType() {<br>    this.colors = [“red”, “blue”, “green”];<br>}</pre></p>
-<p>function SubType() {<br>   SuperType.call(this);<br>}</p>
-<p>SubType.prototype = new SuperType();</p>
-<p>var instance = new SubType();<br>instance.colors.push(“black”);<br>var instance1 = new SubType();<br>instance1.colors.push(“white”);<br>console.log(instance.colors);<br>console.log(instance1.colors);<br><br>组合继承</p>
-<p><pre><br>function SuperType(name) {<br>    this.name = name;<br>    this.colors = [“red”, “blue”, “green”];<br>}</pre></p>
-<p>SuperType.prototype.sayName = function() {<br>    console.log(this.name);<br>}</p>
-<p>function SubType(name, age) {<br>   SuperType.call(this, name);<br>   this.age = age;<br>}</p>
-<p>SubType.prototype = new SuperType();<br>SubType.prototype.sayAge = function() {<br>    console.log(this.age);<br>}<br><br>寄生组合式继承</p>
-<p><pre><br>function object(o) {<br>    function F() {}<br>    F.prototype = o;<br>    return new F();<br>}</pre></p>
-<p>function inheritPrototype(subType, superType) {<br>    let prototype = object(superType.prototype);<br>    prototype.constructor = subType;<br>    subType.prototype = prototype;<br>}</p>
-<p>function SuperType(name) {<br>    this.name = name;<br>    this.colors = [“red”, “blue”, “green”];<br>}</p>
-<p>SuperType.prototype.sayName = function() {<br>    console.log(this.name);<br>}</p>
-<p>function SubType(name, age) {<br>   SuperType.call(this, name);<br>   this.age = age;<br>}</p>
-<p>inheritPrototype(SubType, SuperType);</p>
-<p>SubType.prototype.sayAge = function() {<br>    console.log(this.age);<br>}<br>var instance = new SubType(“Tom”, 70);<br>instance.colors.push(“black”);<br>var instance1 = new SubType(“Jerry”, 69);<br>instance1.colors.push(“white”);<br>console.log(instance.colors);<br>console.log(instance.sayName());<br>console.log(instance.sayAge());<br>console.log(instance1.colors);<br>console.log(instance1.sayName());<br>console.log(instance1.sayAge());<br><br>MDN 原型链继承<br>（欠图一张）</p>
-<p>extends<br>从es5来说，实现对象的继承，还是相当麻烦的。而extends 关键字的出现，使继承变得简单，原型会自动进行调整，super()/super关键字可以访问父类的构造方法和属性。</p>
-<p><pre><br>class Animal {<br>  constructor(name) {<br>    this.name = name;<br>  }</pre></p>
-<p>  speak() {<br>    console.log(this.name + ‘ makes a noise.’);<br>  }<br>}</p>
-<p>class Dog extends Animal {<br>  speak() {<br>    console.log(this.name + ‘ barks.’);<br>  }<br>}</p>
-<p>var d = new Dog(‘Mitzie’);<br>d.speak();// ‘Mitzie barks.’<br><br>分析：Dog类没有构造函数，这样合理吗？</p>
-<p>// 等价于上个类定义</p>
-<p><pre><br>class Dog extends Animal {<br>  constructor(name) {<br>    super(name)<br>  }<br>  speak() {<br>    console.log(this.name + ‘ barks.’);<br>  }<br>}<br></pre><br>super()方法调用注意：</p>
-<p>只可在以extends 实现的派生类中的constructor方法中调用，在非派生类或方法中直接调用，会报错。<br>在constructor中访问this之前，一定要先调用super(),因为它负责初始化this,如果在super()调用之前尝试访问this，会报错。<br>如果不想调用super()，则唯一的方法是让类的constructor()返回一个对象。<br>类方法遮蔽<br>说明：派生类中的方法总会覆盖基类中的同名方法。</p>
-<p><pre><br>class Animal {<br>  constructor(name) {<br>    this.name = name;<br>  }</pre></p>
-<p>  speak() {<br>    console.log(this.name + ‘ makes a noise.’);<br>  }<br>}</p>
-<p>class Dog extends Animal {<br>  speak() {<br>    console.log(this.name + ‘ barks.’);<br>  }<br>}<br><br>// 基类中的speak()方法被覆盖<br>静态类成员继承<br>说明：如果基类有静态成员，那么这些静态成员在派生类中也可用。</p>
-<p><pre><br>class Animal {<br>    constructor(name) {<br>      this.name = name;<br>    }</pre></p>
-<pre><code>speak() {
-  console.log(this.name + &apos; makes a noise.&apos;);
-}
-static create(name) {
-    return new Animal(name);
-}
-</code></pre><p>  }</p>
-<p>  class Dog extends Animal {<br>    speak() {<br>      console.log(this.name + ‘ barks.’);<br>    }<br>  }</p>
-<p>  let a1 = Animal.create(“Monkey”);<br>  let a2 = Dog.create(“BeijinDog”);<br>  console.log(a1 instanceof Animal);  // true<br>  console.log(a2 instanceof Animal);  // true<br>  console.log(a2 instanceof Dog);  // false 这个是不是很意外？<br> <br>派生自表达式的类<br>由ES6的class定义可以知道，是function的语法糖，但为实现原型继承，提供了方便的实现。JS的强大的一点就是函数可以返回函数，那如果返回类的定义呢？是否支持继承？返回对象是个函数，并且有[[Constrcutor]]属性和原型，就能满足extends实现。</p>
-<p><pre><br>class Animal {<br>  constructor(name) {<br>    this.name = name;<br>  }</pre></p>
-<p>  speak() {<br>    console.log(this.name + ‘ makes a noise.’);<br>  }<br>}</p>
-<p>function getBase() {<br>  return Animal;<br>}<br>class Dog extends getBase() {<br>  speak() {<br>    console.log(this.name + ‘ barks.’);<br>  }<br>}</p>
-<p>const dog = new Dog(‘Tom’);<br>dog.speak();<br><br>如果这个例子基于class的实现，有点取巧的意思，那看另一个例子。</p>
-<p><pre><br>const SerializableMixin = {<br>  serialize() {<br>    return JSON.stringify(this);<br>  }<br>}</pre></p>
-<p>const AnimalMixin = {<br>  speak() {<br>    console.log(this.name + ‘ barks.’);<br>  }<br>}</p>
-<p>function mixin(…mixins) {<br>  const base = function() {};<br>  Object.assign(base.prototype, …mixins);<br>  return base;<br>}</p>
-<p>class Dog extends mixin(AnimalMixin, SerializableMixin) {<br>  constructor(name){<br>    super(name);<br>    this.name = name;<br>  }<br>}</p>
-<p>const dog = new Dog(‘Tom’);<br>dog.speak();  // Tom barks.<br><br>关于function,class,extends,mixin，是否有新的理解呢？</p>
-<p>内建对象继承<br>在ES6之前，内建对象很难实现继承的，更多用has-a思想，实现对内建对象的处理。ES6中，大量内建对象的内部实现得以暴漏，也使得继承内建对象变成了可能。</p>
-<p><pre><br>class ColorsArray extends Array {<br>}<br>const colors = new ColorsArray();<br>colors[0] = ‘red’;<br>console.log(colors.length); // 1</pre></p>
-<p>colors.length = 0;<br>console.log(colors[0]); // undefined<br><br>分析：基类（Array）创建 this 的值，然后派生类的构造函数(ColorsArray)再修改这个值。所以一开始可以通过this访问基类的所有内建功能，然后再正确地接收所有与之相关的功能。这与Array.apply/call 这种方法实现继承的this处理方式正好相反。这也是extends特殊的地方。</p>
-<p>Symbol.species</p>
-<p><pre><br>class ColorsArray extends Array {<br>}<br>const colors = new ColorsArray(‘red’, ‘green’, ‘blue’);<br>const subColors = colors.slice(0,1);<br>console.log(colors instanceof ColorsArray);  // true<br>console.log(subColors instanceof ColorsArray);  // true<br></pre><br>通常来讲，slice 方法继承自 Array ，返回的应该是Array的实例，但在这个示例中，却返回的是ColorsArray的实例，这是为什么呢？这是ES6中Symbol.species的功劳。Symbol.species MDN 详细说明</p>
-<p><pre><br>class MyArray extends Array {<br>  // Overwrite species to the parent Array constructor<br>  static get <a href="">Symbol.species</a> { return Array; }<br>}<br>var a = new MyArray(1,2,3);<br>var mapped = a.map(x =&gt; x * x);</pre></p>
-<p>console.log(mapped instanceof MyArray); // false<br>console.log(mapped instanceof Array);   // true<br><br>注意：重写实现的时候，使用getter+static，可以返回想用的类型，也可以返回 this,是的，你没看错，在static getter中使用了this，它指向的是MyArray的构造函数。</p>
-<p>constructor中new.target<br>new.target是es6中新添加的元属性，只有通过new操作创建对象的时候，new.target才会被指向类/方法本身，通过call/apply操作，new.target为undefined。可以通过判断new.target，来确实函数是否允许new操作。MDN new.target 说明<br>惯例，再加个代码示例，偷懒，直接从MDN上拷了。</p>
-<p><pre><br>function Foo() {<br>  if (!new.target) throw ‘Foo() must be called with new’;<br>  console.log(‘Foo instantiated with new’);<br>}</pre></p>
-<p>new Foo(); // logs “Foo instantiated with new”<br>Foo(); // throws “Foo() must be called with new”<br><br>又是先说function，不是已经升级到ES6，使用class了吗？始终要有一个清楚的认识，class，是function实现原型继承的语法糖，但有自己的特性存在的（不然，也不用引入class了）。</p>
-<p><pre><br>class A {<br>  constructor() {<br>    console.log(new.target.name);<br>  }<br>}</pre></p>
-<p>class B extends A { constructor() { super(); } }</p>
-<p>var a = new A(); // logs “A”<br>var b = new B(); // logs “B”</p>
-<p>class C { constructor() { console.log(new.target); } }<br>class D extends C { constructor() { super(); } }</p>
-<p>var c = new C(); // logs class C{constructor(){console.log(new.target);}}<br>var d = new D(); // logs class D extends C{constructor(){super();}}<br><br>这个就是类的了。<br>——————————————————————————————————————————————————————————————————————————————————————————————————————————————————<br>以上来自<a href="https://segmentfault.com/a/1190000019824053" target="_blank" rel="noopener">https://segmentfault.com/a/1190000019824053</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/05/13/es6-class-extends/" data-id="ckbm7ibz7003vd5xqd45n4cwx" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/05/27/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-2-HTML5的新特性/" data-id="ckc3140dc003bbgxqeduoto1s" class="article-share-link">Share</a>
       
       
     </footer>
@@ -539,7 +671,7 @@ static create(name) {
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
+    <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
   </nav>
 
 </section>
@@ -560,7 +692,7 @@ static create(name) {
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript异步编程/">JavaScript异步编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-babel/">react babel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/函数式编程/">函数式编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/函数式编程范式/">函数式编程范式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端路由/">前端路由</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/手写Promise源码/">手写Promise源码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/拉勾/">拉勾</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/正则/">正则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-Flutter/">网易微专业 Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-node/">网易微专业 node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ECMAScript新特性/">ECMAScript新特性</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript异步编程/">JavaScript异步编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TypeScript语言/">TypeScript语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-babel/">react babel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/函数式编程/">函数式编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/函数式编程范式/">函数式编程范式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端路由/">前端路由</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/微信小程序/">微信小程序</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/手写Promise源码/">手写Promise源码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/拉勾/">拉勾</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/正则/">正则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业/">网易微专业</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-Flutter/">网易微专业 Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-node/">网易微专业 node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
     </div>
   </div>
 
@@ -570,7 +702,7 @@ static create(name) {
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/JavaScript异步编程/" style="font-size: 10px;">JavaScript异步编程</a> <a href="/tags/react-babel/" style="font-size: 10px;">react babel</a> <a href="/tags/函数式编程/" style="font-size: 10px;">函数式编程</a> <a href="/tags/函数式编程范式/" style="font-size: 10px;">函数式编程范式</a> <a href="/tags/前端路由/" style="font-size: 10px;">前端路由</a> <a href="/tags/手写Promise源码/" style="font-size: 10px;">手写Promise源码</a> <a href="/tags/拉勾/" style="font-size: 16.67px;">拉勾</a> <a href="/tags/数据结构/" style="font-size: 13.33px;">数据结构</a> <a href="/tags/正则/" style="font-size: 10px;">正则</a> <a href="/tags/算法/" style="font-size: 20px;">算法</a> <a href="/tags/网易微专业-Flutter/" style="font-size: 10px;">网易微专业 Flutter</a> <a href="/tags/网易微专业-node/" style="font-size: 10px;">网易微专业 node</a> <a href="/tags/设计模式/" style="font-size: 16.67px;">设计模式</a>
+      <a href="/tags/ECMAScript新特性/" style="font-size: 10px;">ECMAScript新特性</a> <a href="/tags/JavaScript异步编程/" style="font-size: 10px;">JavaScript异步编程</a> <a href="/tags/TypeScript语言/" style="font-size: 10px;">TypeScript语言</a> <a href="/tags/react-babel/" style="font-size: 10px;">react babel</a> <a href="/tags/函数式编程/" style="font-size: 10px;">函数式编程</a> <a href="/tags/函数式编程范式/" style="font-size: 10px;">函数式编程范式</a> <a href="/tags/前端路由/" style="font-size: 10px;">前端路由</a> <a href="/tags/微信小程序/" style="font-size: 10px;">微信小程序</a> <a href="/tags/手写Promise源码/" style="font-size: 10px;">手写Promise源码</a> <a href="/tags/拉勾/" style="font-size: 20px;">拉勾</a> <a href="/tags/数据结构/" style="font-size: 13.33px;">数据结构</a> <a href="/tags/正则/" style="font-size: 10px;">正则</a> <a href="/tags/算法/" style="font-size: 20px;">算法</a> <a href="/tags/网易微专业/" style="font-size: 10px;">网易微专业</a> <a href="/tags/网易微专业-Flutter/" style="font-size: 10px;">网易微专业 Flutter</a> <a href="/tags/网易微专业-node/" style="font-size: 10px;">网易微专业 node</a> <a href="/tags/设计模式/" style="font-size: 16.67px;">设计模式</a>
     </div>
   </div>
 
@@ -592,23 +724,23 @@ static create(name) {
       <ul>
         
           <li>
+            <a href="/2020/06/28/拉勾-JavaScript性能优化/">拉勾-JavaScript性能优化</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/26/拉勾-TypeScript语言/">拉勾-TypeScript语言</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/21/拉勾-ECMAScript新特性/">拉勾-ECMAScript新特性</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/20/网易微专业-移动端APP开发工程师-微信小程序-3-1-1-创建微信小程序项目/">网易微专业-移动端APP开发工程师-微信小程序-3.1.1-创建微信小程序项目</a>
+          </li>
+        
+          <li>
             <a href="/2020/06/18/拉勾-手写Promise源码/">拉勾-手写Promise源码</a>
-          </li>
-        
-          <li>
-            <a href="/2020/06/17/拉勾-JavaScript异步编程/">拉勾-JavaScript异步编程</a>
-          </li>
-        
-          <li>
-            <a href="/2020/06/15/网易微专业-移动端APP开发工程师-移动UI框架Flutter-2-1-1-Flutter概述及开发环境/">网易微专业-移动端APP开发工程师-移动UI框架Flutter-2.1.1-Flutter概述及开发环境</a>
-          </li>
-        
-          <li>
-            <a href="/2020/06/14/拉勾-函数式编程范式/">拉勾-函数式编程范式</a>
-          </li>
-        
-          <li>
-            <a href="/2020/06/14/拉勾-函数式编程范式-5-高阶函数-函数作为参数/">拉勾-函数式编程范式-5-高阶函数-函数作为参数</a>
           </li>
         
       </ul>

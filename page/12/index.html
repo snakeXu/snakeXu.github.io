@@ -62,6 +62,167 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-js算法简单了解-希尔排序" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/12/10/js算法简单了解-希尔排序/" class="article-date">
+  <time datetime="2019-12-10T09:18:20.000Z" itemprop="datePublished">2019-12-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/12/10/js算法简单了解-希尔排序/">js算法简单了解-希尔排序</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.描述<br>插入排序对于大规模乱序数组排序很慢，希尔排序为了加快速度简单的改进了插入排序，交换不相邻元素以对数组的局部进行片排序，并最终用插入排序将局部有序数组排序。<br>（1）按照某一增量，将数组分为若干子序列，对子序列分别进行插入排序。<br>（2）逐渐减小增量，并重复此过程，直到增量为1，此时序列基本有序，最后进行插入排序。<br>2.代码</p>
+<p><pre><br>function shellsort(arr){<br>    var len = arr &amp;&amp; arr.length;<br>    var h = 1;<br>    while(h &lt; len/3){ h = 3 * h + 1}//理论上这里h可以取任意大于0的正整数<br>    while(h &gt;= 1){<br>        for(var i = h; i &lt; len; i++){<br>            //这个for循环很有意思，相当于从当前第i个元素开始，再与它之前应属于同组的元素比较<br>            //也就是说，当循环到这个元素的时候，它之前的同组元素已经做好了插入排序<br>            for(var j = i; j &gt;= h &amp;&amp; arr[j] &lt; arr[j-h]; j -= h){<br>                var temp = arr[j];<br>                arr[j] = arr[j-h];<br>                arr[j-h] = temp;<br>            }<br>        }<br>        //console.log(arr)<br>        h = parseInt(h / 3)<br>    }<br>}<br>var arr = [49,38,65,101,76,13,27,49,55,1]<br>shellsort(arr)<br></pre><br>3.时间复杂度O(N^1.5)   空间复杂度O(1)</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/12/10/js算法简单了解-希尔排序/" data-id="ckc3140ax0006bgxqfkyisqgt" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法/">算法</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-js算法简单了解-插入排序" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/12/10/js算法简单了解-插入排序/" class="article-date">
+  <time datetime="2019-12-10T06:37:09.000Z" itemprop="datePublished">2019-12-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/12/10/js算法简单了解-插入排序/">js算法简单了解-插入排序</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.描述<br>插入排序的工作原理就是将未排序数据，对已排序数据序列从后向前扫描，找到对应的位置并插入。插入排序通常采用占位的形式，空间复杂度为O(1),因此，在从后向前扫描的过程中，需要反复的把已排序的元素逐步向后挪位，为新插入元素提供插入的位置。<br>(1）从第一个元素开始，该元素可以被认为已经被排序<br>(2）取出下一个元素，在已经排好序的序列中从后往前扫描<br>(3）直到找到小于或者等于该元素的位置<br>(4）将该位置后面的所有已排序的元素从后往前依次移一位<br>(5)将该元素插入到该位置<br>(6)重复步骤2-5<br>另外，插入排序所需的时间取决于输入中元素的初始顺序。<br>2.代码</p>
+<p><pre><br>function insertsort(arr){<br>    var len = arr &amp;&amp; arr.length,i=1,j;<br>    for( ; i &lt; len; i++){<br>        for(j = i; j &gt; 0 &amp;&amp; arr[j] &lt; arr[j-1]; j–){<br>            var temp = arr[j];<br>            arr[j] = arr[j-1]<br>            arr[j-1] = temp;<br>        }<br>        //console.log(arr)这里是为了打印每轮比较的结果<br>    }<br>    return arr<br>}<br>var arr = [49,38,65,101,76,13,27,49,55,1]<br>insertsort(arr)<br></pre><br>结果打印<br><img src="https://snakexu.github.io/images/algorithm/insertsort_1.png"><br>3.时间复杂度最好为O(N) 最坏为(N^2) 平均为O(N^2)   空间复杂度为O(1) 稳定<br>4.额外<br>4.1数组是部分有序的：数组中倒置的数量小于数组大小的某个倍数，那么我们说这个数组是部分有序的。下面是几种典型的部分有序的数组：<br>(1)数组中每个元素距离它最终位置都不远<br>(2)一个有序的大数组接一个小数组<br>(3)数组中只有几个元素的位置不正确<br>——以上来自：算法(第四版)<br><br>插入排序对这样的数组很有效。<br><br>4.2要大幅提高插入排序的速度并不难，只需要在内循环中将较大的元素都向右移动而不总是交换两个元素(这样访问数组的次数就能减半)</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/12/10/js算法简单了解-插入排序/" data-id="ckc3140b3000cbgxqs3oxzaht" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法/">算法</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-js算法简单了解-选择排序" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/12/10/js算法简单了解-选择排序/" class="article-date">
+  <time datetime="2019-12-10T03:50:51.000Z" itemprop="datePublished">2019-12-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/12/10/js算法简单了解-选择排序/">js算法简单了解-选择排序</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.描述<br>在长度为N的无序数组中，第一次遍历n-1个数，找到最小的数值与第一个元素交换；第二次遍历n-2个数，找到最小的数值与第二个元素交换；。。。第n-1次遍历，找到最小的数值与第n-1个元素交换，排序完成。相较其他算法，选择排序的运行时间与数据初始状态无关，总会进行大约N2/2(N的平方除以2)次比较，而其他算法更善于利用数据初始状态<br>2.代码实现</p>
+<p><pre><br>function selectsort(arr){<br>    var len = arr &amp;&amp; arr.length,i=0,j,min;<br>    for( ; i &lt; len - 1; i++){<br>        min = i;<br>        for(j = i+1; j &lt; len; j++){<br>            if(a[j] &lt; a[min])<br>                min = j;<br>        }<br>        if(min != i){<br>            var temp = a[i];<br>            a[i] = a[min];<br>            a[min] = temp;<br>        }<br>    }<br>    return arr<br>}<br></pre><br>3.时间复杂度均为O(N^2)    空间复杂度为O(1)  不稳定(不稳定的意思就是，如果有个数组arr = [4,5,2,3,3,1],在排序之后，a[3]依然在a[4]前边)</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/12/10/js算法简单了解-选择排序/" data-id="ckc3140b5000ebgxqz1k6ycys" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法/">算法</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-js算法简单了解-冒泡算法" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/12/10/js算法简单了解-冒泡算法/" class="article-date">
+  <time datetime="2019-12-10T02:02:50.000Z" itemprop="datePublished">2019-12-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/12/10/js算法简单了解-冒泡算法/">js算法简单了解-冒泡算法</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!--为了补回算法了解，我也是real认真了，拿出了上学时候的教材——数据结构(C语言版)，清华大学出版社，还是很怀念上学做米虫的日子的，言归正传-->
+<p>1.其实就是把数组中相邻元素一个个比较，按照排序的条件进行互换，毫无技巧简单粗暴直接有效。不过这个算法在我看来是最容易学习的。<br>2.代码实现，例子里排序得到的结果是从小到大的，可以按照自己的需要更改比较条件</p>
+<p><pre><br>function BubbleSort(arr){<br>    var temp;//临时变量<br>    for(var i=0; i &lt; arr.length-1; i++){   //表示趟数，一共arr.length-1次。<br>        var count = 0; //打印用的参数<br>        for(var j=arr.length-1; j&gt;i; j–){<br>            if(arr[j] &lt; arr[j-1]){<br>                temp = arr[j];<br>                arr[j] = arr[j-1];<br>                arr[j-1] = temp;<br>                count++;<br>            }<br>        }<br>        console.log(‘第’+i+’轮的比较次数为’+count);<br>    }<br>    return arr;<br>}<br>var arr = [93,72,35,48,42,37,15,2];<br>BubbleSort(arr)<br></pre><br>执行结果如图所示：<br><img src="https://snakexu.github.io/images/algorithm/bubble_1.png"><br>3.时间复杂度:O(N^2)(N的平方)</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/12/10/js算法简单了解-冒泡算法/" data-id="ckc3140aw0005bgxqve8gl9y1" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法/">算法</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-网易微专业-模块化编程-4-1-2-加载器结构设计导论-自研模块加载器" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/12/07/网易微专业-模块化编程-4-1-2-加载器结构设计导论-自研模块加载器/" class="article-date">
@@ -89,7 +250,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/07/网易微专业-模块化编程-4-1-2-加载器结构设计导论-自研模块加载器/" data-id="ckbm7ibwg002yd5xq436akogn" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/12/07/网易微专业-模块化编程-4-1-2-加载器结构设计导论-自研模块加载器/" data-id="ckc3140d20032bgxqgo1xyrmv" class="article-share-link">Share</a>
       
       
     </footer>
@@ -134,7 +295,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/07/网易微专业-模块化编程-4-1-1-模块系统概述-自定义模块规范-书写约定/" data-id="ckbm7ibwg002xd5xqbs2bqlqx" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/12/07/网易微专业-模块化编程-4-1-1-模块系统概述-自定义模块规范-书写约定/" data-id="ckc3140cu002ybgxqhhiw8904" class="article-share-link">Share</a>
       
       
     </footer>
@@ -171,7 +332,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/06/HTTP和HTTPS协议/" data-id="ckbm7ibz5003td5xqy5bw7nlf" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/12/06/HTTP和HTTPS协议/" data-id="ckc3140fe0041bgxqaxc1dmm1" class="article-share-link">Share</a>
       
       
     </footer>
@@ -265,7 +426,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/06/我的typescript学习-接口/" data-id="ckbm7ibza0042d5xq68lgoubh" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/12/06/我的typescript学习-接口/" data-id="ckc3140fh0048bgxqnsxkgyia" class="article-share-link">Share</a>
       
       
     </footer>
@@ -362,7 +523,7 @@ console.log(fibonacci.cache);
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/02/网易微专业-Undersocre-3-4-1-Underscore-partial偏函数or-memoize缓存/" data-id="ckbm7ibvd001qd5xqw2qn1mv9" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/12/02/网易微专业-Undersocre-3-4-1-Underscore-partial偏函数or-memoize缓存/" data-id="ckc3140by001sbgxqv0c6eaq5" class="article-share-link">Share</a>
       
       
     </footer>
@@ -421,319 +582,7 @@ start = 0
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/02/网易微专业-Undersocre-3-3-2-Underscore-unique去重函数-源码拾遗/" data-id="ckbm7ibvc001pd5xq14xhdmqg" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-Undersocre-3-3-1-Underscore数组定位与摊平数组" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/12/01/网易微专业-Undersocre-3-3-1-Underscore数组定位与摊平数组/" class="article-date">
-  <time datetime="2019-12-01T13:42:29.000Z" itemprop="datePublished">2019-12-01</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/12/01/网易微专业-Undersocre-3-3-1-Underscore数组定位与摊平数组/">网易微专业-Undersocre-3.3.1-Underscore数组定位与摊平数组</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.<em>.initial与</em>.flatten<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.3.1_1.png"><br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.3.1_2.png"><br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.3.1_3.png"><br>2.代码</p>
-<p><pre><br>//摊平数组<br>var flatten = function(array, shallow) {<br>    var ret = [];<br>    var index = 0;<br>    for (var i = 0; i &lt; array.length; i++) {<br>        var value = array[i]; //展开一次<br>        if (_.isArray(value) || _.isArguments(value)) {<br>            //递归全部展开<br>            if (!shallow) {<br>                value = flatten(value, shallow);<br>            }<br>            var j = 0,<br>                len = value.length;<br>            //个人以为，这个地方，思路值得学习<br>            ret.length += len;<br>            while (j &lt; len) {<br>                ret[index++] = value[j++];<br>            }<br>        } else {<br>            ret[index++] = value;<br>        }<br>    }<br>    return ret;<br>}<br>_.flatten = function(array, shallow) {<br>    return flatten(array, shallow);<br>}<br>//返回数组中除了最后一个元素外的其他全部元素。 在arguments对象上特别有用。<br>_.initial = function(array, n) {<br>    return [].slice.call(array, 0, Math.max(0, array.length - (n == null ? 1 : n)));<br>};<br>//返回数组中除了第一个元素外的其他全部元素。传递 n 参数将返回从n开始的剩余所有元素<br><em>.rest = function(array, n, guard) {<br>    return [].slice.call(array, n == null ? 1 : n);<br>};<br></em></pre><br>Underscore看到现在，这里应该是比较简单的一节了，这节摊平数组主要是递归函数，但是整理摊平出来的数组也就是递归语句下面生成新数组的思路，还是很值得学习的。.initial和_.rest很容易理解，就不多说了。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/01/网易微专业-Undersocre-3-3-1-Underscore数组定位与摊平数组/" data-id="ckbm7ibvb001od5xqs9t2azob" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-Underscore-3-2-3-乱序数组-洗牌算法" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/11/27/网易微专业-Underscore-3-2-3-乱序数组-洗牌算法/" class="article-date">
-  <time datetime="2019-11-27T08:17:34.000Z" itemprop="datePublished">2019-11-27</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/11/27/网易微专业-Underscore-3-2-3-乱序数组-洗牌算法/">网易微专业-Underscore-3.2.3-乱序数组-洗牌算法</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.洗牌算法<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.2.3_1.png"><br>2.没啥说的，撸代码吧</p>
-<pre>
-_.clone = function(obj) {
-    return _.isArray(obj) ? obj.slice() : _.extend({}, obj);
-};
-
-//返回乱序之后的数组副本
-_.shuffle = function(array){
-   //array.length
-   return _.sample(array,Infinity);
-}
-//抽样函数  10  11 
-_.sample = function(array, n){
-   if(n == null){
-      return  array[_.random(array.length-1)];
-   }
-   var sample = _.clone(array);
-   var length = sample.length;
-   var last = length-1;
-   n = Math.max(Math.min(n, length),0);
-   for(var index = 0; index < n; index++){
-       //随机数   index  n
-       var rand = _.random(index, last);
-       var temp = sample[index];
-       sample[index] = sample[rand];   //交换
-       sample[rand] = temp;  //交换
-   }
-   return sample.slice(0, n);
-}
-</pre>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/27/网易微专业-Underscore-3-2-3-乱序数组-洗牌算法/" data-id="ckbm7ibva001nd5xqhkfytb6b" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-Underscore-3-2-2-条件查询-背后索引查询器实现" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/11/27/网易微专业-Underscore-3-2-2-条件查询-背后索引查询器实现/" class="article-date">
-  <time datetime="2019-11-27T06:44:38.000Z" itemprop="datePublished">2019-11-27</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/11/27/网易微专业-Underscore-3-2-2-条件查询-背后索引查询器实现/">网易微专业-Underscore-3.2.2-条件查询-背后索引查询器实现</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.indexOf lastIndexOf条件查询<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.2.2_1.png"><br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.2.2_2.png"><br>2.代码奉上<br>这节课，老师主要讲的其实是二分查找的算法。二分查找，就是在数组为有序数组的前提下，每次只查找数组长度的一半。最简单的来说，如果我们一个个按序对比，时间复杂度为n，如果采用二分查找，时间复杂度为log以2为底n的对数，在数据量大的时候，和明显二分查找效率更高</p>
-<pre>
-// (dir === 1 => 从前往后找)  (dir === -1 => 从后往前找) 
-function createPredicateIndexFinder(dir) {
-    return function(array, predicate, context) {
-        predicate = cb(predicate, context);  // _.isNaN
-        var length = array.length;
-        // 根据 dir 变量来确定数组遍历的起始位置
-        var index = dir > 0 ? 0 : length - 1;
-
-        for (; index >= 0 && index < length; index += dir) {
-            // 找到第一个符合条件的元素
-            // 并返回下标值
-            if (predicate(array[index], index, array))   //true
-                return index;
-        }
-        return -1;
-    };
-}
-_.findIndex = createPredicateIndexFinder(1);
-_.findLastIndex = createPredicateIndexFinder(-1);
-
-_.isNaN = function(obj) {   // NaN
-    return _.isNumber(obj) && obj !== obj;
-};
-
-_.sortedIndex = function(array, obj, iteratee, context) {
-    // 重点:cb函数 if (iteratee == null) {return function(value){return value;}}
-    iteratee = cb(iteratee, context, 1);
-    var value = iteratee(obj);
-    var low = 0,
-        high = array.length;
-    // 二分查找
-    while (low < high) {  //4  4 
-        var mid = Math.floor((low + high) / 2);   //4
-        if (iteratee(array[mid]) < value)    //  5 < 5
-            low = mid + 1;  //4
-        else
-            high = mid;   //4
-    }
-
-    return low;     //4
-};
-
-function createIndexFinder(dir, predicateFind, sortedIndex) {
-    // API 调用形式
-    // _.indexOf(array, value, [isSorted])
-    return function(array, item, idx) {
-        var i = 0,
-            length = array.length;
-        // 第三个参数true用二分查找优化 否则 遍历查找
-        if (sortedIndex && _.isBoolean(idx) && length) {
-            // 能用二分查找加速的条件
-            // 用 _.sortedIndex 找到有序数组中 item 正好插入的位置
-            idx = sortedIndex(array, item);
-            return array[idx] === item ? idx : -1;
-        }
-
-        //特殊情况 如果要查找的元素是 NaN 类型  NaN !== NaN
-        if (item !== item) {
-            idx = predicateFind(slice.call(array, i, length), _.isNaN);
-            return idx >= 0 ? idx + i : -1;
-        }
-
-        // 非上述情况正常遍历
-        for (idx = dir > 0 ? i : length - 1; idx >= 0 && idx < length; idx += dir) {
-            if (array[idx] === item) return idx;
-        }
-
-        return -1;
-    };
-}
-
-//_.findIndex  特殊情况下的处理方案  NAN  
-//_.sortedIndex 针对排序的数组做二分查找  优化性能
-_.indexOf = createIndexFinder(1, _.findIndex, _.sortedIndex);
-_.lastIndexOf = createIndexFinder(-1, _.findLastIndex);
-</pre>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/27/网易微专业-Underscore-3-2-2-条件查询-背后索引查询器实现/" data-id="ckbm7ibv9001md5xqr2nlhu2y" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-Underscore-3-2-1-Map-reduce真值检测函数" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/11/26/网易微专业-Underscore-3-2-1-Map-reduce真值检测函数/" class="article-date">
-  <time datetime="2019-11-26T13:27:48.000Z" itemprop="datePublished">2019-11-26</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/11/26/网易微专业-Underscore-3-2-1-Map-reduce真值检测函数/">网易微专业-Underscore-3.2.1-Map-reduce真值检测函数</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.map-reduce了解介绍<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.2.1_1.png"><br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.2.1_2.png"><br>2.map源码<br>这个内容在之前章节已经讲过，在此略过<br>3.reduce介绍<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.2.1_3.png"><br>4.真值检测函数<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.2.1_4.png"><br>5.上代码<br>(1)reduce的代码，关于这段代码，只想说，代码太厉害了，逻辑清晰又有深度……(省略万字溢美之词)</p>
-<pre>
-var optimizeCb = function(func, context, count) {
-    if (context == void 0) {
-        return func;
-    }
-
-    switch (count == null ? 3 : count) {
-        case 1:
-            return function(value) {
-                return func.call(context, value);
-            };
-        case 3:
-            return function(value, index, obj) {
-                return func.call(context, value, index, obj);
-            };
-        case 4:
-            return function(memo, value, index, obj) {
-                return func.call(context, memo, value, index, obj);
-            };
-    }
-}
-var createReduce = function(dir) {
-    //累加
-    var reduce = function(obj, iteratee, memo, init) {
-        var keys = !_.isArray(obj) && Object.keys(obj),
-            length = (keys || obj).length,
-            index = dir > 0 ? 0 : length - 1;
-        //给memo设置了初始值memo = obj[0]
-        //即要被操作的obj对象的第一个属性值
-        if (!init) {
-            memo = obj[keys ? keys[index] : index];
-            index += dir; //1   
-        };
-        for (; index >= 0 && index < length; index += dir) {
-            var currnteKey = keys ? keys[index] : index;
-            memo = iteratee(memo, obj[currnteKey], currnteKey, obj)
-        }
-        return memo;
-    }
-    //memo  最终能累加的结果     每一次累加的过程
-    return function(obj, iteratee, memo, context) {
-        var init = arguments.length >= 3;
-        return reduce(obj, optimizeCb(iteratee, context, 4), memo, init);
-    }
-}
-//调用的时候，1为正向从obj[0]处理到obj[Object.keys(obj).length-1]
-//-1为负向，从obj[Object.keys(obj).length-1]处理到obj[0]
-_.reduce = createReduce(1); // 1 || -1
-</pre>
-(2)filter过滤器
-<pre>
-_.filter = function(obj, predicate, context) {
-    var results = [];
-    predicate = cb(predicate, context);
-    _.each(obj, function(value, index, list) {
-        if (predicate(value, index, list)) results.push(value);
-    });
-    return results;
-};
-</pre>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/26/网易微专业-Underscore-3-2-1-Map-reduce真值检测函数/" data-id="ckbm7ibv9001ld5xq35bhwinq" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/12/02/网易微专业-Undersocre-3-3-2-Underscore-unique去重函数-源码拾遗/" data-id="ckc3140by001rbgxq6o47u38c" class="article-share-link">Share</a>
       
       
     </footer>
@@ -747,7 +596,7 @@ _.filter = function(obj, predicate, context) {
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/11/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/">13</a><a class="page-number" href="/page/14/">14</a><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/13/">Next &raquo;</a>
+    <a class="extend prev" rel="prev" href="/page/11/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/">13</a><a class="page-number" href="/page/14/">14</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" href="/page/13/">Next &raquo;</a>
   </nav>
 
 </section>
@@ -768,7 +617,7 @@ _.filter = function(obj, predicate, context) {
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript异步编程/">JavaScript异步编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-babel/">react babel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/函数式编程/">函数式编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/函数式编程范式/">函数式编程范式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端路由/">前端路由</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/手写Promise源码/">手写Promise源码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/拉勾/">拉勾</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/正则/">正则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-Flutter/">网易微专业 Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-node/">网易微专业 node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ECMAScript新特性/">ECMAScript新特性</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript异步编程/">JavaScript异步编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TypeScript语言/">TypeScript语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-babel/">react babel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/函数式编程/">函数式编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/函数式编程范式/">函数式编程范式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端路由/">前端路由</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/微信小程序/">微信小程序</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/手写Promise源码/">手写Promise源码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/拉勾/">拉勾</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/正则/">正则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业/">网易微专业</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-Flutter/">网易微专业 Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-node/">网易微专业 node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
     </div>
   </div>
 
@@ -778,7 +627,7 @@ _.filter = function(obj, predicate, context) {
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/JavaScript异步编程/" style="font-size: 10px;">JavaScript异步编程</a> <a href="/tags/react-babel/" style="font-size: 10px;">react babel</a> <a href="/tags/函数式编程/" style="font-size: 10px;">函数式编程</a> <a href="/tags/函数式编程范式/" style="font-size: 10px;">函数式编程范式</a> <a href="/tags/前端路由/" style="font-size: 10px;">前端路由</a> <a href="/tags/手写Promise源码/" style="font-size: 10px;">手写Promise源码</a> <a href="/tags/拉勾/" style="font-size: 16.67px;">拉勾</a> <a href="/tags/数据结构/" style="font-size: 13.33px;">数据结构</a> <a href="/tags/正则/" style="font-size: 10px;">正则</a> <a href="/tags/算法/" style="font-size: 20px;">算法</a> <a href="/tags/网易微专业-Flutter/" style="font-size: 10px;">网易微专业 Flutter</a> <a href="/tags/网易微专业-node/" style="font-size: 10px;">网易微专业 node</a> <a href="/tags/设计模式/" style="font-size: 16.67px;">设计模式</a>
+      <a href="/tags/ECMAScript新特性/" style="font-size: 10px;">ECMAScript新特性</a> <a href="/tags/JavaScript异步编程/" style="font-size: 10px;">JavaScript异步编程</a> <a href="/tags/TypeScript语言/" style="font-size: 10px;">TypeScript语言</a> <a href="/tags/react-babel/" style="font-size: 10px;">react babel</a> <a href="/tags/函数式编程/" style="font-size: 10px;">函数式编程</a> <a href="/tags/函数式编程范式/" style="font-size: 10px;">函数式编程范式</a> <a href="/tags/前端路由/" style="font-size: 10px;">前端路由</a> <a href="/tags/微信小程序/" style="font-size: 10px;">微信小程序</a> <a href="/tags/手写Promise源码/" style="font-size: 10px;">手写Promise源码</a> <a href="/tags/拉勾/" style="font-size: 20px;">拉勾</a> <a href="/tags/数据结构/" style="font-size: 13.33px;">数据结构</a> <a href="/tags/正则/" style="font-size: 10px;">正则</a> <a href="/tags/算法/" style="font-size: 20px;">算法</a> <a href="/tags/网易微专业/" style="font-size: 10px;">网易微专业</a> <a href="/tags/网易微专业-Flutter/" style="font-size: 10px;">网易微专业 Flutter</a> <a href="/tags/网易微专业-node/" style="font-size: 10px;">网易微专业 node</a> <a href="/tags/设计模式/" style="font-size: 16.67px;">设计模式</a>
     </div>
   </div>
 
@@ -800,23 +649,23 @@ _.filter = function(obj, predicate, context) {
       <ul>
         
           <li>
+            <a href="/2020/06/28/拉勾-JavaScript性能优化/">拉勾-JavaScript性能优化</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/26/拉勾-TypeScript语言/">拉勾-TypeScript语言</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/21/拉勾-ECMAScript新特性/">拉勾-ECMAScript新特性</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/20/网易微专业-移动端APP开发工程师-微信小程序-3-1-1-创建微信小程序项目/">网易微专业-移动端APP开发工程师-微信小程序-3.1.1-创建微信小程序项目</a>
+          </li>
+        
+          <li>
             <a href="/2020/06/18/拉勾-手写Promise源码/">拉勾-手写Promise源码</a>
-          </li>
-        
-          <li>
-            <a href="/2020/06/17/拉勾-JavaScript异步编程/">拉勾-JavaScript异步编程</a>
-          </li>
-        
-          <li>
-            <a href="/2020/06/15/网易微专业-移动端APP开发工程师-移动UI框架Flutter-2-1-1-Flutter概述及开发环境/">网易微专业-移动端APP开发工程师-移动UI框架Flutter-2.1.1-Flutter概述及开发环境</a>
-          </li>
-        
-          <li>
-            <a href="/2020/06/14/拉勾-函数式编程范式/">拉勾-函数式编程范式</a>
-          </li>
-        
-          <li>
-            <a href="/2020/06/14/拉勾-函数式编程范式-5-高阶函数-函数作为参数/">拉勾-函数式编程范式-5-高阶函数-函数作为参数</a>
           </li>
         
       </ul>

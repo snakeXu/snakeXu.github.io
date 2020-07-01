@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>拉勾-TypeScript语言 | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1.课程概述解决JavaScript类型系统的问题，TypeScript大大提高代码的可靠程度。我们这里其实主要讨论的是JavaScript自有类型系统的问题以及如何借助一些优秀的方案解决这些问题，TypeScript是在这个过程中我们涉及到的一门语言，因为TypeScript目前是此类问题最终级的解决方案，所以我们会着重学习TypeScript。本章主要学习:(1)强类型与弱类型(2)静态类型与">
+<meta name="keywords" content="拉勾,TypeScript语言">
+<meta property="og:type" content="article">
+<meta property="og:title" content="拉勾-TypeScript语言">
+<meta property="og:url" content="http://yoursite.com/2020/06/26/拉勾-TypeScript语言/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="1.课程概述解决JavaScript类型系统的问题，TypeScript大大提高代码的可靠程度。我们这里其实主要讨论的是JavaScript自有类型系统的问题以及如何借助一些优秀的方案解决这些问题，TypeScript是在这个过程中我们涉及到的一门语言，因为TypeScript目前是此类问题最终级的解决方案，所以我们会着重学习TypeScript。本章主要学习:(1)强类型与弱类型(2)静态类型与">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_1/TypeScript/2_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_1/TypeScript/2_2.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_1/TypeScript/2_3.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_1/TypeScript/2_4.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_1/TypeScript/3_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_1/TypeScript/6_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_1/TypeScript/20_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_1/TypeScript/25_1.png">
+<meta property="og:updated_time" content="2020-06-30T07:14:23.818Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="拉勾-TypeScript语言">
+<meta name="twitter:description" content="1.课程概述解决JavaScript类型系统的问题，TypeScript大大提高代码的可靠程度。我们这里其实主要讨论的是JavaScript自有类型系统的问题以及如何借助一些优秀的方案解决这些问题，TypeScript是在这个过程中我们涉及到的一门语言，因为TypeScript目前是此类问题最终级的解决方案，所以我们会着重学习TypeScript。本章主要学习:(1)强类型与弱类型(2)静态类型与">
+<meta name="twitter:image" content="https://snakexu.github.io/images/lagou/part_1/TypeScript/2_1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-拉勾-TypeScript语言" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/26/拉勾-TypeScript语言/" class="article-date">
+  <time datetime="2020-06-26T10:32:05.000Z" itemprop="datePublished">2020-06-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      拉勾-TypeScript语言
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.课程概述<br>解决JavaScript类型系统的问题，TypeScript大大提高代码的可靠程度。我们这里其实主要讨论的是JavaScript自有类型系统的问题以及如何借助一些优秀的方案解决这些问题，TypeScript是在这个过程中我们涉及到的一门语言，因为TypeScript目前是此类问题最终级的解决方案，所以我们会着重学习TypeScript。本章主要学习:<br>(1)强类型与弱类型<br>(2)静态类型与动态类型<br>(3)JavaScript自有类型系统的问题<br>(4)Flow静态类型检查方案<br>(5)TypeScript语言规范与基本应用<br>2.强类型与弱类型<br>·强类型与弱类型(类型安全)<br>·静态类型与动态类型(类型检查)<br>强类型:在语言层面限制函数的实参类型必须与形参类型相同<br><img src="https://snakexu.github.io/images/lagou/part_1/TypeScript/2_1.png"><br>弱类型:在语言层面不会限制实参的类型<br><img src="https://snakexu.github.io/images/lagou/part_1/TypeScript/2_2.png"><br>由于这种强弱之分并不是某一个权威机构的定义，导致大家在细节方面的认知略有不同，不过总体上是强类型有更强的类型约束，而弱类型中几乎没有什么约束。老师个人认为强类型语言中不能有任意类型的隐式类型转换，而弱类型语言则允许任意的数据隐式类型转换，比如下图我们在终端做了字符串与数字类型的减法操作，并没有报错，因为JavaScript会做隐式类型转换<br><img src="https://snakexu.github.io/images/lagou/part_1/TypeScript/2_3.png"><br>有人会说，JavaScript也会报类型错误，比如<br><img src="https://snakexu.github.io/images/lagou/part_1/TypeScript/2_4.png"><br>这里要注意，我们说的强类型是在语言的语法层面就限制了不允许传入不同类型的值，如果我们传入不同类型的值在编译就报类型错误，而不是等到运行阶段再通过逻辑判断去限制。在JavaScript中所有报出的类型错误都是在代码层面在运行时通过逻辑判断的。<br>总结：强类型不允许随意的隐式转换，而弱类型允许。变量类型允许随时改变的特点不是强弱类型的差异<br>3.静态类型与动态类型<br>静态类型:一个变量声明的时候它的类型就是明确的，声明过后，它的类型就不允许再修改<br>动态类型:运行阶段才能够明确变量类型，而且变量类型可以随时改变<br>在JavaScript中<br><img src="https://snakexu.github.io/images/lagou/part_1/TypeScript/3_1.png"><br>在运行时才明确var定义的foo变量是NUMBER类型，再将number类型的foo修改为字符串，也是允许的。那我们也可以说动态类型语言中的变量没有类型，变量中存放的值是有类型的。JavaScript是一门标准的动态类型语言。<br>4.JavaScript类型系统特征<br>弱类型且动态类型，本身类型系统非常薄弱，所以类型是非常灵活的，也带来了缺点-缺失了类型系统的可靠性。为什么JavaScript不能设计成强类型/静态类型的语言？因为早期JavaScript应用简单，几十行代码是非常够用的，这时候类型系统就显得很多余了；另外就是JavaScript是一门脚本语言，没有编译环节，而静态类型语言需要在编译阶段做静态类型检查。基于以上原因，JavaScript成为了一门更灵活(弱类型/静态类型)的语言。而随着JavaScript开发的项目规模越来越大，这些曾经的优势变为了短板。<br>5.弱类型的问题</p>
+<pre>
+const obj = {}
+obj.foo()//报错，运行时才能发现错误
+function sum(a,b){
+    return a+b
+}
+console.log(sum(100,100))
+console.log(sum(100,'100'))//变成了字符串拼接，类型不明确导致函数功能发生改变
+obj[true] = 100
+console.log(obj['true'])//在对象中属性名默认为string，对对象索引器的错误用法 
+</pre>
+综上，在代码规模比较小的情况下，弱类型的弱势并不是很明显，但是在开发周期长的大型项目中，弱类型的弱势就很明显了，而君子协议的约定是有隐患的，强制约定才是一种保障，提前消灭一大部分异常而不必等到运行时再慢慢debug
+6.强类型的优势
+6-1.错误更早暴露
+6-2.代码更智能，编码更准确
+6-3.重构更牢靠
+6-4.减少不必要的类型判断
+7.Flow概述
+JavaScript的类型检查器。可以在需要的地方写上类型，而在生产环境可以通过babel等消除，而且不必对每一个变量都写类型注解，可以说非常方便
+8.Flow快速上手
+创建一个项目，安装flow
+//老师课程里是用yarn安装使用的flow，我在本地项目用的npm按装使用，用npm安装和普通插件安装一样，如何使用参考
+//https://blog.csdn.net/qq_38785020/article/details/89642800
+<pre>
+// @flow//这里必须要写，是告诉flow，我需要你检查这个文件
+function sum (a: number, b: number) {
+  return a + b
+}
+sum(100, 100)
+sum(100, '100')//Error ┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈ 01-getting-started.js:7:10
+               //Cannot call sum with '100' bound to b because string [1] is incompatible with
+               //number [2]. [incompatible-call]
+</pre>
+执行npm run flow的部分结果如下图
+<img src="https://snakexu.github.io/images/lagou/part_1/TypeScript/6_1.png">
+9.Flow编译移除注解
+为了类型检查，我们给代码添加了一些注解，这些注解并不是JavaScript的标准语法，以至于js是无法正常运行的，如果想运行，那么就要在开发过后移除这些类型注解。移除这些注解，现在有两种方式，一种就是官方推荐的flow-remove-types，这是最快速最简单的办法。首先安装flow-remove-types，然后在package.json文件的script中添加"remove":"flow-remove-types . -d dist"，此时执行npm run remove就可以看到当前目录下生成了dist文件夹，dist文件夹中无类型注解。
+flow-remove-types命令:flow-remove-types 要移除注解的文件夹 -d 输出文件夹
+另外一个方法就是通过babel去移除。这里需要安装@babel/core(babel的核心模块)、@babel/cli、@babel/preset-flow。然后添加.babelrc文件，文件中内容
+{
+    "preset":["@babel/preset-flow"]
+}
+执行的命令是:babel 执行目录 -d 输出目录
+这两种方案选哪种合适？如果你的项目中已经引入babel，那么babel/preset-flow就挺好的，其实到底用哪种自己根据项目考虑最合适的就好
+9.Flow开发工具插件
+上面我们都是在命令行执行flow检查错误，并不能在代码中直观看到问题到底在哪儿，用户体验差了一些，我们可以在vscode中搜索Flow Language Support，这个是Flow官方提供的插件
+https://flow.org/en/docs/editors flow官网对编辑器插件支持的情况
+10.Flow 类型推断
+Flow会根据我们的代码聪明的做一些类型推断
+<pre>
+function square(n){
+    return n*n
+}
+square('10')//即使我们在没有给函数添加类型注解的情况下，如果我们输入字符串作为参数，也会报错
+</pre>
+11.Flow 类型注解
+尽管flow很聪明的帮我们做一些类型推断，但是我们还是写上注解比价好，这样方便程序的理解。另外Flow的几个基础用法
+<pre>
+/**类型注解
+*
+*@flow
+*/
+function square(n:number){
+    return n*n
+}
+let num:number = 10
+function foo():number{//返回值类型为number，如果没有返回值，可以写void
+    //return 101//不报错
+    //return 'string'//报错
+}
+</pre>
+13.Flow 原始类型
+<pre>
+const a: string = 'foobar'
+const b: number = Infinity // NaN // 100
+const c: boolean = false // true
+const d: null = null
+const e: void = undefined
+const f: symbol = Symbol()
+</pre>
+14.Flow 数组类型
+<pre>
+/**
+ * 数组类型
+ *
+ * @flow
+ */
+const arr1: Array< number > = [1, 2, 3]//这里和tyescript很像，指定了数组里所有元素的类型都为number
+const arr2: number[] = [1, 2, 3]
+// 元组
+const foo: [string, number] = ['foo', 100]
+</pre>
+15.Flow 对象类型
+<pre>
+/**
+ * 对象类型
+ *
+ * @flow
+ */
+const obj1: { foo: string, bar: number } = { foo: 'string', bar: 100 }
+const obj2: { foo?: string, bar: number } = { bar: 100 }//?是可选项
+const obj3: { [string]: string } = {}//默认给对象添加属性的方法是可以的
+obj3.key1 = 'value1'
+obj3.key2 = 'value2'
+</pre>
+16.Flow 函数类型
+<pre>
+/**
+ * 函数类型
+ *
+ * @flow
+ */
+function foo (callback: (string, number) => void) {
+  callback('string', 100)
+}
+foo(function (str, n) {
+  // str => string
+  // n => number
+})
+</pre>
+在之前，我们已经把基础的函数类型注解了解过了，这里主要是如果函数参数是callback函数如何注解
+17.Flow 特殊类型
+<pre>
+/**
+ * 特殊类型
+ *
+ * @flow
+ */
+
+// 字面量类型
+const a: 'foo' = 'foo'
+const type: 'success' | 'warning' | 'danger' = 'success'
+// ------------------------
+// 声明类型
+type StringOrNumber = string | number
+const b: StringOrNumber = 'string' // 100
+// ------------------------
+// Maybe 类型
+const gender: ?number = undefined
+// 相当于
+// const gender: number | null | void = undefined
+</pre>
+18.Flow Mixed与Any
+Mixed和Any都可以接收任意类型的值，但是不同点在于Mixed更接近于强类型的概念，Any更接近于弱类型的概念
+<pre>
+/**
+ * Mixed Any
+ *
+ * @flow
+ */
+// string | number | boolean | ....
+function passMixed (value: mixed) {
+  //value.substr(1)
+  //value * value////先按字符串类型运算再按数值类型运算会报错
+  if (typeof value === 'string') {
+    value.substr(1)
+  }
+  if (typeof value === 'number') {
+    value * value
+  }
+}
+passMixed('string')
+passMixed(100)
+// ---------------------------------
+function passAny (value: any) {
+  value.substr(1)
+  value * value//先按字符串类型运算再按数值类型运算不会报错
+}
+passAny('string')
+passAny(100)
+</pre>
+19.Flow 类型小结
+https://flow.org/en/docs/types/ 对flow中所有类型的一个总结，因为我们不会逐个讲flow的类型
+https://www.saltycrane.com/cheat-sheets/flow-type/latest/ 一个第三方的类型手册，可以更方便做查询
+20.Flow 运行环境API
+Flow在不同的运行环境，比如在浏览器和在node会有一些不同的类型注解
+<pre>
+/**
+ * 运行环境 API
+ *
+ * @flow
+ */
+const element: HTMLElement | null = document.getElementById('app')
+</pre>
+一些API说明文件的链接
+<img src="https://snakexu.github.io/images/lagou/part_1/TypeScript/20_1.png">
+21.TypeScript概述
+TypeScript是基于JavaScript基础之上的编程语言，很多时候我们都在说是JavaScript的超集。由于TypeScript可以编译为JavaScript，那么任何支持JavaScript的运行环境都支持TypeScript。TypeScript功能比Flow更为强大，生态也更健全更完善。可以是TypeScript是前端开发的第二语言。但是再好的语言也会有一些缺点
+缺点一:语言本身多了很多概念
+TypeScript属于“渐进式”，就是即使我们对TypeScript的概念并不了解，仍可以按照JavaScript的标准语法去编写TypeScript代码，在开发过程中了解一个特性就可以使用一个特性
+缺点二:项目初期，TypeScript会增加一些成本
+但是随着项目的发展，这些一开始的开销反而会变成优势
+22.TypeScript快速上手
+首先新建项目，在项目中安装typescript，安装完成后我们在node_modules文件夹下看到.bin目录，在.bin目录下看到tsc，这是一个命令，这个命令的作用就是帮我们编译typescript代码。新建一个typescript文件01-getting-started.ts。虽然我们还不了解typescript，但是完全可以按照JavaScript的标准语法先来编写typescript的代码，而且typescript支持最新的ECMAScript标准。
+<pre>
+const hello = (name)=>{
+    console.log(`hello ${name}`)
+}
+hello('TypeScript')
+</pre>
+在命令行执行tsc 01-getting-started.ts命令，然后就可以看到在项目的根目录下多了一个同名的js文件，js文件的内容是
+<pre>
+var hello = function (name) {
+    console.log("hello " + name);
+};
+hello('TypeScript');
+</pre>
+通过tsc命令可以把我们的代码转换成了ES3标准的代码。另外对于类型检验，和Flow很像，比如
+<pre>
+const hello = (name:string)=>{
+    console.log(`hello ${name}`)
+}
+hello('TypeScript')
+hello(100)//执行tsc命令的时候报错
+</pre>
+tsc命令实际上就是TypeScript compile，这个命令去编译ts文件。在编译过程中，首先会检查typescript的类型使用是否异常，然后移除类型注解之类的扩展语法，并且在这个过程中会自动转换ES新特性为ES3标准的JavaScript
+23.TypeScript配置文件
+tsc命令不仅可以编译单个文件，还可以编译整个项目或者说整个工程。在编译整个项目之前，我们会先给这个项目创建一个typescript的配置文件，在命令行执行tsc --init 命令，可以看到生成了一个tsconfig.json文件。打开这个文件，我们简单看一下，这里大部分内容都被注释掉了，这里我们简单了解几个
+<pre>
+"target": "es5", //tsc命令将ts代码转换为甚么标准，这里是转换为es5标准
+"module": "commonjs", //以commonjs标准执行模块化
+"sourceMap": true,  //开启源代码映射
+"outDir": "dist",  //tsc命令编译结果输出文件夹
+"rootDir": "src",  //项目源代码文件夹
+"strict": true,  //开启严格模式
+</pre>
+在严格模式下，不能不指定类型注解(在非严格模式下，不写类型注解被默认推断为any，在严格模式下，即使是any类型也要明确指定)。如果我们已经有配置文件，但是依然编译单个文件而不是整个项目，那么配置文件是不生效的，只有在用tsc命令编译整个项目的时候，配置文件才生效。此时执行tsc命令编译整个项目，会报错:
+error TS6059: File '/myTypeScript/01-getting-started.ts' is not under 'rootDir' '/myTypeScript/src'. 'rootDir' is expected to contain all source files.
+Found 1 error.
+说明我们的配置文件已经生效了。
+现在我们在项目下新建src文件夹，把之前编译生成的js文件删除，把ts文件移到src文件夹中，再次执行tsc命令，就会看到在根目录下多了dist文件夹，文件夹下有01-getting-started.js文件和01-getting-started。map文件。js文件内容如下
+<pre>
+"use strict";
+var hello = function (name) {
+    console.log("hello " + name);
+};
+hello('TypeScript');
+//# sourceMappingURL=01-getting-started.js.map
+</pre>
+24.TypeScript原始类型
+TypeScript大部分原始类型的用法和Flow很像。
+<pre>
+const a:string = 'foo'
+const b:number = 100 //NaN //Infinity
+const c:boolean = true //false
+const d:string = null //严格模式下会报错
+</pre>
+上面这些在非严格模式下是允许为空/null，在非严格模式下是不允许为空的。tsconfig中的strict是开启所有严格检查的选项，如果只是检查变量不能为空，可以使用
+<pre>
+"strictNullChecks": true, 
+</pre>
+<pre>
+const e:void=undefined//在函数没有返回值的时候标记返回值类型，只能存放undefined/null,严格模式下只能存放undefined
+const f:null = null
+const g:undefined = undefined
+const h:symbol = Symbol()//报错，为什么报错？下回分解
+</pre>
+25.TypeScript标准库声明
+<pre>
+const h:symbol = Symbol()//报错，为什么报错，需要设置"target": "es2015"
+</pre>
+symbol是ES2015中新增的标准类型，symbol自身也是有类型的，而且这些类型在typescript中已经帮我们定义好了。在页面中写Array，然后在Array上单击右键，点击Goto Definition
+<img src="https://snakexu.github.io/images/lagou/part_1/TypeScript/25_1.png">
+能看到lib.es5.d.ts，这里声明了所有内置对象定义的类型，但是我们看到文件名中包含es5，这是一个es5所对应的标准库声明，但是symbol是es2015定义的内置类型，所以在es5定义的标准库中不能正确声明。但是如果我们既想编译到es5标准又想用es2015的标准怎么办呢？找到tsconfig配置文件中的lib选项
+<pre>
+lib": ["ES2015"],
+</pre>
+但是打开ts文件会发现console报错了，真是让人秃头，你猜怎么解决，没错，再次找到配置文件(因为console是浏览器环境下BOM对象提供的，所以要添加相应的标准库，谁让我们刚才写ES2015之后，别的标准库就被覆盖了呢)，然后在lib中添加DOM(ts中DOM和BOM合并成为DOM，可以少写几个字母，开心么)
+<pre>
+lib": ["ES2015","DOM"],
+</pre>
+总结一下就是标准库就是内置对象所对应的声明，在代码中使用内置对象就要引用所对应的标准库，否则ts就找不到对应的标准类型就会报错
+26.TypeScript中文错误消息
+ts会根据使用编辑器的语言来显示信息，但是很无奈，我们用的编辑器大部分都是英文的，不过ts还是有办法的，在执行tsc命令的时候
+<pre>
+tsc --locale zh-CN
+</pre>
+编辑器其实也有相应的语言转换插件，但是不建议使用，毕竟英文更有助于我们搜索问题
+27.TypeScript作用域问题
+我们在不同文件中定义const a，那么如果是在全局作用域中定义的话，就会报错，比如
+<pre>
+a.ts
+const a:string = 'foo'
+b.ts
+const a:number = 1
+</pre>
+一种解决方案就是把他们放到不同的作用域中，例如我们可以用一个立即执行函数
+<pre>
+a.ts
+const a:string = 'foo'
+b.ts
+(function(){
+    const a:number = 1
+})
+</pre>
+或者添加一个exprot，这样变量就变成模块的局部成员了
+<pre>
+a.ts
+const a:string = 'foo'
+b.ts
+const a:number = 1
+exports{}
+</pre>
+28.TypeScript Object类型
+ts中的Object泛指所有非原始类型，对象、数组、函数
+<pre>
+export{}//确保与其他示例没有成员冲突
+const foo:object = function(){}//[]//{}
+const obj:{foo:string,bar:number}={foo:'123',bar:456}//必须一一对应，最好用接口类型
+</pre>
+29.TypeScript 数组类型
+<pre>
+export {} // 确保跟其它示例没有成员冲突
+// 数组类型的两种表示方式
+const arr1: Array< number > = [1, 2, 3]
+const arr2: number[] = [1, 2, 3]
+// 案例 -----------------------
+// 如果是 JS，需要判断是不是每个成员都是数字
+// 使用 TS，类型有保障，不用添加类型判断
+function sum (...args: number[]) {
+  return args.reduce((prev, current) => prev + current, 0)
+}
+sum(1, 2, 3) // => 6
+sum(1,2,3,'p')//报错
+</pre>
+30.TypeScript 元组类型
+元组就是一种特殊的数据结构，明确元素数量和元素类型的数组，各个元素的类型不必要完全相同。在ts中可以使用类似数组字面量来定义元组的类型
+<pre>
+const tuple: [number, string] = [18, 'zce']
+// const age = tuple[0]
+// const name = tuple[1]
+const [age, name] = tuple
+// ---------------------
+const entries: [string, number][] = Object.entries({
+  foo: 123,
+  bar: 456
+})
+const [key, value] = entries[0]
+// key => foo, value => 123
+</pre>
+31.TypeScript 枚举类型
+枚举类型有两个特点：(1)可以给一组数值取一个更好理解的名字(2)一个枚举中只会存在固定的值，并不会有超出范围的可能性
+在传统语言中枚举是很常见的数据结构，但是在JavaScript中并没有这种数据结构，很多时候都是使用一个对象模拟枚举
+<pre>
+// 用对象模拟枚举
+const PostStatus = {
+  Draft: 0,
+  Unpublished: 1,
+  Published: 2
+}
+// 标准的数字枚举
+enum PostStatus {
+  Draft = 0,//枚举类型的值可以不用等号去指定
+  Unpublished = 1,//如果不指定值，默认枚举中的值从0开始累加
+  Published = 2
+}
+const post = {
+  title: 'Hello TypeScript',
+  content: 'TypeScript is a typed superset of JavaScript.',
+  status: PostStatus.Draft // 3 // 1 // 0 //使用枚举 枚举名称.成员名称
+}
+// 字符串枚举
+enum PostStatus {
+  Draft = 'aaa',//字符串不能自增，所以必须指定每个值
+  Unpublished = 'bbb',
+  Published = 'ccc'
+}
+</pre>
+枚举类型会入侵到我们运行时代码——会影响我们编译后的结果。我们在ts中使用的大多数类型都会在编译完成后移除掉，因为它只是我们在编译过程中做的类型检查。而枚举会编译为一个双向的键值对对象(双向键值对->可以通过键获取值，也可以通过值获取键)。我们可以试着编译一下我们刚才写的代码
+<pre></pre>
+32.TypeScript 函数类型
+函数的类型约束，无外乎就是对函数的输入输出进行类型限制，输入就是参数，输出就是返回值。不过在js中有两种函数定义的方式，分别是函数声明和函数表达式。
+<pre>
+function func1(a:number,b:number):string{
+    return 'func1'
+}
+function func2(a:number,b?:number):string{//?参数是可选的
+    return 'func2'
+}
+function func3(a:number,b:number = 1):string{//设置参数默认值
+    return 'func3'
+}
+//可选参数、默认值都要设置在最后一个参数
+function func4(a:number,b:number,...rest:number[]):string{//任意个数的参数
+    return 'func4'
+}
+const func5: (a: number, b: number) => string = function (a: number, b: number): string {
+  return 'func5'
+}
+</pre>
+33.TypeScript 任意类型
+<pre>
+function stringify (value: any) {
+  return JSON.stringify(value)
+}
+stringify('string')
+stringify(100)
+stringify(true)
+let foo: any = 'string'
+foo = 100
+foo.bar()
+// any 类型是不安全的
+</pre>
+any类型约等于不执行任何类型检查
+34.TypeScript 隐式类型推断
+在ts中如果一个变量没有通过类型注解标记一个变量的类型，ts会通过变量使用情况推断变量的类型——隐式类型推断
+<pre>
+let age = 18 // 被推断为number类型
+// age = 'string'//再把number类型赋值为字符串类型会被报错
+let foo//定义的时候没有标记类型注解，ts推断为any类型
+foo = 100
+foo = 'string'
+</pre>
+建议为每个变量添加明确的类型标注，后期可以更直观的了解代码
+35.TypeScript 类型断言
+<pre>
+// 假定这个 nums 来自一个明确的接口
+const nums = [110, 120, 119, 112]
+const res = nums.find(i => i > 0)//这里我们能明确，一定会有大于0的值，但是ts不明确，它会以为有可能返回的是undefined
+//const square = res * res//使用的时候不能确定是数字，于是我们断言一定会是数字的
+const num1 = res as number //这里是一种断言方式
+const num2 = <number>res //另外一种断言方式 // JSX 下不能使用
+</number></pre>
+这里要明确，类型断言不等于类型转换，并不是把一个类型转换成另外一个类型，类型转换是代码在运行时的一个概念，类型断言是编译过程中的一个概念，在编译过后，类型断言就不会存在了，有本质上的差异
+36.TypeScript 接口
+理解成一种规范、契约，约定一个对象的结构，去使用一个接口就一定要去遵循这个接口全部的约定。接口最直观的体现就是约定对象中有哪些成员，这些成员的类型是什么样的
+<pre>
+interface Post {
+  title: string
+  content: string
+}
+function printPost (post: Post) {
+  console.log(post.title)
+  console.log(post.content)
+}
+printPost({
+  title: 'Hello TypeScript',
+  content: 'A javascript superset'
+})
+</pre>
+接口就是用来约束对象的结构，一个对象要实现一个接口就要拥有这个对象中所有的成员。如果我们编译一下这个代码会发现编译后的js文件中并没有任何与接口有关的痕迹，ts中的接口只是为我们有结构的数据进行类型约束，在实际运行中没有太大的意义
+37.TypeScript 接口补充
+<pre>
+interface Post {
+  title: string
+  content: string
+  subtitle?: string//可选成员
+  readonly summary: string//只读成员
+}
+const hello: Post = {
+  title: 'Hello TypeScript',
+  content: 'A javascript superset',
+  summary: 'A javascript'
+}
+hello.summary = 'other'//只读成员初始化完成修改之后再修改会报错
+interface Cache {
+  [prop: string]: string//动态成员，prop这个不是固定的名字，可以按需求自己设置
+}
+const cache: Cache = {}
+cache.foo = 'value1'
+cache.bar = 'value2'
+</pre>
+38.TypeScript 类的基本使用
+类-描述一类具体事物的抽象特征，用来描述一类具体对象的抽象成员。ES6以前，js通过函数+原型模拟实现类，ES6开始有了专门的class。TypeScript增强了class的相关语法
+<pre>
+class Person {
+  name: string // = 'init name'
+  age: number  //在下面赋值之前要先定义
+  constructor (name: string, age: number) {
+    this.name = name
+    this.age = age
+  }
+  sayHi (msg: string): void {
+    console.log(`I am ${this.name}, ${msg}`)
+  }
+}
+</pre>
+39.TypeScript 类的访问修饰符
+<pre>
+class Person {
+  public name: string // = 'init name'
+  private age: number
+  protected gender: boolean
+  constructor (name: string, age: number) {
+    this.name = name
+    this.age = age
+    this.gender = true
+  }
+  sayHi (msg: string): void {
+    console.log(`I am ${this.name}, ${msg}`)
+    console.log(this.age)
+  }
+}
+class Student extends Person {
+  private constructor (name: string, age: number) {
+    super(name, age)
+    console.log(this.gender)
+  }
+  //private只能在类内被访问，所以定义静态方法在类内实例化
+  static create (name: string, age: number) {
+    return new Student(name, age)
+  }
+}
+const tom = new Person('tom', 18)
+console.log(tom.name)
+// console.log(tom.age)
+// console.log(tom.gender)
+const jack = Student.create('jack', 18)
+</pre>
+40.TypeScript 类的只读属性
+<pre>
+class Person {
+  public name: string // = 'init name'
+  private age: number
+  // 只读成员
+  protected readonly gender: boolean
+  constructor (name: string, age: number) {
+    this.name = name
+    this.age = age
+    this.gender = true
+  }
+  sayHi (msg: string): void {
+    console.log(`I am ${this.name}, ${msg}`)
+    console.log(this.age)
+  }
+}
+const tom = new Person('tom', 18)
+console.log(tom.name)
+// tom.gender = false//只读属性只能赋值一次，并且赋值之后不能再修改
+</pre>
+41.TypeScript 类与接口
+<pre>
+//其实Eat与Run两个接口可以合并成一个接口，但是简单细化更好
+interface Eat {
+  eat (food: string): void
+}
+interface Run {
+  run (distance: number): void
+}
+class Person implements Eat, Run {
+  eat (food: string): void {
+    console.log(`优雅的进餐: ${food}`)
+  }
+
+  run (distance: number) {
+    console.log(`直立行走: ${distance}`)
+  }
+}
+class Animal implements Eat, Run {
+  eat (food: string): void {
+    console.log(`呼噜呼噜的吃: ${food}`)
+  }
+
+  run (distance: number) {
+    console.log(`爬行: ${distance}`)
+  }
+}
+</pre>
+42.TypeScript 抽象类
+抽象类与接口有点像，都是约束子类中必须有某一个成员，区别在于抽象类可以包含一些具体实现，但是接口只能是成员的抽象，不能包含具体的实现。
+<pre>
+//抽象类 抽象类只能被继承，不能被new
+abstract class Animal {
+  eat (food: string): void {
+    console.log(`呼噜呼噜的吃: ${food}`)
+  }
+  //抽象方法，不需要方法体 父类如果有抽象方法，子类必须实现这个抽象方法
+  abstract run (distance: number): void
+}
+//继承抽象类
+class Dog extends Animal {
+  run(distance: number): void {
+    console.log('四脚爬行', distance)
+  }
+
+}
+const d = new Dog()
+d.eat('嗯西马')
+d.run(100)
+</pre>
+43.TypeScript 泛型
+在定义函数、接口、类的时候没有指定具体的类型，等到使用的时候再具体指定一个类型。泛型就是声明函数的时候不去指定具体的类型，等到调用的时候再传递具体的类型，为了最大程度复用代码
+<pre>
+function createNumberArray (length: number, value: number): number[] {
+  //由于Array对象默认创建的是any类型的数组，需要指定一下元素类型，这里通过泛型参数传递一个类型
+  //这里Array是一个泛型类，在ts中定义这个类的时候并不知道我们会用它存放什么样类型的数据，所以使用泛型参数，再调用的时候再传递一个具体类型
+  const arr = Array< number >(length).fill(value)
+  return arr
+}
+const res = createNumberArray(3, 100)
+res => [100, 100, 100
+</pre>
+上面我们定义了一个数字数组，如果我们又需要一个字符串数组，难道要再定义一个？
+<pre>
+function createStringArray (length: number, value: string): string[] {
+  const arr = Array< string >(length).fill(value)
+  return arr
+}
+</pre>
+这么做有点傻，更好的方法是使用泛型
+<pre>
+function createArray< T > (length: number, value: T): T[] {
+  const arr = Array< T >(length).fill(value)
+  return arr
+}
+const res = createArray< string >(3, 'foo')
+</pre>
+44.TypeScript 类型声明
+我们经常在使用npm安装一些第三方模块的时候不一定是ts编写的，这个时候可以用类型声明，即一个成员在定义的时候没有明确的类型声明，我们在使用的时候可以定义一个类型声明
+<pre>
+import { camelCase } from 'lodash' //假设lodash没有ts版本的声明模块
+declare function camelCase (input: string): string
+const res = camelCase('hello typed')
+</pre>
+如果有ts声明模块我们可以安装ts模块，比如lodash有types声明文件 @types/lodash，我们可以在开发环境安装声明文件，因为不会提供具体代码，只是提供类型声明。而query-string模块有类型声明文件，我们可以直接使用
+<pre>
+import qs from 'query-string'
+qs.parse('?key=value&key2=value2')
+</pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/26/拉勾-TypeScript语言/" data-id="ckc3140iv0055bgxq0rnq9qp9" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TypeScript语言/">TypeScript语言</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/拉勾/">拉勾</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/06/28/拉勾-JavaScript性能优化/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          拉勾-JavaScript性能优化
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/06/21/拉勾-ECMAScript新特性/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">拉勾-ECMAScript新特性</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/拉勾/">拉勾</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ECMAScript新特性/">ECMAScript新特性</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript异步编程/">JavaScript异步编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TypeScript语言/">TypeScript语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-babel/">react babel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/函数式编程/">函数式编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/函数式编程范式/">函数式编程范式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端路由/">前端路由</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/微信小程序/">微信小程序</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/手写Promise源码/">手写Promise源码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/拉勾/">拉勾</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/正则/">正则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业/">网易微专业</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-Flutter/">网易微专业 Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-node/">网易微专业 node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/ECMAScript新特性/" style="font-size: 10px;">ECMAScript新特性</a> <a href="/tags/JavaScript异步编程/" style="font-size: 10px;">JavaScript异步编程</a> <a href="/tags/TypeScript语言/" style="font-size: 10px;">TypeScript语言</a> <a href="/tags/react-babel/" style="font-size: 10px;">react babel</a> <a href="/tags/函数式编程/" style="font-size: 10px;">函数式编程</a> <a href="/tags/函数式编程范式/" style="font-size: 10px;">函数式编程范式</a> <a href="/tags/前端路由/" style="font-size: 10px;">前端路由</a> <a href="/tags/微信小程序/" style="font-size: 10px;">微信小程序</a> <a href="/tags/手写Promise源码/" style="font-size: 10px;">手写Promise源码</a> <a href="/tags/拉勾/" style="font-size: 20px;">拉勾</a> <a href="/tags/数据结构/" style="font-size: 13.33px;">数据结构</a> <a href="/tags/正则/" style="font-size: 10px;">正则</a> <a href="/tags/算法/" style="font-size: 20px;">算法</a> <a href="/tags/网易微专业/" style="font-size: 10px;">网易微专业</a> <a href="/tags/网易微专业-Flutter/" style="font-size: 10px;">网易微专业 Flutter</a> <a href="/tags/网易微专业-node/" style="font-size: 10px;">网易微专业 node</a> <a href="/tags/设计模式/" style="font-size: 16.67px;">设计模式</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/06/28/拉勾-JavaScript性能优化/">拉勾-JavaScript性能优化</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/26/拉勾-TypeScript语言/">拉勾-TypeScript语言</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/21/拉勾-ECMAScript新特性/">拉勾-ECMAScript新特性</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/20/网易微专业-移动端APP开发工程师-微信小程序-3-1-1-创建微信小程序项目/">网易微专业-移动端APP开发工程师-微信小程序-3.1.1-创建微信小程序项目</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/18/拉勾-手写Promise源码/">拉勾-手写Promise源码</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

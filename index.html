@@ -62,6 +62,1290 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-拉勾-JavaScript性能优化" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/28/拉勾-JavaScript性能优化/" class="article-date">
+  <time datetime="2020-06-28T12:06:17.000Z" itemprop="datePublished">2020-06-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/28/拉勾-JavaScript性能优化/">拉勾-JavaScript性能优化</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.课程概述<br>·性能优化不可避免<br>·哪些内容可以看作性能优化：本质上来说任何一种可以提高运行效率，降低运行开销的行为都可以认为是性能优化<br>·无处不在的前端性能优化：例如请求资源时用到的网络，数据的传输方式，开发过程中所使用的框架等等都可以进行优化<br>本阶段的核心是JavaScript语言的优化，内容概要<br>·内存管理<br>·垃圾回收与常见GC算法<br>·V8引擎的垃圾回收<br>·Performance工具<br>·代码优化实例<br>2.内存管理<br>2-1.内存为什么需要管理<br><img src="https://snakexu.github.io/images/lagou/part_1/performance/2_1.png"><br>从图中可以看到，我们一下子给数组索引值很大的地方添加了一个变量，导致内存泄漏性性能损耗很大<br>2-2.内存管理介绍<br>·内存:由可读写单元组成，表示一片可操作空间<br>·管理:人为的去操作一片空间的申请、使用和释放<br>·内存管理:开发者主动申请空间、使用空间、释放空间<br>·管理流程:申请-使用-释放<br>2-3.JavaScript中的内存管理<br>由于JavaScript没有提供相应的API，所以不能像一些语言可以由开发者主动调用API来完成相应空间的管理。但是我们可以通过js脚本来演示在内部一个空间的生命周期是怎样完成的</p>
+<p><pre><br>//申请<br>let obj = {}<br>//使用<br>obj.name = “lg”<br>//释放<br>obj = null<br></pre><br>3.JavaScript中的垃圾回收<br>3-1.JavaScript中的垃圾<br>·JavaScript中内存管理是自动的<br>·对象不再被引用时是垃圾<br>·对象不能从根上访问到时是垃圾<br>3-2.JavaScript中的可达对象<br>·可以访问到的对象就是可达对象(引用、作用域链)<br>·可达的标准就是从根出发是否能够被找到<br>·JavaScript中的根就可以理解为是全局变量对象</p>
+<p><pre><br>let obj = {name:’xm’}//空间被引用,obj是可达的<br>let ali = obj //被引用，多了一次引用，引用数值变化<br>obj = null//obj的引用被断掉了，但是{name:’xm’}的空间是存在的，因为遍历ali还存在<br></pre><br>下面这个例子会可以更多理解</p>
+<p><pre><br>function objGroup(obj1,obj2){<br>    obj1.next = obj2<br>    obj2.prev = obj1<br>    return {<br>        o1:obj1,<br>        o2:obj2<br>    }<br>}<br>let obj = objGroup({name:’obj1’},{name:’obj2’})<br>console.log(obj)<br>//{<br>//  o1: <ref *1=""> {<br>//    name: ‘obj1’,<br>//    next: { name: ‘obj2’, prev: [Circular <em>1] }<br>//  },<br>//  o2: &lt;ref </em>2&gt; {<br>//    name: ‘obj2’,<br>//    prev: <ref *1=""> { name: ‘obj1’, next: [Circular *2] }<br>//  }<br>//}<br></ref></ref></pre><br>我们结合上面的代码和下面的图一起来看<br><img src="https://snakexu.github.io/images/lagou/part_1/performance/3_1.png"><br>我们从全局global出发，找到可达obj对象，通过函数调用指向一个内存空间，内存空间中有o1和o2，在o1和o2里边我们又通过相应的属性去指向obj1的空间和obj2的空间，对于obj1和obj2，又通过next和prev做了一个互相的引用。目前来说我们代码中出现的对象都可以从根上进行查找到。如果此时我们通过delete obj.o1和delete obj2.prev，我们去掉obj对o1的引用以及obj2对o1的引用，那么此时我们很难再通过什么方式找到obj1的空间<br><img src="https://snakexu.github.io/images/lagou/part_1/performance/3_2.png"><br>上图红线部分表示我们delete操作之后的情况，此时obj1就会被认为是垃圾，被JavaScript引擎进行回收。<br>4.GC算法介绍<br>4-1.GC定义与作用<br>·GC就是垃圾回收机制的简写<br>·GC可以找到内存中的垃圾、并释放和回收空间<br>4-2.GC里的垃圾是什么<br>·程序中不再需要使用的对象</p>
+<p><pre><br>function func(){<br>    name = ‘lg’<br>    return <code>${name} is a coder</code><br>}<br>func()<br></pre><br>·程序中不能再访问到的对象</p>
+<p><pre><br>function func(){<br>    const name = ‘lg’<br>    return <code>${name} is a coder</code><br>}<br>func()<br></pre><br>4-3.GC算法是什么<br>·GC算法是一种机制，垃圾回收器完成具体的工作<br>·工作内容就是查找垃圾释放空间、回收空间<br>·算法就是工作时查找和回收所遵循的规则<br>4-4.常见GC算法<br>·引用计数<br>·标记清除<br>·标记整理<br>·分代回收<br>5.引用计数算法实现原理<br>·核心思想:设置引用数，判断当前引用数是否为0<br>·引用计数器<br>·引用关系改变时修改引用数字<br>·引用数字为0时立即回收</p>
+<p><pre><br>const user1 = {age:11}<br>const user2 = {age:22}<br>const user3 = {age:33}<br>const nameList = [user1.age,user2.age,user3.age]<br>function fn(){<br>    num1 = 1<br>    num2 = 2<br>}<br>fn()<br></pre><br>这种情况下当前全局有user1、user2、user3、nameList、num1、num2变量，这些变量的引用计数都不为0。如果我们稍作修改</p>
+<p><pre><br>function fn(){<br>    const num1 = 1<br>    const num2 = 2<br>}<br></pre><br>那么在fn执行完毕后，在外部全局作用域不能找到num1、num2，num1、num2的引用计数为0，会被作为垃圾回收。而user1、user2、user3被nameList引用，即使脚本执行完毕，user1、user2、user3的引用计数器都不为0，不会被作为垃圾回收。<br>6.引用计数算法优缺点<br>优点：<br>·发现垃圾时立即回收<br>·最大限度减少程序暂停(应用程序执行必然对内存有消耗，而我们执行平台的内存是有上限的，内存肯定有占满的时候，由于引用计数算法时刻监控着引用数值为0的情况，即使内存即将被占满，由于有引用计数时刻监测着引用为0的变量，进行垃圾回收，保证了当前内存不会有占满的时候)<br>缺点：<br>·无法回收循环引用的对象<br>·时间开销大(当前引用计数需要维护一个数值的变化，就需要时刻监控当前对象的引用数值是否发生变化，数值修改本身就需要消耗时间，如果内存中很多对象都需要变化时间就会显得更大一些)</p>
+<p><pre><br>//循环引用对象<br>function fn(){<br>    const obj1 = {}<br>    const obj2 = {}<br>    obj1.name = obj2<br>    obj2.name = obj1<br>    return ‘lg is a coder’<br>}<br>fn()<br></pre><br>虽然在fn执行完毕后，外部不再有对obj1、obj2的引用，但是函数内部o bj1和obj2互相引用，造成引用计数无法为0，无法释放变量空间，造成内存的浪费<br>7.标记清除算法实现原理<br>·核心思想:分标记和清除二个阶段完成<br>·遍历所有对象找标记活动对象<br>·遍历所有对象清除没有标记对象<br>·回收相应的空间<br> <img src="https://snakexu.github.io/images/lagou/part_1/performance/7_1.png"><br> 在标记阶段找到所有可达对象(会递归查找，比如图中global找到A再找到D)，将可达对象进行标记；标记完成之后进行清除，找到没有标记的对象，进行清除，同时将标记阶段做的标记清除，这样就完成了一次垃圾的回收，还会将回收的空间放到空闲列表上，方便后续的程序申请使用。而上图中的a1、b1可能是当前局部作用域，而当前局部作用域执行完成以后空间就会被回收，在global链条下找不到a1、b1，GC机制认为a1、b1是垃圾对象，不进行标记，a1、b1被垃圾回收。<br>8.标记清除算法的优缺点<br>相比引用计数，标记清除解决了循环引用的问题。缺点是容易造成内存空间的碎片化，也就是回收的内存空间在地址上不是连续在一起的，不能使空间得到最大化的使用<br>9.标记整理算法实现原理<br>·标记整理可以看作是标记清除的增强<br>·标记阶段的操作和标记清除一致<br>·清除阶段会先执行整理，移动对象位置<br><img src="https://snakexu.github.io/images/lagou/part_1/performance/9_1.png"><br><img src="https://snakexu.github.io/images/lagou/part_1/performance/9_2.png"><br>10.常见GC算法总结<br>常见GC算法：<br>·引用计数<br>  可以即时回收垃圾对象<br>  可以即时回收垃圾对象<br>  减少程序卡顿时间<br>  无法回收循环引用的对象<br>  资源消耗较大<br>·标记清除<br>  可以回收循环引用的对象<br>  容易产生碎片化空间，浪费空间<br>  不会立即回收垃圾对象<br>·标记整理<br>  减少碎片化空间<br>  不会立即回收垃圾对象<br>11.认识V8<br>·V8是一款主流的JavaScript执行引擎(chrome浏览器，node平台都是在用V8执行代码)<br>·V8采用即时编译<br>·V8内存设限(V8是为浏览器制造的，现有内存大小对网页应用来说足够使用了；V8内部的垃圾回收机制来说这个内存限制也是合理的)<br>12.V8垃圾回收策略<br>在程序使用过程中我们需要用到很多数据，包括原始数据、对象数据。对于原始数据来说都是程序语言自身来进行控制的，所以我们提到的垃圾回收主要还是存在堆区里的对象数据，因此这个过程是离不开内存操作的，而V8对内存是设置了上限的，因为我们想知道在这种情况下是怎么进行垃圾回收的<br>V8垃圾回收策略<br>·采用分代回收的思想<br>·内存分为新生代、老生代(后面介绍如何划分新生代、老生代)<br>·针对不同对象采用不同算法<br><img src="https://snakexu.github.io/images/lagou/part_1/performance/12_1.png"><br>V8中常用GC算法<br>·分代回收<br>·空间复制<br>·标记清除<br>·标记整理<br>·标记增量<br>13.V8如何回收新生代对象<br><img src="https://snakexu.github.io/images/lagou/part_1/performance/13_1.png"><br>V8内存分配<br>·V8内存空间一分为二(上面图中左边带白色部分为新生代，右边老生代存储区有写明)<br>·小空间用于存储新生代对象(32M|16M)<br>·新生代指的是存活时间较短的对象<br>新生代对象回收实现<br>·回收过程中采用复制算法+标记整理<br>·新生代内存区分为二个等大小空间<br>·使用空间为From，空闲空间为To<br>·活动对象存储于from空间<br>·标记整理后将活动对象拷贝至To(可以得到连续的存储空间)<br>·From与To交换空间完成释放<br>回收细节说明<br>·拷贝过程中可能出现晋升<br>·晋升就是将新生代对象移动至老生代<br>·一轮GC还存活的新生代需要晋升<br>·To空间的使用率超过25%需要晋升(怕将来交换之后新进对象没有操作空间)<br>14.V8如何回收老生代对象<br>老生代对象说明<br>·老生代对象存放在右侧老生代区域<br>·64位操作系统1.4G，32位操作系统700M<br>·老生代对象就是指存活时间较长的对象(例如全局变量，一些闭包中的变量数据)<br>老生代对象回收实现<br>·主要采用标记清除、标记整理、增量标记算法<br>·首先使用标记清除完成垃圾空间的回收<br>·采用标记整理进行空间优化(发现老生代存储空间不满足需求的情况下)<br>·采用增量标记进行效率优化<br>细节对比<br>·新生代区域垃圾回收使用空间换时间<br>·老生代垃圾回收不适合复制算法(相对新生代空间，老生代空间较大，采用复制算法消耗较大)<br><img src="https://snakexu.github.io/images/lagou/part_1/performance/14_1.png"><br>标记增量:将我们当前一整段的垃圾回收拆分成多个小步去实现，从而去替代之前一口气完成的垃圾回收，从而完成程序执行与垃圾回收交替运行，时间安排更加合理<br>15.V8垃圾回收总结<br>·V8是一款主流的JavaScript执行引擎<br>·V8内存设置上限<br>·V8采用基于分代回收思想实现垃圾回收<br>·V8内存分为新生代和老生代<br>·V8垃圾回收常见的GC算法<br>16.Performance工具介绍<br>为什么使用Performance<br>·GC的目的是为了实现内存空间的良性循环<br>·良性循环的基石是合理使用<br>·时刻关注才能确定是否合理<br>·Performance提供多种监控方式<br>通过Performance时刻监控内存<br>Performance使用步骤<br>·打开浏览器输入目标网址<br>·进入开发人员工具面板，选择性能<br>·开启录制功能，访问具体界面<br>·执行用户行为，一段时间后停止录制<br>·分析界面中记录的内存信息<br>17.内存问题的体现<br>内存问题的外在表现<br>·页面出现延迟加载或经常性暂停<br>在网络环境正常的情况下，一般判定内存有问题，而且与GC频繁的垃圾回收操作相关——程序代码中存在瞬间让程序爆掉的代码<br>·页面持续性出现糟糕的性能<br>有可能存在内存膨胀——当前界面为了去达到最佳使用速度会去申请一定的内存空间，而申请的内存空间远大于当前设备所能提供的内存大小<br>·页面的性能随时间延长越来越差<br>通常伴随着内存的泄漏<br>18.监控内存的几种方式<br>界定内存问题的标准<br>·内存泄漏：内存使用持续升高<br>·内存膨胀：在多数设备上都存在性能问题<br>·频繁垃圾回收：通过内存变化图进行分析<br>监控内存的几种方式<br>·浏览器任务管理器<br>·Timeline时序图记录<br>·堆快照查找分离DOM<br>·判断是否存在频繁的垃圾回收<br>19.任务管理器监控内存</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/28/拉勾-JavaScript性能优化/" data-id="ckc3140fi0049bgxqqnifp99x" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/拉勾/">拉勾</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-拉勾-TypeScript语言" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/26/拉勾-TypeScript语言/" class="article-date">
+  <time datetime="2020-06-26T10:32:05.000Z" itemprop="datePublished">2020-06-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/26/拉勾-TypeScript语言/">拉勾-TypeScript语言</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.课程概述<br>解决JavaScript类型系统的问题，TypeScript大大提高代码的可靠程度。我们这里其实主要讨论的是JavaScript自有类型系统的问题以及如何借助一些优秀的方案解决这些问题，TypeScript是在这个过程中我们涉及到的一门语言，因为TypeScript目前是此类问题最终级的解决方案，所以我们会着重学习TypeScript。本章主要学习:<br>(1)强类型与弱类型<br>(2)静态类型与动态类型<br>(3)JavaScript自有类型系统的问题<br>(4)Flow静态类型检查方案<br>(5)TypeScript语言规范与基本应用<br>2.强类型与弱类型<br>·强类型与弱类型(类型安全)<br>·静态类型与动态类型(类型检查)<br>强类型:在语言层面限制函数的实参类型必须与形参类型相同<br><img src="https://snakexu.github.io/images/lagou/part_1/TypeScript/2_1.png"><br>弱类型:在语言层面不会限制实参的类型<br><img src="https://snakexu.github.io/images/lagou/part_1/TypeScript/2_2.png"><br>由于这种强弱之分并不是某一个权威机构的定义，导致大家在细节方面的认知略有不同，不过总体上是强类型有更强的类型约束，而弱类型中几乎没有什么约束。老师个人认为强类型语言中不能有任意类型的隐式类型转换，而弱类型语言则允许任意的数据隐式类型转换，比如下图我们在终端做了字符串与数字类型的减法操作，并没有报错，因为JavaScript会做隐式类型转换<br><img src="https://snakexu.github.io/images/lagou/part_1/TypeScript/2_3.png"><br>有人会说，JavaScript也会报类型错误，比如<br><img src="https://snakexu.github.io/images/lagou/part_1/TypeScript/2_4.png"><br>这里要注意，我们说的强类型是在语言的语法层面就限制了不允许传入不同类型的值，如果我们传入不同类型的值在编译就报类型错误，而不是等到运行阶段再通过逻辑判断去限制。在JavaScript中所有报出的类型错误都是在代码层面在运行时通过逻辑判断的。<br>总结：强类型不允许随意的隐式转换，而弱类型允许。变量类型允许随时改变的特点不是强弱类型的差异<br>3.静态类型与动态类型<br>静态类型:一个变量声明的时候它的类型就是明确的，声明过后，它的类型就不允许再修改<br>动态类型:运行阶段才能够明确变量类型，而且变量类型可以随时改变<br>在JavaScript中<br><img src="https://snakexu.github.io/images/lagou/part_1/TypeScript/3_1.png"><br>在运行时才明确var定义的foo变量是NUMBER类型，再将number类型的foo修改为字符串，也是允许的。那我们也可以说动态类型语言中的变量没有类型，变量中存放的值是有类型的。JavaScript是一门标准的动态类型语言。<br>4.JavaScript类型系统特征<br>弱类型且动态类型，本身类型系统非常薄弱，所以类型是非常灵活的，也带来了缺点-缺失了类型系统的可靠性。为什么JavaScript不能设计成强类型/静态类型的语言？因为早期JavaScript应用简单，几十行代码是非常够用的，这时候类型系统就显得很多余了；另外就是JavaScript是一门脚本语言，没有编译环节，而静态类型语言需要在编译阶段做静态类型检查。基于以上原因，JavaScript成为了一门更灵活(弱类型/静态类型)的语言。而随着JavaScript开发的项目规模越来越大，这些曾经的优势变为了短板。<br>5.弱类型的问题</p>
+<pre>
+const obj = {}
+obj.foo()//报错，运行时才能发现错误
+function sum(a,b){
+    return a+b
+}
+console.log(sum(100,100))
+console.log(sum(100,'100'))//变成了字符串拼接，类型不明确导致函数功能发生改变
+obj[true] = 100
+console.log(obj['true'])//在对象中属性名默认为string，对对象索引器的错误用法 
+</pre>
+综上，在代码规模比较小的情况下，弱类型的弱势并不是很明显，但是在开发周期长的大型项目中，弱类型的弱势就很明显了，而君子协议的约定是有隐患的，强制约定才是一种保障，提前消灭一大部分异常而不必等到运行时再慢慢debug
+6.强类型的优势
+6-1.错误更早暴露
+6-2.代码更智能，编码更准确
+6-3.重构更牢靠
+6-4.减少不必要的类型判断
+7.Flow概述
+JavaScript的类型检查器。可以在需要的地方写上类型，而在生产环境可以通过babel等消除，而且不必对每一个变量都写类型注解，可以说非常方便
+8.Flow快速上手
+创建一个项目，安装flow
+//老师课程里是用yarn安装使用的flow，我在本地项目用的npm按装使用，用npm安装和普通插件安装一样，如何使用参考
+//https://blog.csdn.net/qq_38785020/article/details/89642800
+<pre>
+// @flow//这里必须要写，是告诉flow，我需要你检查这个文件
+function sum (a: number, b: number) {
+  return a + b
+}
+sum(100, 100)
+sum(100, '100')//Error ┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈ 01-getting-started.js:7:10
+               //Cannot call sum with '100' bound to b because string [1] is incompatible with
+               //number [2]. [incompatible-call]
+</pre>
+执行npm run flow的部分结果如下图
+<img src="https://snakexu.github.io/images/lagou/part_1/TypeScript/6_1.png">
+9.Flow编译移除注解
+为了类型检查，我们给代码添加了一些注解，这些注解并不是JavaScript的标准语法，以至于js是无法正常运行的，如果想运行，那么就要在开发过后移除这些类型注解。移除这些注解，现在有两种方式，一种就是官方推荐的flow-remove-types，这是最快速最简单的办法。首先安装flow-remove-types，然后在package.json文件的script中添加"remove":"flow-remove-types . -d dist"，此时执行npm run remove就可以看到当前目录下生成了dist文件夹，dist文件夹中无类型注解。
+flow-remove-types命令:flow-remove-types 要移除注解的文件夹 -d 输出文件夹
+另外一个方法就是通过babel去移除。这里需要安装@babel/core(babel的核心模块)、@babel/cli、@babel/preset-flow。然后添加.babelrc文件，文件中内容
+{
+    "preset":["@babel/preset-flow"]
+}
+执行的命令是:babel 执行目录 -d 输出目录
+这两种方案选哪种合适？如果你的项目中已经引入babel，那么babel/preset-flow就挺好的，其实到底用哪种自己根据项目考虑最合适的就好
+9.Flow开发工具插件
+上面我们都是在命令行执行flow检查错误，并不能在代码中直观看到问题到底在哪儿，用户体验差了一些，我们可以在vscode中搜索Flow Language Support，这个是Flow官方提供的插件
+https://flow.org/en/docs/editors flow官网对编辑器插件支持的情况
+10.Flow 类型推断
+Flow会根据我们的代码聪明的做一些类型推断
+<pre>
+function square(n){
+    return n*n
+}
+square('10')//即使我们在没有给函数添加类型注解的情况下，如果我们输入字符串作为参数，也会报错
+</pre>
+11.Flow 类型注解
+尽管flow很聪明的帮我们做一些类型推断，但是我们还是写上注解比价好，这样方便程序的理解。另外Flow的几个基础用法
+<pre>
+/**类型注解
+*
+*@flow
+*/
+function square(n:number){
+    return n*n
+}
+let num:number = 10
+function foo():number{//返回值类型为number，如果没有返回值，可以写void
+    //return 101//不报错
+    //return 'string'//报错
+}
+</pre>
+13.Flow 原始类型
+<pre>
+const a: string = 'foobar'
+const b: number = Infinity // NaN // 100
+const c: boolean = false // true
+const d: null = null
+const e: void = undefined
+const f: symbol = Symbol()
+</pre>
+14.Flow 数组类型
+<pre>
+/**
+ * 数组类型
+ *
+ * @flow
+ */
+const arr1: Array< number > = [1, 2, 3]//这里和tyescript很像，指定了数组里所有元素的类型都为number
+const arr2: number[] = [1, 2, 3]
+// 元组
+const foo: [string, number] = ['foo', 100]
+</pre>
+15.Flow 对象类型
+<pre>
+/**
+ * 对象类型
+ *
+ * @flow
+ */
+const obj1: { foo: string, bar: number } = { foo: 'string', bar: 100 }
+const obj2: { foo?: string, bar: number } = { bar: 100 }//?是可选项
+const obj3: { [string]: string } = {}//默认给对象添加属性的方法是可以的
+obj3.key1 = 'value1'
+obj3.key2 = 'value2'
+</pre>
+16.Flow 函数类型
+<pre>
+/**
+ * 函数类型
+ *
+ * @flow
+ */
+function foo (callback: (string, number) => void) {
+  callback('string', 100)
+}
+foo(function (str, n) {
+  // str => string
+  // n => number
+})
+</pre>
+在之前，我们已经把基础的函数类型注解了解过了，这里主要是如果函数参数是callback函数如何注解
+17.Flow 特殊类型
+<pre>
+/**
+ * 特殊类型
+ *
+ * @flow
+ */
+
+// 字面量类型
+const a: 'foo' = 'foo'
+const type: 'success' | 'warning' | 'danger' = 'success'
+// ------------------------
+// 声明类型
+type StringOrNumber = string | number
+const b: StringOrNumber = 'string' // 100
+// ------------------------
+// Maybe 类型
+const gender: ?number = undefined
+// 相当于
+// const gender: number | null | void = undefined
+</pre>
+18.Flow Mixed与Any
+Mixed和Any都可以接收任意类型的值，但是不同点在于Mixed更接近于强类型的概念，Any更接近于弱类型的概念
+<pre>
+/**
+ * Mixed Any
+ *
+ * @flow
+ */
+// string | number | boolean | ....
+function passMixed (value: mixed) {
+  //value.substr(1)
+  //value * value////先按字符串类型运算再按数值类型运算会报错
+  if (typeof value === 'string') {
+    value.substr(1)
+  }
+  if (typeof value === 'number') {
+    value * value
+  }
+}
+passMixed('string')
+passMixed(100)
+// ---------------------------------
+function passAny (value: any) {
+  value.substr(1)
+  value * value//先按字符串类型运算再按数值类型运算不会报错
+}
+passAny('string')
+passAny(100)
+</pre>
+19.Flow 类型小结
+https://flow.org/en/docs/types/ 对flow中所有类型的一个总结，因为我们不会逐个讲flow的类型
+https://www.saltycrane.com/cheat-sheets/flow-type/latest/ 一个第三方的类型手册，可以更方便做查询
+20.Flow 运行环境API
+Flow在不同的运行环境，比如在浏览器和在node会有一些不同的类型注解
+<pre>
+/**
+ * 运行环境 API
+ *
+ * @flow
+ */
+const element: HTMLElement | null = document.getElementById('app')
+</pre>
+一些API说明文件的链接
+<img src="https://snakexu.github.io/images/lagou/part_1/TypeScript/20_1.png">
+21.TypeScript概述
+TypeScript是基于JavaScript基础之上的编程语言，很多时候我们都在说是JavaScript的超集。由于TypeScript可以编译为JavaScript，那么任何支持JavaScript的运行环境都支持TypeScript。TypeScript功能比Flow更为强大，生态也更健全更完善。可以是TypeScript是前端开发的第二语言。但是再好的语言也会有一些缺点
+缺点一:语言本身多了很多概念
+TypeScript属于“渐进式”，就是即使我们对TypeScript的概念并不了解，仍可以按照JavaScript的标准语法去编写TypeScript代码，在开发过程中了解一个特性就可以使用一个特性
+缺点二:项目初期，TypeScript会增加一些成本
+但是随着项目的发展，这些一开始的开销反而会变成优势
+22.TypeScript快速上手
+首先新建项目，在项目中安装typescript，安装完成后我们在node_modules文件夹下看到.bin目录，在.bin目录下看到tsc，这是一个命令，这个命令的作用就是帮我们编译typescript代码。新建一个typescript文件01-getting-started.ts。虽然我们还不了解typescript，但是完全可以按照JavaScript的标准语法先来编写typescript的代码，而且typescript支持最新的ECMAScript标准。
+<pre>
+const hello = (name)=>{
+    console.log(`hello ${name}`)
+}
+hello('TypeScript')
+</pre>
+在命令行执行tsc 01-getting-started.ts命令，然后就可以看到在项目的根目录下多了一个同名的js文件，js文件的内容是
+<pre>
+var hello = function (name) {
+    console.log("hello " + name);
+};
+hello('TypeScript');
+</pre>
+通过tsc命令可以把我们的代码转换成了ES3标准的代码。另外对于类型检验，和Flow很像，比如
+<pre>
+const hello = (name:string)=>{
+    console.log(`hello ${name}`)
+}
+hello('TypeScript')
+hello(100)//执行tsc命令的时候报错
+</pre>
+tsc命令实际上就是TypeScript compile，这个命令去编译ts文件。在编译过程中，首先会检查typescript的类型使用是否异常，然后移除类型注解之类的扩展语法，并且在这个过程中会自动转换ES新特性为ES3标准的JavaScript
+23.TypeScript配置文件
+tsc命令不仅可以编译单个文件，还可以编译整个项目或者说整个工程。在编译整个项目之前，我们会先给这个项目创建一个typescript的配置文件，在命令行执行tsc --init 命令，可以看到生成了一个tsconfig.json文件。打开这个文件，我们简单看一下，这里大部分内容都被注释掉了，这里我们简单了解几个
+<pre>
+"target": "es5", //tsc命令将ts代码转换为甚么标准，这里是转换为es5标准
+"module": "commonjs", //以commonjs标准执行模块化
+"sourceMap": true,  //开启源代码映射
+"outDir": "dist",  //tsc命令编译结果输出文件夹
+"rootDir": "src",  //项目源代码文件夹
+"strict": true,  //开启严格模式
+</pre>
+在严格模式下，不能不指定类型注解(在非严格模式下，不写类型注解被默认推断为any，在严格模式下，即使是any类型也要明确指定)。如果我们已经有配置文件，但是依然编译单个文件而不是整个项目，那么配置文件是不生效的，只有在用tsc命令编译整个项目的时候，配置文件才生效。此时执行tsc命令编译整个项目，会报错:
+error TS6059: File '/myTypeScript/01-getting-started.ts' is not under 'rootDir' '/myTypeScript/src'. 'rootDir' is expected to contain all source files.
+Found 1 error.
+说明我们的配置文件已经生效了。
+现在我们在项目下新建src文件夹，把之前编译生成的js文件删除，把ts文件移到src文件夹中，再次执行tsc命令，就会看到在根目录下多了dist文件夹，文件夹下有01-getting-started.js文件和01-getting-started。map文件。js文件内容如下
+<pre>
+"use strict";
+var hello = function (name) {
+    console.log("hello " + name);
+};
+hello('TypeScript');
+//# sourceMappingURL=01-getting-started.js.map
+</pre>
+24.TypeScript原始类型
+TypeScript大部分原始类型的用法和Flow很像。
+<pre>
+const a:string = 'foo'
+const b:number = 100 //NaN //Infinity
+const c:boolean = true //false
+const d:string = null //严格模式下会报错
+</pre>
+上面这些在非严格模式下是允许为空/null，在非严格模式下是不允许为空的。tsconfig中的strict是开启所有严格检查的选项，如果只是检查变量不能为空，可以使用
+<pre>
+"strictNullChecks": true, 
+</pre>
+<pre>
+const e:void=undefined//在函数没有返回值的时候标记返回值类型，只能存放undefined/null,严格模式下只能存放undefined
+const f:null = null
+const g:undefined = undefined
+const h:symbol = Symbol()//报错，为什么报错？下回分解
+</pre>
+25.TypeScript标准库声明
+<pre>
+const h:symbol = Symbol()//报错，为什么报错，需要设置"target": "es2015"
+</pre>
+symbol是ES2015中新增的标准类型，symbol自身也是有类型的，而且这些类型在typescript中已经帮我们定义好了。在页面中写Array，然后在Array上单击右键，点击Goto Definition
+<img src="https://snakexu.github.io/images/lagou/part_1/TypeScript/25_1.png">
+能看到lib.es5.d.ts，这里声明了所有内置对象定义的类型，但是我们看到文件名中包含es5，这是一个es5所对应的标准库声明，但是symbol是es2015定义的内置类型，所以在es5定义的标准库中不能正确声明。但是如果我们既想编译到es5标准又想用es2015的标准怎么办呢？找到tsconfig配置文件中的lib选项
+<pre>
+lib": ["ES2015"],
+</pre>
+但是打开ts文件会发现console报错了，真是让人秃头，你猜怎么解决，没错，再次找到配置文件(因为console是浏览器环境下BOM对象提供的，所以要添加相应的标准库，谁让我们刚才写ES2015之后，别的标准库就被覆盖了呢)，然后在lib中添加DOM(ts中DOM和BOM合并成为DOM，可以少写几个字母，开心么)
+<pre>
+lib": ["ES2015","DOM"],
+</pre>
+总结一下就是标准库就是内置对象所对应的声明，在代码中使用内置对象就要引用所对应的标准库，否则ts就找不到对应的标准类型就会报错
+26.TypeScript中文错误消息
+ts会根据使用编辑器的语言来显示信息，但是很无奈，我们用的编辑器大部分都是英文的，不过ts还是有办法的，在执行tsc命令的时候
+<pre>
+tsc --locale zh-CN
+</pre>
+编辑器其实也有相应的语言转换插件，但是不建议使用，毕竟英文更有助于我们搜索问题
+27.TypeScript作用域问题
+我们在不同文件中定义const a，那么如果是在全局作用域中定义的话，就会报错，比如
+<pre>
+a.ts
+const a:string = 'foo'
+b.ts
+const a:number = 1
+</pre>
+一种解决方案就是把他们放到不同的作用域中，例如我们可以用一个立即执行函数
+<pre>
+a.ts
+const a:string = 'foo'
+b.ts
+(function(){
+    const a:number = 1
+})
+</pre>
+或者添加一个exprot，这样变量就变成模块的局部成员了
+<pre>
+a.ts
+const a:string = 'foo'
+b.ts
+const a:number = 1
+exports{}
+</pre>
+28.TypeScript Object类型
+ts中的Object泛指所有非原始类型，对象、数组、函数
+<pre>
+export{}//确保与其他示例没有成员冲突
+const foo:object = function(){}//[]//{}
+const obj:{foo:string,bar:number}={foo:'123',bar:456}//必须一一对应，最好用接口类型
+</pre>
+29.TypeScript 数组类型
+<pre>
+export {} // 确保跟其它示例没有成员冲突
+// 数组类型的两种表示方式
+const arr1: Array< number > = [1, 2, 3]
+const arr2: number[] = [1, 2, 3]
+// 案例 -----------------------
+// 如果是 JS，需要判断是不是每个成员都是数字
+// 使用 TS，类型有保障，不用添加类型判断
+function sum (...args: number[]) {
+  return args.reduce((prev, current) => prev + current, 0)
+}
+sum(1, 2, 3) // => 6
+sum(1,2,3,'p')//报错
+</pre>
+30.TypeScript 元组类型
+元组就是一种特殊的数据结构，明确元素数量和元素类型的数组，各个元素的类型不必要完全相同。在ts中可以使用类似数组字面量来定义元组的类型
+<pre>
+const tuple: [number, string] = [18, 'zce']
+// const age = tuple[0]
+// const name = tuple[1]
+const [age, name] = tuple
+// ---------------------
+const entries: [string, number][] = Object.entries({
+  foo: 123,
+  bar: 456
+})
+const [key, value] = entries[0]
+// key => foo, value => 123
+</pre>
+31.TypeScript 枚举类型
+枚举类型有两个特点：(1)可以给一组数值取一个更好理解的名字(2)一个枚举中只会存在固定的值，并不会有超出范围的可能性
+在传统语言中枚举是很常见的数据结构，但是在JavaScript中并没有这种数据结构，很多时候都是使用一个对象模拟枚举
+<pre>
+// 用对象模拟枚举
+const PostStatus = {
+  Draft: 0,
+  Unpublished: 1,
+  Published: 2
+}
+// 标准的数字枚举
+enum PostStatus {
+  Draft = 0,//枚举类型的值可以不用等号去指定
+  Unpublished = 1,//如果不指定值，默认枚举中的值从0开始累加
+  Published = 2
+}
+const post = {
+  title: 'Hello TypeScript',
+  content: 'TypeScript is a typed superset of JavaScript.',
+  status: PostStatus.Draft // 3 // 1 // 0 //使用枚举 枚举名称.成员名称
+}
+// 字符串枚举
+enum PostStatus {
+  Draft = 'aaa',//字符串不能自增，所以必须指定每个值
+  Unpublished = 'bbb',
+  Published = 'ccc'
+}
+</pre>
+枚举类型会入侵到我们运行时代码——会影响我们编译后的结果。我们在ts中使用的大多数类型都会在编译完成后移除掉，因为它只是我们在编译过程中做的类型检查。而枚举会编译为一个双向的键值对对象(双向键值对->可以通过键获取值，也可以通过值获取键)。我们可以试着编译一下我们刚才写的代码
+<pre></pre>
+32.TypeScript 函数类型
+函数的类型约束，无外乎就是对函数的输入输出进行类型限制，输入就是参数，输出就是返回值。不过在js中有两种函数定义的方式，分别是函数声明和函数表达式。
+<pre>
+function func1(a:number,b:number):string{
+    return 'func1'
+}
+function func2(a:number,b?:number):string{//?参数是可选的
+    return 'func2'
+}
+function func3(a:number,b:number = 1):string{//设置参数默认值
+    return 'func3'
+}
+//可选参数、默认值都要设置在最后一个参数
+function func4(a:number,b:number,...rest:number[]):string{//任意个数的参数
+    return 'func4'
+}
+const func5: (a: number, b: number) => string = function (a: number, b: number): string {
+  return 'func5'
+}
+</pre>
+33.TypeScript 任意类型
+<pre>
+function stringify (value: any) {
+  return JSON.stringify(value)
+}
+stringify('string')
+stringify(100)
+stringify(true)
+let foo: any = 'string'
+foo = 100
+foo.bar()
+// any 类型是不安全的
+</pre>
+any类型约等于不执行任何类型检查
+34.TypeScript 隐式类型推断
+在ts中如果一个变量没有通过类型注解标记一个变量的类型，ts会通过变量使用情况推断变量的类型——隐式类型推断
+<pre>
+let age = 18 // 被推断为number类型
+// age = 'string'//再把number类型赋值为字符串类型会被报错
+let foo//定义的时候没有标记类型注解，ts推断为any类型
+foo = 100
+foo = 'string'
+</pre>
+建议为每个变量添加明确的类型标注，后期可以更直观的了解代码
+35.TypeScript 类型断言
+<pre>
+// 假定这个 nums 来自一个明确的接口
+const nums = [110, 120, 119, 112]
+const res = nums.find(i => i > 0)//这里我们能明确，一定会有大于0的值，但是ts不明确，它会以为有可能返回的是undefined
+//const square = res * res//使用的时候不能确定是数字，于是我们断言一定会是数字的
+const num1 = res as number //这里是一种断言方式
+const num2 = <number>res //另外一种断言方式 // JSX 下不能使用
+</number></pre>
+这里要明确，类型断言不等于类型转换，并不是把一个类型转换成另外一个类型，类型转换是代码在运行时的一个概念，类型断言是编译过程中的一个概念，在编译过后，类型断言就不会存在了，有本质上的差异
+36.TypeScript 接口
+理解成一种规范、契约，约定一个对象的结构，去使用一个接口就一定要去遵循这个接口全部的约定。接口最直观的体现就是约定对象中有哪些成员，这些成员的类型是什么样的
+<pre>
+interface Post {
+  title: string
+  content: string
+}
+function printPost (post: Post) {
+  console.log(post.title)
+  console.log(post.content)
+}
+printPost({
+  title: 'Hello TypeScript',
+  content: 'A javascript superset'
+})
+</pre>
+接口就是用来约束对象的结构，一个对象要实现一个接口就要拥有这个对象中所有的成员。如果我们编译一下这个代码会发现编译后的js文件中并没有任何与接口有关的痕迹，ts中的接口只是为我们有结构的数据进行类型约束，在实际运行中没有太大的意义
+37.TypeScript 接口补充
+<pre>
+interface Post {
+  title: string
+  content: string
+  subtitle?: string//可选成员
+  readonly summary: string//只读成员
+}
+const hello: Post = {
+  title: 'Hello TypeScript',
+  content: 'A javascript superset',
+  summary: 'A javascript'
+}
+hello.summary = 'other'//只读成员初始化完成修改之后再修改会报错
+interface Cache {
+  [prop: string]: string//动态成员，prop这个不是固定的名字，可以按需求自己设置
+}
+const cache: Cache = {}
+cache.foo = 'value1'
+cache.bar = 'value2'
+</pre>
+38.TypeScript 类的基本使用
+类-描述一类具体事物的抽象特征，用来描述一类具体对象的抽象成员。ES6以前，js通过函数+原型模拟实现类，ES6开始有了专门的class。TypeScript增强了class的相关语法
+<pre>
+class Person {
+  name: string // = 'init name'
+  age: number  //在下面赋值之前要先定义
+  constructor (name: string, age: number) {
+    this.name = name
+    this.age = age
+  }
+  sayHi (msg: string): void {
+    console.log(`I am ${this.name}, ${msg}`)
+  }
+}
+</pre>
+39.TypeScript 类的访问修饰符
+<pre>
+class Person {
+  public name: string // = 'init name'
+  private age: number
+  protected gender: boolean
+  constructor (name: string, age: number) {
+    this.name = name
+    this.age = age
+    this.gender = true
+  }
+  sayHi (msg: string): void {
+    console.log(`I am ${this.name}, ${msg}`)
+    console.log(this.age)
+  }
+}
+class Student extends Person {
+  private constructor (name: string, age: number) {
+    super(name, age)
+    console.log(this.gender)
+  }
+  //private只能在类内被访问，所以定义静态方法在类内实例化
+  static create (name: string, age: number) {
+    return new Student(name, age)
+  }
+}
+const tom = new Person('tom', 18)
+console.log(tom.name)
+// console.log(tom.age)
+// console.log(tom.gender)
+const jack = Student.create('jack', 18)
+</pre>
+40.TypeScript 类的只读属性
+<pre>
+class Person {
+  public name: string // = 'init name'
+  private age: number
+  // 只读成员
+  protected readonly gender: boolean
+  constructor (name: string, age: number) {
+    this.name = name
+    this.age = age
+    this.gender = true
+  }
+  sayHi (msg: string): void {
+    console.log(`I am ${this.name}, ${msg}`)
+    console.log(this.age)
+  }
+}
+const tom = new Person('tom', 18)
+console.log(tom.name)
+// tom.gender = false//只读属性只能赋值一次，并且赋值之后不能再修改
+</pre>
+41.TypeScript 类与接口
+<pre>
+//其实Eat与Run两个接口可以合并成一个接口，但是简单细化更好
+interface Eat {
+  eat (food: string): void
+}
+interface Run {
+  run (distance: number): void
+}
+class Person implements Eat, Run {
+  eat (food: string): void {
+    console.log(`优雅的进餐: ${food}`)
+  }
+
+  run (distance: number) {
+    console.log(`直立行走: ${distance}`)
+  }
+}
+class Animal implements Eat, Run {
+  eat (food: string): void {
+    console.log(`呼噜呼噜的吃: ${food}`)
+  }
+
+  run (distance: number) {
+    console.log(`爬行: ${distance}`)
+  }
+}
+</pre>
+42.TypeScript 抽象类
+抽象类与接口有点像，都是约束子类中必须有某一个成员，区别在于抽象类可以包含一些具体实现，但是接口只能是成员的抽象，不能包含具体的实现。
+<pre>
+//抽象类 抽象类只能被继承，不能被new
+abstract class Animal {
+  eat (food: string): void {
+    console.log(`呼噜呼噜的吃: ${food}`)
+  }
+  //抽象方法，不需要方法体 父类如果有抽象方法，子类必须实现这个抽象方法
+  abstract run (distance: number): void
+}
+//继承抽象类
+class Dog extends Animal {
+  run(distance: number): void {
+    console.log('四脚爬行', distance)
+  }
+
+}
+const d = new Dog()
+d.eat('嗯西马')
+d.run(100)
+</pre>
+43.TypeScript 泛型
+在定义函数、接口、类的时候没有指定具体的类型，等到使用的时候再具体指定一个类型。泛型就是声明函数的时候不去指定具体的类型，等到调用的时候再传递具体的类型，为了最大程度复用代码
+<pre>
+function createNumberArray (length: number, value: number): number[] {
+  //由于Array对象默认创建的是any类型的数组，需要指定一下元素类型，这里通过泛型参数传递一个类型
+  //这里Array是一个泛型类，在ts中定义这个类的时候并不知道我们会用它存放什么样类型的数据，所以使用泛型参数，再调用的时候再传递一个具体类型
+  const arr = Array< number >(length).fill(value)
+  return arr
+}
+const res = createNumberArray(3, 100)
+res => [100, 100, 100
+</pre>
+上面我们定义了一个数字数组，如果我们又需要一个字符串数组，难道要再定义一个？
+<pre>
+function createStringArray (length: number, value: string): string[] {
+  const arr = Array< string >(length).fill(value)
+  return arr
+}
+</pre>
+这么做有点傻，更好的方法是使用泛型
+<pre>
+function createArray< T > (length: number, value: T): T[] {
+  const arr = Array< T >(length).fill(value)
+  return arr
+}
+const res = createArray< string >(3, 'foo')
+</pre>
+44.TypeScript 类型声明
+我们经常在使用npm安装一些第三方模块的时候不一定是ts编写的，这个时候可以用类型声明，即一个成员在定义的时候没有明确的类型声明，我们在使用的时候可以定义一个类型声明
+<pre>
+import { camelCase } from 'lodash' //假设lodash没有ts版本的声明模块
+declare function camelCase (input: string): string
+const res = camelCase('hello typed')
+</pre>
+如果有ts声明模块我们可以安装ts模块，比如lodash有types声明文件 @types/lodash，我们可以在开发环境安装声明文件，因为不会提供具体代码，只是提供类型声明。而query-string模块有类型声明文件，我们可以直接使用
+<pre>
+import qs from 'query-string'
+qs.parse('?key=value&key2=value2')
+</pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/26/拉勾-TypeScript语言/" data-id="ckc3140iv0055bgxq0rnq9qp9" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TypeScript语言/">TypeScript语言</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/拉勾/">拉勾</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-拉勾-ECMAScript新特性" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/21/拉勾-ECMAScript新特性/" class="article-date">
+  <time datetime="2020-06-21T10:12:12.000Z" itemprop="datePublished">2020-06-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/21/拉勾-ECMAScript新特性/">拉勾-ECMAScript新特性</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.课程介绍<br>这里主要是对本章节课程简单概述，就不详细记录了<br>2.ECMAScript概述<br>ECMAScript也是一门脚本语言，通常缩写为es，通常看作JavaScript的标准化规范。实际上JavaScript是ECMAScript的扩展语言。 ECMAScript只提供了最基本的语法，也就说约定了代码该如何编写，例如该怎么定义变量和函数以及分支、循环之类的语句。JavaScript实现了ECMAScript的语言标准并且在这个基础之上实现了一些扩展，使得我们可以在浏览器环境中操作DOM和BOM，在node环境中可以做读写文件之类的操作。总之，浏览器环境中的JavaScript就是ECMAScript和webAPI(也就是我们所说的DOM和BOM)。在node环境中的JavaScript就是ECMAScript和node环境提供的API(fs,net…)。JavaScript语言本身指的就是ECMAScript。从2015年ECMAScript就保持着每年一个大版本的迭代，导致JavaScript这门语言本身变得越来越高级，越来越便捷。下图是目前为止所有ECMAScript的标准名称和版本号、发行时间<br><img src="https://snakexu.github.io/images/lagou/part_1/ECMAScript/2_1.png"><br>其中ES2015是一个比较重要的点，也是从2015开始按照年份命名，由于一下子没适应从之前的版本号命名变成年份命名，所以ES2015也被称为ES6。<br>3.ES2015概述<br>ES2015也可以叫做ES6，可以说是新时代ECMAScript标准的代表版本——相比上一个版本变化比较大，自此命名规则发生变化。有人喜欢用ES6泛指ES6之后所有的新标准，例如有人说使用ES6之中的async/await，但是实际上async/await是ES2017中制定的新标准。所以需要注意分辨资料中的ES6是特指还是泛指。如果可以，建议阅读ES2015完整语言规格文件，因为包含了新特性/新特性之后的所有语言标准规范。这是链接<a href="https://www.ecma-international.org/ecma-262/6.0/" target="_blank" rel="noopener">https://www.ecma-international.org/ecma-262/6.0/</a><br>本章节主要介绍ES5.1基础之上的变化，并且主要介绍一些变化大/值得我们单独了解的新特性。主要归为4类:<br>·解决原有语法上的一些问题/不足(如let、const的块级作用域)<br>·对原有语法进行增强(如解构、默认值)<br>·全新的对象/全新的方法/全新的功能(promise、proxy等)<br>·全新的数据类型/数据结构(symbol/set等)<br>4.ES2015准备工作<br>可以使用node环境，也可以使用最新版本的chrome浏览器，老师用的node版本为12.13.0。同时还需要nodemon的小工具，修改完代码后自动执行<br>5.ES2015 let与块级作用域<br>作用域-代码中某个成员能够起作用的范围，在ES2015之前，es只有两种类型的作用域，分别是<br>·全局作用域<br>·函数作用域<br>在ES2015中新增了一个<br>·块级作用域<br>块——在代码中用花括号包裹起来的范围。以前块没有独立作用域</p>
+<pre>
+for(var i=0; i < 3; i++){
+    for(var i=0; i < 3; i++){
+        console.log(i)
+    }
+    console.log('内层结束 i = '+i)
+}
+</pre>
+执行结果
+//0
+//1
+//2
+//内层结束 i = 3
+造成以上执行结果的原因是:外层声明了i过后，内层再次声明了这个变量，而且都是使用var去声明变量的，也就是说并不是一个块级作用域内的成员，而是全局成员，那么内层声明i就会覆盖掉之前声明的i，内层循环结束后，i=3，那么外层拿到的i也就是i=3，不满足外层循环的条件，自然就不会循环了。如果把var换成let，那么就能解决我们遇到的这个问题，因为let有块级作用域。但是我们这里不鼓励这种同名变量，对于以后程序的理解有很大麻烦。
+在我们循环注册事件时，在事件的处理函数中，要访问循环的计数器，这种情况下，以前机会出现一些问题
+<pre>
+var elements = [{},{},{}]
+for(var i=0; i < elements.length;i++){
+    elements[i].onclick = function(){
+        console.log(i)//获取的是外层的i，在执行完后，无论从哪里调用，i的值都已经是3了
+    }
+}
+elements[0].onclick()//3
+elements[1].onclick()//3
+elements[2].onclick()//3
+</pre>
+通过闭包解决这个问题——借助函数作用域摆脱全局作用域所产生的影响
+<pre>
+var elements = [{},{},{}]
+for(var i=0; i < elements.length;i++){
+    elements[i].onclick = (function(){
+        console.log(i)
+    })(i)
+}
+elements[0].onclick()//0
+elements[1].onclick()//1
+elements[2].onclick()//2
+</pre>
+借助let的块级作用域解决问题
+<pre>
+var elements = [{},{},{}]
+for(let i=0; i < elements.length;i++){
+    elements[i].onclick = function(){
+        console.log(i)
+    }
+}
+elements[0].onclick()//0
+elements[1].onclick()//1
+elements[2].onclick()//2
+</pre>
+其实在上面代码中本质也是闭包的机制， onclick执行的时候，循环已经结束，实际的i已经被销毁了，通过闭包的机制才能拿到相应的i
+<pre>
+for(let i=0; i < elements.length;i++){
+    let i = 'foo'
+    console.log(i)//得到三次foo
+}
+</pre>
+上面代码表明两个i没有相互影响，没有在同一个作用域当中。如果这样不好理解，那我们把上面的代码拆解开，用if的方式去演示
+<pre>
+let i = 0;
+if(i < 3){
+
+    let i = 'foo'
+    console.log(i)
+}
+i++
+if(i < 3){
+    let i = 'foo'
+    console.log(i)
+}
+i++
+if(i < 3){
+    let i = 'foo'
+    console.log(i)
+}
+i++
+</pre>
+上面代码模拟了循环的完整过程
+另外let不会像var一样发生变量提升的情况，至于为什么不继续用var升级而改用let，主要是考虑到很多项目如果这样升级势必造成影响。
+6.ES2015 const
+定义一个恒量/常量，在let的基础上多了一个"只读"特性，即变量声明之后不可以再修改
+<pre>
+const name = "zce"
+name = "jack"//报错
+</pre>
+声明的同时要赋值
+<pre>
+const name
+name = "zce"//报错
+</pre>
+其实这里说的声明的成员不能被修改，指的是不允许在声明过后重新指向一个内存地址，并不是说不允许修改恒量中的成员
+<pre>
+const obj = {}
+obj.name = "zce"//不报错，没有修改obj指向的内存地址，修改了内存地址空间的数据
+obj = {}//报错，因为重新为obj指了一个新的地址
+</pre>
+老师的个人最佳实践是不用var(比如先使用后定义并不是一个好的编程习惯)，主要用const(更明确代码中的成员是否会被修改)，配合let定义必须要修改的值
+7.ES2015数组的解构
+<pre>
+const arr = [100,200,300]
+const [foo,bar,baz] = arr
+console.log(foo,bar,baz) //100,200,300
+//或者如果只想获取第三个成员
+const [,,baz] = arr // 300
+//提取从当前位置往后的所有成员
+const [foo,...rest] = arr //...rest的用法只能在最后一个位置使用
+console.log(rest) //[200,300]
+//解构成员数组长度小于被解构数组长度，会从前到后提取
+const [foo,bar] = arr
+console.log(foo,bar); //100,200
+//如果解构成员长度大于数组长度，提取到的是undefined
+const [foo,bar,baz,more] = arr
+console.log(more)//undefined
+//如果需要给提取到的下标设置默认值
+const [foo,bar,baz,more = 'defalut value'] = arr
+console.log(bar,more)//200"defalut value"
+</pre>
+举例用到解构的好处
+<pre>
+const path = "/foo/bar/baz";
+//const tmp = path.split('/');
+//const rootdir = tmp[1]//这种方案需要多用到一个中间变量
+const [,rootdir] = path.split('/')
+console.log(rootdir)
+</pre>
+8.ES2015对象的解构
+对象的解构和数组的解构很相似，不同之处在于对象没有下标，我们通过变量解构
+<pre>
+const obj = { name:'zce',age:18}
+const { name } = obj
+console.log(name)
+const { age } = obj
+console.log(age)
+</pre>
+没有匹配到的成员值为undefined，也可以设置默认值。在对象中我们解构的变量名同时用来匹配被解构对象当中的属性名，所以如果当前作用域中有同名的成员就会产生冲突
+<pre>
+const obj = { name:'zce',age:18}
+const name = 'tom'
+const { name } = obj
+console.log(name)//报错
+</pre>
+解决的方式是重命名
+<pre>
+const obj = { name:'zce',age:18}
+const name = 'tom'
+const { name:objName = 'jace' } = obj//jack为设置默认值
+console.log(objName)//zce
+</pre>
+应用场景的例子
+<pre>
+const { log } = console
+log('foo')
+log('bar')
+</pre>
+简化了代码的编写，减小了代码整体的体积
+9.ES2015模版字符串
+<pre>
+const str = `hello es2015,this is a \`string\``
+console.log(str)//hello es2015,this is a `string`
+const str1 = `hello es2015,
+this is a \`string\``//支持换行
+const name = 'tom' 
+//${可以嵌入任何标准的js语句}，例如变量
+const msg = `hey,${name}---${1+2}---${Math.random()}`//hey,tom---3---0.2061239309540519
+</pre>
+10.ES2015带标签的模版字符串
+<pre>
+const str = tag`hello world`//tag是一个标签，是一个特殊的模版字符串函数，这里没有tag这个函数，所以这里会报错
+const str1 = console.log`hello world`//console.log作为模版字符串的标签//['hello','world']
+</pre>
+为什么打印的是数组呢？我们一步步探寻
+<pre>
+const name = 'tom'
+const gender = true
+function myTagFunc(strings){
+    console.log(strings)
+}
+const result = myTagFunc`hey,${name} is a ${gender}`
+</pre>
+<img src="https://snakexu.github.io/images/lagou/part_1/ECMAScript/10_1.png">
+上面打印的数组就是我们模版字符串内容分割过后的结果，模版字符串中可能有嵌入的表达式，所以数组就是按照表达式分割过后的静态内容，所以是数组。除了数组以外，这个函数还可以接收所以在模版字符串中出现的函数表达式的返回值。
+<pre>
+const name = 'tom'
+const gender = true
+function myTagFunc(strings,name,gender){
+    console.log(strings,name,gender)
+}
+const result = myTagFunc`hey,${name} is a ${gender}`//["hey,", " is a ", "", raw: Array(3)] "tom" true
+</pre>
+函数的返回值就是带标签的模版字符串对应的返回值
+<pre>
+const name = 'tom'
+const gender = true
+function myTagFunc(strings,name,gender){
+    //console.log(strings,name,gender)
+    return '123'
+}
+const result = myTagFunc`hey,${name} is a ${gender}`//123
+</pre>
+如果想返回正常的返回值
+<pre>
+const name = 'tom'
+const gender = true
+function myTagFunc(strings,name,gender){
+    return strings[0]+name+strings[1]+gender+strings[2]
+}
+const result = myTagFunc`hey,${name} is a ${gender}`
+console.log(result)//hey,tom is a true
+</pre>
+标签函数的作用就是对模版字符串进行加工
+<pre>
+const name = 'tom'
+const gender = true
+function myTagFunc(strings,name,gender){
+    const sex = gender ? 'man' : 'woman'
+    return strings[0]+name+strings[1]+sex+strings[2]
+}
+const result = myTagFunc`hey,${name} is a ${gender}`
+console.log(result)//hey,tom is a man
+</pre>
+11.ES2015字符串的扩展方法
+·includes()
+·startsWith()
+·endsWith()
+<pre>
+const message = 'Error:foo is not defined.'
+console.log(message.startsWith('Error'))//true
+console.log(message.endsWith('.'))//true
+console.log(message.includes('foo'))//true
+</pre>
+12.ES2015参数默认值
+过去是通过逻辑参数来设置默认值
+<pre>
+function foo(enable){
+    enable = enable || true
+    console.log('foo invoked - enable:')
+    console.log(enable)
+}
+foo(true)
+//foo invoked - enable:
+//true
+</pre>
+但是上面代码有个问题，就是如果传入的是false，会引起错误，所以我们不要使用短路设置默认值
+<pre>
+function foo(enable){
+    enable = enable === undefined ? true : enable
+    console.log('foo invoked - enable:')
+    console.log(enable)
+}
+foo(true)
+//foo invoked - enable:
+//true
+</pre>
+而有了参数默认值新功能过后，这一切都会变得简单的多
+<pre>
+function foo(enable = true){
+    console.log('foo invoked - enable:')
+    console.log(enable)
+}
+foo(false)
+//foo invoked - enable:
+//false
+</pre>
+如果有多个参数，那么带有默认值的参数一定要放在参数列表的最后，因为参数是按照次序传递的，如果有参数的默认值不在最后面的话，默认值将无法正常工作
+13.ES2015剩余参数
+<pre>
+function foo(...args){
+    console.log(args)
+}
+foo(1,2,3,4 )//[1, 2, 3, 4]
+</pre>
+因为接收的是剩余的所有参数，所以只能出现在参数列表的最后一位，且只能出现一次
+14.ES2015展开数组
+把数组当中的每一个成员按照次序传递
+<pre>
+const arr = ['foo','bar','baz'];
+console.log(...arr)//foo bar baz
+</pre>
+15.ES2015箭头函数
+<pre>
+const inc = n => n+1
+console.log(inc(100))
+</pre>
+对比一下普通函数，会发现箭头函数使我们的代码更简短更易读
+<pre>
+const arr = [1,2,3,4,5,6,7]
+arr.filter(function(item){
+    return itme % 2
+})
+arr.filter(item => item % 2 )
+</pre>
+16.ES2015箭头函数与this
+箭头函数不会改变this的指向
+<pre>
+const person = {
+    name : 'tom',
+    sayHi : function(){
+        console.log(`hi, my name is ${this.name}`)
+    }
+}
+person.sayHi()//hi, my name is tom
+</pre>
+对比上面的代码，我们把sayHi方法改变为箭头函数
+<pre>
+const person = {
+    name : 'tom',
+    sayHi : () => {
+        console.log(`hi, my name is ${this.name}`)
+    }
+}
+person.sayHi()//hi, my name is undefined
+</pre>
+这种特性可以解决一些问题
+<pre>
+const person = {
+    name : 'tom',
+    sayHi : () => {
+        console.log(`hi, my name is ${this.name}`)
+    },
+    // sayHiAsync:function(){
+    //      const _this = this //我们要拿到this的指向
+    //     setTimeout(function(){
+    //         console.log(_this.name)
+    //     },1000)
+    // }//这里是ES5的方法
+    sayHiAsync:function(){
+        setTimeout(() => {
+            console.log(_this.name)
+        })
+    }
+}
+person.sayHiAsync()
+</pre>
+17.ES2015对象字面量的增强
+<pre>
+const bar = '123'
+const obj = {
+    foo:123,
+    // bar:bar,//传统方式
+    bar,
+    // method:function(){
+        // console.log('method111')
+    // }//传统方式
+    method(){
+        console.log('method111')
+        console.log(this)
+    },
+    //ES2015动态添加变量属性的方法
+    [Math.random()]:123,//计算属性名，表达式的执行结果作为属性的属性名
+}
+console.log(obj)//{foo: 123, bar: "123", method: ƒ}
+console.log(obj.method())//{foo: 123, bar: "123", method: ƒ}
+obj[Math.random()] = 123//过去动态添加变量属性的方法 
+</pre>
+18.ES2015 Object.assign
+将多个源对象的属性复制到一个目标对象中，如果对象中有相同的属性，源对象中的属性会覆盖掉目标对象中的属性(从源对象中取，往目标对象中放)
+<pre>
+const source1 = {
+    a:123,
+    b:123
+}
+const target = {
+    a:456,
+    c:456
+}
+const result = Object.assign(target,source1)
+// console.log(result)//{a: 123, c: 456, b: 123}
+// console.log(target)//{a: 123, c: 456, b: 123}
+// console.log(result === target)//true
+const source2 = {
+    b:789,
+    d:789
+}
+const result = Object.assign(target,source1,source2)
+console.log(result)//{a: 123, c: 456, b: 789, d: 789}
+console.log(target)//{a: 123, c: 456, b: 789, d: 789}
+console.log(result === target)//true
+</pre>
+本质就是用源对象中的属性覆盖目标对象中的属性，用法举例
+<pre>
+function func(obj){
+    obj.name = 'func obj'
+    console.log(obj)//{name: "func obj"}
+}
+const obj = { name : "global obj"}
+func(obj)
+console.log(obj)//{name: "func obj"}
+</pre>
+在上面代码中如果在函数内部直接修改对象参数的属性，外界对应的对象也会发生变化，如果只想在函数内部修改属性
+<pre>
+function func(obj){
+    const funcObj = Object.assign({},obj)
+    funcObj.name = 'func obj'
+    console.log(funcObj)//{name: "func obj"}
+}
+const obj = { name : "global obj"}
+func(obj)
+console.log(obj)//{name: "global obj"}
+</pre>
+19.ES2015 Object.is
+<pre>
+console.log(
+// 0 === false //false
+// 0 == false  //true
+// NaN === NaN //false,过去认为NaN是一种无限可能的值，所以认为两个NaN不相等
+// +0 === -0   //true
+//针对NaN!==NaN和+0===-0两种不符合我们日常需求的运算，我们可以用Object.is
+// Object.is(NaN,NaN) //true
+Object.is(+0,-0) //false
+)
+</pre>
+虽然Object.is在一些地方很好用，但是日常开发还是建议使用===和==运算符
+20.ES2015 Proxy
+如果我们要监视某个对象的读写，我们需要Object.defineProperty这样的方法来为我们的对象添加属性，这样我们就能捕获对象属性的读写过程。这样的方法使用的非常广泛，比如vue3.0之前就是使用的这样的方法完成双向数据绑定。在ES2015中设计了Proxy类型，为对象设置访问代理器的。相对于Object.defineProperty，proxy功能更为强大使用起来也更为方便。
+<pre>
+const person = {
+    name:'zce',
+    age:20
+}
+const personProxy = new Proxy(person,{
+    get(target,prototype){
+        console.log(target,prototype);//{name: "zce", age: 20} "name"
+        return 100
+    },
+    set(){}
+})
+console.log(personProxy.name) //100
+</pre>
+
+<pre>
+const person = {
+    name:'zce',
+    age:20
+}
+const personProxy = new Proxy(person,{
+    get(target,prototype){
+        return prototype in target ? target[prototype] : 'default'
+    },
+    set(){}
+})
+console.log(personProxy.name) //zce
+console.log(personProxy.xxx) //default
+</pre>
+
+<pre>
+const person = {
+    name:'zce',
+    age:20
+}
+const personProxy = new Proxy(person,{
+    get(target,prototype){
+        return prototype in target ? target[prototype] : 'default'
+    },
+    set(target, prototype, value){
+        console.log(target, prototype, value)//{name: "zce", age: 20} "gender" true
+    }
+})
+personProxy.gender = true
+</pre>
+
+<p><pre><br>const person = {<br>    name:’zce’,<br>    age:20<br>}<br>const personProxy = new Proxy(person,{<br>    get(target,prototype){<br>        return prototype in target ? target[prototype] : ‘default’<br>    },<br>    set(target, prototype, value){<br>        if(prototype === ‘age’){<br>            if(!Number.isInteger(value)){<br>                throw new TypeError(<code>${value} is not an int</code>)<br>            }<br>        }<br>        target[prototype] = value<br>    }<br>})<br>personProxy.age = ‘aaa’//报错 aaa is not an int<br>personProxy.gender = true<br></pre><br>21.ES2015 Proxy对比defineProperty<br>21-1.Object.defineProperty只能监视到对象属性的读写，proxy能监视到更多对象操作：比如proxy可以监视到delete操作或对对象中方法的调用等</p>
+<p><pre><br>const person = {<br>    name:’zce’,<br>    age:20<br>}<br>const personProxy = new Proxy(person,{<br>    deleteProperty(target,prototype){<br>        console.log(‘delete’,prototype);//delete age<br>        delete target[prototype]<br>    }<br>})<br>delete personProxy.age<br>console.log(person)//{name: “zce”}<br></pre><br>下图列举了proxy可以监视的对象的操作<br><img src="https://snakexu.github.io/images/lagou/part_1/ECMAScript/21_1.png"><br>21-2.Proxy更好的支持数组对象的监视<br>以往通过Object.defineProperty监视数组的操作往往通过重写数组的操作方法来实现(通过自定义的方法覆盖掉数组原型上的操作)</p>
+<p><pre><br>const list = []<br>const listProxy = new Proxy(list,{<br>    set(target, prototype, value){<br>        console.log(‘set’,prototype,value)<br>        target[prototype] = value<br>        return true//表示设置成功<br>    }<br>})<br>listProxy.push(100)<br>//set 0 100<br>//set length 1<br></pre><br>21-3.Proxy是以非侵入的方式监管了对象的读写<br>对一个已经定义好的对象，不需要对对象本身进行任何操作就可以监视到它内部成员的读写，而Object.defineProperty需要我们通过特定的方式单独去定义对象中的需要被监视的属性，对已经存在的对象，我们需要做很多额外的操作</p>
+<p><pre><br>const person = {}<br>Object.defineProperty(person,’name’,{<br>    get(){<br>        console.log(‘name 被访问’)<br>        return person._name<br>    },<br>    set(value){<br>        console.log(‘name 被设置’)<br>        person._name = value<br>    }<br>})<br>Object.defineProperty(person,’age’,{<br>    get(){<br>        console.log(‘age 被访问’)<br>        return person._age<br>    },<br>    set(value){<br>        console.log(‘age 被设置’)<br>        person._age = value<br>    }<br>})<br>person.name = ‘jack’<br>console.log(person.name)<br></pre><br>22.ES2015 Reflect<br>统一的对象操作，是一个静态类，也就是说不能通过new去实例化一个对象，只能调用静态类中的一些静态方法(例如Reflect.get())。Relect内部封装了一系列对对象底层的操作，一共13个(定义了14个，但是其中一个已经废弃掉了)，仔细看这13个方法的方法名与Proxy对象中的处理对象方法成员是一致的，相当于是Proxy处理对象方法的默认实现，如果觉得这句话不好理解，可以通过下面的例子理解。</p>
+<p><pre><br>const obj = {<br>    foo:’123’,<br>    bar:’456’<br>}<br>const proxy = new Proxy(obj,{<br>    get(target,property){<br>        console.log(‘watch logic~’)<br>        return Reflect.get(target,property)<br>    }<br>})<br>console.log(proxy.foo)//123<br></pre><br>Reflect的主要意义在于提供了一套统一的用于操作对象的API</p>
+<p><pre><br>const obj = {<br>    foo:’123’,<br>    bar:’456’<br>}<br>//console.log(‘name’ in obj)//传统判断对象属性是否存在<br>//console.log(delete obj[‘age’])//传统删除对象属性<br>//console.log(Object.keys(obj))//传统遍历对象属性<br>console.log(Reflect.has(obj,’name’))//判断对象属性是否存在<br>console.log(Reflect.deleteProperty(obj,’age’))//删除对象属性<br>console.log(Reflect.ownKeys(obj))//获取对象中所有属性名<br></pre><br>23.ES2015 Promise<br>一种更优的异步编程解决方案，解决了传统异步编程中回调函数嵌套过深的问题<br>24.ES2015 class类<br>从前定义一个类，我们要通过函数、原型去实现</p>
+<p><pre><br>function Person(name){<br>    this.name = name<br>}<br>Person.prototype.say = function(){<br>    console.log(<code>hi, my name is ${this.name}</code>)<br>}<br></pre><br>现在我们用class去实现</p>
+<p><pre><br>class Person{<br>    constructor(name){<br>        this.name = name<br>    }<br>    say(){<br>        console.log(<code>hi, my name is ${this.name}</code>)<br>    }<br>}<br>const p = new Person(‘tom’)<br>p.say()<br></pre><br>25.ES2015静态方法<br>在类中通常有实例方法和静态方法，实例方法就是通过构造的实例对象去调用，静态方法是通过类型本身去调用。以前实现静态方法就是在构造函数对象去挂载方法来实现，因为在js中函数也是对象，可以添加一些方法成员。ES2015中新增添加静态成员的static关键词</p>
+<p><pre><br>class Person{<br>    constructor(name){<br>        this.name = name<br>    }<br>    say(){<br>        console.log(<code>hi, my name is ${this.name}</code>)<br>    }<br>    static create(name){<br>        return new Person(name)<br>    }<br>}<br>const tom = Person.create(‘tom’)<br>tom.say()//hi, my name is tom<br></pre><br>因为静态方法是在当前类中定义的，所以在静态方法内部，this不会指向某一个实例对象而是当前的类型<br>26.ES2015 类的继承<br>通过继承的特性我们就能抽象出来相似的类型之间重复的地方，在ES2015之前大多数情况我们都会通过原型的方式实现继承，在ES2015专门出现了用于继承的关键词extends</p>
+<p><pre><br>class Person{<br>    constructor(name){<br>        this.name = name<br>    }<br>    say(){<br>        console.log(<code>hi, my name is ${this.name}</code>)<br>    }<br>}<br>class Student extends Person{<br>    constructor(name,number){<br>        super(name)<br>        this.number = number<br>    }<br>    hello(){<br>        super.say()<br>        console.log(<code>my school number is ${this.number}</code>)<br>    }<br>}<br>const s = new Student(‘jack’,100)<br>s.hello()<br>//hi, my name is jack<br>//my school number is 100<br></pre><br>extends继承比原型继承更方便更清楚一些<br>27.ES2015 Set<br>ES2015提供的全新的数据结构，可以把它理解为集合，与传统的数组非常类似，不过set内部的成员不允许重复，也就是说每一个值在同一个set内部是唯一的。它是一个类型，我们通过用这个类型构造的实例就能用来存放不重复的数据，可以通过集合的add方法往集合中添加数据。由于add方法可以返回集合对象本身，我们可以链式调用，如果我们用add添加了之前已经存在的值，那么这个值就会被忽略掉。想要遍历集合当中的数据，我们可以用forEach方法，也可以通过for…of…。可以通过size属性获取整个集合的长度</p>
+<p><pre><br>const s = new Set()<br>s.add(1).add(2).add(3).add(4).add(2)<br>console.log(s)//Set {1,2,3,4}<br>s.forEach(i =&gt; console.log(i))<br>//1<br>//2<br>//3<br>//4<br>for(let i of s){<br>    console.log(i)<br>}<br>//1<br>//2<br>//3<br>//4<br>console.log(s.size)//4<br>console.log(s.has(100))//false，判断集合中是否存在某个特定的值<br>console.log(s.delete(3))//删除集合中某个指定的值，删除成功的话返回true<br>s.clear()//清楚当前集合中全部的内容<br>console.log(s)//Set {}<br></pre><br>最常见的应用场景就是为数组中的元素去重</p>
+<p><pre><br>const arr = [1,2,1,3,1,4]<br>const result = new Set(arr)<br>console.log(result)//Set { 1, 2, 3, 4 }<br>//可以用Array.from/[…展开]把Set再次转化成数组<br>const result1 = Array.from(new Set(arr))//[ 1, 2, 3, 4 ]<br>const result2 = […new Set(arr)]//[ 1, 2, 3, 4 ]<br></pre><br>28.ES2015 Map<br>与对象非常相似，本质上都是键值对的集合，但是对象中的键只能是字符串类型，所以说存放复杂数据结构时会有一些问题。有人说我也可以用其他类型的数据做为对象的键，这里我们一起来尝试一下</p>
+<p><pre><br>const obj={}<br>obj[true] = ‘value’<br>obj[123] = ‘value’<br>obj[{a:1}] = ‘value’<br>console.log(Object.keys(obj))//[ ‘123’, ‘true’, ‘[object Object]’ ]<br></pre><br>从上面打印结果来看，我们设置的布尔/对象/数字 类型的非字符串类型的键，都被内部toString的结果作为键。看上面的打印结果，我们应该能想到一些问题，设想我们用对象存储学生的考试成绩，假定我们用对象存储每个学生的考试成绩。如果我们用学生对象作为键，那不管每个对象键中的属性有何不同，但是toString的结果都是一样的，就没有办法做到区分</p>
+<p><pre><br>console.log(obj[{}])//value<br>console.log(obj[‘[object Object]’])//value<br></pre><br>现在我们明白了问题的所在，Map就是为了解决这样的问题。Map才能算严格意义上的键值对的集合，用来去映射两个任意类型数据之间的关系</p>
+<p><pre><br>const m = new Map()<br>const tom = { name:’tom’ }<br>m.set(tom,90)<br>console.log(m)//Map { { name: ‘tom’ } =&gt; 90 }<br>console.log(m.get(tom))//90<br>//m.has()//判断某个键是否存在<br>//m.delete()//删除某个键<br>//m.clear()//清空s所有键值<br>m.forEach((value,key)=&gt;{//遍历<br>    console.log(value,key)<br>})//90 { name: ‘tom’ }<br></pre><br>对象只能用字符串作为键，而Map可以用任意类型数据作为键<br>28.ES2015 Symbol<br>在ES2015之前对象的属性名只能是字符串，字符串是可能会产生冲突的。比如我们设置了全局缓存对象变量cache，而在不同的js文件中我们设置了同一个对象属性，那么就会产生问题，在过去，我们会通过约定来尽量规避这种情况<br><img src="https://snakexu.github.io/images/lagou/part_1/ECMAScript/28_1.png"><br>但是约定的方式只是规避了问题，并不是彻底解决问题，ES2015提供了Symbol类型来彻底解决这个问题，作用就是表示一个独一无二的值</p>
+<p><pre><br>const s = Symbol()<br>console.log(s)//Symbol()<br>console.log(typeof s)//symbol<br></pre><br>这种类型最大的特点就是独一无二，也就说通过这种方式创建的每一个值都是唯一的，永远不会重复</p>
+<p><pre><br>console.log(Symbol() === Symbol())//false<br></pre><br>考虑到在开发过程中的调试，允许我们传入一个字符串作为这个值的描述文本，对于我们多次使用Symbol的情况，就能在控制台中区分出来到底是哪一个对应的Symbol</p>
+<p><pre><br>console.log(Symbol(‘foo’))//Symbol(foo)<br>console.log(Symbol(‘bar’))//Symbol(bar)<br>console.log(Symbol(‘baz’))//Symbol(baz)<br></pre><br>从ES2015开始，对象就可以使用Symbol类型的值作为属性名</p>
+<p><pre><br>const obj = {}<br>obj[Symbol()] = ‘123’<br>obj[Symbol()] = ‘456’<br>console.log(obj)//{ [Symbol()]: ‘123’, [Symbol()]: ‘456’ }<br>//或者<br>const obj1 = {<br>    [Symbol()]:123<br>}<br>console.log(obj1)//{ [Symbol()]: 123 }<br></pre><br>我们可以通过Symbol的特性来模拟对象的私有成员，假定我们创建了a.js文件</p>
+<p><pre><br>//a.js<br>const name = Symbol()<br>const person = {<br>    [name] : ‘zce’,<br>    say(){<br>        console.log(this[name])<br>    }<br>}<br>//b.js<br>//person[Symbol()]//不能访问，因为Symbol成员不能产生完全一样的值<br>person.say()<br></pre><br>在b.js中，我们没有办法再去创建一个完全相同的Symbol，所以无法访问person对象中的Symbol变量的成员，只能访问对象中普通名称的成员。Symbol目前最主要的作用就是为对象添加独一无二的属性名。截止到ES2019，一共定义了6种原始类型和Object数据类型，一共7种数据类型。在未来还会新增一个叫BigInt的原始数据类型，用于去存放更长的数字，目前处于stage-4阶段，预计在下一个版本能正式被标准化，那么ES就是8种数据类型了<br>28.ES2015 Symbol补充<br>Symbol每次生成的都是全新的一个值，如果想去全局复用，可以用全局变量的方式或者使用Symbol类型提供的静态方法，也就是for方法，可以接收一个字符串作为一个参数，相同的字符串一定会返回相同的Symbol类型的值，因为在方法内部维护了一个全局的注册表，为我们的字符串和Symbol提供了一一对应的关系。因为方法内部维护的是字符串与Symbol的关系，也就是说如果我们传入的不是字符串，方法内部会自动转换成字符串，会导致比如传入布尔值的true和传入字符串的true拿到的值是一样的</p>
+<p><pre><br>const s1 = Symbol.for(‘foo’)<br>const s2 = Symbol.for(‘foo’)<br>console.log(s1 === s2)//true<br>console.log(Symbol.for(true) === Symbol.for(‘true’))<br></pre><br>Symbol方法中还定义了很多内置的Symbol常量来作为内部方法的标识，可以让一些自定义对象实现js当中内置的一些接口</p>
+<p><pre><br>//Symbol.iterator<br>//Symbol.hasInstance<br>const obj = {}<br>console.log(obj.toString())//[object Object]-&gt;我们把这样的字符串叫做对象的toString标签<br>//自定义对象的toString标签，可以在对象中添加一个特定的成员去标识<br>//考虑到使用字符串添加标识可能会跟内部的一些成员产生重复，所以es要求我们使用Symbol实现接口<br>const obj1 = {<br>    [Symbol.toStringTag]:’XObject’<br>}<br>console.log(obj1.toString())//[object XObject]<br>//toStringTag是Symbol内置的一个常量，这种Symbol在后面我们为对象实现迭代器时常用到<br></pre><br>Symbol作为对象的属性名，通过传统的for…in…循环/Object.keys()是无法拿到的，通过JSON.stringify序列化对象为一个字符串，Symbol属性也会被忽略掉，种种特性使得Symbol特别适合作为私有属性</p>
+<p><pre><br>const obj = {<br>    [Symbol()]:’symbol value’,<br>    foo:’normal value’<br>}<br>for(var key in obj){<br>    console.log(key)<br>}<br>Object.keys(obj)<br></pre><br>如果想获取Symbol类型的属性名，可以通过Object.getOwnPropertySymbols(obj)。Object.getOwnPropertySymbols类似于Object.keys，所不同的是Object.keys只能获取到字符串类型的属性名，而Object.getOwnPropertySymbols获取到的是Symbol属性名<br>31.ES2015 for…of循环<br>在es中有很多遍历数据的方法，比如for循环适合遍历普通数组，for…in…适合遍历键值对，还有一些函数式的遍历方法，例如forEach方法。但是这些遍历方法都有一些局限性，所以ES2015借鉴其他语言引入了一种新的遍历方法for…of循环，这种遍历方式以后会作为遍历所有数据结构的统一方式。下面先了解for…of循环的基本用法</p>
+<p><pre><br>const arr = [100,200,300,400]<br>for(const item of arr){<br>    console.log(item)<br>}<br>//100<br>//200<br>//300<br>//400<br></pre><br>这种循环方式就可以取代我们之前常用的数组循环方式forEach，并且for…of循环可以随时用break关键词终止循环，这一点比forEach表现好，因为forEach循环无法终止遍历</p>
+<p><pre><br>const arr = [100,200,300,400]<br>for(const item of arr){<br>    console.log(item)<br>    if(item &gt; 100){<br>        break;<br>    }<br>}<br></pre><br>除了数组可以用for…of循环遍历，一些伪数组对象也是可以用for…of循环遍历的，例如函数中的arguments，DOM节点的列表。这些伪数组对象的遍历和普通数组对象的遍历没有什么区别，这里不再演示。但是一些Set(其实和遍历数组基本一样，拿到的是元素本身)、Map对象，我们还是了解一下吧</p>
+<p><pre><br>const s = new Set([‘foo’,’bar’])<br>for(const item of s){<br>    console.log(item)<br>}<br>//foo<br>//bar<br></pre></p>
+<p><pre><br>const m = new Map()<br>m.set(‘foo’,’123’)<br>m.set(‘bar’,’345’)<br>for(const item of m){<br>    console.log(item)<br>}<br>//[ ‘foo’, ‘123’ ]//当前被遍历的键和值<br>//[ ‘bar’, ‘345’ ]<br>//配合数组的解构语法，可以直接拿到数组的键和值了<br>for(const [key,value] of m){<br>    console.log(key,value)<br>}<br>//foo 123<br>//bar 345<br></pre><br>上面基本都成功了，但是当我们试图变量普通对象的时候，却报错了</p>
+<p><pre><br>const obj = {foo:123,bar:456}<br>for(item of obj){<br>    console.log(item)<br>}<br>//for(item of obj){<br>            ^<br>//TypeError: obj is not iterable<br></pre><br>说好的能遍历所有的数据结构呢？预知原因几何，且听下回分解<br>32.ES2015 可迭代接口<br>上节课说到for…of循环说好的能遍历所有的数据结构，但是居然不能遍历普通对象，这是因为：ES中能够表示有结构的数据类型越来越多，例如数组、对象到ES2015的set、map等，开发者甚至可以组合使用这种类型去定义一些符合自己业务需求的数据结构，为了给各种各样的数据结构提供统一的遍历方式，ES2015提供了一种Iterable的接口，意思就是可迭代的(如果不太理解编程语言当中的接口概念，可以把接口理解为一种规格标准，例如在ES中任意一种数据类型都有toString方法，是因为它们都实现了统一的规格标准。而在编程语言当中更专业的说法是它们都实现了统一的接口)。实现Iterable接口就是for…of的前提。我们可以在浏览器的控制台中查看一下我们之前定义的Map、Set等对象的数据结构<br><img src="https://snakexu.github.io/images/lagou/part_1/ECMAScript/32_1.png"><br>可以看到我们每个可以用for…of循环遍历的数据结构都有Symbol.iterator，在Symbol.iterator中有个next方法，我们调用这个next方法<br><img src="https://snakexu.github.io/images/lagou/part_1/ECMAScript/32_2.png"><br><img src="https://snakexu.github.io/images/lagou/part_1/ECMAScript/32_3.png"><br>我们能看到next方法返回的又是一个对象，当我们多次调用next方法之后可以看到<br><img src="https://snakexu.github.io/images/lagou/part_1/ECMAScript/32_4 .png"><br>我们可以想到，在迭代器当中维护了一个数据指针，我们每调用一次next，数据都会往后移一位，而途中done属性的作用就是表示我们 内部的数据是否遍历完了。我们通过尝试，了解了实现iterable接口数据类型的特点。我们来总结一下，所有能实现for…of循环的数据类型都要实现iterable的接口，在内部必须挂载一个iterator的方法，这个iterator的方法需要返回一个带有next方法的对象，我们不断调用next方法就能实现对内部所有数据的遍历。那么我们再反过来看一下Set</p>
+<p><pre><br>const s = new Set([‘foo’,’bar’,’baz’])<br>const iterator = s<a href="">Symbol.iterator</a><br>console.log(iterator.next())//{ value: ‘foo’, done: false }<br>console.log(iterator.next())//{ value: ‘bar’, done: false }<br>console.log(iterator.next())//{ value: ‘baz’, done: false }<br>console.log(iterator.next())//{ value: undefined, done: true }<br></pre><br>这就是for…of循环内部的实现原理，其实我们也可以使用while循环实现相同的遍历<br>33.ES2015 实现可迭代接口<br>上节课我们了解了可迭代接口iterable，也就是说如果我们给对象实现iterable接口，那么也可以通过for…of循环去遍历普通对象。在ES中实现iterable实际上就是在对象中挂载iterator方法，在这个方法中返回一个迭代器对象</p>
+<p><pre><br>const obj = {<br>    [Symblo.iterator]:function(){//实现了可迭代接口iterable<br>        return {//实现了迭代器接口iterator<br>            next:function(){<br>                return {//迭代结果接口iterationResult<br>                    value:’zce’,//当前被迭代到的数据，值可以是任意类型，本例中为了方便理解，随便赋了一个值<br>                    done:true   //布尔值，表示迭代是否结束<br>                }<br>            }<br>        }<br>    }<br>}<br>//我们试着调用for…of<br>for(const item of obj){<br>    console.log(‘循环体’)<br>}<br></pre><br>我们试着调用for…of循环，发现并没有报错(虽然也没有执行，但是不报错已经是一个好的开始，毕竟我们把done属性设置为true)，那我们在上面代码的基础上进行修改</p>
+<p><pre><br>const obj = {<br>    store:[‘foo’,’bar’,’baz’],//对象中添加一个数组，里面放一些值得被遍历的数据<br>    [Symbol.iterator]:function(){//实现了可迭代接口iterable<br>        let index = 0//既然要在next方法中迭代数组，我们就要维护一个下标<br>        const self = this//在next函数中的this并没有指向当前对象，定义self来接收当前的this<br>        return {//实现了迭代器接口iterator<br>            next:function(){<br>                const result =  {//迭代结果接口iterationResult<br>                    value:self.store[index],//当前被迭代到的数据，值可以是任意类型<br>                    done:index &gt;= self.store.length   //布尔值，表示迭代是否结束<br>                }<br>                index++<br>                return result<br>            }<br>        }<br>    }<br>}<br>for(const item of obj){<br>    console.log(‘循环体’,item)<br>}<br>//循环体 foo<br>//循环体 bar<br>//循环体 baz<br></pre><br>虽然我们实现了对象的迭代器，但是好像也没觉得有什么用处，难道实现起来真的没有意义么？<br>34.ES2015 迭代器模式<br>上节课我们实现了对象的迭代器，但是感觉并不是很实用？这节课我们来学习下迭代器模式，看看能不能派上用场。不过不要被这个名字吓到，我们来了解下就知道了。假如我们合作一个任务清单应用，这里老师的任务是设计一个用于存放所有任务的对象，我的任务是把所有的任务项全部罗列、呈现到界面上。<br><img src="https://snakexu.github.io/images/lagou/part_1/ECMAScript/34_1.png"><br>从上图可以看到，用一般的思维方式去完成这个任务，我的代码和老师的代码严重耦合，老师的代码只要修改了，我的代码就需要修改。此时如果老师的数据结构能够对外提供一个统一的遍历接口，对于我(调用者而言)也就不用再关心老师的代码内部的数据结构是怎样的了，更不用担心老师的代码内部结构改变过后产生的影响<br><img src="https://snakexu.github.io/images/lagou/part_1/ECMAScript/34_2.png"><br>实现可迭代接口其实是相同的道理，对外提供统一的遍历接口，让外部不用再担关心内部数据的结构是什么样的，ES2015在语言层面实现了迭代器模式，适用于任何数据结构，只需要在需要的地方实现iterator方法就可以</p>
+<p><pre><br>//老师的代码===============================<br>const todos = {<br>    life: [‘吃饭’, ‘睡觉’, ‘打豆豆’],<br>    learn: [‘语文’, ‘数学’, ‘外语’],<br>    work: [‘喝茶’],<br>    // 提供统一遍历访问接口<br>    each: function (callback) {<br>        const all = [].concat(this.life, this.learn, this.work)<br>        for (const item of all) {<br>            callback(item)<br>        }<br>    },<br>    // 提供迭代器（ES2015 统一遍历访问接口）<br>    [Symbol.iterator]: function () {<br>        const all = […this.life, …this.learn, …this.work]<br>        let index = 0<br>        return {<br>            next: function () {<br>                return {<br>                      value: all[index],<br>                      done: index++ &gt;= all.length<br>                }<br>            }<br>        }<br>    }<br>}<br>// 我的代码 ===============================<br>todos.each(function (item) {<br>  console.log(item)<br>})<br>console.log(‘——————————-‘)<br>for (const item of todos) {<br>  console.log(item)<br>}<br>/*吃饭<br>睡觉<br>打豆豆<br>语文<br>数学<br>外语</pre></p>
+<h2 id="喝茶"><a href="#喝茶" class="headerlink" title="喝茶"></a>喝茶</h2><p>吃饭<br>睡觉<br>打豆豆<br>语文<br>数学<br>外语*/<br><br>35.ES2015 生成器<br>生成器是为了避免异步编程过程中回调嵌套过深，提供更好的异步编程解决方案。我们先来了解一下生成器函数的语法以及基本应用</p>
+<p><pre><br>function* foo(){<br>    console.log(‘zce’)//并未被打印<br>    return 100<br>}<br>const result = foo()<br>//console.log(result)//Object [Generator] {}<br>console.log(result.next())<br>//zce<br>//{ value: 100, done: true }//生成器接口也实现了iterator接口，也即是迭代器接口的协议<br></pre><br>这里我们单独用生成器函数并没有什么体会，因为平时使用生成器函数都会配合yield关键词使用</p>
+<p><pre><br>function * foo () {<br>  console.log(‘1111’)<br>  yield 100<br>  console.log(‘2222’)<br>  yield 200<br>  console.log(‘3333’)<br>  yield 300<br>}<br>const generator = foo()<br>console.log(generator.next()) // 第一次调用，函数体开始执行，遇到第一个 yield 暂停<br>//1111<br>//{ value: 100, done: false }<br>console.log(generator.next())//第二次调用，从暂停位置继续，直到遇到下一个 yield 再次暂停<br>//2222<br>//{ value: 200, done: false }<br>console.log(generator.next())<br>//3333<br>//{ value: 300, done: false }<br>console.log(generator.next())// 第四次调用，已经没有需要执行的内容了，所以直接得到 undefined<br>//{ value: undefined, done: true }<br>console.log(generator.next())<br>//{ value: undefined, done: true }<br></pre><br>生成器函数自动帮我们返回一个生成器对象，我们调用这个对象的next方法才会让这个函数的函数体开始执行，在执行过程中一旦遇到yield关键词，函数的执行就会被暂停，而且yield后面的值将会被作为next的结果返回，如果我们继续调用生成器对象next，函数就会从暂停的位置继续开始执行，周而复始知道函数的执行完全结束，next所返回done的值也就变成了true。生成器函数最大的特点就是惰性执行，就是我们调用一下next就执行一次。<br>36.ES2015 生成器应用<br>了解了生成器，我们简单应用一下<br>(1)实现一个发号器</p>
+<p><pre><br>function * createIdMaker(){<br>    let id = 1;<br>    while(true){//虽然这里是执行条件是true，但是因为有yield，每次只执行一遍就会停下<br>        yield id++<br>    }<br>}<br>const idMaker = createIdMaker()<br>console.log(idMaker.next().value)//1<br>console.log(idMaker.next().value)//2<br>console.log(idMaker.next().value)//3<br>console.log(idMaker.next().value)//4<br></pre><br>(2)实现对象的iterator方法<br>虽然生成器本身是有iterator接口的，我们用生成器实现iterator接口要比之前简单很多</p>
+<p><pre><br>const todos = {<br>  life: [‘吃饭’, ‘睡觉’, ‘打豆豆’],<br>  learn: [‘语文’, ‘数学’, ‘外语’],<br>  work: [‘喝茶’],<br>  [Symbol.iterator]: function * () {<br>    const all = […this.life, …this.learn, …this.work]<br>    for (const item of all) {<br>      yield item<br>    }<br>  }<br>}<br>for (const item of todos) {<br>  console.log(item)<br>}<br></pre><br>37.ES2015 ES Modules<br>会在后面相关内容做介绍，这里不讲<br>38.ES2016 概述<br>ES2016与ES2015相比只是一个小版本的迭代<br>(1)Array.prototype.includes检查数组是否包含指定元素变得更加简单<br>过去我们用indexOf查找元素是否存在，但是indexOf不能查找NaN，includes可以查找NaN</p>
+<p><pre><br>const arr = [‘foo’,1,NaN,false]<br>console.log(arr.includes(‘foo’))//true<br>console.log(arr.includes(NaN))//true<br></pre><br>(2)指数运算符<br>过去我们求2的10次放就是Math.pow(2,10)，ES2016的指数运算就是语言本身的运算符，在ES2016中2的10次方就是console.log( 2 ** 10 )<br>39.ES2017 概述<br>(1)Object.values()<br>返回对象的值数组<br>(2)Object.entries()<br>以数组的形式返回对象中的所有键值对</p>
+<p><pre><br>const obj = {<br>    foo:’value1’,<br>    bar:’value2’<br>}<br>console.log(Object.values(obj))//[ ‘value1’, ‘value2’ ]<br>for(let [key,value] of Object.entries(obj)){<br>    console.log(key,value)<br>}<br>//foo value1<br>//bar value2<br>console.log(new Map(Object.entries(obj)))<br>//Map { ‘foo’ =&gt; ‘value1’, ‘bar’ =&gt; ‘value2’ }<br></pre><br>(3)Object.getOwnPropertyDescriptor()<br>获取对象中属性的完整描述信息。自从ES5之后我们可以给对象定义getter/setter属性，getter/setter是不能通过Object. assign去完全复制的，只会把getter/setter去当成一个普通的属性来复制</p>
+<p><pre><br>const p1 = {<br>    firstName : ‘lei’,<br>    lastName : ‘wang’,<br>    get fullName(){<br>        return this.firstName+’ ‘+this.lastName<br>    }<br>}<br>// console.log(p1.fullName)<br>// const p2 = Object.assign({},p1)<br>// p2.firstName = ‘zce’<br>// console.log(p2.fullName)//lei wang<br>// console.log(p2)//{ firstName: ‘zce’, lastName: ‘wang’, fullName: ‘lei wang’ }<br>const descriptors = Object.getOwnPropertyDescriptors(p1)<br>// console.log(descriptor)<br>//{<br>//  firstName: {<br>//    value: ‘lei’,<br>//    writable: true,<br>//    enumerable: true,<br>//    configurable: true<br>//  },<br>//  lastName: {<br>//    value: ‘wang’,<br>//    writable: true,<br>//    enumerable: true,<br>//    configurable: true<br>//  },<br>//  fullName: {<br>//    get: [Function: get fullName],<br>//    set: undefined,<br>//    enumerable: true,<br>//    configurable: true<br>//  }<br>//}<br>const p2 = Object.defineProperties({},descriptors)<br>p2.firstName = ‘zce’<br>console.log(p2.fullName)//zce wang<br></pre><br>(4)String.prototype.padStart/String.prototype.padEnd<br>用给定的字符串填充指定(字符串开始位置或者字符串结束位置)位置</p>
+<p><pre><br>const books = {<br>    html:5,<br>    css:16,<br>    javascript:128<br>}<br>for(const [name,count] of Object.entries(books)){<br>    console.log(<code>${name.padEnd(16,&#39;-&#39;)}|${count.toString().padStart(3,&#39;0&#39;)}</code>)<br>}<br>//html————|005<br>//css————-|016<br>//javascript——|128<br></pre><br>(5)在函数参数中添加尾逗号</p>
+<p><pre><br>function foo(bar,baz,){<br>    //…<br>}<br></pre><br>(6)Async/Await<br>在异步编程中详细介绍过</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/21/拉勾-ECMAScript新特性/" data-id="ckc3140ll005lbgxqgov77chp" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ECMAScript新特性/">ECMAScript新特性</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/拉勾/">拉勾</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-移动端APP开发工程师-微信小程序-3-1-1-创建微信小程序项目" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/20/网易微专业-移动端APP开发工程师-微信小程序-3-1-1-创建微信小程序项目/" class="article-date">
+  <time datetime="2020-06-20T00:51:32.000Z" itemprop="datePublished">2020-06-20</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/20/网易微专业-移动端APP开发工程师-微信小程序-3-1-1-创建微信小程序项目/">网易微专业-移动端APP开发工程师-微信小程序-3.1.1-创建微信小程序项目</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>这里主要讲解了一下注册小程序账号，下载微信开发者工具，初步了解开发者工具，所以不赘述。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/20/网易微专业-移动端APP开发工程师-微信小程序-3-1-1-创建微信小程序项目/" data-id="ckc3140dh003ibgxqrxf8qftc" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/微信小程序/">微信小程序</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/网易微专业/">网易微专业</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-拉勾-手写Promise源码" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/06/18/拉勾-手写Promise源码/" class="article-date">
@@ -777,7 +2061,7 @@ catch(failCallback){
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/18/拉勾-手写Promise源码/" data-id="ckbm7ic3g004wd5xqbaplysf7" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/06/18/拉勾-手写Promise源码/" data-id="ckc3140iw0059bgxq76v4e5xt" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/手写Promise源码/">手写Promise源码</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/拉勾/">拉勾</a></li></ul>
@@ -845,7 +2129,7 @@ catch(failCallback){
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/17/拉勾-JavaScript异步编程/" data-id="ckbm7ic1h004nd5xqzb4kc842" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/06/17/拉勾-JavaScript异步编程/" data-id="ckc3140h7004vbgxqu3edjx0x" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript异步编程/">JavaScript异步编程</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/拉勾/">拉勾</a></li></ul>
@@ -884,7 +2168,7 @@ catch(failCallback){
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/15/网易微专业-移动端APP开发工程师-移动UI框架Flutter-2-1-1-Flutter概述及开发环境/" data-id="ckbm7ibx4003hd5xqdp27n8k6" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/06/15/网易微专业-移动端APP开发工程师-移动UI框架Flutter-2-1-1-Flutter概述及开发环境/" data-id="ckc3140di003jbgxq6xyc8mw6" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/网易微专业-Flutter/">网易微专业 Flutter</a></li></ul>
@@ -975,7 +2259,7 @@ catch(failCallback){
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/14/拉勾-函数式编程范式/" data-id="ckbm7ic3f004ud5xqu8s23pie" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/06/14/拉勾-函数式编程范式/" data-id="ckc3140iv0057bgxqomowp2l5" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/函数式编程/">函数式编程</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/拉勾/">拉勾</a></li></ul>
@@ -1046,7 +2330,7 @@ console.log(r)
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/14/拉勾-函数式编程范式-5-高阶函数-函数作为参数/" data-id="ckbm7ibui000sd5xq541mvy6j" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/06/14/拉勾-函数式编程范式-5-高阶函数-函数作为参数/" data-id="ckc3140bb000rbgxqxlav6smh" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/函数式编程范式/">函数式编程范式</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/拉勾/">拉勾</a></li></ul>
@@ -1085,361 +2369,7 @@ console.log(r)
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/13/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-7-canvas/" data-id="ckbm7ibx3003gd5xq10hn4cb3" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-学习手动创建react项目过程中" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/06/10/学习手动创建react项目过程中/" class="article-date">
-  <time datetime="2020-06-10T09:49:05.000Z" itemprop="datePublished">2020-06-10</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/06/10/学习手动创建react项目过程中/">学习手动创建react项目过程中</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><a href="https://www.shangmayuan.com/a/c9392696e58e4aa1bedcef39.html" target="_blank" rel="noopener">https://www.shangmayuan.com/a/c9392696e58e4aa1bedcef39.html</a> 一个不错的自己搭建react开发环境的教程<br>学习用最传统的npm iniy -y来创建一个react项目，中间一点点学习到的东西<br>1.webpack/webpack-cli是必须安装的<br>2.babel在安装的过程中<br>2-1.@babel/preset-react和babel-preset-react-app个人以为babel-preset-react-app是用npx默认创建react项目中做了更适应于react的一些操作<br>babel-preset-react-app:<a href="https://github.com/facebook/create-react-app/tree/master/packages/babel-preset-react-app" target="_blank" rel="noopener">https://github.com/facebook/create-react-app/tree/master/packages/babel-preset-react-app</a><br>而@babel/preset-react是babel提供的关于react的预设<a href="https://babel.docschina.org/docs/en/babel-preset-react#docsNav" target="_blank" rel="noopener">https://babel.docschina.org/docs/en/babel-preset-react#docsNav</a><br>2-2.babel-loader:<a href="https://www.webpackjs.com/loaders/babel-loader/" target="_blank" rel="noopener">https://www.webpackjs.com/loaders/babel-loader/</a><br>babel和webpack之间的桥梁，允许使用Babel和webpack来转译JavaScript文件。上面关于babel-loader的webpack介绍中，目前来看值得注意的有<br>(1)cacheDirectory:默认值为 false。当有设置时，指定的目录将用来缓存 loader 的执行结果。通过使用cacheDirectory提升打包速度<br>(2)给出了babel-loader很慢的解决方案，其中exclude: /(node_modules|bower_components)/适用于很多可以指定打包目录的loader，也算是一种优化方式。<br>(3)另外，babel 在每个文件都插入了辅助代码，使代码体积过大 这个目录中提到了babel-plugin-transform-runtime，随着babel的升级这个plugin有一些变化我将在接下来的内容中看能补充多少。<br>2-3.babel-plugin-transform-runtime:<a href="https://babel.docschina.org/docs/en/babel-plugin-transform-runtime#docsNav" target="_blank" rel="noopener">https://babel.docschina.org/docs/en/babel-plugin-transform-runtime#docsNav</a><br>一个插件，可重新使用Babel注入的帮助程序代码以节省代码大小。<br>安装babel-plugin-transform-runtime作为开发环境的依赖<br>安装@babel/runtime作为生产环境的依赖<br>下面两篇文章解决了我的疑问，polyfill/transform-runtime/corejs的配置<br><a href="https://segmentfault.com/a/1190000020237790" target="_blank" rel="noopener">https://segmentfault.com/a/1190000020237790</a> Babel7 转码（四）- polyfill 还是 transform-runtime<br><a href="https://segmentfault.com/a/1190000020237817" target="_blank" rel="noopener">https://segmentfault.com/a/1190000020237817</a> 关于介绍Babel7 转码（五）- corejs3 的更新(polyfill和按需加载语法编译在corejs3下的更新)<br><a href="https://segmentfault.com/a/1190000018358854" target="_blank" rel="noopener">https://segmentfault.com/a/1190000018358854</a> 一文读懂 babel7 的配置文件加载逻辑(关于babel配置文件的一些介绍)<br>3.webpack的loader和plugin<br>3-1.html-webpack-plugin把打包的文件插入到html中</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/10/学习手动创建react项目过程中/" data-id="ckbm7ibud000md5xqje5b8oli" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/react-babel/">react babel</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-look直播，企业级全栈web应用搭建分享" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/06/08/网易微专业-look直播，企业级全栈web应用搭建分享/" class="article-date">
-  <time datetime="2020-06-08T11:54:49.000Z" itemprop="datePublished">2020-06-08</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/06/08/网易微专业-look直播，企业级全栈web应用搭建分享/">网易微专业-look直播，企业级全栈web应用搭建分享</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>SPA &amp;&amp; SSR<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_1.png"><br>问题<br>两端代码复用<br>两端的渲染保持一致<br>两端的fallback设计<br>node端降级方案<br>1.工程架构<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_2.png"><br>1-1.组件分割<br>根据路由分割js，避免js bundle过大<br>(演示代码)</p>
-<p><pre><br>//webpack的import方法分割js返回一个promise，会有一个异步等待过程，<br>// baseLoadable等待promise完成之后才会去渲染组件<br>import baseLoadable from ‘@loadable/component’<br>const loading = () =&gt; {<br>    &lt; div classname = “m-loading” &gt;加载中…&lt; /div&gt;<br>}<br>const loadable = loader =&gt; baseLoadable(loader,{<br>    fallback:&lt; loading /&gt;<br>}<br>const Home = loadable(()=&gt;import(‘./views/home’))<br>const List = loadable(()=&gt;import(‘./views/list’))<br>const Detail = loadable(()=&gt;import(‘./views/detail’))<br></pre><br>1-2.路由<br>采用配置式路由为了方便node端获取对应组件</p>
-<p><pre><br>&lt; Switch &gt;<br>&lt; Route exact path=’/list’ component={List} /&gt;<br>&lt; Route exact path=’/detail/:id’ component={Detail} /&gt;<br>&lt; Route exact path=’/‘ component={Home} /&gt;<br>&lt; /Switch &gt;<br></pre><br>上面代码 组件式配置化</p>
-<p><pre><br>const config = [<br>{<br>    path:’/list’,<br>    exact:true,<br>    component:List<br>},<br>{<br>    path:’/detail/:id’,<br>    exact:true,<br>    component:Detail<br>},<br>{<br>    path:’/‘,<br>    exact:true,<br>    component:Home<br>},<br>]<br>export default config;<br></pre><br>1-3.获取组件<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_3.png"><br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_4.png"><br>1-4.请求方法<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_5.png"><br>1-5.两端数据一致</p>
-<p><pre><br>&lt; script &gt;<br>window.CURRENT_STATE = &lt; %- state% &gt;<br>&lt; /script &gt;<br>import {createStore} from ‘redux’<br>…<br>const store = createStore(rootReducer,window.CURRENT_STATE)<br></pre><br>保证首屏的css和js加载完</p>
-<p><pre><br>import { loadableReady } from ‘@loadable/component’;<br>loadableReady(()=&gt;{<br>    ReactDOM.hydrate(<br>        &lt; APP /&gt;,<br>        document.getElementById(‘j-app’)<br>    );<br>})<br></pre><br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_6.png"><br>1-6.async标签<br>提前执行script脚本<br>&lt; script async src=”/public/app.js” &gt;&lt; /script &gt;<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_7.png"><br>1-8.SEO<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_8.png"><br>1-9.webpack<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_9.png"><br>1-10.缓存<br>没有接口请求，则认为是静态可缓存<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_10.png"><br>新建Map存储上次的html<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_11.png"><br>1-11.降级<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_12.png"><br>2.状态管理<br>2-1.redux<br>只有碰到react实在解决不了的问题，你才需要redux<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_13.png"><br>2-2.思考<br>·繁琐的代码且重复<br>·开发体验不友好<br>·可读性差，不便于维护<br>2-3.改进<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_14.png"><br>·设置modal类<br>·自定义一个中间件<br>·充分利用redux数据流<br>扩展dispatch支持字符串方式<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_15.png"><br>3.异步任务<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_16.png"><br>问题<br>·数据的来源多，ajax、websocket、事件<br>·数据的依赖关系<br>·礼物消息的处理<br>3-1.rxjs<br>为了解决上面的问题，引入了rxjs<br>一种编程模型<br>针对异步数据流的编程<br>将一切数据包装成流<br>提供强大的操作符处理<br>3-2.Observable<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_17.png"><br>Publisher<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_18.png"></p>
-<p><pre><br>const Publisher = (observer) =&gt; {<br>    let count = 0;<br>    const inter = setIntrerval(()=&gt;{<br>        count+=1;<br>        observer.next(count);<br>        if(count&gt;=5){<br>            observer.complete();<br>            clearInterval(inter);<br>        }<br>    },1000);<br>}<br>const ob$ = Observable.create(Publisher);<br>const scp = ob$.subscribe((v)=&gt;{<br>    console.log(v)<br>})<br>setTimeout(()=&gt;{<br>    const scp1 = ob$.subscribe((v)=&gt;{<br>        console.log(v)<br>    })<br>},1000)<br>/<em><br>const observer = {<br>    next:(val)=&gt;{},<br>    complete:()=&gt;{},<br>    error:()=&gt;{}<br>}
-</em>/<br></pre><br>Subject<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_19.png"><br>Subject-多播<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_20.png"><br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_21.png"><br>3-3.数据的统一<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_22.png"><br>3-4.数据的依赖关系<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_23.png"><br>3-5.礼物消息<br>项目是一个直播项目，有一个需求是30s内同一用户同一礼物数目进行累加<br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_24.png"><br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_25.png"><br><img src="https://snakexu.github.io/images/wangyi/projectlook/look_26.png"></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/08/网易微专业-look直播，企业级全栈web应用搭建分享/" data-id="ckbm7ibvp0023d5xqeeve2s0a" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-webpack实战演练-3-3-1-网易的webpack工程化实践" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/06/07/网易微专业-webpack实战演练-3-3-1-网易的webpack工程化实践/" class="article-date">
-  <time datetime="2020-06-07T03:29:11.000Z" itemprop="datePublished">2020-06-07</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/06/07/网易微专业-webpack实战演练-3-3-1-网易的webpack工程化实践/">网易微专业-webpack实战演练-3.3.1-网易的webpack工程化实践</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.eslint<br>1-1.eslint相关包<br>01.eslint+eslint-loader核心内容<br>02.eslint-plugin-html/eslint-plugin-vue<br>03.eslint-friendly-fromatter 友好提示<br>04.eslint-config-standard 代码风格标准<br>webpack.base.conf.js</p>
-<pre>
-const createLiningRult = ()=>({
-    test:/\.(js|vue)$/,
-    loader:'eslint-loader',
-    enforce:'pre',
-    include:[resolve('src'),resolve('test')],
-    options:{
-        formatter:require('eslint-friendly-formatter'),
-        emitWarning:!config.dev.showEslintErrorsInOverlay
-    }
-})
-</pre>
-.eslintrc.js 这里并不是全部配置，截取部分老师讲的内容
-<pre>
-rules:{
-    'generator-star-spacing':'off',
-    //1-开启，以警告提示；2-开启，以报错提示；0-等价于off，即关闭这条检查规则
-    'no-console':'off',
-    'no-alert':1,
-    'no-implicit-globals':1,//不准在全局定义function、var
-    'no-debugger':process.env.NODE_ENV === 'production'?'error':'off'
-}
-</pre>
-2.一些特别的plugins和loader
-webpack.DefinePlugin:将当前环境代码传到业务代码(比如业务代码不能获取process.env，可以通过这个方法获取环境代码)
-<pre>
-plugins:[
-    new webpack.DefinePlugin({
-        'process.env':require('../config/dev.env');
-    })
-]
-</pre>
-webpack.ProvidePlugin:避免开发过程中频繁引入同一个库
-<pre>
-plugins:[
-    new webpack.ProvidePlugin({
-        ax:'axios'
-    })
-]
-</pre>
-webpack.NoEmitOnErrorsPlugin:编译出现错误的时候，跳过错误继续编译
-copy-webpack-plugin:拷贝文件，需要安装，作用于某文件夹中文件并没有在项目中全部被引用，但是项目中需要某文件夹中全部文件的情况
-<pre>
-//是的，这里老师并没有给完整的例子
-plugins:[
-    new copyWebpackPlugin({
-        from:……
-    })
-]
-</pre>
-mini-css-extract-plugin:这个使用的时候，要先定义引入，再在plugin中写入，另外定义处理css的时候，也不能用style-loader了，要用这个插件
-3.环境区分
-<img src="https://snakexu.github.io/images/wangyi/node/3.3.1_1.png">
-4.项目问题解决
-4-1.不要把配置当配置，当成一个程序(项目中的一些配置可以写成方法，以应对灵活多变的业务需求)
-4-2.解决方案归纳
-·如果要是对模块内容进行处理
-loader是第一解决方案
-·如果要增加一些特殊的功能
-可以自定义增加插件
-·项目上的打包简化，可变性配置等
-通过编写相应的操作函数
-
-自己写一个plugin
-下面是老师示例的自己编写plugin
-<pre>
-const path = require('path');
-const fs = require('fs');
-const readFileAsync = require("util").promisify(fs.readFile);
-const writeFileAsync = require("util").promisify(fs.writeFile);
-class AddStaticServer {
-    constructor(options) {
-        this.options = options || {
-            serverPath: '//kc.stu.126.net'
-        };
-        this.serverPath = this.options.serverPath;
-    }
-    apply(compiler) {
-        // 等 html-webpack-plugin 解决多页面构建速度慢的问题可以使用此方法
-        // compiler.hooks.compilation.tap('AddStaticServer', compilation => {
-        //     compilation.hooks.htmlWebpackPluginBeforeHtmlProcessing.tap(
-        //         'AddStaticServer',
-        //         data => {
-        //             data.html =
-        //             data.html.replace(/\/static\/css/g, `${this.serverPath}res/css`)
-        //                 .replace(/\/static\/js/g, `${this.serverPath}res/js`)
-        //                 .replace(/\/static\/img/g, `${this.serverPath}res/img`);
-        //         }
-        //     );
-        // });
-        compiler.hooks.done.tap('AddStaticServer', compilation => {
-            let context = compiler.options.context;
-            let publicPath = path.resolve(context, 'dist');
-            compilation.toJson().assets.forEach((ast) => {
-                let {dir, base, ext} = path.parse(ast.name);
-                if (ext === '.ftl') {
-                    readFileAsync(path.resolve(publicPath, dir, base), {encoding: 'utf-8'}).then((cnt) => {
-                        cnt = cnt.replace(/\/static\/css/g, `${this.serverPath}res/css`)
-                                .replace(/\/static\/js/g, `${this.serverPath}res/js`)
-                                .replace(/\/static\/img/g, `${this.serverPath}res/img`);
-                        writeFileAsync(path.resolve(publicPath, dir, base), cnt);
-                    });
-                }
-            });
-        });
-    }
-}
-module.exports = AddStaticServer;
-</pre>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/07/网易微专业-webpack实战演练-3-3-1-网易的webpack工程化实践/" data-id="ckbm7ibw9002rd5xq4gch21cg" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-webpack实战演练-3-2-6-webpack打包速度优化" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/06/06/网易微专业-webpack实战演练-3-2-6-webpack打包速度优化/" class="article-date">
-  <time datetime="2020-06-06T03:02:23.000Z" itemprop="datePublished">2020-06-06</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/06/06/网易微专业-webpack实战演练-3-2-6-webpack打包速度优化/">网易微专业-webpack实战演练-3.2.6-webpack打包速度优化</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.打包结果分析<br>1-1.chunks和module<br>chunks:即代码块，即webpack把js分割成了几块代码<br>module:模块，每一个文件即一个模块<br>1-2.如何可视化的获取打包结果分析<br>·官方版本<br>Mac:webpack –profile –json &gt;stats.json<br>Window:webpack –profile –json &gt;stats.json<br>在项目中执行上述命令之后，打开下面的网站<br><a href="http://webpack.github.io/analyse/" target="_blank" rel="noopener">http://webpack.github.io/analyse/</a><br>选择刚才打包生成的stats.json<br><img src="https://snakexu.github.io/images/wangyi/node/3.2.6_1.png"><br>·社区版本<br>(1)webpack-bundle-analyzer<br>2.优化打包速度<br>2-1.有哪些可以优化的点<br>·项目本身<br>(1)减少依赖嵌套深度<br>(2)使用尽可能少的处理<br>·webpack层面<br>(1)Dll处理<br>(2)通过include减少loader范围<br>(3)HappyPack<br>(4)Uglify优化<br>(5)减少resolve、sourcemap、cache-loader，用新版本的node和webpack</p>
-<p>webpack.dll.js</p>
-<pre>
-const webpack = require('webpack')
-module.exports = {
-    entry:{
-        vendor:['jquery','loadsh']
-    },
-    output:{
-        path:__dirname+'/src/dll',
-        filename:"./[name].js",
-        library:"[name]_library"//引用名
-    },
-    plugins:[
-        new webpack.DllPlugin({
-            path:__dirname+"/src/dll/[name].json",
-            name:"[name]_library",//这里要与引用名一致(也就是与output.library一致)
-        })//告诉打包命令，我们已经处理过jquery和lodash文件了
-    ]
-}
-</pre>
-保存之后，在命令行项目文件夹下，输入webpack --config webpack.dll.js，我们可以看到项目src文件夹下生成了一个dll文件夹，里面有vendor.js和vendor.json文件，vendor.json文件会给到真正的打包配置中。
-在webpack.config.js文件的plugin中添加:
-<pre>
-new webpack.DllReferencePlugin({
-     manifest:require('./src/dll/vendor.json')
-}),
-</pre>
-到这里，我们只是完成了dll打包，但是我们dll打包的文件并没有被引入到html页面中，我们可以通过
-<pre>
-new htmlWebpackPlugin({
-    filename:"index.html",
-    template:"./src/index.html",
-    vendorPath:"../src/dll/vendor.js",//在这里引入dll生成的文件
-    chunks:['app','runtime']
-})
-</pre>
-并且在html页面通过模版字符串的方式引入
-<pre>
-< script type="text/javascript" src="${htmlWebpackPlugin.options.vendorPath}">< /script >
-</pre>
-
-<p>HappyPack由于webpack是node编写的，而node可以开工作进程，所以通过这个思路，HappyPack开启多线程。HappyPack是要通过npm下载的，假设我们要用happypack处理vue文件</p>
-<pre>
-rules:[
-{
-    test:/\.vue$/,
-    loader:'happypack/loader?id=happyvue'
-}
-]
-</pre>
-在配置生产环境的配置文件中
-<pre>
-const HappyPack = require('happypack');
-const os = require('os')
-const happyThreadpool = HappyPack.ThreadPool({size:os.cpus().length})//根据cpu决定建几个线程
-const vueLoaderConfig = require('./vue-loader.conf.js')
-//这里只是需要修改plugins中的内容，并不是说plugins在文件中层级关系
-plugins:[
-    new HappyPack({
-        id:'happyvue',//对应我们在上面定义的id
-        loaders:[
-        {
-            path:"vue-loader",
-            cache:true,
-            options:vueLoaderConfig
-        }
-        ],
-        threadPool:happyThreadPool
-    })
-]
-</pre>
-其实在webpack中任何操作都是需要增加打包时间的(包括优化操作)，所以在运用优化操作的时候，尽可能却确定优化操作比直接打包更值得
-3.长缓存优化
-3-1.把hash改为chunkhash
-我们在用webpack打包项目的时候，输出文件名通常会加hash，而每次项目中页面有内容变化，整个项目再次打包生成的文件hash代码会改变，影响浏览器生成缓存，我们可以将hash改成chunkhash
-<pre>
-output:{
-    path:__dirname+"/dist",
-    filename:"./[name].[chunkhash].js",
-}
-</pre>
-3-2.NamedChunksPlugin和NamedModulesPlugin
-上面的把hash改为chunkhash并不完美，当模块发生变动的时候，并不能保证hash的稳定。我们用3-2的方案完善
-在webpack配置文件中做如下修改
-<pre>
-plugins:[
-    new webpack.NamedChunksPlugin(),
-    new webpack.NamedModulesPlugin()
-]
-</pre>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/06/网易微专业-webpack实战演练-3-2-6-webpack打包速度优化/" data-id="ckbm7ibw8002qd5xq1b9t5039" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/06/13/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-7-canvas/" data-id="ckc3140dg003hbgxq6phfpbck" class="article-share-link">Share</a>
       
       
     </footer>
@@ -1453,7 +2383,7 @@ plugins:[
 
   <nav id="page-nav">
     
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
   </nav>
 
 </section>
@@ -1474,7 +2404,7 @@ plugins:[
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript异步编程/">JavaScript异步编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-babel/">react babel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/函数式编程/">函数式编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/函数式编程范式/">函数式编程范式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端路由/">前端路由</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/手写Promise源码/">手写Promise源码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/拉勾/">拉勾</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/正则/">正则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-Flutter/">网易微专业 Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-node/">网易微专业 node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ECMAScript新特性/">ECMAScript新特性</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript异步编程/">JavaScript异步编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TypeScript语言/">TypeScript语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-babel/">react babel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/函数式编程/">函数式编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/函数式编程范式/">函数式编程范式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端路由/">前端路由</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/微信小程序/">微信小程序</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/手写Promise源码/">手写Promise源码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/拉勾/">拉勾</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/正则/">正则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业/">网易微专业</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-Flutter/">网易微专业 Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-node/">网易微专业 node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
     </div>
   </div>
 
@@ -1484,7 +2414,7 @@ plugins:[
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/JavaScript异步编程/" style="font-size: 10px;">JavaScript异步编程</a> <a href="/tags/react-babel/" style="font-size: 10px;">react babel</a> <a href="/tags/函数式编程/" style="font-size: 10px;">函数式编程</a> <a href="/tags/函数式编程范式/" style="font-size: 10px;">函数式编程范式</a> <a href="/tags/前端路由/" style="font-size: 10px;">前端路由</a> <a href="/tags/手写Promise源码/" style="font-size: 10px;">手写Promise源码</a> <a href="/tags/拉勾/" style="font-size: 16.67px;">拉勾</a> <a href="/tags/数据结构/" style="font-size: 13.33px;">数据结构</a> <a href="/tags/正则/" style="font-size: 10px;">正则</a> <a href="/tags/算法/" style="font-size: 20px;">算法</a> <a href="/tags/网易微专业-Flutter/" style="font-size: 10px;">网易微专业 Flutter</a> <a href="/tags/网易微专业-node/" style="font-size: 10px;">网易微专业 node</a> <a href="/tags/设计模式/" style="font-size: 16.67px;">设计模式</a>
+      <a href="/tags/ECMAScript新特性/" style="font-size: 10px;">ECMAScript新特性</a> <a href="/tags/JavaScript异步编程/" style="font-size: 10px;">JavaScript异步编程</a> <a href="/tags/TypeScript语言/" style="font-size: 10px;">TypeScript语言</a> <a href="/tags/react-babel/" style="font-size: 10px;">react babel</a> <a href="/tags/函数式编程/" style="font-size: 10px;">函数式编程</a> <a href="/tags/函数式编程范式/" style="font-size: 10px;">函数式编程范式</a> <a href="/tags/前端路由/" style="font-size: 10px;">前端路由</a> <a href="/tags/微信小程序/" style="font-size: 10px;">微信小程序</a> <a href="/tags/手写Promise源码/" style="font-size: 10px;">手写Promise源码</a> <a href="/tags/拉勾/" style="font-size: 20px;">拉勾</a> <a href="/tags/数据结构/" style="font-size: 13.33px;">数据结构</a> <a href="/tags/正则/" style="font-size: 10px;">正则</a> <a href="/tags/算法/" style="font-size: 20px;">算法</a> <a href="/tags/网易微专业/" style="font-size: 10px;">网易微专业</a> <a href="/tags/网易微专业-Flutter/" style="font-size: 10px;">网易微专业 Flutter</a> <a href="/tags/网易微专业-node/" style="font-size: 10px;">网易微专业 node</a> <a href="/tags/设计模式/" style="font-size: 16.67px;">设计模式</a>
     </div>
   </div>
 
@@ -1506,23 +2436,23 @@ plugins:[
       <ul>
         
           <li>
+            <a href="/2020/06/28/拉勾-JavaScript性能优化/">拉勾-JavaScript性能优化</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/26/拉勾-TypeScript语言/">拉勾-TypeScript语言</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/21/拉勾-ECMAScript新特性/">拉勾-ECMAScript新特性</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/20/网易微专业-移动端APP开发工程师-微信小程序-3-1-1-创建微信小程序项目/">网易微专业-移动端APP开发工程师-微信小程序-3.1.1-创建微信小程序项目</a>
+          </li>
+        
+          <li>
             <a href="/2020/06/18/拉勾-手写Promise源码/">拉勾-手写Promise源码</a>
-          </li>
-        
-          <li>
-            <a href="/2020/06/17/拉勾-JavaScript异步编程/">拉勾-JavaScript异步编程</a>
-          </li>
-        
-          <li>
-            <a href="/2020/06/15/网易微专业-移动端APP开发工程师-移动UI框架Flutter-2-1-1-Flutter概述及开发环境/">网易微专业-移动端APP开发工程师-移动UI框架Flutter-2.1.1-Flutter概述及开发环境</a>
-          </li>
-        
-          <li>
-            <a href="/2020/06/14/拉勾-函数式编程范式/">拉勾-函数式编程范式</a>
-          </li>
-        
-          <li>
-            <a href="/2020/06/14/拉勾-函数式编程范式-5-高阶函数-函数作为参数/">拉勾-函数式编程范式-5-高阶函数-函数作为参数</a>
           </li>
         
       </ul>

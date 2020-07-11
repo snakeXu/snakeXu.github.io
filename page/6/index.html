@@ -62,6 +62,310 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-网易微专业-node-1-1-1-es6快速入门" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/04/09/网易微专业-node-1-1-1-es6快速入门/" class="article-date">
+  <time datetime="2020-04-09T03:38:24.000Z" itemprop="datePublished">2020-04-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/04/09/网易微专业-node-1-1-1-es6快速入门/">网易微专业-node-1.1.1-es6快速入门</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.初识ECMAScript6.0<br>1-1.ES6初识<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.1_1.png"><br>1-2.ES6新增变化<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.1_2.png"><br>2.ES6快速入门<br>2-1.let、const以及变量解构赋值<br>这里说一下，虽然较新版本的chrome等浏览器支持es6，但是一般还是会用babel解析成es5<br>2-1-1.let<br>·ES6新增了let命令，用于声明变量，只在其所在的代码块内有效<br>·let不允许在相同的作用域内重复声明同一个变量<br>·let声明变量的方式实际上就是为JavaScript新增了块级作用域</p>
+<pre>
+var name = 'Evan';
+function foo(){
+    console.log(name);
+    if(false){
+        let name = 'Bob'
+    }
+}
+foo()
+</pre>
+这里需要注意，var定义变量会有变量提升，比如
+<pre>
+console.log(x)
+var x = 10
+</pre>
+控制台会输出undefined，因为变量提升，所以在console.log之前会定义变量x，即var x;在console之后再赋值，但是对于let定义是不会变量提升的
+<pre>
+console.log(y)
+let y = 10
+</pre>
+用let定义，在定义之前console的话，控制台会报错，因为let不会变量提升，相当于没有定义先使用变量，所以报错
+<pre>
+function foo(){
+    let x = 10;
+    let x = 20;
+}
+</pre>
+如果在同一作用域中用var重复定义，后定义的变量值开辟的内存会起作用，先定义变量开辟的内存被放弃，但是如果用let在同一作用域中重复定义变量，像上面代码重复定义，浏览器会报错    
+2-1-2.const
+·const用来声明常量
+·const声明变量必须立即初始化，并且其值不能再改变
+<p>
+const PI = 3.14 //常量定义名字一般大写
+</p>
+另外const和let一样，都是有块级作用域的
+如果想改变常量的值，浏览器会报错，如下代码，浏览器会报错
+<p>
+const PI = 3.14 
+PI = 3.15
+console.log(PI)
+</p>
+2-1-3.全局对象的属性
+- var命令和function命令声明的全局变量依旧是全局对象的属性
+- let命令、const命令和class命令声明的全局变量不属于全局对象的属性
+<pre>
+var x = 10;
+let y = 20;
+console.log(window.x)  //10
+console.log(window.y)  //undefined
+</pre>
+2-1-4.变量的解构赋值
+-ES6允许按照一定的模式，从数组或对象中提取值，对变量进行赋值
+(1)数组的解构赋值
+<pre>
+let [x,y,z] = [10,20,30]
+x //10
+y //20
+z //30
+</pre>
+(2)对象的解构赋值
+<pre>
+let {x,y} = {x:10,y:20}
+x //10
+y //20
+</pre>
+2-2.字符串新增方法
+includes():返回布尔值，表示是否找到了参数字符串
+starstWith():返回布尔值，表示参数字符串是否在源字符串的开始位置
+endsWith():返回布尔值，表示参数字符串是否在源字符串的结尾位置
+这三个方法都支持第2个参数，表示开始匹配的位置
+<pre>
+let s = 'Hello world!';
+s.includes('o');        //true
+s.startsWith('Hello');  //true
+s.endsWith('!');        //true
+s.includes('o',8);      //false
+s.startsWith('world',6);//true
+s.endsWith('Hello',5);  //true
+</pre>
+2-3.模版字符串
+·模版字符串是增强版的字符串，用反引号(`)标识
+·模版字符串可以当作普通字符串使用，也可以用来定义多行字符串
+·在模版字符串中可以嵌入变量，只需要将变量名字写入${}中
+<pre>
+var name = 'Evan' , age = 18;
+`My name is ${name}, I'm ${age} years old.`
+</pre>
+2-4.箭头函数
+箭头函数的特点:
+1.如果参数只有一个，可以省略小括号
+2.如果函数体只有一行，可以不写大括号
+3.箭头函数中没有arguments变量
+4.不会改变this指向(箭头函数根本没有自己的this，导致内部的this就是外层代码块的this)
+<pre>
+let sum = (n1,n2)=>n1+n2
+等价于
+let sum = (n1,n2)=>{return n1+n2}
+
+
+
+let f = v=>v
+等价于
+let f = v=>return v
+</pre>
+<pre>
+let getTempItem = id=>{id:id,name:'temp'};//这里本身是想返回一个对象，但是会报错，因为大括号会被解释成代码块
+let getTempItem = id=>({id:id,name:'temp'})//上面一行代码，如果想返回一个对象，这样写才对
+</pre>
+箭头函数中this指向被固化
+<pre>
+var person = {
+    name:'Evan',
+    age:18,
+    func:function(){
+        console.log(this)
+    }
+}
+person.func();//person对象
+</pre>
+<pre>
+var person = {
+    name:'Evan',
+    age:18,
+    func:()=>{
+        console.log(this)
+    }
+}
+person.func();//window对象
+</pre>
+关于this，ES5中谁调用，this指向谁；在ES6中定义时候的环境决定了this的指向。所以根据需要灵活运用
+2-5.对象属性和方法的简洁表示法
+·ES6允许直接写入变量和函数作为对象的属性和方法。
+<pre>
+//简洁表示法
+function(x,y){
+    return {x,y}
+}
+//常规写法
+function(x,y){
+    return {x:x,y:y}
+}
+</pre>
+<pre>
+//简洁表示法
+var o = {
+    method(){
+        return "Hello"
+    }
+}
+//常规写法
+var o = {
+    method:function(){
+        return "Hello"
+    }
+}
+</pre>
+2-6.ES6中的面向对象
+使用class构造对象，示例代码
+<img src="https://snakexu.github.io/images/wangyi/node/1.1.1_3.png">
+2-7.Promise对象
+·Promise是异步编程的一种解决方案，比传统的解决方案(回调函数和事件)更合理、更强大
+·有了Promise对象，就可以将异步操作以同步操作的流程表达出来，避免了层层嵌套的回调函数
+·Promise对象提供统一的接口，使得控制异步操作更加容易
+<pre>
+const promiseObj = new Promise(function(resolve,reject){
+    //...some code
+    if(/*异步操作成功*/){
+        resolve(value)
+    }else{
+        reject(error)
+    }
+})
+</pre>
+·Promise构造函数接受一个函数作为参数，该函数的两个参数分别是resolve和reject
+·Promise实例生成后，可以用then方法分别指定resolved和rejected状态的回调函数
+<pre>
+promiseObj.then(function(value){
+    //success
+},function(error){
+    //failure
+})
+</pre>
+·then方法的两个回调函数都接受Promise对象传出的值作为参数
+·then方法的第一个回调函数是Promise对象的状态变为resolved时调用
+·then方法的第二个回调函数是Promise对象的状态变为rejected时调用，该函数是可选的，不一定要提供
+<pre>
+function timeout(ms){
+    return new Promise(resolve,reject){
+        setTimeout(resolve,ms,'完成')
+    }
+}
+timeout(1000).then(value=>console.log(value))
+</pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/04/09/网易微专业-node-1-1-1-es6快速入门/" data-id="ckchm0rg700305ajhlsy68i3z" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-js实现重载和重写" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/04/01/js实现重载和重写/" class="article-date">
+  <time datetime="2020-04-01T09:02:12.000Z" itemprop="datePublished">2020-04-01</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/04/01/js实现重载和重写/">js实现重载和重写</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>重载<br>函数名相同，函数的参数列表不同(包括参数个数和参数类型)，根据参数的不同去执行不同的操作。在JavaScript中，同一个作用域，出现两个名字一样的函数，后面的会覆盖前面的，所以 JavaScript 没有真正意义的重载。</p>
+<p><pre><br>// 可以跟据arguments个数实现重载<br>function fn(){<br>    switch(arguments.length){<br>        case 0:<br>        addFn(arguments.length)<br>        break<br>        case 1:<br>        deleteFn(arguments.length)<br>    }<br>}<br>function addFn(n){<br>    console.log(<code>fn函数参数个数为${n+1}个</code>)<br>}<br>function deleteFn(n){<br>    console.log(<code>fn函数参数个数为${n-1}个</code>)<br>}<br>fn()  // fn函数参数个数为1个<br>fn(1) // fn函数参数个数为0个<br></pre><br>重写<br>“实例中的指针仅指向原型，而不是指向构造函数”。<br>“重写原型对象切断了现有原型与任何之前已经存在的对象实例之间的关系；它们引用的仍然是最初的原型”。</p>
+<p><pre><br>var parent = function(name,age){<br>    this.name = name;<br>    this.age = age;<br>}<br>parent.prototype.showProper = function(){<br>    console.log(this.name+”:”+this.age);<br>}<br>var child = function(name,age){<br>    parent.call(this,name,age);<br>}<br>// inheritance<br>child.prototype = Object.create(parent.prototype);<br>// child.prototype = new parent();<br>child.prototype.constructor = child;<br>// rewrite function<br>child.prototype.showProper = function(){<br>    console.log(‘I am ‘+this.name+”:”+this.age);<br>}<br>var obj = new child(‘wozien’,’22’);<br>obj.showProper();<br></pre><br>上面这段代码通过使用寄生组合继承，实现子类私有继承父类私有，子类公有继承父类公有，达到重写父类的showProper</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/04/01/js实现重载和重写/" data-id="ckchm0rbt00025ajhl437z9c1" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-MV-组件化开发React专题-React生态-2-4-3-Redux源码解析分享" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/04/01/网易微专业-MV-组件化开发React专题-React生态-2-4-3-Redux源码解析分享/" class="article-date">
+  <time datetime="2020-04-01T08:45:38.000Z" itemprop="datePublished">2020-04-01</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/04/01/网易微专业-MV-组件化开发React专题-React生态-2-4-3-Redux源码解析分享/">网易微专业-MV-组件化开发React专题-React生态-2.4.3-Redux源码解析分享</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/04/01/网易微专业-MV-组件化开发React专题-React生态-2-4-3-Redux源码解析分享/" data-id="ckchm0rck001b5ajh0peb6iyv" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-网易微专业-MV-组件化开发React专题-React生态-2-4-2-实现React-下-so-diff" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/03/29/网易微专业-MV-组件化开发React专题-React生态-2-4-2-实现React-下-so-diff/" class="article-date">
@@ -327,7 +631,7 @@ function removeNode( dom ) {
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/03/29/网易微专业-MV-组件化开发React专题-React生态-2-4-2-实现React-下-so-diff/" data-id="ckc39jeux004iojxqm6bk202e" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/03/29/网易微专业-MV-组件化开发React专题-React生态-2-4-2-实现React-下-so-diff/" data-id="ckchm0rg2002s5ajh7aqsovxj" class="article-share-link">Share</a>
       
       
     </footer>
@@ -370,7 +674,7 @@ function removeNode( dom ) {
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/03/26/网易微专业福利期-异步编程-3-1-理解异步/" data-id="ckc39jet3003yojxqvdely157" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/03/26/网易微专业福利期-异步编程-3-1-理解异步/" data-id="ckchm0rh0004o5ajhlvbp80c0" class="article-share-link">Share</a>
       
       
     </footer>
@@ -406,7 +710,7 @@ function removeNode( dom ) {
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/03/26/网易微专业-VuePress项目实战-4-1-2-基本配置/" data-id="ckc39jert001xojxqy5ydhf3j" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/03/26/网易微专业-VuePress项目实战-4-1-2-基本配置/" data-id="ckchm0rcx001v5ajhkhegjxx2" class="article-share-link">Share</a>
       
       
     </footer>
@@ -444,7 +748,7 @@ function removeNode( dom ) {
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/03/26/网易微专业-VuePress项目实战-4-1-1-设计-运行原理/" data-id="ckc39jerq001uojxqebvj09rs" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/03/26/网易微专业-VuePress项目实战-4-1-1-设计-运行原理/" data-id="ckchm0rd200205ajhofgzd97t" class="article-share-link">Share</a>
       
       
     </footer>
@@ -481,7 +785,7 @@ function removeNode( dom ) {
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/03/26/网易微专业-VuePress项目实战-4-1-0-VuePress课程导学/" data-id="ckc39jerp001sojxq4lf8eszm" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/03/26/网易微专业-VuePress项目实战-4-1-0-VuePress课程导学/" data-id="ckchm0rcy001w5ajh0iby2si6" class="article-share-link">Share</a>
       
       
     </footer>
@@ -775,7 +1079,7 @@ ReactDOM.render(< App/>,document.getElementById('root'))
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/03/20/网易微专业-MV-组件化开发React专题-React生态-2-4-1-实现React-下-state/" data-id="ckc39jerc0018ojxqiomx58g2" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/03/20/网易微专业-MV-组件化开发React专题-React生态-2-4-1-实现React-下-state/" data-id="ckchm0rcn001f5ajhm084p63q" class="article-share-link">Share</a>
       
       
     </footer>
@@ -815,144 +1119,7 @@ ReactDOM.render(< App/>,document.getElementById('root'))
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/03/18/网易微专业-MV-组件化开发React专题-React生态-2-4-1-实现React/" data-id="ckc39jerd001aojxqegvwbp0p" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-MV-组件化开发React专题-React生态-2-3-5-工程化与webpack" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/03/17/网易微专业-MV-组件化开发React专题-React生态-2-3-5-工程化与webpack/" class="article-date">
-  <time datetime="2020-03-17T09:13:32.000Z" itemprop="datePublished">2020-03-17</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/03/17/网易微专业-MV-组件化开发React专题-React生态-2-3-5-工程化与webpack/">网易微专业-MV-组件化开发React专题-React生态-2.3.5-工程化与webpack</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>课程目标<br>一.独立实现一个工程化工具<br>二.阅读webpack相关配置代码<br>三.自定义实现webpack插件<br>1.工程化工具<br><img src="https://snakexu.github.io/images/wangyi/react/2.3.5_1.png"><br>使用npm init -y初始化简单项目，在项目的package.json文件中，有如下内容</p>
-<p><pre><br>{<br>    “name”:”mycli”,<br>    “version”:”1.0.0”,<br>    “description”:””,<br>    “main”:”index.js”,<br>    “bin”:”index.js”,//这里是手动添加的，指向当前的index.js，可执行文件的目录<br>    “script”:{<br>        “test”:”echo \”Error:no test specified\” &amp;&amp; exit 1”<br>    },<br>    “keywords”:[],<br>    “author”:””,<br>    “license”:”ISC”<br>}<br></pre><br>在项目中创建一个index.js，里面只有一行代码</p>
-<p><pre><br>console.log(‘hello world’);<br></pre><br>然后在命令行当前目录下敲入命令npm link，执行后再敲入命令mycli(因为package.json中的name是mycli)，windows系统会弹出如下弹窗<br><img src="https://snakexu.github.io/images/wangyi/react/2.3.5_2.png"><br>当我们敲入命令npm link的时候，在我们操作系统的环境变量的目录下生成一个类似于如下的目录<br><img src="https://snakexu.github.io/images/wangyi/react/2.3.5_3.png"><br>然后再敲mycli的时候就执行了这样的一个js文件，但是操作系统不知道如何执行js文件，那怎么让windows系统认识/执行js文件呢，对index.js文件进行如下修改</p>
-<p><pre></pre></p>
-<p>#!/usr/bin/env node //告诉操作系统我们以node来执行index.js文件<br>console.log(‘hello world’);<br><br>再次执行npm link，再执行mycli<br><img src="https://snakexu.github.io/images/wangyi/react/2.3.5_4.png"><br>假设我们现在有这样的需求：产品经理希望开发一个工具，这个工具在命令行中输入mycli create -t vue -n shop会创建一个会创建一个vue的模版项目名为shop</p>
-<p><pre><br>let program = require(‘commander’)//解析命令行的工具<br>program.version(‘0.0.0’)<br>.option(‘-t,–type &lt; name &gt;’,’project type’)<br>.option(‘-n,–type &lt; name &gt;’,’project type’)<br>program.command(‘create’).action(function(){<br>    console.log(program.name,program.type)<br>})<br>program.parse(process.argv)<br></pre><br>在命令行输入mycli create -t vue -n shop得到shop，对上面代码稍加修改</p>
-<p><pre><br>let program = require(‘commander’)<br>program.version(‘0.0.0’)<br>.option(‘-t,–type &lt; name &gt;’,’project type’)<br>program.command(‘create &lt; name &gt;’).action(function(name){<br>    console.log(name,program.type)<br>})<br>program.parse(process.argv)<br></pre><br>在命令行输入mycli create shop -t vue得到shop vue。接下来，我们要为我们的需求添砖加瓦了。首先做一个我们的需求的逻辑就是我们有一堆的模版，模版里面有vue/h5/react……各种项目类型，我们在命令行输入mycli create shop -t h5 ，就把h5模版的所有代码复制到本地。</p>
-<p><pre><br>let program = require(‘commander’)<br>let createProject = require(‘./create’)//引入了这个模块执行<br>program.version(‘0.0.0’)<br>.option(‘-t,–type &lt; name &gt;’,’project type’)<br>program.command(‘create &lt; name &gt;’).action(function(name){<br>    createProject(name,program.type)<br>    console.log(name,program.type)<br>})<br>program.parse(process.argv)<br></pre><br>createProject的内容(自己对着教程一行行敲下来也是不容易啊，自我感动下~~~)</p>
-<p><pre><br>let chalk = require(‘chalk’);<br>let fs = require(‘fs’);<br>let path = require(‘path’);<br>require(‘shelljs/global’)<br>var log = function(txt){<br>    console.log(chalk.magenta.bold(txt))<br>}<br>function createProject(name,type){<br>    var p = process.cwd();<br>    cd(p);<br>    if(fs.existsSync(name)){<br>        log(‘project exists,please rename it’)<br>        process.exit()<br>    }<br>}<br>var np = path.join(__dirname,’projects’,type);<br>cp(‘-R’,np+’/‘,name);<br>log(‘复制’+type+’项目源文件成功!’)<br>cd(name)<br>log(‘设置淘宝镜像—-npm config set registry <a href="http://registry.npm.taobao.org&#39;" target="_blank" rel="noopener">http://registry.npm.taobao.org&#39;</a>)<br>exec(‘npm config set registry <a href="http://registry.npm.taobao.org&#39;" target="_blank" rel="noopener">http://registry.npm.taobao.org&#39;</a>)<br>log(‘安装模块—-npm install’)<br>log(‘安装模块时间较长，请耐心等候，您也可以按CTRL+C停止安装，手动npm install 安装’)<br>log(‘安装模块中…’)<br>exex(‘npm install’)<br>if(type != ‘jquery’){<br>    log(‘正在启动项目’)<br>    exec(‘npm start’)<br>}<br>module.exports = createProject<br></pre><br>这是一个简单的执行过程，如果我们想让程序跟vue-cli一样和用户有交互，需要安装inquirer</p>
-<p><pre></pre></p>
-<p>#!/usr/bin/env node<br>let program = require(‘commander’)<br>let inquirer = require(‘inquirer’)<br>let promptList = [<br>{<br>    type:’input’,<br>    message:’设置一个用户名’,<br>    name:’name’,<br>    default:’test_user’,//默认值<br>},<br>{<br>    type:’confirm’,<br>    message:’是否使用监听’,<br>    name:’watch’,<br>    prefix:’前缀’,<br>},<br>{<br>    type:’list’,<br>    message:’请选择一种水果’,<br>    name:’fruit’,<br>    choices:[<br>    “Apple”,<br>    “Pear”,<br>    “Banana”<br>    ],<br>    filter:function(val){<br>        return val.toLowerCase()//使用filter将答案变为小写<br>    }<br>}<br>]<br>inquirer.prompt(promptList).then(answer=&gt;{<br>    console.log(answer)<br>})<br><br>在命令行执行mycli可以看到<br><img src="https://snakexu.github.io/images/wangyi/react/2.3.5_5.png"><br><img src="https://snakexu.github.io/images/wangyi/react/2.3.5_6.png"><br>是我们期待的交互了，稍微修改下，就可以作为我们项目的一个基础代码</p>
-<p><pre></pre></p>
-<p>#!/usr/bin/env node<br>let program = require(‘commander’)<br>let inquirer = require(‘inquirer’)<br>let createProject = require(‘./create’)<br>let path = require(‘path’)<br>let fs = require(‘fs’)<br>let promptList = [<br>{<br>    type:’input’,<br>    message:’设置一个项目名’,<br>    name:’name’,<br>    default:’project_name’,//默认值<br>},<br>{<br>    type:’confirm’,<br>    message:’是否使用监听’,<br>    name:’watch’,<br>    prefix:’前缀’,<br>},<br>{<br>    type:’list’,<br>    message:’请选择项目类型’,<br>    name:’type’,<br>    choices:fs.readdirSync(path.join(__dirname,’projects’)),//projects是一个路径，里面放着各种类型的模版<br>}<br>]<br>inquirer.prompt(promptList).then(answer=&gt;{<br>    console.log(answer)<br>    createProject(answer.name,answer.type)<br>})<br><br>可以丰富一下工具，比如异常的响应，比如-h提示<br>2.webpack相关配置<br>2-1.webpack核心概念<br>entry:入口;output:出口;loader:加载器;plugins:插件<br>2-2.webpack中相关的一些概念<br>在webpack中resolve中找依赖可以给指定依赖一个别名，举个例子</p>
-<p><pre><br>resolve:{<br>    extensions:[‘.js’,’.jsx’,’.json’],<br>    alias:{<br>        ‘@components’:’./src/component’//指定别名，import ‘./component/header’ =&gt; import ‘@components/header’<br>    },<br>    modules:[resolve(‘node_modules’)],//规定我们在引入资源的时候的一个空间范围，<br>    //我们可以自己添加路径，比如我们自己写组件在自己定义的目录’./src/components’<br>    //modules:[resolve(‘node_modules’),’./src/components’]<br>}<br></pre><br>3.自定义实现webpack插件<br>实现一个插件的需求:打包生成的文件自动传到云服务器(假设我们已知上传到服务器的接口)<br>首先写一个基本代码了解一下，以下代码是写在一个webpack文件中</p>
-<p><pre><br>class CustomPlugin{<br>    apply(complier){<br>        complier.plugin(‘emit’,(compilation,callback)=&gt;{<br>            for(let filename in compilation.assets){<br>                let content = compilation.assets[filename].[‘_source’].children<br>                console.log(filename,content)<br>            }<br>        })<br>    }<br>}<br>module.exports = {<br>    mode:’development’,<br>    entry:’./src/index.js’,<br>    plugins:[<br>    new CustomPlugin()<br>    ]<br>}<br></pre><br>通过上面代码，我们发现我们可以拿到文件名和文件内容，如果我们再写一个函数上传，就可以实现我们的需求了</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/03/17/网易微专业-MV-组件化开发React专题-React生态-2-3-5-工程化与webpack/" data-id="ckc39jerc0017ojxq4b3q9qad" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-MV-组件化开发React专题-React生态-2-3-2-React动画" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/03/16/网易微专业-MV-组件化开发React专题-React生态-2-3-2-React动画/" class="article-date">
-  <time datetime="2020-03-16T02:58:55.000Z" itemprop="datePublished">2020-03-16</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/03/16/网易微专业-MV-组件化开发React专题-React生态-2-3-2-React动画/">网易微专业-MV-组件化开发React专题-React生态-2.3.2-React动画</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><img src="https://snakexu.github.io/images/wangyi/react/2.3.1_1.png"><br>这是一个非常不好的例子，在setInterval中每执行一次this.setState，render函数都要重新执行一次，componentDidUpdate/componentWillUpdate等都会被执行，这时候性能是非常糟糕的。如果在一些无关紧要的状态在更新的时候触发了子组件的重绘，组件的性能会更加糟糕。如果我们真的需要div的宽度变化的时候，我们也不要把div的宽度设置为一个状态，我们要真实的拿到这个dom元素，可以对代码进行一些修改<br><img src="https://snakexu.github.io/images/wangyi/react/2.3.1_2.png"><br>虽然这样我们是直接在操作DOM，并没有那么遵循React的风格，但是这种方式是老师推荐的<br>1.列表动画<br>ani.js</p>
-<p><pre><br>import React,{ Component } from ‘react’<br>import ReactDOM from ‘react-dom’<br>import PropTypes from ‘prop-types’<br>export class AnimateList extends Component{<br>    mounted = false<br>    static childContextTypes={<br>        mountStyle:PropTypes.object,<br>        unMountStyle:PropTypes.object,<br>        parent:PropTypes.object,<br>        remove:PropTypes.object,<br>    }<br>    getChildContext(){<br>        return {<br>            mountStyle:this.props.mountStyle,<br>            unMountStyle:this.props.unMountStyle,<br>            parent:this,<br>            remove:this.props.remove,<br>        }<br>    }<br>    render(){<br>        return (<br>            &lt; &gt;<br>                {this.props.children}<br>            &lt; /&gt;<br>        )<br>    }<br>}<br>export class AnimateItem extends Component{<br>    static contextTypes={<br>        mountStyle:PropTypes.object,<br>        unMountStyle:PropTypes.object,<br>        parent:PropTypes.object,<br>        remove:PropTypes.object,<br>    }<br>    unMountAnimation = ()=&gt;{<br>    }<br>    remove = (index)=&gt;{<br>        const {<br>            unMountStyle<br>        } = this.context<br>        let dom = ReactDOM.findDOMNode(this)<br>        let move = ()=&gt;{<br>            this.context.remove(index)<br>        }<br>        dom.addEventListener(‘transitionend’,move,false)<br>        for(let key in unMountStyle){<br>            dom.style[key] = unMountStyle[key]<br>        }<br>    }<br>    render(){<br>        let {<br>            render<br>        } = this.props<br>        return (<br>            &lt; &gt;<br>                {render(this.remove)}<br>                {/<em> {this.props.children} </em>/}<br>            &lt; /&gt;<br>        )<br>    }<br>    run(index){<br>        const {<br>            mountStyle,<br>            parent<br>        } = this.context<br>        let dom = ReactDOM.findDOMNode(this)<br>        // dom.style.transition = <code>0.5s ${index * 0.2}s</code><br>        dom.style.transition = parent.mounted?’0.5s’:<code>0.5s ${index * 0.2}s</code><br>        parent.mounted = parent.props.children.length === index<br>        setTimeout(()=&gt;{<br>            for(let key in mountStyle){<br>                dom.style[key] = mountStyle[key]<br>            }<br>        },0)<br>    }<br>    componentDidMount(){<br>        const {<br>            index<br>        } = this.props<br>        this.run(index)<br>    }<br>}<br></pre><br>aniIndex.js</p>
-<p><pre><br>import React from ‘react’;<br>import {<br>  AnimateItem,<br>  AnimateList<br>} from ‘./ani’<br>class App extends React.Component{<br>  constructor(props) {<br>    super(props);<br>    this.state = {<br>      list :[<br>        ‘a’,<br>        ‘b’,<br>        ‘c’,<br>        ‘d’<br>      ],<br>      value: ‘’<br>    }<br>  }<br>  render() {<br>    const {<br>      list,<br>      value<br>    } = this.state<br>    return (<br>      &lt; div&gt;<br>        &lt; input value={value} onChange={e =&gt; this.setState({value: e.target.value})}/&gt;&lt; button onClick={e =&gt; {<br>          list.push(value)<br>          this.setState({<br>            list<br>          })<br>        }}&gt;add&lt; /button&gt;<br>      &lt; AnimateList<br>        delayTime=’0.2’<br>        runTime=’0.2’<br>        mountStyle={ {<br>          marginLeft: ‘15px’<br>        } }<br>        unMountStyle={ {<br>          marginLeft: 0<br>        } }<br>        remove={(index)=&gt;{<br>            list.splice(index,1)<br>                  this.setState({<br>                    list<br>                  })<br>        }}<br>      &gt;<br>        {<br>          this.state.list.map((item,index) =&gt; &lt; AnimateItem index={index+1} key={item} render={(remove)=&gt;(<br>            &lt; p&gt;hello {item} &lt; button onClick={e =&gt; {<br>                remove(index)<br>              }}&gt;delete&lt; /button&gt; &lt; /p&gt;<br>          )}&gt;<br>          &lt; /AnimateItem&gt;)<br>        }<br>      &lt; /AnimateList&gt;<br>      &lt; /div&gt;<br>    );<br>  }<br>}<br>export default App;<br></pre><br>2.<br>2-1.推荐一个animate的css框架<br><a href="https://github.com/daneden/animate.css" target="_blank" rel="noopener">https://github.com/daneden/animate.css</a></p>
-<p><pre><br>import React,{ Component } from ‘react’<br>import ReactDOM from ‘react-dom’<br>import ‘animate.css’<br>class Animate extends Component{<br>    render(){<br>        return (<br>            &lt; div&gt;<br>                {this.props.children }<br>            &lt; /div&gt;<br>        )<br>    }<br>    componentDidMount(){<br>        const element = ReactDOM.findDOMNode(this)<br>        element.classList.add(‘animated’,’bounceOutLeft’)<br>    }<br>}<br>class App extends Component{<br>    render(){<br>        return (<br>            &lt; div&gt;<br>                &lt; Animate in=’bounceInLeft’ out=’bounceOutDown’&gt;<br>                    &lt; p&gt;hello world&lt; /p&gt;<br>                &lt; /Animate&gt;<br>            &lt; /div&gt;<br>        )<br>    }<br>}<br>export default App<br></pre><br>这里我们注意到并没有把animate的classname写在组件内部的div标签上，写在div标签上不是不可以，但是不建议这么做，因为如果我们中间需要修改类名可能会触发生命周期的一些方法，引起性能下降<br>2-2.基于react的动画框架react-spring<br><a href="https://www.react-spring.io/docs/hooks/basics" target="_blank" rel="noopener">https://www.react-spring.io/docs/hooks/basics</a></p>
-<p><pre><br>import React,{ Component } from ‘react’<br>import ReactDOM from ‘react-dom’<br>import {useSpring,animated} from ‘react-spring’<br>function App(){<br>    const props = useSpring({<br>        to:async(next,cancel)=&gt;{<br>            await next({opacity:1,color:’#ffaaee’})<br>            await next({opacity:0.5,color:’rgb(14,26,19)’})<br>            await next({marginLeft:500,color:’rgb(14,26,19)’})<br>        },<br>        from:{opacity:0,color:’red’,marginLeft:0}<br>    })<br>    return &lt; animated.div style={props}&gt;hello world&lt; /animated.div&gt;<br>}<br>export default App<br></pre><br>后面陆续讲了这个框架的不同用法，这里我没有记录，这里已经有一个开头了，希望自己可以动脑思考。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/03/16/网易微专业-MV-组件化开发React专题-React生态-2-3-2-React动画/" data-id="ckc39jera0014ojxqoqy8hkc1" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-MV-组件化开发React专题-React生态-2-3-1-路由-React-Router-原理" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/03/15/网易微专业-MV-组件化开发React专题-React生态-2-3-1-路由-React-Router-原理/" class="article-date">
-  <time datetime="2020-03-15T03:59:40.000Z" itemprop="datePublished">2020-03-15</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/03/15/网易微专业-MV-组件化开发React专题-React生态-2-3-1-路由-React-Router-原理/">网易微专业-MV-组件化开发React专题-React生态-2.3.1-路由(React-Router)原理</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.hashhistory</p>
-<p><pre><br>import React,{ Component } from ‘react’</pre></p>
-<p>class Router extends Component{<br>    render(){<br>        return (<br>            &lt; &gt;<br>            {this.props.children}<br>            &lt;/&gt;<br>        )<br>    }<br>}<br>class Route extends Component{<br>    render(){<br>        const {<br>            path,<br>            component<br>        } = this.props;<br>        let instance = null;<br>        let hash = window.location.hash.replace(‘#’,’’)<br>        if(path === hash){<br>            instance = component<br>        }<br>        return (<br>            &lt; &gt;<br>            {instance}<br>            &lt;/&gt;<br>        )<br>    }<br>}<br>const AA = ()=&gt;&lt; div&gt;aa&lt; /div&gt;<br>const BB = ()=&gt;&lt; div&gt;bb&lt; /div&gt;<br>function App(){<br>    return (<br>        &lt; div&gt;<br>            &lt; Router&gt;<br>                &lt; header&gt;<br>                    &lt; div&gt;header&lt; /div&gt;<br>                    &lt; Route path=”/aa” component={AA}/&gt;<br>                    &lt; Route path=”/bb” component={BB}/&gt;<br>                &lt; /header&gt;<br>            &lt; /Router&gt;<br>        &lt; /div&gt;<br>    )<br>}<br>export default App<br><br>开启服务之后我们在浏览器中看到，并没有像我们预想的在/aa页面中展示aa，在/bb页面中展示bb<br><img src="https://snakexu.github.io/images/wangyi/react/2.3.1_1.png"><br>这是为什么？因为我们&lt; Route path=”./aa” component={AA}/&gt;在这里 component={AA}传的是AA类本身，在调用的时候instance = component也是类本身，而不是实例；如果我们在调用的时候instance = <aa> 则是通过标签实例化了(常规实例化是通过new关键字，在虚拟DOM中是通过标签实例化的)，所以如果想页面按照我们预想的效果展示，我们需要做一些简单的修改</aa></p>
-<p><pre><br>if(path === hash){<br>    //React.createElement(component,{name:’a’,age:2},children)，即第二个可以传组件需要参数，第三个参数是子组件<br>    instance = React.createElement(component,null,null);<br>}<br></pre><br>能看出来我们对哪里进行了修改么？是class Route extends Component这个组件中的部分内容。<br>但是我们发现我们对页面路由进行修改的时候，并不是每次(即使是不存在的路由)都很好的反馈我们想要的结果，这是因为我们没有给hashhistory绑定事件。我们在页面添加一个事件</p>
-<p><pre><br>window.onhashchange = (e)=&gt;{<br>    console.log(e);<br>}<br></pre><br>控制台打印如下内容<br><img src="https://snakexu.github.io/images/wangyi/react/2.3.1_2.png"><br>从而我们知道，可以通过一个方式捕捉hash的变化，变化以后的hash是什么呢？我们可以通过loaction.hash来获取到。 每次浏览器内容发生变化，可以通过上下文(context)传递给子组件，子组件捕捉到hashhistory发生变化来控制自身的渲染与否</p>
-<p><pre><br>import React,{ Component } from ‘react’<br>import PropTypes from ‘prop-types’<br>class Router extends Component{<br>    render(){<br>        return (<br>            &lt; &gt;<br>            {this.props.children}<br>            &lt;/&gt;<br>        )<br>    }<br>}<br>class Route extends Component{<br>    constructor(props){<br>        super(props);<br>        this.state = {<br>            hash:window.location.hash<br>        }<br>    }<br>    static contextTypes = {<br>        hash: PropTypes.string<br>    }<br>    getHash(){<br>        let url = window.location.hash.replace(‘#’,’’)<br>        return url<br>    }<br>    getChildContext(){<br>        return {<br>            hash:this.getHash()<br>        }<br>    }<br>    componentDidMount(){<br>        window.onhashchange = ()=&gt;{<br>            this.setState({<br>                hash:this.getHash()<br>            })<br>        }<br>    }<br>    render(){<br>        const {<br>            path,<br>            component<br>        } = this.props;<br>        let instance = null;<br>        //let hash = window.location.hash.replace(‘#’,’’)<br>        const {<br>            hash<br>        } = this.context<br>        if(path === hash){<br>            //React.createElement(component,{name:’a’,age:2},children)，即第二个可以传组件需要参数，第三个参数是子组件<br>            instance = React.createElement(component,null,null);<br>        }<br>        return (<br>            &lt; &gt;<br>            {instance}<br>            &lt;/&gt;<br>        )<br>    }<br>}<br>const AA = ()=&gt;&lt; div&gt;aa&lt; /div&gt;<br>const BB = ()=&gt;&lt; div&gt;bb&lt; /div&gt;<br>function App(){<br>    return (<br>        &lt; div&gt;<br>            &lt; Router&gt;<br>                &lt; header&gt;<br>                    &lt; div&gt;header&lt; /div&gt;<br>                    &lt; Route path=”/aa” component={AA}/&gt;<br>                    &lt; Route path=”/bb” component={BB}/&gt;<br>                &lt; /header&gt;<br>            &lt; /Router&gt;<br>        &lt; /div&gt;<br>    )<br>}<br>export default App<br></pre><br>经过一番改造，页面内容在我们修改地址栏地址的时候发生了变化。但是如果地址栏后面加上类似于?a=1的参数，页面就不能按照我们预想的反馈了，老师在这里对我们的要求是，尽量自己去实现获取参数等功能<br>2.browserhistory</p>
-<p><pre><br>import React,{ Component } from ‘react’<br>import PropTypes from ‘prop-types’<br>class Router extends Component{<br>    constructor(props){<br>        super(props);<br>        this.state = {<br>            hash:this.getHash()<br>        }<br>        this.history = window.history<br>    }<br>    static childContextTypes = {<br>        hash: PropTypes.string,<br>    }<br>    getHash(){<br>        let url = window.location.pathname;<br>        return url<br>    }<br>    getChildContext(){<br>        return {<br>            hash:this.state.hash<br>        }<br>    }<br>    componentDidMount(){<br>        this.history.route = (name) =&gt;{<br>            this.setState({<br>                hash:<code>${name}</code><br>            })<br>            window.history.pushState(null,null,name);//只是改变页面状态，没有做任何请求<br>        }<br>    }<br>    render(){<br>        return (<br>            &lt; &gt;<br>            {this.props.children}<br>            &lt;/&gt;<br>        )<br>    }<br>}<br>class Route extends Component{<br>    static contextTypes = {<br>        hash: PropTypes.string<br>    }<br>    render(){<br>        const {<br>            path,<br>            component<br>        } = this.props;<br>        let instance = null;<br>        const {<br>            hash<br>        } =this.context<br>        if(path === hash){<br>            //React.createElement(component,{name:’a’,age:2},children)，即第二个可以传组件需要参数，第三个参数是子组件<br>            instance = React.createElement(component,null,null);<br>        }<br>        return (<br>            &lt; &gt;<br>            {instance}<br>            &lt;/&gt;<br>        )<br>    }<br>}</pre></p>
-<p>const AA = ()=&gt;&lt; div&gt;aa&lt; /div&gt;<br>const BB = ()=&gt;&lt; div&gt;bb&lt; /div&gt;</p>
-<p>function App(){<br>    return (<br>        &lt; div&gt;<br>            &lt; Router&gt;<br>                &lt; header&gt;<br>                    &lt; div&gt;header&lt; /div&gt;<br>                    &lt; Route path=”/aa” component={AA}/&gt;<br>                    &lt; Route path=”/bb” component={BB}/&gt;<br>                &lt; /header&gt;<br>            &lt; /Router&gt;<br>        &lt; /div&gt;<br>    )<br>}<br>export default App<br><br>这里我们基本了解了browserhistory的实现原理，在这里我们发现，即使在url输入参数?a=1页面也能正常显示，是因为location.pathname是获取的不带参数的<br>3.简单看一下reactrouter的API，这里看的是reactrouter4的版本 <a href="https://reacttraining.com/react-router/web/guides/quick-start" target="_blank" rel="noopener">https://reacttraining.com/react-router/web/guides/quick-start</a><br>4.服务端渲染<br>通过配合服务端代码了解如何区分前后端路由，了解为何browserhistory需要后端支持。<br>4-1.如何区分前后端路由<br>如果url中既包含前端路由又包含后端路由，我们通常看到node端路由会有app.use(express为例)等指定路由，那么app.use中指定的就是后端路由<br>4-2.为何browserhistory需要后端支持：如果在后端路由拦截中找不到确定的前端路由会造成页面404，这时候就需要后端配合指定页面前端路由，或者找不到页面的指定app.use(*)等。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/03/15/网易微专业-MV-组件化开发React专题-React生态-2-3-1-路由-React-Router-原理/" data-id="ckc39jerb0016ojxq6sdfg9cn" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/03/18/网易微专业-MV-组件化开发React专题-React生态-2-4-1-实现React/" data-id="ckchm0rd200215ajh6omrfvjo" class="article-share-link">Share</a>
       
       
     </footer>
@@ -987,7 +1154,7 @@ ReactDOM.render(< App/>,document.getElementById('root'))
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ECMAScript新特性/">ECMAScript新特性</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript异步编程/">JavaScript异步编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TypeScript语言/">TypeScript语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-babel/">react babel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/函数式编程/">函数式编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/函数式编程范式/">函数式编程范式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端路由/">前端路由</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/微信小程序/">微信小程序</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/手写Promise源码/">手写Promise源码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/拉勾/">拉勾</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/正则/">正则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业/">网易微专业</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-Flutter/">网易微专业 Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-node/">网易微专业 node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ECMAScript新特性/">ECMAScript新特性</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript异步编程/">JavaScript异步编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TypeScript语言/">TypeScript语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-babel/">react babel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/函数式编程/">函数式编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/函数式编程范式/">函数式编程范式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端路由/">前端路由</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工程化/">工程化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/微信小程序/">微信小程序</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/手写Promise源码/">手写Promise源码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/拉勾/">拉勾</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/拉勾，自动化构建/">拉勾，自动化构建</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/正则/">正则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业/">网易微专业</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-Flutter/">网易微专业 Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-node/">网易微专业 node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
     </div>
   </div>
 
@@ -997,7 +1164,7 @@ ReactDOM.render(< App/>,document.getElementById('root'))
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/ECMAScript新特性/" style="font-size: 10px;">ECMAScript新特性</a> <a href="/tags/JavaScript异步编程/" style="font-size: 10px;">JavaScript异步编程</a> <a href="/tags/TypeScript语言/" style="font-size: 10px;">TypeScript语言</a> <a href="/tags/react-babel/" style="font-size: 10px;">react babel</a> <a href="/tags/函数式编程/" style="font-size: 10px;">函数式编程</a> <a href="/tags/函数式编程范式/" style="font-size: 10px;">函数式编程范式</a> <a href="/tags/前端路由/" style="font-size: 10px;">前端路由</a> <a href="/tags/微信小程序/" style="font-size: 10px;">微信小程序</a> <a href="/tags/手写Promise源码/" style="font-size: 10px;">手写Promise源码</a> <a href="/tags/拉勾/" style="font-size: 20px;">拉勾</a> <a href="/tags/数据结构/" style="font-size: 13.33px;">数据结构</a> <a href="/tags/正则/" style="font-size: 10px;">正则</a> <a href="/tags/算法/" style="font-size: 20px;">算法</a> <a href="/tags/网易微专业/" style="font-size: 10px;">网易微专业</a> <a href="/tags/网易微专业-Flutter/" style="font-size: 10px;">网易微专业 Flutter</a> <a href="/tags/网易微专业-node/" style="font-size: 10px;">网易微专业 node</a> <a href="/tags/设计模式/" style="font-size: 16.67px;">设计模式</a>
+      <a href="/tags/ECMAScript新特性/" style="font-size: 10px;">ECMAScript新特性</a> <a href="/tags/JavaScript异步编程/" style="font-size: 10px;">JavaScript异步编程</a> <a href="/tags/TypeScript语言/" style="font-size: 10px;">TypeScript语言</a> <a href="/tags/react-babel/" style="font-size: 10px;">react babel</a> <a href="/tags/函数式编程/" style="font-size: 10px;">函数式编程</a> <a href="/tags/函数式编程范式/" style="font-size: 10px;">函数式编程范式</a> <a href="/tags/前端路由/" style="font-size: 10px;">前端路由</a> <a href="/tags/工程化/" style="font-size: 10px;">工程化</a> <a href="/tags/微信小程序/" style="font-size: 10px;">微信小程序</a> <a href="/tags/手写Promise源码/" style="font-size: 10px;">手写Promise源码</a> <a href="/tags/拉勾/" style="font-size: 20px;">拉勾</a> <a href="/tags/拉勾，自动化构建/" style="font-size: 10px;">拉勾，自动化构建</a> <a href="/tags/数据结构/" style="font-size: 12.5px;">数据结构</a> <a href="/tags/正则/" style="font-size: 10px;">正则</a> <a href="/tags/算法/" style="font-size: 17.5px;">算法</a> <a href="/tags/网易微专业/" style="font-size: 10px;">网易微专业</a> <a href="/tags/网易微专业-Flutter/" style="font-size: 10px;">网易微专业 Flutter</a> <a href="/tags/网易微专业-node/" style="font-size: 10px;">网易微专业 node</a> <a href="/tags/设计模式/" style="font-size: 15px;">设计模式</a>
     </div>
   </div>
 
@@ -1006,7 +1173,7 @@ ReactDOM.render(< App/>,document.getElementById('root'))
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
     </div>
   </div>
 
@@ -1019,23 +1186,23 @@ ReactDOM.render(< App/>,document.getElementById('root'))
       <ul>
         
           <li>
+            <a href="/2020/07/08/拉勾-自动化构建/">拉勾-自动化构建</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/03/拉勾-脚手架工具/">拉勾-脚手架工具</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/03/拉勾-工程化概述/">拉勾-工程化概述</a>
+          </li>
+        
+          <li>
             <a href="/2020/06/28/拉勾-JavaScript性能优化/">拉勾-JavaScript性能优化</a>
           </li>
         
           <li>
             <a href="/2020/06/26/拉勾-TypeScript语言/">拉勾-TypeScript语言</a>
-          </li>
-        
-          <li>
-            <a href="/2020/06/21/拉勾-ECMAScript新特性/">拉勾-ECMAScript新特性</a>
-          </li>
-        
-          <li>
-            <a href="/2020/06/20/网易微专业-移动端APP开发工程师-微信小程序-3-1-1-创建微信小程序项目/">网易微专业-移动端APP开发工程师-微信小程序-3.1.1-创建微信小程序项目</a>
-          </li>
-        
-          <li>
-            <a href="/2020/06/18/拉勾-手写Promise源码/">拉勾-手写Promise源码</a>
           </li>
         
       </ul>

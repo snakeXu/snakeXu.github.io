@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>拉勾-自动化构建 | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1.自动化构建简介(一切重复工作本应自动化)上图中的自动化构建是在自动化构建工作流，作用是运行环境兼容带来的问题，使用提高效率的语法、规范和标准。例如ECMAScript Next、scss、模版引擎等这些好用的工具都不能直接在浏览器中使用，自动化构建工具就可以派上用场了，可以把这些不被支持的代码特性转换为可支持的代码，提高编码效率2.自动化构建初体验从上面的直接编写css代码到下图用scss编写">
+<meta name="keywords" content="拉勾，自动化构建">
+<meta property="og:type" content="article">
+<meta property="og:title" content="拉勾-自动化构建">
+<meta property="og:url" content="http://yoursite.com/2020/07/08/拉勾-自动化构建/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="1.自动化构建简介(一切重复工作本应自动化)上图中的自动化构建是在自动化构建工作流，作用是运行环境兼容带来的问题，使用提高效率的语法、规范和标准。例如ECMAScript Next、scss、模版引擎等这些好用的工具都不能直接在浏览器中使用，自动化构建工具就可以派上用场了，可以把这些不被支持的代码特性转换为可支持的代码，提高编码效率2.自动化构建初体验从上面的直接编写css代码到下图用scss编写">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_2/automation/1_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_2/automation/2_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_2/automation/2_2.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_2/automation/7_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_2/automation/7_2.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_2/automation/7_3.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_2/automation/7_4.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_2/automation/7_5.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_2/automation/7_6.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_2/automation/9_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_2/automation/10_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_2/automation/11_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_2/automation/13_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_2/automation/15_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_2/automation/16_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_2/automation/17_1.png">
+<meta property="og:updated_time" content="2020-07-11T09:35:28.603Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="拉勾-自动化构建">
+<meta name="twitter:description" content="1.自动化构建简介(一切重复工作本应自动化)上图中的自动化构建是在自动化构建工作流，作用是运行环境兼容带来的问题，使用提高效率的语法、规范和标准。例如ECMAScript Next、scss、模版引擎等这些好用的工具都不能直接在浏览器中使用，自动化构建工具就可以派上用场了，可以把这些不被支持的代码特性转换为可支持的代码，提高编码效率2.自动化构建初体验从上面的直接编写css代码到下图用scss编写">
+<meta name="twitter:image" content="https://snakexu.github.io/images/lagou/part_2/automation/1_1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-拉勾-自动化构建" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/07/08/拉勾-自动化构建/" class="article-date">
+  <time datetime="2020-07-07T19:48:07.000Z" itemprop="datePublished">2020-07-08</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      拉勾-自动化构建
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.自动化构建简介(一切重复工作本应自动化)<br><img src="https://snakexu.github.io/images/lagou/part_2/automation/1_1.png"><br>上图中的自动化构建是在自动化构建工作流，作用是运行环境兼容带来的问题，使用提高效率的语法、规范和标准。例如ECMAScript Next、scss、模版引擎等这些好用的工具都不能直接在浏览器中使用，自动化构建工具就可以派上用场了，可以把这些不被支持的代码特性转换为可支持的代码，提高编码效率<br>2.自动化构建初体验<br><img src="https://snakexu.github.io/images/lagou/part_2/automation/2_1.png"><br>从上面的直接编写css代码到下图用scss编写再构建成普通css<br><img src="https://snakexu.github.io/images/lagou/part_2/automation/2_2.png"><br>我们可以按照上面两张图来先创建一个项目，用css编写，再删除css文件，编写scss文件，安装sass模块(yarn add scss –dev)，安装完成后，在node_modules文件夹里就能看到.bin目录，这样我们就可以用sass编译我们刚刚写到scss文件了，在命令行中输入.\node_modules\.bin\sass，执行完这个命令就会看到这条命令的用法，即.\node_modules\.bin\sass 输入路径 输出路径，执行这条命令之后，就可以看到编译过后的scss文件-&gt;css文件，并且文件中还帮我们做了sourcemap。但是如果在开发过程中我们经常这样输入命令，就显得有些麻烦，而且别人也可能不知道你的项目有哪些命令，怎么用这些命令，那么NPM Scripts 就是用来解决这些问题的，在package.json文件中添加如下</p>
+<p><pre><br>“scripts”: {<br>    “build”: “sass scss/main.scss css/style.css”<br>},<br></pre><br>scripts 可以自动发现node_modules文件夹中的执行命令，我们不用再写完整路径，然后就可以通过npm/yarn启动这个命令。这里我们再安装一个browser-sync的模块来启动测试服务器运行我们的项目，添加启动服务器的命令</p>
+<p><pre><br>“scripts”: {<br>    “build”: “sass scss/main.scss css/style.css”,<br>    “serve”: “browser-sync .”//认真的说这条才是启动服务器的命令<br>},<br></pre><br>这时执行yarn serve命令就可以启动服务打开浏览器，但是我们可以添加preserve命令帮我们先执行build命令，这样更加简化项目执行</p>
+<p><pre><br>“scripts”: {<br>    “build”: “sass scss/main.scss css/style.css –watch”,//–watch监听文件的变化，一旦发生变化就自动编译<br>    “preserve”:”yarn build”,//自动在serve执行之前执行<br>    “serve”: “browser-sync .”//认真的说这条才是启动服务器的命令<br>},<br></pre><br>当我们加了–watch之后再启动就发现，sass就阻塞在了监听的地方，去等待文件发生变化，此时我们需要借助npm-run-all去同时执行多个任务，yarn add npm-run-all –dev 安装这个模块</p>
+<p><pre><br>“scripts”: {<br>    “build”: “sass scss/main.scss css/style.css –watch”,<br>    “serve”: “browser-sync .”,<br>    “start”: “run-p build serve”//通过run-p去同时执行build和serve，源于安装了npm-run-all<br>},<br></pre><br>再次升级</p>
+<p><pre><br>“scripts”: {<br>    “build”: “sass scss/main.scss css/style.css –watch”,<br>    “serve”: “browser-sync . –files \”css/*\””,//–files参数让browser-sync去监听项目文件下的一些变化，一旦文件发生变化，自动同步到浏览器<br>    “start”: “run-p build serve”<br>},<br></pre><br>3.常用的自动化构建工具<br>目前市面上使用最多的自动化构建工具是grunt/gulp/fis等<br>grunt:出现最早，插件生态非常完善，由于工作过程是基于临时文件去实现的(磁盘读写)，所以构建速度比较慢<br>gulp:基于内存，构建速度相对较快，默认支持同时执行多个任务，插件生态比较完善<br>fis:百度内部使用，后来开源，把项目中典型的需求基本都集成在内部<br>4.grunt的基本使用<br>初始化一个项目，安装grunt，添加gruntfile.js文件，这个文件是grunt的入口文件，用于去定义需要grunt自动执行的任务，需要导出一个函数，此函数接收一个grunt的形参，内部提供一些创建任务时可以用到的API</p>
+<p><pre><br>module.exports = grunt =&gt; {<br>    grunt.registerTask(‘foo’,()=&gt;{//参数 任务名字，任务函数-&gt;任务发生时自动执行的函数<br>        console.log(‘hello grunt’)<br>    })<br>    grunt.registerTask(‘foo’,任务描述(出现在帮助信息中),()=&gt;{<br>        console.log(‘other task’)<br>    })<br>    // grunt.registerTask(‘default’,()=&gt;{//如果注册名字为default，那么将成为grunt的默认任务<br>        // console.log(‘default task’)<br>    // })<br>    grunt.registerTask(‘default’,[‘foo’,’bar’])//一般用default去映射一些其他任务，这里把foo和bar任务串联到了一起<br>    // 这里grunt默认支持同步模式，如果想使用异步操作，要用到this.async得到一个回调函数，在异步操作完成后调用这个回调函数标识一下这个任务已经完成<br>    // grunt.registerTask(‘async-task’,()=&gt;{<br>        // setTimeout(()=&gt;{<br>            // console.log(‘async task working’)<br>        // },1000)<br>    // })<br>    grunt.registerTask(‘async-task’,function (){<br>        const done = this.async()<br>        setTimeout(()=&gt;{<br>            console.log(‘async task working’)<br>            done()//标识一下这个任务已经完成了<br>        },1000)<br>    })<br>}<br></pre><br>然后运行yarn grunt foo 运行foo任务，可以运行grunt –help 去得到帮助信息。<br>5.grunt标记任务失败</p>
+<p><pre><br>module.exports = grunt =&gt; {<br>    grunt.registerTask(‘bad’,()=&gt;{<br>        console.log(‘bad working’)<br>        return false //构建任务失败的标记<br>        //如果当前任务在任务列表中，当前任务执行失败，那么列表中后续任务都不会再实现<br>    })<br>    grunt.registerTask(‘foo’,()=&gt;{<br>        console.log(‘foo task’)<br>    })<br>    grunt.registerTask(‘bar’,()=&gt;{<br>        console.log(‘bar task’)<br>    })<br>    grunt.registerTask(‘default’,[‘foo’,’bad’,’bar’])//bad执行失败了，bar就不会运行<br>}<br></pre><br>正常执行yarn grunt default 命令，上面的bar任务是不会执行的，但是命令行也提示我们，如果执行yarn grunt default –force，bar任务是可以执行的<br>标记异步任务执行失败</p>
+<p><pre><br>module.exports = grunt =&gt; {<br>    grunt.registerTask(‘bad-async’,function (){<br>        const done = this.async()<br>        setTimeout(()=&gt;{<br>            console.log(‘bad async’)<br>            done(false)<br>        },1000)<br>    })<br>}<br></pre><br>6.grunt的配置方法</p>
+<p><pre><br>module.exports = grunt =&gt; {<br>  // grunt.initConfig() 用于为任务添加一些配置选项<br>  grunt.initConfig({<br>    // 键一般对应任务的名称<br>    // 值可以是任意类型的数据<br>    foo: {<br>      bar: ‘baz’<br>    }<br>  })<br>  grunt.registerTask(‘foo’, () =&gt; {<br>    // 任务中可以使用 grunt.config() 获取配置<br>    console.log(grunt.config(‘foo’))<br>    // 如果属性值是对象的话，config 中可以使用点的方式定位对象中属性的值<br>    console.log(grunt.config(‘foo.bar’))<br>  })<br>}<br></pre><br>7.grunt多目标任务<br><img src="https://snakexu.github.io/images/lagou/part_2/automation/7_1.png"></p>
+<p><pre><br>module.exports = grunt =&gt; {<br>    // 多目标模式，可以让任务根据配置形成多个子任务<br>    grunt.initConfig({//配置多任务的目标<br>      build: {//必须是一个对象<br>          css:’1’,//每一个属性的名称就是我们的目标名称<br>          js: ‘2’<br>        }<br>    })<br>    grunt.registerMultiTask(‘build’, function () {<br>        console.log(<code>build task</code>)<br>    })<br>}<br></pre><br><img src="https://snakexu.github.io/images/lagou/part_2/automation/7_2.png"><br>通过yarn grunt build:css 可以只运行指定目标</p>
+<p><pre><br>module.exports = grunt =&gt; {<br>    grunt.initConfig({<br>        build: {<br>            css:’1’,<br>            js: ‘2’<br>        }<br>    })<br>    grunt.registerMultiTask(‘build’, function () {<br>       console.log(<code>task: build, target: ${this.target}, data: ${this.data}</code>)<br>    })<br>}<br></pre><br>重新用yarn grunt build:css 命令执行上面代码，可以得到<br><img src="https://snakexu.github.io/images/lagou/part_2/automation/7_3.png"><br>在initConfig每一个被指定的属性都会成为一个目标，除了options</p>
+<p><pre><br>module.exports = grunt =&gt; {<br>    grunt.initConfig({<br>        build: {<br>            options:{<br>                foo:’bar’,<br>            },<br>            css:’1’,<br>            js: ‘2’<br>        }<br>    })<br>    grunt.registerMultiTask(‘build’, function () {<br>       console.log(<code>task: build, target: ${this.target}, data: ${this.data}</code>)<br>    })<br>}<br></pre><br>再次执行yarn grunt build 命令<br><img src="https://snakexu.github.io/images/lagou/part_2/automation/7_4.png"><br>可以看到并没有一个target叫options，这个options可以作为一个配置选项出现</p>
+<p><pre><br>module.exports = grunt =&gt; {<br>    grunt.initConfig({<br>        build: {<br>            options:{<br>                foo:’bar’,<br>            },<br>            css:’1’,<br>            js: ‘2’<br>        }<br>    })<br>    grunt.registerMultiTask(‘build’, function () {<br>        console.log(this.options())<br>        console.log(<code>task: build, target: ${this.target}, data: ${this.data}</code>)<br>    })<br>}<br></pre><br>执行结果如下<br><img src="https://snakexu.github.io/images/lagou/part_2/automation/7_5.png"></p>
+<p><pre><br>module.exports = grunt =&gt; {<br>    grunt.initConfig({<br>        build: {<br>            options:{<br>                foo:’bar’,<br>            },<br>            css:{<br>                options: {<br>                    foo: ‘baz’<br>                }<br>            },<br>            js: ‘2’<br>        }<br>    })<br>    grunt.registerMultiTask(‘build’, function () {<br>        console.log(this.options())<br>        console.log(<code>task: build, target: ${this.target}, data: ${this.data}</code>)<br>    })<br>}<br></pre><br><img src="https://snakexu.github.io/images/lagou/part_2/automation/7_6.png"><br>8.Grunt插件的使用<br>插件机制是grunt的核心<br>使用一个插件的大体过程就是首先使用npm安装插件，再到gruntfile中载入这个插件提供的一些任务，最后根据这些插件的文档完成相关的配置选项。这里我们用grunt-contrib-clean来演示，这个插件用来清除项目当中产生的一些临时文件<br>首先安装 yarn add grunt-contrib-clean</p>
+<p><pre><br>module.exports = grunt =&gt; {<br>  grunt.loadNpmTasks(‘grunt-contrib-clean’)<br>}<br></pre><br>运行yarn grunt clean，控制台会打印错误信息:clean任务没有配置对应目标，我们需要initConfig去配置不同的目标</p>
+<p><pre><br>module.exports = grunt =&gt; {<br>  grunt.initConfig({<br>    clean: {<br>      temp: ‘temp/*<em>‘ //temp/app.js temp/</em>.txt 等都是支持的<br>    }<br>  })<br>  grunt.loadNpmTasks(‘grunt-contrib-clean’)<br>}<br></pre><br>9.Grunt常用插件及总结<br>9-1.grunt-sass<br>grunt官方也提供了一个sass插件，但是这个模块需要本机安装sass环境，使用起来不是很方便。grunt-sass是一个npm的模块，在内部是通过npm的形式去依赖sass，grunt-sass需要一个sass模块的支持，这里我们用grunt官方提供的sass模块，yarn add grunt-sass sass –dev</p>
+<p><pre><br>module.exports = grunt =&gt; {<br>    grunt.initConfig({<br>        sass: {<br>              main: {<br>                  files: {<br>                      ‘dist/css/main.css’ : ‘src/scss/main.scss’<br>                  }<br>              }<br>        },<br>    })<br>    grunt.loadNpmTasks(‘grunt-sass’)<br>}<br></pre><br><img src="https://snakexu.github.io/images/lagou/part_2/automation/9_1.png"><br>implementation是用来指定在grunt-sass中用哪一个模块去处理sass的编译</p>
+<p><pre><br>const sass = require(‘sass’)<br>module.exports = grunt =&gt; {<br>    grunt.initConfig({<br>        sass: {<br>            options: {<br>                sourceMap: true,<br>                implementation: sass //更多选项可以去grunt-sass官方文档查看<br>            },<br>              main: {<br>                  files: {<br>                      ‘dist/css/main.css’ : ‘src/scss/main.scss’<br>                  }<br>              }<br>        },<br>    })<br>    grunt.loadNpmTasks(‘grunt-sass’)<br>}<br></pre><br>9-2.grunt-babel<br>安装 yarn add grunt-babel @babel-core @babel/preset-env –dev ，安装之后又需要 loadNpmTasks 去加载任务，随着安装的插件越来越多，社区中有一个模块可以减少loadNpmTasks的使用。同样也需要我们安装一下 yarn add load-grunt-tasks –dev </p>
+<p><pre><br>const sass = require(‘sass’)<br>const loadGruntTasks = require(‘load-grunt-tasks’)<br>module.exports = grunt =&gt; {<br>    grunt.initConfig({<br>        sass: {<br>            options: {<br>                sourceMap: true,<br>                implementation: sass //更多选项可以去grunt-sass官方文档查看<br>            },<br>              main: {<br>                  files: {<br>                      ‘dist/css/main.css’ : ‘src/scss/main.scss’<br>                  }<br>              }<br>        },<br>        babel: {<br>            options: {<br>                sourceMap: true,<br>                presets: [‘@babel/preset-env’]<br>            },<br>              main: {<br>                  files: {<br>                      ‘dist/js/app.js’ : ‘src/js/app.js’<br>                  }<br>              }<br>        },<br>    })<br>    // grunt.loadNpmTasks(‘grunt-sass’)<br>    loadGruntTasks(grunt) // 自动加载grunt所有的插件任务<br>}<br></pre><br>9-3.grunt-contrib-watch<br>文件修改完之后自动编译，安装 yarn add grunt-contrib-watch –dev </p>
+<p><pre><br>const sass = require(‘sass’)<br>const loadGruntTasks = reuqire(‘load-grunt-tasks’)<br>module.exports = grunt =&gt; {<br>    grunt.initConfig({<br>        sass: {<br>            options: {<br>                sourceMap: true,<br>                implementation: sass //更多选项可以去grunt-sass官方文档查看<br>            },<br>              main: {<br>                  files: {<br>                      ‘dist/css/main.css’ : ‘src/scss/main.scss’<br>                  }<br>              }<br>        },<br>        babel: {<br>            options: {<br>                sourceMap: true,<br>                presets: [‘@babel/preset-env’]<br>            },<br>              main: {<br>                  files: {<br>                      ‘dist/js/app.js’ : ‘src/js/app.js’<br>                  }<br>              }<br>        },<br>        watch: {<br>            js: {<br>                files: [‘src/js/<em>.js’],<br>                tasks: [‘babel’]<br>            },<br>            js: {<br>                files: [‘src/scss/</em>.scss’],<br>                tasks: [‘sass’]<br>            },<br>        }<br>    })<br>    // grunt.loadNpmTasks(‘grunt-sass’)<br>    loadGruntTasks(grunt) // 自动加载grunt所有的插件任务<br>}<br></pre><br>由于watch只会在文件发生改变的时候才执行，所以我们增加default任务，保证启动之前先执行一次css、js任务</p>
+<p><pre><br>const sass = require(‘sass’)<br>const loadGruntTasks = reuqire(‘load-grunt-tasks’)<br>module.exports = grunt =&gt; {<br>    grunt.initConfig({<br>        sass: {<br>            options: {<br>                sourceMap: true,<br>                implementation: sass //更多选项可以去grunt-sass官方文档查看<br>            },<br>              main: {<br>                  files: {<br>                      ‘dist/css/main.css’ : ‘src/scss/main.scss’<br>                  }<br>              }<br>        },<br>        babel: {<br>            options: {<br>                sourceMap: true,<br>                presets: [‘@babel/preset-env’]<br>            },<br>              main: {<br>                  files: {<br>                      ‘dist/js/app.js’ : ‘src/js/app.js’<br>                  }<br>              }<br>        },<br>        watch: {<br>            js: {<br>                files: [‘src/js/<em>.js’],<br>                tasks: [‘babel’]<br>            },<br>            js: {<br>                files: [‘src/scss/</em>.scss’],<br>                tasks: [‘sass’]<br>            },<br>        }<br>    })<br>    // grunt.loadNpmTasks(‘grunt-sass’)<br>    loadGruntTasks(grunt) // 自动加载grunt所有的插件任务<br>    grunt.registerTasks(‘default’,[‘css’,’js’,’watch’])<br>}<br></pre><br>10.Gulp的基本使用<br> Gulp作为当下最流行的构建系统，其核心特点就是高效、易用。使用gulp的过程非常简单，大体来说就是现在项目中安装一个gulp的开发依赖，然后在项目的根目录，也就是package.json所在目录去添加gulpfile.js用于去编写一些构建任务<br> <img src="https://snakexu.github.io/images/lagou/part_2/automation/10_1.png"><br>报错是因为最新gulp取消了同步代码模式，约定每个任务都必须是个异步任务<br>纠正上面的问题</p>
+<p><pre><br>exports.foo = done =&gt; {<br>  console.log(‘foo task working~’)<br>  done() // 标识任务执行完成<br>}<br>// default 是默认任务<br>// 在运行是可以省略任务名参数<br>exports.default = done =&gt; {<br>  console.log(‘default task working~’)<br>  done()<br>}<br></pre><br>在gulp4.0以前我们去注册gulp任务是要通过gulp模块中的一个方法去实现</p>
+<p><pre><br>// v4.0 之前需要通过 gulp.task() 方法注册任务<br>const gulp = require(‘gulp’)<br>gulp.task(‘bar’, done =&gt; {<br>  console.log(‘bar task working~’)<br>  done()<br>})<br></pre><br>11.Gulp的组合任务<br> <pre><br>const { series, parallel } = require(‘gulp’)<br>const task1 = done =&gt; {<br>  setTimeout(() =&gt; {<br>    console.log(‘task1 working~’)<br>    done()<br>  }, 1000)<br>}<br>const task2 = done =&gt; {<br>  setTimeout(() =&gt; {<br>    console.log(‘task2 working~’)<br>    done()<br>  }, 1000)<br>}<br>const task3 = done =&gt; {<br>  setTimeout(() =&gt; {<br>    console.log(‘task3 working~’)<br>    done()<br>  }, 1000)<br>}<br>// 让多个任务按照顺序依次执行<br>exports.foo = series(task1, task2, task3)<br>// 让多个任务同时执行<br>exports.bar = parallel(task1, task2, task3)<br></pre><br><img src="https://snakexu.github.io/images/lagou/part_2/automation/11_1.png"><br>12.Gulp的异步任务<br>Gulp中的任务都是异步任务，异步任务在被调用的时候是无法明确是否完成的，都是在函数内部通过函数回调/事件方式通知外部完成。在gulp中也有这个问题，也有很多解决方式。我们想到的解决方式一，也是通过回调的方式去解决</p>
+<p><pre><br>exports.callback = done =&gt; {<br>  console.log(‘callback task’)<br>  done()<br>}<br>exports.callback_error = done =&gt; {<br>  console.log(‘callback task’)<br>  done(new Error(‘task failed’))// 如果发生错误，错误优先<br>}<br></pre><br>方案二，通过promise</p>
+<p><pre><br>exports.promise = () =&gt; {<br>  console.log(‘promise task’)<br>  return Promise.resolve() //resolve中不要写东西，gulp会忽略这些东西<br>}<br>exports.promise_error = () =&gt; {<br>  console.log(‘promise task’)<br>  return Promise.reject(new Error(‘task failed’))//如果遇到失败任务，gulp同样会不再执行后面的所有任务<br>}<br></pre><br>方案三，async/await</p>
+<p><pre><br>const timeout = time =&gt; {<br>  return new Promise(resolve =&gt; {<br>    setTimeout(resolve, time)<br>  })<br>}<br>exports.async = async () =&gt; {<br>  await timeout(1000)<br>  console.log(‘async task’)<br>}<br></pre><br>方案四，stream</p>
+<p><pre><br>const fs = require(‘fs’)<br>exports.stream = () =&gt; {<br>  const read = fs.createReadStream(‘yarn.lock’)<br>  const write = fs.createWriteStream(‘a.txt’)<br>  read.pipe(write)<br>  return read<br>}<br></pre><br>stream都有end事件，任务完成会触发stream的end事件，从而gulp知道任务完成，简单模拟一下就是</p>
+<p><pre><br>exports.stream = done =&gt; {<br>  const read = fs.createReadStream(‘yarn.lock’)<br>  const write = fs.createWriteStream(‘a.txt’)<br>  read.pipe(write)<br>  read.on(‘end’, () =&gt; {<br>    done()<br>  })<br>}<br></pre><br>13.Gulp构建过程核心工作原理<br>我们一个普通文件的处理过程大致如下<br><img src="https://snakexu.github.io/images/lagou/part_2/automation/13_1.png"><br>通过对node底层API去模拟实现这样一个过程</p>
+<p><pre><br>const fs = require(‘fs’)<br>const { Transform } = require(‘stream’)<br>exports.default = () =&gt; {<br>  // 文件读取流<br>  const readStream = fs.createReadStream(‘normalize.css’)<br>  // 文件写入流<br>  const writeStream = fs.createWriteStream(‘normalize.min.css’)<br>  // 文件转换流<br>  const transformStream = new Transform({<br>    // 核心转换过程<br>    transform: (chunk, encoding, callback) =&gt; {<br>      const input = chunk.toString()<br>      //替换掉代码中的css注释<br>      const output = input.replace(/\s+/g, ‘’).replace(/\/*.+?*\//g, ‘’)<br>      callback(null, output)<br>    }<br>  })<br>  return readStream<br>    .pipe(transformStream) // 转换<br>    .pipe(writeStream) // 写入<br>}</pre></p>
+<p><br>14.Gulp文件操作API<br>创建构建任务的流程：通过src方法去创建一个读取流，再借助插件实现的转换方法来实现文件的加工，再通过gulp提供的dest方法去创建一个写入流</p>
+<p><pre><br>const { src, dest } = require(‘gulp’)<br>const cleanCSS = require(‘gulp-clean-css’)//压缩css代码<br>const rename = require(‘gulp-rename’)<br>exports.default = () =&gt; {<br>  return src(‘src/*.css’)<br>    .pipe(cleanCSS())<br>    .pipe(rename({ extname: ‘.min.css’ }))//指定重命名的扩展名<br>    .pipe(dest(‘dist’))<br>}<br></pre><br>15.Gulp案例-样式编译<br>首先准备一个需要自动化构建的项目<br><img src="https://snakexu.github.io/images/lagou/part_2/automation/15_1.png"><br>上面项目目录中public是不需要加工可以直接打包的内容；src放开发阶段代码，这个目录下所有内容都会被构建，里面包含js、scss代码、项目图片(打包的时候压缩删除一些不必要的图片信息)。首先安装gulp，然后创建gulpfile.js文件</p>
+<p><pre><br>const { src, dest } = require(‘gulp’)<br>const style = () =&gt; {<br>  return src(‘src/assets/styles/*.scss’)<br>    .pipe(dest(‘dist’))<br>}<br>module.exports = {<br>  style<br>}<br></pre><br>执行yarn gulp style ，可以看到多出了dist目录，但是我们看到dist目录下的文件不能按照我们src目录输出，丢失了原来的目录结构，我们可以</p>
+<p><pre><br>const { src, dest } = require(‘gulp’)<br>const style = () =&gt; {<br>  return src(‘src/assets/styles/*.scss’, { base: ‘src’ })// base保存了目录的基准结构<br>    .pipe(dest(‘dist’))<br>}<br>module.exports = {<br>  style<br>}<br></pre><br>这里我们还没有加文件转换，我们安装 yarn add gulp-sass –dev ，安装开发依赖</p>
+<p><pre><br>const { src, dest } = require(‘gulp’)<br>const sass = require(‘gulp-sass’)<br>const style = () =&gt; {<br>  return src(‘src/assets/styles/*.scss’, { base: ‘src’ })<br>    .pipe(sass())<br>    .pipe(dest(‘dist’))<br>}<br>module.exports = {<br>  style<br>}<br></pre><br>再执行yarn gulp style 会看到有main.css 。顺便，这里之前生成的文件不会被清空，因为我们没有安装相关插件，后续会安装，这里先手动清空一下吧。还有就是我们看到只生成了一个main.css，和我们项目里原来有三个scss相关的文件不同，这里是因为我们之前有三个.scss文件，但是其中两个是以下划线开头命名的，gulp默认下划线开头的是内部依赖文件，会被忽略掉。另外处理后盛出的css会把右半边花括号放到代码旁边，我们需要指定一下才能改成平时我们习惯的新的一行</p>
+<p><pre><br>const { src, dest } = require(‘gulp’)<br>const sass = require(‘gulp-sass’)<br>const style = () =&gt; {<br>  return src(‘src/assets/styles/*.scss’, { base: ‘src’ })<br>    .pipe(sass({outputStyle:’expanded’}))<br>    .pipe(dest(‘dist’))<br>}<br>module.exports = {<br>  style<br>}<br></pre><br>16.Gulp案例-脚本编译<br>在上一节，我们完成了样式编译，现在来编译脚本</p>
+<p><pre><br>const { src, dest } = require(‘gulp’)<br>const sass = require(‘gulp-sass’)<br>const style = () =&gt; {<br>  return src(‘src/assets/styles/<em>.scss’, { base: ‘src’ })<br>    .pipe(sass({outputStyle:’expanded’}))<br>    .pipe(dest(‘dist’))<br>}<br>const script = () =&gt; {<br>    return src(‘src/assets/scripts/</em>.js’, { base: ‘src’ })<br>      .pipe(babel())<br>      .pipe(dest(‘dist’))<br>}<br>module.exports = { //这里采用这种导出方式只是因为暂时需要，后面会升级导出方法<br>  style,<br>  script<br>}<br></pre><br>安装 yarn add gulp-babel –dev 这个开发依赖，执行 yarn gulp script ，会发现报错<br><img src="https://snakexu.github.io/images/lagou/part_2/automation/16_1.png"><br>因为这里babel只是帮忙唤醒babel-core模块的转换过程，并没有自动安装核心转换模块，我们要自己手动安装 yarn add @babel/core @babel/preset-env –dev </p>
+<p><pre><br>//因为这一节内容是脚本编译，这里先不写样式编译的内容了<br>const { src, dest } = require(‘gulp’)<br>const script = () =&gt; {<br>    return src(‘src/assets/scripts/*.js’, { base: ‘src’ })<br>      .pipe(babel({preset:[‘@babel/preset-env’]}))<br>      .pipe(dest(‘dist’))<br>}<br>module.exports = { //这里采用这种导出方式只是因为暂时需要，后面会升级导出方法<br>  style,<br>  script<br>}<br></pre><br>重新运行 yarn gulp script ，就OK了。如果忘了写 {preset:[‘@babel/preset-env’]} ，可能会造成转换没有效果的感觉<br>17.Gulp案例-页面模版编译<br>页面模版也就是html，这里为了把能重用的部分抽离出来，用了模版引擎swig，首先又是熟悉的安装环节 yarn add gulp-swig –dev </p>
+<p><pre><br>const swig = require(‘gulp-swig’)<br>//和上面编译脚本/样式都是在gulpfile.js文件中，这里只抽离写了页面模版相关的<br>const page = () =&gt; {<br>    return src(‘src/*<em>/</em>.html’, { base: ‘src’ })//src文件夹下的任意文件夹下的html文件<br>      .pipe(swig())<br>      .pipe(dest(‘dist’))<br>}<br>module.exports = {<br>  style,<br>  script,<br>  page<br>}<br></pre><br>我们原来的模版用到了一些数据标记，如下图<br><img src="https://snakexu.github.io/images/lagou/part_2/automation/17_1.png"><br>即原来网站中可能发生变化的地方提取成一些数据，这里我们也模拟准备了一些数据</p>
+<p><pre><br>const swig = require(‘gulp-swig’)<br>const data = {<br>  menus: [<br>    {<br>      name: ‘Home’,<br>      icon: ‘aperture’,<br>      link: ‘index.html’<br>    },<br>    {<br>      name: ‘Features’,<br>      link: ‘features.html’<br>    },<br>    {<br>      name: ‘About’,<br>      link: ‘about.html’<br>    },<br>    {<br>      name: ‘Contact’,<br>      link: ‘#’,<br>      children: [<br>        {<br>          name: ‘Twitter’,<br>          link: ‘<a href="https://twitter.com/w_zce&#39;" target="_blank" rel="noopener">https://twitter.com/w_zce&#39;</a><br>        },<br>        {<br>          name: ‘About’,<br>          link: ‘<a href="https://weibo.com/zceme&#39;" target="_blank" rel="noopener">https://weibo.com/zceme&#39;</a><br>        },<br>        {<br>          name: ‘divider’<br>        },<br>        {<br>          name: ‘About’,<br>          link: ‘<a href="https://github.com/zce&#39;" target="_blank" rel="noopener">https://github.com/zce&#39;</a><br>        }<br>      ]<br>    }<br>  ],<br>  pkg: require(‘./package.json’),<br>  date: new Date()<br>}<br>const page = () =&gt; {<br>    return src(‘src/*<em>/</em>.html’, { base: ‘src’ })//src文件夹下的任意文件夹下的html文件<br>      .pipe(swig( {data:data} ))//等价于 .pipe(swig( {data} ))<br>      .pipe(dest(‘dist’))<br>}<br>module.exports = {<br>  style,<br>  script,<br>  page<br>}<br></pre><br>再执行yarn gulp page 命令，我们可以看到，我们的数据被插入到了页面模版中<br>但是项目中我们不可能为脚本、页面、样式单独执行任务，所以我们要创建一个组合任务</p>
+<p><pre><br>////三个任务之间没有什么关联，可以同时执行，所以用parallel<br>const { src, dest, parallel } = require(‘gulp’)<br>const compile = parallel(style,script,page)<br>module.exports = {<br>  compile<br>}<br></pre><br>18.Gulp案例-图片和字体文件转换<br>只写了代码，如果有啥特别的地方再说吧，因为大致流程和上面编译别的文件差不多，安装的插件 yarn add gulp-imagemin –dev</p>
+<p><pre><br>const imagemin = require(‘gulp-imagemin’)<br>const image = () =&gt; {<br>  return src(‘src/assets/images/<strong>‘, { base: ‘src’ })<br>    .pipe(imagemin())<br>    .pipe(dest(‘dist’))<br>}<br>//字体文件同理，不再过多讲了<br>const font = () =&gt; {<br>  return src(‘src/assets/fonts/</strong>‘, { base: ‘src’ })<br>    .pipe(imagemin())<br>    .pipe(dest(‘dist’))<br>}<br>const compile = parallel(style,script,page,image,font)<br></pre><br>19.Gulp案例-其他文件及文件清除<br>src下的文件都已经处理完了，再去把public中的文件做一个拷贝</p>
+<p><pre><br>const extra = () =&gt; {<br>    return src(‘public/**’, { base: ‘public’ })<br>      .pipe(dest(‘dist’))<br>}<br>//这里没有把任务添加到compile是因为compile是处理src目录下的，容易产生混淆<br>const build = parallel(compile,extra)<br>module.exports = {<br>    build<br>}<br></pre><br>我们安装一个清除插件，清除每次执行yarn gulp XX 的结果(也就是清理dist目录下的文件)，虽然这个插件不属于gulp，但是可以在gulp中使用 yarn add del –dev</p>
+<p><pre><br>//引入series，因为clean任务要先于别的任务执行，如果同时执行就可能出现已经生成的文件被删除的情况<br>const { src, dest, parallel, series } = require(‘gulp’)<br>const del = require(‘del’)//del返回的是一个promise<br>const clean = () =&gt; {<br>    return del([‘dist’])<br>}<br>const build =  series(clean,parallel(compile,extra))<br></pre><br>20.Gulp案例-自动加载插件<br>随着项目越来越复杂，如果每次都是这样手动引入插件，require操作会非常多，不利于代码的维护，我们可以通过一个插件解决这个小问题，安装这个插件 yarn add gulp-load-plugins –dev</p>
+<p><pre><br>const loadPlugins = require(‘gulp-load-plugins’)//导出的是一个方法<br>//plugins是一个对象，所有插件都会成为这个对象上的一个属性<br>const plugins = loadPlugins()<br>//插件的gulp都会被去掉，剩下的按照驼峰命名，比如gulp-sass-ss变成sassSs<br>//把我们之前所有插件重命名<br>const style = () =&gt; {<br>  return src(‘src/assets/styles/<em>.scss’, { base: ‘src’ })<br>      //用plugins重命名sass，之前引入sass的require(‘gulp-sass’)的定义可以删掉<br>    .pipe(plugins.sass({ outputStyle: ‘expanded’ }))<br>    .pipe(dest(‘dist’))<br>    .pipe(bs.reload({ stream: true }))<br>}<br>const script = () =&gt; {<br>  return src(‘src/assets/scripts/</em>.js’, { base: ‘src’ })<br>      //用plugins重命名babel，之前引入babel的require(‘gulp-babel’)的定义可以删掉<br>    .pipe(plugins.babel({ presets: [‘@babel/preset-env’] }))<br>    .pipe(dest(‘dist’))<br>    .pipe(bs.reload({ stream: true }))<br>}<br>const page = () =&gt; {<br>  return src(‘src/*.html’, { base: ‘src’ })<br>      //用swig重命名swig，之前引入swig的require(‘gulp-swig’)的定义可以删掉<br>    .pipe(plugins.swig({ data, defaults: { cache: false } })) // 防止模板缓存导致页面不能及时更新<br>    .pipe(dest(‘dist’))<br>    .pipe(bs.reload({ stream: true }))<br>}<br>const image = () =&gt; {<br>    //用imagemin重命名imagemin，之前引入imagemin的require(‘gulp-imagemin’)的定义可以删掉<br>  return src(‘src/assets/images/<strong>‘, { base: ‘src’ })<br>    .pipe(plugins.imagemin())<br>    .pipe(dest(‘dist’))<br>}<br>const font = () =&gt; {<br>  return src(‘src/assets/fonts/</strong>‘, { base: ‘src’ })<br>    .pipe(plugins.imagemin())<br>    .pipe(dest(‘dist’))<br>}<br>//还有一些没有需要修改的代码没有写到这里，完整的代码会在后面介绍gulp的最后一节写入<br></pre><br>21.Gulp案例-开发服务器<br>除了对文件的构建意外，我们这里还需要一个开发服务器，用于在开发阶段调试我们的应用，我们可以通过gulp去启动并且管理这个服务器，在后续就可以配合我们的构建任务自动编译并刷新浏览器，可以减少很多重复操作<br>首先，安装插件 yarn add brower-sync –dev </p>
+<p><pre><br>const browserSync = require(‘browser-sync’)<br>const bs = browserSync.create()<br>const serve = () =&gt; {<br>    bs.init({<br>        server:{<br>            baseDir:’dist’//指定网站的根目录<br>        }<br>    })<br>}<br></pre><br>运行yarn gulp serve 命令，我们可能看到的网页不是我们想要的，因为css样式等不对，这是因为我们没有处理node_modules目录，也就是构建的代码没有处理路径等问题，这里我们先用一个小的解决办法</p>
+<p><pre><br>const browserSync = require(‘browser-sync’)<br>const bs = browserSync.create()<br>const serve = () =&gt; {<br>    bs.init({<br>        notify:false,//关闭是否连接browser-sync提示<br>        port:2080,//改变启动端口<br>        // open:false,//是否在启动时自动打开浏览器<br>        files:’dist/**’,//路径监听启动通配符，监听哪些文件改变后browser-sync更新浏览器<br>        server:{<br>            baseDir:’dist’,<br>            routes:{<br>                ‘/node_modules’:’node_modules’<br>            }<br>        }<br>    })<br>}<br></pre><br>22.Gulp案例-监视变化以及构建优化</p>
+<p><pre><br>//watch自动监视文件路径的通配符，根据文件的变化决定是否重新执行某一个任务<br>const { src, dest, parallel, series, watch } = require(‘gulp’)<br>const serve = () =&gt; {<br>    watch(‘src/assets/styles/<em>.scss’, style)<br>    watch(‘src/assets/scripts/</em>.js’, script)<br>    watch(‘src/*.html’, page)<br>    watch(‘src/assets/images/<strong>‘, image)<br>    watch(‘src/assets/fonts/</strong>‘, font)<br>    watch(‘public/<strong>‘, extra)<br>    bs.init({<br>        notify:false,<br>        port:2080,<br>        files:’dist/</strong>‘,<br>        server:{<br>            baseDir:’dist’,<br>            routes:{<br>                ‘/node_modules’:’node_modules’<br>            }<br>        }<br>    })<br>}<br></pre><br>运行 yarn gulp serve 命令，到这里我们尝试修改源代码(src目录下的文件)基本实现了。我们对图片、字体、extra每次都执行构建意义不大(这种文件在上线之前构建一次就OK了)，影响构建效率。所以我们上面watch的image、font、extra都注释掉</p>
+<p><pre><br>const serve = () =&gt; {<br>    watch(‘src/assets/styles/<em>.scss’, style)<br>    watch(‘src/assets/scripts/</em>.js’, script)<br>    watch(‘src/*.html’, page)<br>    // watch(‘src/assets/images/<strong>‘, image)<br>    // watch(‘src/assets/fonts/</strong>‘, font)<br>    // watch(‘public/<strong>‘, extra)<br>    watch([<br>        ‘src/assets/images/</strong>‘,<br>        ‘src/assets/fonts/<strong>‘,<br>        ‘public/</strong>‘<br>    ], bs.reload)//文件发生变化之后自动更新，而不是构建<br>    bs.init({<br>        notify:false,<br>        port:2080,<br>        files:’dist/**’,<br>        server:{<br>            //按照数组顺序，从最开始的目录开始找，直到找到文件或者到最后一项都没找到<br>            baseDir:[‘dist’,’src’,’public’] ,<br>            routes:{<br>                ‘/node_modules’:’node_modules’<br>            }<br>        }<br>    })<br>}<br>const compile = parallel(style,script,page)<br>//上线之前build任务<br>const build = series(clean,parallel(compile,image,font,extra))<br>const develop = series(compile,serve)<br>module.exports = {<br>    clean,<br>    compile,<br>    build,<br>    develop<br>}<br></pre><br>23.Gulp案例-useref文件引用处理<br>这里主要就是要处理我们之前发现构建的文件中有node_modules文件夹中的依赖的，因为我们并不会把node_modules文件夹放到线上，首先安装 yarn add gulp-useref –dev</p>
+<p><pre><br>const useref = () =&gt; {<br>    return src(‘dist/*.html’,{base:’dist’})<br>      .pipe(plugins.useref({searchPath:[‘dist’,’.’]}))<br>      .pipe(dest(‘dist’))<br>}<br>module.exports = {<br>    clean,<br>    compile,<br>    build,<br>    develop,<br>    useref<br>}<br></pre><br>24.Gulp案例-文件压缩<br>分别压缩HTML、CSS、JavaScript，安装相关插件 yarn add gulp-htmlmin gulp-uglify gulp-clean-css –dev ，之前我们都是对一种文件进行一种操作，现在我们分别要对三种文件进行三种不同的操作，我们需要一个插件来识别 yarn add gulp-if –dev </p>
+<p><pre><br>const useref = () =&gt; {<br>  return src(‘dist/*.html’, { base: ‘dist’ })<br>    .pipe(plugins.useref({ searchPath: [‘dist’, ‘.’] }))<br>    // html js css<br>    // if会自动创建一个转换流，会在转换流内部通过if指定的条件去决定是否要去执行具体的转换流<br>    .pipe(plugins.if(/.js$/, plugins.uglify()))<br>    .pipe(plugins.if(/.css$/, plugins.cleanCss()))<br>    .pipe(plugins.if(/.html$/, plugins.htmlmin()))<br>    .pipe(dest(‘dist’))<br>}<br></pre><br>这里执行yarn gulp useref 之前，先要执行 yarn gulp compile ，但是还有一个问题，src()中的是读取流，pipe(dest(‘dist’))是写入流，会产生读写冲突，我们不写入dist目录了，换个目录名试试</p>
+<p><pre><br>const useref = () =&gt; {<br>  return src(‘dist/*.html’, { base: ‘dist’ })<br>    .pipe(plugins.useref({ searchPath: [‘dist’, ‘.’] }))<br>    // html js css<br>    // if会自动创建一个转换流，会在转换流内部通过if指定的条件去决定是否要去执行具体的转换流<br>    .pipe(plugins.if(/.js$/, plugins.uglify()))<br>    .pipe(plugins.if(/.css$/, plugins.cleanCss()))<br>    .pipe(plugins.if(/.html$/, plugins.htmlmin({<br>      //默认不是处理所有的空白字符，就是只是删除一些空格，需要指定额外的参数才能去掉所有换行符、空白字符<br>      collapseWhitespace: true,<br>      minifyCSS: true,//压缩html内的css代码<br>      minifyJS: true //压缩html中的js代码<br>    })))<br>    .pipe(dest(‘release’))<br>}<br></pre><br>25.Gulp案例-重新规划构建过程<br>上一节我们为了解决读写冲突，为useref指定了新的生成目录release，显然这样是不行的。我们先为各种类型的文件进行了转换，在上线之前又用useref进行了转换，那么我们之前为html、js、css文件转换直接写入最终要上线的dist目录就有问题了，我们应该先把这些转换结果放入一个临时的文件目录中，然后在useref转换的时候通过临时目录把文件拿出来做转换操作，最后再放入dist目录，这样更合适一些(也就是把处理css/js/html过程中的dest变为temp临时文件夹，clean的时候记得也清除temp目录；把serve中的baseDir的数组中dist改为temp；再把useref中dest(‘release’)，改为dest(‘dist’)，把src的base改为temp，searchPath的dist改为temp)</p>
+<p><pre><br>const { src, dest, parallel, series, watch } = require(‘gulp’)<br>const del = require(‘del’)<br>const browserSync = require(‘browser-sync’)<br>const loadPlugins = require(‘gulp-load-plugins’)<br>const plugins = loadPlugins()<br>const bs = browserSync.create()<br>const data = {<br>  menus: [<br>    {<br>      name: ‘Home’,<br>      icon: ‘aperture’,<br>      link: ‘index.html’<br>    },<br>    {<br>      name: ‘Features’,<br>      link: ‘features.html’<br>    },<br>    {<br>      name: ‘About’,<br>      link: ‘about.html’<br>    },<br>    {<br>      name: ‘Contact’,<br>      link: ‘#’,<br>      children: [<br>        {<br>          name: ‘Twitter’,<br>          link: ‘<a href="https://twitter.com/w_zce&#39;" target="_blank" rel="noopener">https://twitter.com/w_zce&#39;</a><br>        },<br>        {<br>          name: ‘About’,<br>          link: ‘<a href="https://weibo.com/zceme&#39;" target="_blank" rel="noopener">https://weibo.com/zceme&#39;</a><br>        },<br>        {<br>          name: ‘divider’<br>        },<br>        {<br>          name: ‘About’,<br>          link: ‘<a href="https://github.com/zce&#39;" target="_blank" rel="noopener">https://github.com/zce&#39;</a><br>        }<br>      ]<br>    }<br>  ],<br>  pkg: require(‘./package.json’),<br>  date: new Date()<br>}<br>const clean = () =&gt; {<br>  return del([‘dist’, ‘temp’])<br>}<br>const style = () =&gt; {<br>  return src(‘src/assets/styles/<em>.scss’, { base: ‘src’ })<br>    .pipe(plugins.sass({ outputStyle: ‘expanded’ }))<br>    .pipe(dest(‘temp’))<br>    .pipe(bs.reload({ stream: true }))<br>}<br>const script = () =&gt; {<br>  return src(‘src/assets/scripts/</em>.js’, { base: ‘src’ })<br>    .pipe(plugins.babel({ presets: [‘@babel/preset-env’] }))<br>    .pipe(dest(‘temp’))<br>    .pipe(bs.reload({ stream: true }))<br>}<br>const page = () =&gt; {<br>  return src(‘src/<em>.html’, { base: ‘src’ })<br>    .pipe(plugins.swig({ data, defaults: { cache: false } })) // 防止模板缓存导致页面不能及时更新<br>    .pipe(dest(‘temp’))<br>    .pipe(bs.reload({ stream: true }))<br>}<br>const image = () =&gt; {<br>  return src(‘src/assets/images/<strong>‘, { base: ‘src’ })<br>    .pipe(plugins.imagemin())<br>    .pipe(dest(‘dist’))<br>}<br>const font = () =&gt; {<br>  return src(‘src/assets/fonts/</strong>‘, { base: ‘src’ })<br>    .pipe(plugins.imagemin())<br>    .pipe(dest(‘dist’))<br>}<br>const extra = () =&gt; {<br>  return src(‘public/**’, { base: ‘public’ })<br>    .pipe(dest(‘dist’))<br>}<br>const serve = () =&gt; {<br>  watch(‘src/assets/styles/</em>.scss’, style)<br>  watch(‘src/assets/scripts/<em>.js’, script)<br>  watch(‘src/</em>.html’, page)<br>  // watch(‘src/assets/images/<strong>‘, image)<br>  // watch(‘src/assets/fonts/</strong>‘, font)<br>  // watch(‘public/<strong>‘, extra)<br>  watch([<br>    ‘src/assets/images/</strong>‘,<br>    ‘src/assets/fonts/<strong>‘,<br>    ‘public/</strong>‘<br>  ], bs.reload)<br>  bs.init({<br>    notify: false,<br>    port: 2080,<br>    // open: false,<br>    // files: ‘dist/*<em>‘,<br>    server: {<br>      baseDir: [‘temp’, ‘src’, ‘public’],<br>      routes: {<br>        ‘/node_modules’: ‘node_modules’<br>      }<br>    }<br>  })<br>}<br>const useref = () =&gt; {<br>  return src(‘temp/</em>.html’, { base: ‘temp’ })<br>    .pipe(plugins.useref({ searchPath: [‘temp’, ‘.’] }))<br>    // html js css<br>    .pipe(plugins.if(/.js$/, plugins.uglify()))<br>    .pipe(plugins.if(/.css$/, plugins.cleanCss()))<br>    .pipe(plugins.if(/.html$/, plugins.htmlmin({<br>      collapseWhitespace: true,<br>      minifyCSS: true,<br>      minifyJS: true<br>    })))<br>    .pipe(dest(‘dist’))<br>}<br>const compile = parallel(style, script, page)<br>// 上线之前执行的任务<br>const build =  series(<br>  clean,<br>  parallel(<br>    //这里compile和useref是有依赖关系的，所以用series执行<br>    series(compile, useref),<br>    image,<br>    font,<br>    extra<br>  )<br>)<br>const develop = series(compile, serve)<br>module.exports = {<br>  clean,<br>  build,<br>  develop<br>}<br></pre><br>26.Gulp案例-补充<br>通过观察我们发现，我们只需要将clean、build、develop导出，并且在package.json文件中定义scripts</p>
+<p><pre><br>“scripts”: {<br>    “clean”: “gulp clean”,<br>    “build”: “gulp build”,<br>    “develop”: “gulp develop”<br>}<br></pre><br>另外还要记得在.gitignore中忽略我们生成的dist、temp目录<br>另外虽然这个代码已经完成了基本项目中的需求，但是依然不建议直接保存以后使用。原因在于有可能以后各种依赖会有改变，或者项目需求不同等等，其实最主要的是不利于个人的学习，不多做一些联系不能更加熟练的掌握<br>27.封装工作流-准备<br>如果我们开发多个同类型项目，那么多个项目的自动化工作流有可能是一样的，我们有可能需要在多个项目中重复去使用这些构建任务，这些构建任务在大多数情况下是相同的，那么就需要复用相同的gulpfile，我们可以把gulpfile作为代码段保存起来，在不同的项目中去使用。先做一些准备工作：我们在git上创建一个仓库用来存放我们的代码。在本地初始化一个项目，这里老师自己写的脚手架是zce-cli，安装之后通过zce init 模版名称 去创建项目，然后通过git init去初始化仓库，git remote add origin 远端仓库地址 ，然后提交我们初始化的仓库<br>28.封装工作流-提取<br>首先将gulpfile文件整体移动到我们刚创建的项目中(作为index.js)，再将package.json中的devDependencies中的内容放到我们刚才创建的项目的dependencies中，因为dependencies才会自动安装，而devDependencies是开发依赖，不会自动安装。正常是将包发布到npm，但是这里我们是本地调试，故先进入到我们刚修改的项目中，在项目文件夹下执行npm link命令，再到我们要使用这个包的项目目录下执行npm link 要link的包的包名。在使用目录的gulpfile文件中</p>
+<p><pre><br>module.exports = require(‘包名’)<br></pre><br>另外，我们之前写gulp的时候定义了data给模版使用，但是这里是不合理的，我们应该定义一个读取data文件的过程<br>29.封装工作流-解决模块中的问题<br>在项目根目录下创建一个配置文件pages.config.js，在这个文件里存放我们需要的数据，然后在我们抽取的包的index.js中添加读取操作</p>
+<p><pre><br>const cwd = process.cwd()<br>let config = {}<br>try{<br>    const loadConfig = require(<code>${cwd}/pages.config.js</code>)<br>    config = Object.assign({},config,loadConfig)<br>}cache(e){}<br></pre><br>把代码中读取data的地方换成我们刚读取的config.data，并且把{ presets: [‘@babel/preset-env’] }改成{ presets: [require(‘@babel/preset-env’)] }<br>30.封装工作流-抽象路径配置<br>项目中的目录都是我们指定的，比如src文件夹，这样不够灵活，我们可以考虑把其改成可配置的</p>
+<p><pre><br>let config = {<br>    build:{<br>        src:’src’,<br>        dist:’dist’,<br>        temp:’temp’,<br>        public:’public’,<br>        paths:{<br>            styles:’assets/styles/<em>.scss’,<br>            scripts:’assets/scripts/</em>.js’,<br>            pages:’<em>.html’,<br>            images:’asset/images/<strong>‘,<br>            fonts:’asset/fonts/</strong>‘,<br>        }<br>    },<br>}<br>const style = () =&gt; {<br>    //从’src/assets/styles/</em>.scss’变成config.build.paths.styles肯定会有一些问题<br>    //cwd指定在哪个路径去找，默认是当前项目所在目录<br>  return src(config.build.paths.styles, { base: config.build.src, cwd: config.build.src })<br>    .pipe(plugins.sass({ outputStyle: ‘expanded’ }))<br>    .pipe(dest(config.build.temp))<br>    .pipe(bs.reload({ stream: true }))<br>}<br>const font = () =&gt; {<br>  return src(config.build.paths.fonts, { base: config.build.src, cwd: config.build.src })<br>    .pipe(plugins.imagemin())<br>    .pipe(dest(config.build.dist))<br>}<br>const serve = () =&gt; {<br>  watch(config.build.paths.styles, {cwd: config.build.src},style)<br>  watch(config.build.paths.scripts, {cwd: config.build.src},script)<br>  watch(config.build.paths.pages, {cwd: config.build.src},page)<br>  watch([<br>    config.build.paths.images,<br>    config.build.paths.fonts,<br>    //‘public/<strong>‘//public因为和images等路径不一样，我们把public单独拆出来再做一个任务<br>  ],{cwd: config.build.src}, bs.reload)<br>  watch(‘</strong>‘,{cwd: config.build.public}, bs.reload)<br>  bs.init({<br>    notify: false,<br>    port: 2080,<br>    server: {<br>      baseDir: [‘temp’, ‘src’, ‘public’],<br>      routes: {<br>        ‘/node_modules’: ‘node_modules’<br>      }<br>    }<br>  })<br>}<br></pre><br>把我们之前写的config相关的目录换成config对象里的属性，我们已经把style修改作为例子放在这里了，剩下的按照例子修改就好。都修改完成后我们输入命令yarn serve来尝试下是不是都修改正确，都修改正确后，我们可以把config对象放到pages.config.js文件中，这样我们就可以按照自己的想法配置文件目录名称了<br>31.封装工作流-包装Gulp CLI</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/07/08/拉勾-自动化构建/" data-id="ckchm0rnu005t5ajhlrlsh4ss" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/拉勾，自动化构建/">拉勾，自动化构建</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2020/07/03/拉勾-脚手架工具/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">拉勾-脚手架工具</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/拉勾/">拉勾</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ECMAScript新特性/">ECMAScript新特性</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript异步编程/">JavaScript异步编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TypeScript语言/">TypeScript语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-babel/">react babel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/函数式编程/">函数式编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/函数式编程范式/">函数式编程范式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端路由/">前端路由</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工程化/">工程化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/微信小程序/">微信小程序</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/手写Promise源码/">手写Promise源码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/拉勾/">拉勾</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/拉勾，自动化构建/">拉勾，自动化构建</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/正则/">正则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业/">网易微专业</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-Flutter/">网易微专业 Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-node/">网易微专业 node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/ECMAScript新特性/" style="font-size: 10px;">ECMAScript新特性</a> <a href="/tags/JavaScript异步编程/" style="font-size: 10px;">JavaScript异步编程</a> <a href="/tags/TypeScript语言/" style="font-size: 10px;">TypeScript语言</a> <a href="/tags/react-babel/" style="font-size: 10px;">react babel</a> <a href="/tags/函数式编程/" style="font-size: 10px;">函数式编程</a> <a href="/tags/函数式编程范式/" style="font-size: 10px;">函数式编程范式</a> <a href="/tags/前端路由/" style="font-size: 10px;">前端路由</a> <a href="/tags/工程化/" style="font-size: 10px;">工程化</a> <a href="/tags/微信小程序/" style="font-size: 10px;">微信小程序</a> <a href="/tags/手写Promise源码/" style="font-size: 10px;">手写Promise源码</a> <a href="/tags/拉勾/" style="font-size: 20px;">拉勾</a> <a href="/tags/拉勾，自动化构建/" style="font-size: 10px;">拉勾，自动化构建</a> <a href="/tags/数据结构/" style="font-size: 12.5px;">数据结构</a> <a href="/tags/正则/" style="font-size: 10px;">正则</a> <a href="/tags/算法/" style="font-size: 17.5px;">算法</a> <a href="/tags/网易微专业/" style="font-size: 10px;">网易微专业</a> <a href="/tags/网易微专业-Flutter/" style="font-size: 10px;">网易微专业 Flutter</a> <a href="/tags/网易微专业-node/" style="font-size: 10px;">网易微专业 node</a> <a href="/tags/设计模式/" style="font-size: 15px;">设计模式</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/07/08/拉勾-自动化构建/">拉勾-自动化构建</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/03/拉勾-脚手架工具/">拉勾-脚手架工具</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/03/拉勾-工程化概述/">拉勾-工程化概述</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/28/拉勾-JavaScript性能优化/">拉勾-JavaScript性能优化</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/26/拉勾-TypeScript语言/">拉勾-TypeScript语言</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

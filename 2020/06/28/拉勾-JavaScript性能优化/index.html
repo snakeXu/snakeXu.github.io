@@ -24,7 +24,20 @@
 <meta property="og:image" content="https://snakexu.github.io/images/lagou/part_1/performance/12_1.png">
 <meta property="og:image" content="https://snakexu.github.io/images/lagou/part_1/performance/13_1.png">
 <meta property="og:image" content="https://snakexu.github.io/images/lagou/part_1/performance/14_1.png">
-<meta property="og:updated_time" content="2020-07-01T07:16:51.840Z">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_1/performance/19_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_1/performance/20_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_1/performance/21_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_1/performance/21_2.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_1/performance/21_3.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_1/performance/25_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_1/performance/26_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_1/performance/27_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_1/performance/28_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_1/performance/29_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_1/performance/31_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_1/performance/32_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_1/performance/34_1.png">
+<meta property="og:updated_time" content="2020-07-03T04:00:03.401Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="拉勾-JavaScript性能优化">
 <meta name="twitter:description" content="1.课程概述·性能优化不可避免·哪些内容可以看作性能优化：本质上来说任何一种可以提高运行效率，降低运行开销的行为都可以认为是性能优化·无处不在的前端性能优化：例如请求资源时用到的网络，数据的传输方式，开发过程中所使用的框架等等都可以进行优化本阶段的核心是JavaScript语言的优化，内容概要·内存管理·垃圾回收与常见GC算法·V8引擎的垃圾回收·Performance工具·代码优化实例2.内存管">
@@ -106,11 +119,34 @@
 <p><pre><br>const user1 = {age:11}<br>const user2 = {age:22}<br>const user3 = {age:33}<br>const nameList = [user1.age,user2.age,user3.age]<br>function fn(){<br>    num1 = 1<br>    num2 = 2<br>}<br>fn()<br></pre><br>这种情况下当前全局有user1、user2、user3、nameList、num1、num2变量，这些变量的引用计数都不为0。如果我们稍作修改</p>
 <p><pre><br>function fn(){<br>    const num1 = 1<br>    const num2 = 2<br>}<br></pre><br>那么在fn执行完毕后，在外部全局作用域不能找到num1、num2，num1、num2的引用计数为0，会被作为垃圾回收。而user1、user2、user3被nameList引用，即使脚本执行完毕，user1、user2、user3的引用计数器都不为0，不会被作为垃圾回收。<br>6.引用计数算法优缺点<br>优点：<br>·发现垃圾时立即回收<br>·最大限度减少程序暂停(应用程序执行必然对内存有消耗，而我们执行平台的内存是有上限的，内存肯定有占满的时候，由于引用计数算法时刻监控着引用数值为0的情况，即使内存即将被占满，由于有引用计数时刻监测着引用为0的变量，进行垃圾回收，保证了当前内存不会有占满的时候)<br>缺点：<br>·无法回收循环引用的对象<br>·时间开销大(当前引用计数需要维护一个数值的变化，就需要时刻监控当前对象的引用数值是否发生变化，数值修改本身就需要消耗时间，如果内存中很多对象都需要变化时间就会显得更大一些)</p>
 <p><pre><br>//循环引用对象<br>function fn(){<br>    const obj1 = {}<br>    const obj2 = {}<br>    obj1.name = obj2<br>    obj2.name = obj1<br>    return ‘lg is a coder’<br>}<br>fn()<br></pre><br>虽然在fn执行完毕后，外部不再有对obj1、obj2的引用，但是函数内部o bj1和obj2互相引用，造成引用计数无法为0，无法释放变量空间，造成内存的浪费<br>7.标记清除算法实现原理<br>·核心思想:分标记和清除二个阶段完成<br>·遍历所有对象找标记活动对象<br>·遍历所有对象清除没有标记对象<br>·回收相应的空间<br> <img src="https://snakexu.github.io/images/lagou/part_1/performance/7_1.png"><br> 在标记阶段找到所有可达对象(会递归查找，比如图中global找到A再找到D)，将可达对象进行标记；标记完成之后进行清除，找到没有标记的对象，进行清除，同时将标记阶段做的标记清除，这样就完成了一次垃圾的回收，还会将回收的空间放到空闲列表上，方便后续的程序申请使用。而上图中的a1、b1可能是当前局部作用域，而当前局部作用域执行完成以后空间就会被回收，在global链条下找不到a1、b1，GC机制认为a1、b1是垃圾对象，不进行标记，a1、b1被垃圾回收。<br>8.标记清除算法的优缺点<br>相比引用计数，标记清除解决了循环引用的问题。缺点是容易造成内存空间的碎片化，也就是回收的内存空间在地址上不是连续在一起的，不能使空间得到最大化的使用<br>9.标记整理算法实现原理<br>·标记整理可以看作是标记清除的增强<br>·标记阶段的操作和标记清除一致<br>·清除阶段会先执行整理，移动对象位置<br><img src="https://snakexu.github.io/images/lagou/part_1/performance/9_1.png"><br><img src="https://snakexu.github.io/images/lagou/part_1/performance/9_2.png"><br>10.常见GC算法总结<br>常见GC算法：<br>·引用计数<br>  可以即时回收垃圾对象<br>  可以即时回收垃圾对象<br>  减少程序卡顿时间<br>  无法回收循环引用的对象<br>  资源消耗较大<br>·标记清除<br>  可以回收循环引用的对象<br>  容易产生碎片化空间，浪费空间<br>  不会立即回收垃圾对象<br>·标记整理<br>  减少碎片化空间<br>  不会立即回收垃圾对象<br>11.认识V8<br>·V8是一款主流的JavaScript执行引擎(chrome浏览器，node平台都是在用V8执行代码)<br>·V8采用即时编译<br>·V8内存设限(V8是为浏览器制造的，现有内存大小对网页应用来说足够使用了；V8内部的垃圾回收机制来说这个内存限制也是合理的)<br>12.V8垃圾回收策略<br>在程序使用过程中我们需要用到很多数据，包括原始数据、对象数据。对于原始数据来说都是程序语言自身来进行控制的，所以我们提到的垃圾回收主要还是存在堆区里的对象数据，因此这个过程是离不开内存操作的，而V8对内存是设置了上限的，因为我们想知道在这种情况下是怎么进行垃圾回收的<br>V8垃圾回收策略<br>·采用分代回收的思想<br>·内存分为新生代、老生代(后面介绍如何划分新生代、老生代)<br>·针对不同对象采用不同算法<br><img src="https://snakexu.github.io/images/lagou/part_1/performance/12_1.png"><br>V8中常用GC算法<br>·分代回收<br>·空间复制<br>·标记清除<br>·标记整理<br>·标记增量<br>13.V8如何回收新生代对象<br><img src="https://snakexu.github.io/images/lagou/part_1/performance/13_1.png"><br>V8内存分配<br>·V8内存空间一分为二(上面图中左边带白色部分为新生代，右边老生代存储区有写明)<br>·小空间用于存储新生代对象(32M|16M)<br>·新生代指的是存活时间较短的对象<br>新生代对象回收实现<br>·回收过程中采用复制算法+标记整理<br>·新生代内存区分为二个等大小空间<br>·使用空间为From，空闲空间为To<br>·活动对象存储于from空间<br>·标记整理后将活动对象拷贝至To(可以得到连续的存储空间)<br>·From与To交换空间完成释放<br>回收细节说明<br>·拷贝过程中可能出现晋升<br>·晋升就是将新生代对象移动至老生代<br>·一轮GC还存活的新生代需要晋升<br>·To空间的使用率超过25%需要晋升(怕将来交换之后新进对象没有操作空间)<br>14.V8如何回收老生代对象<br>老生代对象说明<br>·老生代对象存放在右侧老生代区域<br>·64位操作系统1.4G，32位操作系统700M<br>·老生代对象就是指存活时间较长的对象(例如全局变量，一些闭包中的变量数据)<br>老生代对象回收实现<br>·主要采用标记清除、标记整理、增量标记算法<br>·首先使用标记清除完成垃圾空间的回收<br>·采用标记整理进行空间优化(发现老生代存储空间不满足需求的情况下)<br>·采用增量标记进行效率优化<br>细节对比<br>·新生代区域垃圾回收使用空间换时间<br>·老生代垃圾回收不适合复制算法(相对新生代空间，老生代空间较大，采用复制算法消耗较大)<br><img src="https://snakexu.github.io/images/lagou/part_1/performance/14_1.png"><br>标记增量:将我们当前一整段的垃圾回收拆分成多个小步去实现，从而去替代之前一口气完成的垃圾回收，从而完成程序执行与垃圾回收交替运行，时间安排更加合理<br>15.V8垃圾回收总结<br>·V8是一款主流的JavaScript执行引擎<br>·V8内存设置上限<br>·V8采用基于分代回收思想实现垃圾回收<br>·V8内存分为新生代和老生代<br>·V8垃圾回收常见的GC算法<br>16.Performance工具介绍<br>为什么使用Performance<br>·GC的目的是为了实现内存空间的良性循环<br>·良性循环的基石是合理使用<br>·时刻关注才能确定是否合理<br>·Performance提供多种监控方式<br>通过Performance时刻监控内存<br>Performance使用步骤<br>·打开浏览器输入目标网址<br>·进入开发人员工具面板，选择性能<br>·开启录制功能，访问具体界面<br>·执行用户行为，一段时间后停止录制<br>·分析界面中记录的内存信息<br>17.内存问题的体现<br>内存问题的外在表现<br>·页面出现延迟加载或经常性暂停<br>在网络环境正常的情况下，一般判定内存有问题，而且与GC频繁的垃圾回收操作相关——程序代码中存在瞬间让程序爆掉的代码<br>·页面持续性出现糟糕的性能<br>有可能存在内存膨胀——当前界面为了去达到最佳使用速度会去申请一定的内存空间，而申请的内存空间远大于当前设备所能提供的内存大小<br>·页面的性能随时间延长越来越差<br>通常伴随着内存的泄漏<br>18.监控内存的几种方式<br>界定内存问题的标准<br>·内存泄漏：内存使用持续升高<br>·内存膨胀：在多数设备上都存在性能问题<br>·频繁垃圾回收：通过内存变化图进行分析<br>监控内存的几种方式<br>·浏览器任务管理器<br>·Timeline时序图记录<br>·堆快照查找分离DOM<br>·判断是否存在频繁的垃圾回收<br>19.任务管理器监控内存</p>
+<p><pre><br>&lt; button id=”btn” &gt;Add&lt; /button &gt;<br>&lt; script &gt;<br>    const oBtn = document.getElementById(‘btn’);<br>    oBtn.onclick = function(){<br>        let arrList = new Array(1000000)<br>    }<br>&lt; /script &gt;<br></pre><br>写完上面代码，我们打开浏览器，shift+ESC调出浏览器任务管理器，在浏览器任务管理器上右键单击，选择JavaScript内存，在浏览器的任务管理器上会多出JavaScript内存一列<br><img src="https://snakexu.github.io/images/lagou/part_1/performance/19_1.png"><br>上图中内存一列和JavaScript内存一列有什么不同呢？内存一列是原生内存，可以理解为浏览器中DOM节点占据的内存，如果这个值持续增大，那么代表界面中在不断持续的创建新的DOM。JavaScript内存是表示JavaScript堆，这列中我们需要关注的是小括号内的值，表示的是界面中所有可达对象正在使用的内存大小，这个值增大表示，要么在创建新对象，要么当前对象一直在增长。我们点击几次刚才的button，再来看浏览器任务管理器，会看到JavaScript内存变大。借助这样一个方式，我们监控当前浏览器内存的变化。如果JavaScript内存的值一直增大，可以断定程序有问题，但是想知道有什么问题，不是浏览器任务管理器能满足的了。<br>20.Timeline记录内存</p>
+<p><pre><br>&lt; button id=”btn” &gt;Add&lt; /button &gt;<br>&lt; script &gt;<br>    const arrList = []<br>    function test(){<br>        for(var i =0; i &lt; 100000; i++){<br>            document.body.appendChild(document.createElement(‘p’))<br>        }<br>        arrList.push(new Array(100000).join(‘x’))//这些操作都是为了引起页面性能明显变化<br>    }<br>    document.getElementById(‘btn’).addEventListener(‘click’,test)<br>&lt; /script &gt;<br></pre><br>打开浏览器开发者工具，选择性能，开始录制，多次点击按钮，结束录制，只展示内存变化<br><img src="https://snakexu.github.io/images/lagou/part_1/performance/20_1.png"><br>这里性能有升有降，证明垃圾回收机制正常起作用了。如果一直是在上升而不下降，那么就有可能是内存泄漏，我们可以具体查看时间线上的节点判断哪里出问题。<br>21.堆快照查找分离DOM<br>什么是分离DOM<br>·界面元素存活在DOM树上<br>·垃圾对象时的DOM节点<br>·分离状态的DOM节点</p>
+<p><pre><br>&lt; button id=”btn” &gt;Add&lt; /button &gt;<br>&lt; script &gt;<br>var tmpEle<br>function fn(){<br>    var ul = document.createElement(‘ul’)<br>    for(var i =0; i &lt; 100000; i++){<br>        var li = document.createElement(‘li’)<br>        ul.appendChild(li)<br>    }<br>    tmpEle = ul//我们并没有把新创建的DOM添加到页面中，属于分离DOM的一种<br>}<br>document.getElementById(‘btn’).addEventListener(‘click’,fn)<br>&lt; /script &gt;<br></pre><br>首先我们在页面没有进行操作的时候点击一下堆快照<br><img src="https://snakexu.github.io/images/lagou/part_1/performance/21_1.png"><br><img src="https://snakexu.github.io/images/lagou/part_1/performance/21_2.png"><br>然后筛选deta，发现没有内容。当我们点击当前页面按钮，再次执行上面的操作，拍摄快照，筛选内容<br><img src="https://snakexu.github.io/images/lagou/part_1/performance/21_3.png"><br>就会发现当前页面有我们在代码里创建的分离DOM，解决方案就是把分离DOM置空</p>
+<p><pre><br>&lt; button id=”btn” &gt;Add&lt; /button &gt;<br>&lt; script &gt;<br>var tmpEle<br>function fn(){<br>    var ul = document.createElement(‘ul’)<br>    for(var i =0; i &lt; 100000; i++){<br>        var li = document.createElement(‘li’)<br>        ul.appendChild(li)<br>    }<br>    tmpEle = ul<br>    tmpEle = null<br>}<br>document.getElementById(‘btn’).addEventListener(‘click’,fn)<br>&lt; /script &gt;<br></pre><br>22.判断是否存在频繁GC<br>为什么确定频繁垃圾回收<br>·GC工作时应用程序是停止的<br>·频繁且过长的GC会导致应用假死<br>·用户使用中感知应用卡顿<br>确定频繁的垃圾回收<br>·Timeline中频繁的上升下降<br>·任务管理器中数据频繁的增加减小<br>23.Performance总结<br>·Performance使用流程<br>·内存问题的相关分析<br>·Performance时序图监控内存变化<br>·任务管理器监控内存变化<br>·堆快照查找分离DOM<br>24.代码优化介绍<br>如何精准测试JavaScript性能<br>·本质上就是采集大量的执行样本进行数学统计和分析<br>·使用基于Benchmark.js的 <a href="https://jsperf.com/" target="_blank" rel="noopener">https://jsperf.com/</a> 完成<br>Jsperf使用流程<br>·使用GitHub账号登陆<br>·填写个人信息(非必填)<br>·填写详细的测试用例信息(title、slug)<br>·填写准备代码(DOM操作时经常使用)<br>·填写必要有setup与teardowm代码<br>·填写测试代码片段<br>25.慎用全局变量<br>为什么要慎用<br>·全局变量定义在全局执行上下文，是所有作用域链的顶端(一直会查找到全局作用域，影响性能)<br>·全局执行上下文一直存在于上下文执行栈，直到程序退出(全局变量一直存在影响GC)<br>·如果某个局部作用域出现了同名变量则会遮蔽或污染全局<br>之前我们讲过注册jsperf，然后在jsperf上执行代码，查看差异，就能看出全局变量与局部变量的执行差异<br><img src="https://snakexu.github.io/images/lagou/part_1/performance/25_1.png"><br>26.缓存全局变量<br>将使用中无法避免的全局变量缓存到局部</p>
+<p><pre><br>&lt; input type=”button” value=”btn” id=”btn1” &gt;<br>  &lt; input type=”button” value=”btn” id=”btn2” &gt;<br>  &lt; input type=”button” value=”btn” id=”btn3” &gt;<br>  &lt; input type=”button” value=”btn” id=”btn4” &gt;<br>  &lt; p &gt;1111&lt; /p &gt;<br>  &lt; input type=”button” value=”btn” id=”btn5” &gt;<br>  &lt; input type=”button” value=”btn” id=”btn6” &gt;<br>  &lt; p&gt;222&lt; /p&gt;<br>  &lt; input type=”button” value=”btn” id=”btn7” &gt;<br>  &lt; input type=”button” value=”btn” id=”btn8” &gt;<br>  &lt; p&gt;333&lt; /p&gt;<br>  &lt; input type=”button” value=”btn” id=”btn9” &gt;<br>  &lt; input type=”button” value=”btn” id=”btn10” &gt;</pre></p>
+<p>  &lt; script &gt;<br>    function getBtn() {<br>      let oBtn1 = document.getElementById(‘btn1’)<br>      let oBtn3 = document.getElementById(‘btn3’)<br>      let oBtn5 = document.getElementById(‘btn5’)<br>      let oBtn7 = document.getElementById(‘btn7’)<br>      let oBtn9 = document.getElementById(‘btn9’)<br>    }</p>
+<pre><code>function getBtn2() {
+  let obj = document
+  let oBtn1 = obj.getElementById(&apos;btn1&apos;)
+  let oBtn3 = obj.getElementById(&apos;btn3&apos;)
+  let oBtn5 = obj.getElementById(&apos;btn5&apos;)
+  let oBtn7 = obj.getElementById(&apos;btn7&apos;)
+  let oBtn9 = obj.getElementById(&apos;btn9&apos;)
+}
+</code></pre><p>  &lt; /script &gt;<br><br>这里要在jsperf中执行上面代码，因为有html代码所以需要一点不同的操作，同学们自己了解一下，执行代码效果<br><img src="https://snakexu.github.io/images/lagou/part_1/performance/26_1.png"><br>27.通过原型对象添加附加方法<br>通过原型新增方法，在原型对象上新增实例对象需要的方法</p>
+<p><pre><br>var fn1 = function() {<br>  this.foo = function() {<br>    console.log(11111)<br>  }<br>}<br>let f1 = new fn1()<br>var fn2 = function() {}<br>fn2.prototype.foo = function() {<br>  console.log(11111)<br>}<br>let f2 = new fn2()<br></pre><br><img src="https://snakexu.github.io/images/lagou/part_1/performance/27_1.png"><br>28.避开闭包陷阱<br>闭包特点<br>·外部具有指向内部的引用<br>·在”外部”作用域访问”内部”作用域的数据(这里内、外的概念用的并不是很标准，以后慢慢了解)<br><img src="https://snakexu.github.io/images/lagou/part_1/performance/28_1.png"><br>关于闭包<br>·闭包是一种很强大的语法<br>·闭包使用不当很容易出现内存泄漏<br>·不要为了闭包而闭包</p>
+<p><pre><br>function foo(){<br>  var el = document.getElementById(‘btn’);//html页面上存在的一个元素<br>  el.onclick = function(){<br>    console.log(el.id)<br>  }<br>  //如果元素在页面被移除，而上面还调用了el，导致元素引用计数不为0，不能被垃圾回收导致内存泄漏<br>  //这里el置空使btn元素引用计数为0，可以顺利被垃圾回收<br>  el = null<br>}<br></pre><br>29.避免属性访问方法使用<br>JavaScript中的面向对象<br>·JavaScript不需属性的访问方法，所有属性都是外部可见的<br>·使用属性访问方法只会增加一层重定义，没有访问的控制力</p>
+<p><pre><br>function Person() {<br>  this.name = ‘icoder’<br>  this.age = 18<br>  this.getAge = function() {<br>    return this.age<br>  }<br>}<br>const p1 = new Person()<br>const a = p1.getAge()<br>//与上面代码进行执行效率对比<br>function Person() {<br>  this.name = ‘icoder’<br>  this.age = 18<br>}<br>const p2 = new Person()<br>const b = p2.age<br></pre><br>上面代码中两种访问方式执行效率对比，得出直接访问属性效率更高<br><img src="https://snakexu.github.io/images/lagou/part_1/performance/29_1.png"><br>30.For循环优化</p>
+<p><pre><br>var arrList = []<br>arrList[10000] = ‘icoder’<br>for (var i = 0; i &lt; arrList.length; i++) {<br>  console.log(arrList[i])<br>}<br>for (var i = arrList.length; i; i–) {<br>  console.log(arrList[i])<br>}<br></pre><br>这里主要是想说明如果提前获取要遍历元素的长度比在for循环中每次i &lt; arr.length执行效率要高，尤其在被遍历元素量级很大的时候会比较明显<br>31.选择最优的循环方法</p>
+<p><pre><br>arrList.forEach(function(item) {<br>  console.log(item)<br>})<br>for (var i = arrList.length; i; i–) {<br>  console.log(arrList[i])<br>}<br>for (var i in arrList) {<br>  console.log(arrList[i])<br>}<br></pre><br>这里主要对比三种遍历方式执行效率的差异(这里注意for循环是提前计算length，而不是每次循环i &lt; length 这种)<br><img src="https://snakexu.github.io/images/lagou/part_1/performance/31_1.png"><br>可以看出性能角度forEach &gt; for &gt; for…in<br>32.文档随便优化节点添加<br>节点的添加操作必然有回流和重绘， 这两个操作对性能消耗比较大</p>
+<p><pre><br>//第一种添加方式<br>for (var i = 0; i &lt; 10; i++) {<br>      var oP = document.createElement(‘p’)<br>      oP.innerHTML = i<br>      document.body.appendChild(oP)<br>}<br>//第二种添加方式<br>const fragEle = document.createDocumentFragment()<br>for (var i = 0; i &lt; 10; i++) {<br>    var oP = document.createElement(‘p’)<br>    oP.innerHTML = i<br>    fragEle.appendChild(oP)<br>}<br>document.body.appendChild(fragEle)<br></pre><br>对比两种添加节点对方式，明显第二种方式添加效率比较好<br><img src="https://snakexu.github.io/images/lagou/part_1/performance/32_1.png"><br>33.克隆优化节点操作<br>当我们要去新增节点，可以先找到一个相似节点去克隆，再把克隆的节点添加到界面(被克隆到节点可能已经具有样式/属性，我们不用再额外添加)</p>
+<p><pre><br>//传统方法<br>for (var i = 0; i &lt; 3; i++) {<br>    var oP = document.createElement(‘p’)<br>    oP.innerHTML = i<br>    document.body.appendChild(oP)<br>}<br>//克隆方法<br>var oldP = document.getElementById(‘box1’)//假设已经存在box1节点<br>for (var i = 0; i &lt; 3; i++) {<br>    var newP = oldP.cloneNode(false)<br>    newP.innerHTML = i<br>    document.body.appendChild(newP)<br>}<br></pre><br>采用第二种克隆方法性能优于传统添加节点方式<br>34.直接量替换new Object</p>
+<p><pre><br>// 采用字面量<br>var a = [1, 2, 3]<br>// 采用new<br>var a1 = new Array(3)<br>a1[0] = 1<br>a1[1] = 2<br>a1[2] = 3<br></pre><br><img src="https://snakexu.github.io/images/lagou/part_1/performance/34_1.png"><br>采用字面量优于new去创建 </p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/28/拉勾-JavaScript性能优化/" data-id="ckc39jeuu004aojxqwqwfqkqm" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/06/28/拉勾-JavaScript性能优化/" data-id="ckchm0ris004y5ajhn96rnrwd" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/拉勾/">拉勾</a></li></ul>
@@ -120,6 +156,15 @@
   
     
 <nav id="article-nav">
+  
+    <a href="/2020/07/03/拉勾-工程化概述/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          拉勾-工程化概述
+        
+      </div>
+    </a>
   
   
     <a href="/2020/06/26/拉勾-TypeScript语言/" id="article-nav-older" class="article-nav-link-wrap">
@@ -150,7 +195,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ECMAScript新特性/">ECMAScript新特性</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript异步编程/">JavaScript异步编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TypeScript语言/">TypeScript语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-babel/">react babel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/函数式编程/">函数式编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/函数式编程范式/">函数式编程范式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端路由/">前端路由</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/微信小程序/">微信小程序</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/手写Promise源码/">手写Promise源码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/拉勾/">拉勾</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/正则/">正则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业/">网易微专业</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-Flutter/">网易微专业 Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-node/">网易微专业 node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ECMAScript新特性/">ECMAScript新特性</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript异步编程/">JavaScript异步编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TypeScript语言/">TypeScript语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-babel/">react babel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/函数式编程/">函数式编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/函数式编程范式/">函数式编程范式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端路由/">前端路由</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工程化/">工程化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/微信小程序/">微信小程序</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/手写Promise源码/">手写Promise源码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/拉勾/">拉勾</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/拉勾，自动化构建/">拉勾，自动化构建</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/正则/">正则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业/">网易微专业</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-Flutter/">网易微专业 Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-node/">网易微专业 node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
     </div>
   </div>
 
@@ -160,7 +205,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/ECMAScript新特性/" style="font-size: 10px;">ECMAScript新特性</a> <a href="/tags/JavaScript异步编程/" style="font-size: 10px;">JavaScript异步编程</a> <a href="/tags/TypeScript语言/" style="font-size: 10px;">TypeScript语言</a> <a href="/tags/react-babel/" style="font-size: 10px;">react babel</a> <a href="/tags/函数式编程/" style="font-size: 10px;">函数式编程</a> <a href="/tags/函数式编程范式/" style="font-size: 10px;">函数式编程范式</a> <a href="/tags/前端路由/" style="font-size: 10px;">前端路由</a> <a href="/tags/微信小程序/" style="font-size: 10px;">微信小程序</a> <a href="/tags/手写Promise源码/" style="font-size: 10px;">手写Promise源码</a> <a href="/tags/拉勾/" style="font-size: 20px;">拉勾</a> <a href="/tags/数据结构/" style="font-size: 13.33px;">数据结构</a> <a href="/tags/正则/" style="font-size: 10px;">正则</a> <a href="/tags/算法/" style="font-size: 20px;">算法</a> <a href="/tags/网易微专业/" style="font-size: 10px;">网易微专业</a> <a href="/tags/网易微专业-Flutter/" style="font-size: 10px;">网易微专业 Flutter</a> <a href="/tags/网易微专业-node/" style="font-size: 10px;">网易微专业 node</a> <a href="/tags/设计模式/" style="font-size: 16.67px;">设计模式</a>
+      <a href="/tags/ECMAScript新特性/" style="font-size: 10px;">ECMAScript新特性</a> <a href="/tags/JavaScript异步编程/" style="font-size: 10px;">JavaScript异步编程</a> <a href="/tags/TypeScript语言/" style="font-size: 10px;">TypeScript语言</a> <a href="/tags/react-babel/" style="font-size: 10px;">react babel</a> <a href="/tags/函数式编程/" style="font-size: 10px;">函数式编程</a> <a href="/tags/函数式编程范式/" style="font-size: 10px;">函数式编程范式</a> <a href="/tags/前端路由/" style="font-size: 10px;">前端路由</a> <a href="/tags/工程化/" style="font-size: 10px;">工程化</a> <a href="/tags/微信小程序/" style="font-size: 10px;">微信小程序</a> <a href="/tags/手写Promise源码/" style="font-size: 10px;">手写Promise源码</a> <a href="/tags/拉勾/" style="font-size: 20px;">拉勾</a> <a href="/tags/拉勾，自动化构建/" style="font-size: 10px;">拉勾，自动化构建</a> <a href="/tags/数据结构/" style="font-size: 12.5px;">数据结构</a> <a href="/tags/正则/" style="font-size: 10px;">正则</a> <a href="/tags/算法/" style="font-size: 17.5px;">算法</a> <a href="/tags/网易微专业/" style="font-size: 10px;">网易微专业</a> <a href="/tags/网易微专业-Flutter/" style="font-size: 10px;">网易微专业 Flutter</a> <a href="/tags/网易微专业-node/" style="font-size: 10px;">网易微专业 node</a> <a href="/tags/设计模式/" style="font-size: 15px;">设计模式</a>
     </div>
   </div>
 
@@ -169,7 +214,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
     </div>
   </div>
 
@@ -182,23 +227,23 @@
       <ul>
         
           <li>
+            <a href="/2020/07/08/拉勾-自动化构建/">拉勾-自动化构建</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/03/拉勾-脚手架工具/">拉勾-脚手架工具</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/03/拉勾-工程化概述/">拉勾-工程化概述</a>
+          </li>
+        
+          <li>
             <a href="/2020/06/28/拉勾-JavaScript性能优化/">拉勾-JavaScript性能优化</a>
           </li>
         
           <li>
             <a href="/2020/06/26/拉勾-TypeScript语言/">拉勾-TypeScript语言</a>
-          </li>
-        
-          <li>
-            <a href="/2020/06/21/拉勾-ECMAScript新特性/">拉勾-ECMAScript新特性</a>
-          </li>
-        
-          <li>
-            <a href="/2020/06/20/网易微专业-移动端APP开发工程师-微信小程序-3-1-1-创建微信小程序项目/">网易微专业-移动端APP开发工程师-微信小程序-3.1.1-创建微信小程序项目</a>
-          </li>
-        
-          <li>
-            <a href="/2020/06/18/拉勾-手写Promise源码/">拉勾-手写Promise源码</a>
           </li>
         
       </ul>

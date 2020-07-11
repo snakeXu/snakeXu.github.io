@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>拉勾-脚手架工具 | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1.脚手架工具概要脚手架的本质作用：创建项目基础结构、提供项目规范和约定·相同的组织结构·相同的代码开发范式·相同的模块依赖·相同的工具配置·相同的基础代码2.常用的脚手架工具Yeoman、plop3.Yeoman简介相比vue-cli等这类专门的脚手架，Yeoman是一款非常通用的脚手架4.Yeoman基础使用首先要安装Yeoman，可以yarn global add yo或者npm insta">
+<meta property="og:type" content="article">
+<meta property="og:title" content="拉勾-脚手架工具">
+<meta property="og:url" content="http://yoursite.com/2020/07/03/拉勾-脚手架工具/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="1.脚手架工具概要脚手架的本质作用：创建项目基础结构、提供项目规范和约定·相同的组织结构·相同的代码开发范式·相同的模块依赖·相同的工具配置·相同的基础代码2.常用的脚手架工具Yeoman、plop3.Yeoman简介相比vue-cli等这类专门的脚手架，Yeoman是一款非常通用的脚手架4.Yeoman基础使用首先要安装Yeoman，可以yarn global add yo或者npm insta">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_2/tools/6_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_2/tools/6_2.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_2/tools/8_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_2/tools/14_1.png">
+<meta property="og:updated_time" content="2020-07-07T19:43:51.920Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="拉勾-脚手架工具">
+<meta name="twitter:description" content="1.脚手架工具概要脚手架的本质作用：创建项目基础结构、提供项目规范和约定·相同的组织结构·相同的代码开发范式·相同的模块依赖·相同的工具配置·相同的基础代码2.常用的脚手架工具Yeoman、plop3.Yeoman简介相比vue-cli等这类专门的脚手架，Yeoman是一款非常通用的脚手架4.Yeoman基础使用首先要安装Yeoman，可以yarn global add yo或者npm insta">
+<meta name="twitter:image" content="https://snakexu.github.io/images/lagou/part_2/tools/6_1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-拉勾-脚手架工具" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/07/03/拉勾-脚手架工具/" class="article-date">
+  <time datetime="2020-07-03T09:00:29.000Z" itemprop="datePublished">2020-07-03</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      拉勾-脚手架工具
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.脚手架工具概要<br>脚手架的本质作用：创建项目基础结构、提供项目规范和约定<br>·相同的组织结构<br>·相同的代码开发范式<br>·相同的模块依赖<br>·相同的工具配置<br>·相同的基础代码<br>2.常用的脚手架工具<br>Yeoman、plop<br>3.Yeoman简介<br>相比vue-cli等这类专门的脚手架，Yeoman是一款非常通用的脚手架<br>4.Yeoman基础使用<br>首先要安装Yeoman，可以yarn global add yo或者npm install -g yo<br>使用Yeoman去创建项目，要找到对应类型的Generator，假设我们要生成一个node项目，我们需要generator-node这样一个模块，那么就需要把这个generator-node模块全局安装到本地。<br>安装成功后，可以创建一个目录，通过yo命令去运行我们安装的generator-node去创建项目，只不过这时候我们的命令要去掉generator，yo node这个命令就可以了，Yeoman会问我们一系列问题，正常回答就好<br>另外如果在生成过程中，让你在travis-cli上启动这个项目，命令行会卡死在这儿，敲一下回车结束这个流程<br>5.Sub Generator<br>有时候我们可能并不需要创建完整的项目，只需要在已有的项目基础上去创建一些文件，例如给一个已经存在的项目创建readme，或者创建一个配置文件等，可以用yeoman提供的sub generator这样一个特性来实现。在项目目录下用特定的命令去生成对应的文件，比如我们在项目中用generator-node子集的一个生成器去生成一个cli应用:yo node:cli，先提问是不是覆盖原来的package.json文件，我们选择是，然后本地模块可以通过npm link到全局范围，重新通过npm i 安装依赖<br>这里需要注意的是，并不是每个generator都生成子集生成器，我们要去官网去确定是不是有子集生成器<br>6.Yeoman 使用步骤总结<br><img src="https://snakexu.github.io/images/lagou/part_2/tools/6_1.png"><br>比如创建webapp的时候，有一些二进制的文件需要安装，npm处理起来会比较缓慢，我们可以用淘宝镜像源。一些淘宝镜像源<br><img src="https://snakexu.github.io/images/lagou/part_2/tools/6_2.png"><br>7.自定义Generator(基于Yeoman搭建自己的脚手架)<br>Yeoman是一款通用的脚手架，我们可以通过Yeoman去创建自己的项目。一些通用的cli只会创建基础的公共代码，而我们实际项目中会出现一些基础代码/业务代码，在相同类型项目时还是会重复的。我们可以通过自定义Generator来实现这些功能<br>8.创建Generator模块(本质上就是创建一个NPM模块)<br>Generator基本结构<br><img src="https://snakexu.github.io/images/lagou/part_2/tools/8_1.png"><br>另外generator的名称需要固定为generator-&lt; name &gt;(尖括号内无空格，尖括号内代表可修改项)这种格式<br>我们通过npm init / yarn init 的命令初始化一个项目，安装yeoman-generator模块，提供了生存generator的基类，在基类中提供了一些工具函数，让我们可以在创建生成器时更加便捷<br>然后我们按照之前介绍的基本结构创建文件夹，其中generators/app/index.js会作为generator的核心入口，需要导出继承自Yeoman Generator的类型。Yeoman Generator 在工作时会自动调用我们在此类型中定义的一些生命周期方法，我们在这些方法中可以通过调用父类提供的一些工具方法实现一些功能，例如文件写入</p>
+<p><pre><br>const Generator = require(‘yeoman-generator’)<br>module.exports = class extends Generator {<br>    riting () {<br>        // Yeoman 自动在生成文件阶段调用此方法<br>        // 我们这里尝试往项目目录中写入文件<br>        this.fs.write(<br>           this.destinationPath(‘temp.txt’),<br>           Math.random().toString()<br>        )<br>    }<br>}<br></pre><br>以上一个简单的generator就完成了，通过npm link / yarn link 使之成为一个全局的模块包，这样yeoman在工作的时候就能找到我们写的工具，然后通过yo 工具名 来使用了<br>9.根据模版创建文件<br>我们可以创建一个templates目录，并且把我们想要生成的文件的都放入这个目录作为模板。例如我们创建templates/foo.txt</p>
+<p><pre><br>这是一个模板文件<br>//下面说的都是真的，简单介绍了一下generator template的支持语法等<br>内部可以使用 EJS 模板标记输出数据<br>例如：&lt;%= title %&gt;<br>其他的 EJS 语法也支持<br>&lt;% if (success) { %&gt;<br>哈哈哈<br>&lt;% }%&gt;<br></pre><br>然后在generators/app/index.js中通过模板方式写入文件到目标目录</p>
+<p><pre><br>const Generator = require(‘yeoman-generator’)<br>module.exports = class extends Generator {<br>    riting () {<br>        // Yeoman 自动在生成文件阶段调用此方法<br>        // 通过模板方式写入文件到目标目录<br>        // 模板文件路径<br>        const tmpl = this.templatePath(‘foo.txt’)<br>        // 输出目标路径<br>        const output = this.destinationPath(‘foo.txt’)<br>        // 模板数据上下文<br>        const context = { title: ‘Hello zce~’, success: false }<br>        this.fs.copyTpl(tmpl, output, context)<br>    }<br>}<br></pre><br>然后在命令行运行yo generatorname命令，yeoman就会使用模板引擎自动渲染模板。相对于手动创建每一个文件，模版的方式大大提高了效率<br>10.接收用户输入</p>
+<p><pre><br>module.exports = class extends Generator {<br>    prompting () {<br>        // Yeoman 在询问用户环节会自动调用此方法<br>        // 在此方法中可以调用父类的 prompt() 方法发出对用户的命令行询问<br>        return this.prompt([<br>              {<br>                type: ‘input’,//采用用户输入的方式来得到信息<br>                name: ‘name’,//我们用来得到用户输入的键<br>                message: ‘Your project name’,//给用户的提示<br>                default: this.appname // appname 为项目生成目录名称，作为这个问题的默认值<br>              }<br>        ])<br>        .then(answers =&gt; {<br>              // answers =&gt; { name: ‘user input value’ }<br>              this.answers = answers<br>        })<br>    }<br>    riting () {<br>        // Yeoman 自动在生成文件阶段调用此方法<br>        // 模板文件路径<br>        //这里bar.html就是模版，里面简单的写了一些简单的html内容<br>        const tmpl = this.templatePath(‘bar.html’)<br>        // 输出目标路径<br>        const output = this.destinationPath(‘bar.html’)<br>        // 模板数据上下文<br>        const context = this.answers<br>        this.fs.copyTpl(tmpl, output, context)<br>    }<br>}<br></pre><br>11.Vue Generator案例<br>首先我们先按照原始方式创建一个理想的项目结构，里面有我们所有需要重复使用的项目基础代码，然后我们去封装一个generator去生成我们理想的项目结构<br>首先创建一个generator目录，比如我们叫generator-zce-vue，进入这个目录，通过yarn init / npm init 去初始化一个package.json，安装yeoman-generator依赖。打开项目，把我们之前生成的项目结构目录整体拷贝到templates目录下作为模板，并且把需要发生变化的地方可以替换成EJS(&lt;%= 变量名 %&gt; )模版标记，用用户输入等方式获取，比如我们替换项目名称</p>
+<p><pre><br>//README.md文件</pre></p>
+<h1 id="lt-name-gt"><a href="#lt-name-gt" class="headerlink" title="&lt;%= name %&gt;"></a>&lt;%= name %&gt;</h1><h2 id="Project-setup"><a href="#Project-setup" class="headerlink" title="Project setup"></a>Project setup</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn install</span><br></pre></td></tr></table></figure>
+<h3 id="Compiles-and-hot-reloads-for-development"><a href="#Compiles-and-hot-reloads-for-development" class="headerlink" title="Compiles and hot-reloads for development"></a>Compiles and hot-reloads for development</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn run serve</span><br></pre></td></tr></table></figure>
+<h3 id="Compiles-and-minifies-for-production"><a href="#Compiles-and-minifies-for-production" class="headerlink" title="Compiles and minifies for production"></a>Compiles and minifies for production</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn run build</span><br></pre></td></tr></table></figure>
+<h3 id="Run-your-tests"><a href="#Run-your-tests" class="headerlink" title="Run your tests"></a>Run your tests</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn run test</span><br></pre></td></tr></table></figure>
+<h3 id="Lints-and-fixes-files"><a href="#Lints-and-fixes-files" class="headerlink" title="Lints and fixes files"></a>Lints and fixes files</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn run lint</span><br></pre></td></tr></table></figure>
+<h3 id="Customize-configuration"><a href="#Customize-configuration" class="headerlink" title="Customize configuration"></a>Customize configuration</h3><p>See <a href="https://cli.vuejs.org/config/" target="_blank" rel="noopener">Configuration Reference</a>.<br>//package.json<br>{<br>  “name”: “&lt;%= name %&gt;”,<br>  “version”: “0.1.0”,<br>  “private”: true,<br>  “scripts”: {<br>    “serve”: “vue-cli-service serve”,<br>    “build”: “vue-cli-service build”,<br>    “lint”: “vue-cli-service lint”<br>  },<br>  “dependencies”: {<br>    “axios”: “^0.19.0”,<br>    “core-js”: “^3.2.1”,<br>    “vue”: “^2.6.10”,<br>    “vue-router”: “^3.0.3”,<br>    “vuex”: “^3.0.1”<br>  },<br>  “devDependencies”: {<br>    “@vue/cli-plugin-babel”: “^3.11.0”,<br>    “@vue/cli-plugin-eslint”: “^3.11.0”,<br>    “@vue/cli-service”: “^3.11.0”,<br>    “@vue/eslint-config-standard”: “^4.0.0”,<br>    “babel-eslint”: “^10.0.1”,<br>    “eslint”: “^6.2.2”,<br>    “eslint-plugin-vue”: “^5.0.0”,<br>    “sass”: “^1.18.0”,<br>    “sass-loader”: “^7.1.0”,<br>    “vue-template-compiler”: “^2.6.10”<br>  }<br>}<br>//index.html<br>&lt; title &gt;&lt;%= name %&gt;&lt; /title &gt;<br><br>然后修改入口文件代码</p>
+<p><pre><br>const Generator = require(‘yeoman-generator’)</pre></p>
+<p>module.exports = class extends Generator {<br>  prompting () {<br>    return this.prompt([<br>      {<br>        type: ‘input’,<br>        name: ‘name’,<br>        message: ‘Your project name’,<br>        default: this.appname<br>      }<br>    ])<br>    .then(answers =&gt; {<br>      this.answers = answers<br>    })<br>  }<br>  writing () {<br>    // 把每一个文件都通过模板转换到目标路径<br>    const templates = [<br>      ‘.browserslistrc’,<br>      ‘.editorconfig’,<br>      ‘.env.development’,<br>      ‘.env.production’,<br>      ‘.eslintrc.js’,<br>      ‘.gitignore’,<br>      ‘babel.config.js’,<br>      ‘package.json’,<br>      ‘postcss.config.js’,<br>      ‘README.md’,<br>      ‘public/favicon.ico’,<br>      ‘public/index.html’,<br>      ‘src/App.vue’,<br>      ‘src/main.js’,<br>      ‘src/router.js’,<br>      ‘src/assets/logo.png’,<br>      ‘src/components/HelloWorld.vue’,<br>      ‘src/store/actions.js’,<br>      ‘src/store/getters.js’,<br>      ‘src/store/index.js’,<br>      ‘src/store/mutations.js’,<br>      ‘src/store/state.js’,<br>      ‘src/utils/request.js’,<br>      ‘src/views/About.vue’,<br>      ‘src/views/Home.vue’<br>    ]<br>    templates.forEach(item =&gt; {<br>      // item =&gt; 每个文件路径<br>      this.fs.copyTpl(<br>        this.templatePath(item),<br>        this.destinationPath(item),<br>        this.answers<br>      )<br>    })<br>  }<br>}<br><br>然后npm link / yarn link 到全局，然后创建项目文件夹，在我们的项目文件夹运行yo generator-name命令，输入交互信息，而我们发现会报错，是因为我们在index.html文件中用到了和EJS模版标记一样的标记，但是我们需要原样输出，那么我们就多加一个%就好</p>
+<p><pre> &lt; link rel=”icon” href=”&lt;%%= BASE_URL %&gt;favicon.ico” &gt; </pre><br>12.发布Generator<br>实际上就是发布一个npm模块，只需要将自己写好的generator模块通过npm publish这样一个命令去发布一个公开模块就好。在发布之前，我们需要将源代码托管到源代码仓库。先创建一个本地仓库，创建gitignore去忽略一些文件，然后通过git init初始化一个本地空仓库。通过git add . 去添加，git commit，打开github，创建一个新仓库，通过git remote add origin 远端仓库地址 ，git push -u origin master， npm publish 。这里要注意了，如果你使用的是淘宝镜像，就需要发布到官方镜像:yarn publish –registry=<a href="https://registry.yarnpkg.com" target="_blank" rel="noopener">https://registry.yarnpkg.com</a><br>13.Plop简介<br>一个小而美的脚手架工具。主要用于创建项目中特定类型文件。自动化创建指定类型文件，提高工作效率。<br>14.Plop的基本使用<br>首先，将plop作为开发依赖安装到项目中yarn add plop –dev(这里老师创建了一个基本的react项目，把plop作为依赖安装到这个项目中)。在项目的根目录下创建plopfile.js文件，这个文件是plop工作的入口文件，导出一个函数，并且这个函数接收一个叫plop的对象，这个对象提供了一系列工具函数帮我们创建生成器的任务</p>
+<p><pre><br>module.exports = plop =&gt; {<br>  plop.setGenerator(‘component’, { //plop.setGenerator(生成器名字,生成器配置选项)<br>    description: ‘application component’,//描述<br>    prompts: [ // 命令行交互问题<br>      {<br>        type: ‘input’,<br>        name: ‘name’,<br>        message: ‘component name’ //屏幕提示，如果有默认答案，还可以写default:默认答案内容<br>      }<br>    ],<br>    actions: [ // 完成命令行交互之后执行的动作<br>      {<br>        type: ‘add’,<br>        //双花括号，得到命令行交互的答案，但是由于hexo对双花括号报错，这里将双花括号中间添加空格<br>        path: ‘src/components/{ { name } }/{ { name } }.js’,<br>        templateFile: ‘plop-templates/component.js.hbs’//本次添加文件的模板文件，一般放在项目根目录的plop-templates文件夹下面<br>      },<br>      {<br>        type: ‘add’,<br>        path: ‘src/components/{ { name } }/{ { name } }.css’,<br>        templateFile: ‘plop-templates/component.css.hbs’<br>      },<br>      {<br>        type: ‘add’,<br>        path: ‘src/components/{ { name } }/{ { name } }.test.js’,<br>        templateFile: ‘plop-templates/component.test.js.hbs’<br>      }<br>    ]<br>  })<br>}<br></pre><br>component.test.js.hbs</p>
+<p><pre><br>import React from ‘react’;<br>import ReactDOM from ‘react-dom’;<br>import  from ‘./‘;</pre></p>
+<p>it(‘renders without crashing’, () =&gt; {<br>  const div = document.createElement(‘div’);<br>  ReactDOM.render(&lt; { { name } } /&gt;, div);<br>  ReactDOM.unmountComponentAtNode(div);<br>});<br><br>component.js.hbs</p>
+<p><pre><br>import React from ‘react’;<br>import ‘./{ { name } }.css’;<br>export default () =&gt; (<br>  &lt; div className=”{ { name } }” &gt;</pre></p>
+<p>  &lt; /div &gt;<br>)<br><br>component.css.hbs</p>
+<p><pre><br>. {</pre></p>
+<p>}<br><br>安装plop的时候，plop提供了一个cli程序，可以通过yarn去启动这个plop程序即yarn plop 生成器名字 (生成器名字就是我们刚才在plop.setGenerator中指定的)<br>总结，在项目中使用plop的步骤<br><img src="https://snakexu.github.io/images/lagou/part_2/tools/14_1.png"><br>15.脚手架的工作原理<br>本节通过创建一个小型脚手架工具来体会工作原理，主要是node的cli的应用，创建一个目录，在目录中用npm init / yarn init 初始化一个项目<br>package.json</p>
+<p><pre><br>{<br>  “name”: “sample-scaffolding”,<br>  “version”: “0.1.0”,<br>  “main”: “index.js”,<br>  “bin”: “cli.js”,//指定执行cli应用的入口文件<br>  “author”: “zce &lt; <a href="mailto:w@zce.me" target="_blank" rel="noopener">w@zce.me</a> &gt; (<a href="https://zce.me)&quot;" target="_blank" rel="noopener">https://zce.me)&quot;</a>,<br>  “license”: “MIT”,<br>  “dependencies”: {<br>    “ejs”: “^2.6.2”,<br>    “inquirer”: “^7.0.0”<br>  }<br>}<br></pre><br>cli.js</p>
+<p><pre></pre></p>
+<p>#!/usr/bin/env node<br>// Node CLI 应用入口文件必须要有这样的文件头<br>// 如果是 Linux 或者 macOS 系统下还需要修改此文件的读写权限为 755<br>// 具体就是通过 chmod 755 cli.js 实现修改<br>// 脚手架的工作过程：<br>// 1. 通过命令行交互询问用户问题<br>// 2. 根据用户回答的结果生成文件<br>const fs = require(‘fs’)<br>const path = require(‘path’)<br>// 发起命令行交互需要安装inquirer<br>const inquirer = require(‘inquirer’)<br>// 模版引擎，需要安装<br>const ejs = require(‘ejs’)<br>inquirer.prompt([ //发起命令行询问<br>  {<br>    type: ‘input’,<br>    name: ‘name’,<br>    message: ‘Project name?’<br>  }<br>])<br>.then(anwsers =&gt; { // 在then中拿到用户答案<br>  // console.log(anwsers)<br>  // 根据用户回答的结果生成文件<br>  // 模板目录<br>  const tmplDir = path.join(__dirname, ‘templates’)<br>  // 目标目录<br>  const destDir = process.cwd()<br>  // 将模板下的文件全部转换到目标目录<br>  fs.readdir(tmplDir, (err, files) =&gt; {<br>    if (err) throw err<br>    files.forEach(file =&gt; {<br>      // 通过模板引擎渲染文件<br>      ejs.renderFile(path.join(tmplDir, file), anwsers, (err, result) =&gt; { //参数 模版引擎路径，工作环境上下文，回调函数<br>        if (err) throw err<br>        // 将结果写入目标文件路径<br>        fs.writeFileSync(path.join(destDir, file), result)<br>      })<br>    })<br>  })<br>})<br><br>通过yarn link 的方式把这样一个模块link到全局，然后可以通过sample-scaffolding这样一个命令</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/07/03/拉勾-脚手架工具/" data-id="ckchm0rfy002k5ajhgkdh3667" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/07/08/拉勾-自动化构建/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          拉勾-自动化构建
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/07/03/拉勾-工程化概述/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">拉勾-工程化概述</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/拉勾/">拉勾</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ECMAScript新特性/">ECMAScript新特性</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript异步编程/">JavaScript异步编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TypeScript语言/">TypeScript语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-babel/">react babel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/函数式编程/">函数式编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/函数式编程范式/">函数式编程范式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端路由/">前端路由</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工程化/">工程化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/微信小程序/">微信小程序</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/手写Promise源码/">手写Promise源码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/拉勾/">拉勾</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/拉勾，自动化构建/">拉勾，自动化构建</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/正则/">正则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业/">网易微专业</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-Flutter/">网易微专业 Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-node/">网易微专业 node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/ECMAScript新特性/" style="font-size: 10px;">ECMAScript新特性</a> <a href="/tags/JavaScript异步编程/" style="font-size: 10px;">JavaScript异步编程</a> <a href="/tags/TypeScript语言/" style="font-size: 10px;">TypeScript语言</a> <a href="/tags/react-babel/" style="font-size: 10px;">react babel</a> <a href="/tags/函数式编程/" style="font-size: 10px;">函数式编程</a> <a href="/tags/函数式编程范式/" style="font-size: 10px;">函数式编程范式</a> <a href="/tags/前端路由/" style="font-size: 10px;">前端路由</a> <a href="/tags/工程化/" style="font-size: 10px;">工程化</a> <a href="/tags/微信小程序/" style="font-size: 10px;">微信小程序</a> <a href="/tags/手写Promise源码/" style="font-size: 10px;">手写Promise源码</a> <a href="/tags/拉勾/" style="font-size: 20px;">拉勾</a> <a href="/tags/拉勾，自动化构建/" style="font-size: 10px;">拉勾，自动化构建</a> <a href="/tags/数据结构/" style="font-size: 12.5px;">数据结构</a> <a href="/tags/正则/" style="font-size: 10px;">正则</a> <a href="/tags/算法/" style="font-size: 17.5px;">算法</a> <a href="/tags/网易微专业/" style="font-size: 10px;">网易微专业</a> <a href="/tags/网易微专业-Flutter/" style="font-size: 10px;">网易微专业 Flutter</a> <a href="/tags/网易微专业-node/" style="font-size: 10px;">网易微专业 node</a> <a href="/tags/设计模式/" style="font-size: 15px;">设计模式</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/07/08/拉勾-自动化构建/">拉勾-自动化构建</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/03/拉勾-脚手架工具/">拉勾-脚手架工具</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/03/拉勾-工程化概述/">拉勾-工程化概述</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/28/拉勾-JavaScript性能优化/">拉勾-JavaScript性能优化</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/26/拉勾-TypeScript语言/">拉勾-TypeScript语言</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

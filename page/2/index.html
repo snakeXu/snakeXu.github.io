@@ -62,6 +62,205 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-拉勾-函数式编程范式" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/14/拉勾-函数式编程范式/" class="article-date">
+  <time datetime="2020-06-14T10:27:36.000Z" itemprop="datePublished">2020-06-14</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/14/拉勾-函数式编程范式/">拉勾-函数式编程范式</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>6.高阶函数-函数作为返回值</p>
+<p><pre><br>function makeFn(){<br>    let msg = ‘Hello function’;<br>    return function(){<br>        console.log(msg);<br>    }<br>}<br>const fn = makeFn()<br>fn()//调用返回函数<br>makeFn()()//和fn()其实调用结果是一致的<br></pre><br>下面我们模拟once(只执行一次的函数)执行</p>
+<p><pre><br>function once(fn){<br>    let done = false;<br>    return function(){<br>        if(!done){<br>            done = true;<br>            return fn.apply(this,arguments)<br>        }<br>    }<br>}<br>let pay = once(function(money){<br>    console.log(<code>支付:${money}RMB</code>)<br>})<br>pay(5)<br>pay(5)<br>pay(5)<br></pre><br>7.高阶函数的意义<br>使用高阶函数的意义:抽象可以帮我们屏蔽细节，只需要关注于我们的目标；高阶函数是用来抽象通用的问题<br>举例我们需要打印数组中的所有元素 </p>
+<p><pre><br>//面向过程的方式<br>let array = [1,2,3,4]<br>for(let i =0; i &lt; array.length; i++){<br>    console.log(array[i])<br>}<br>//高阶函数<br>let array = [1,2,3,4]<br>forEach(array,(item)=&gt;{<br>    consle.log(item)<br>})<br>//这里是过滤<br>let r = filter(array,(item)=&gt;{<br>    return item % 2 === 0<br>})<br></pre><br>总之我们发现，使用高阶函数能让我们的函数变得很灵活，抽象可以帮助我们屏蔽实现的细节，以后再调用函数，只需要关注我们实现的目标就可以了<br>8.常用的高阶函数<br>模拟常用高阶函数map/every/some<br>8-1.map</p>
+<p><pre><br>//这里用const定义是因为我们不希望在我们写好之后被别人修改<br>const map = (array,fn)=&gt;{<br>    let results = []<br>    for(let value of array){<br>        results.push(fn(value))<br>    }<br>    return results<br>}<br>//测试<br>let arr = [1,2,3,4]<br>arr = map(arr,(v)=&gt;v*v)<br>console.log(arr)<br></pre><br>8-2.every</p>
+<p><pre><br>const every = (array,fn)=&gt;{<br>    let result = true;<br>    for(let value of array){<br>        result = fn(value)<br>        if(!result){<br>            break;<br>        }<br>    }<br>    return result<br>}<br>//测试<br>let arr = [11,12,14]<br>let r = every(arr,v=&gt; v &gt; 10)<br>console.log(r)<br></pre><br>8-3.some</p>
+<p><pre><br>const some = (array,fn)=&gt;{<br>    let result = false;<br>    for(let value of array){<br>        result = fn(value)<br>        if(result){<br>            break;<br>        }<br>    }<br>    return result<br>}<br>//测试<br>let arr = [1,3,4,9]<br>let r = some(arr,v=&gt;v%2===0)<br>console.log(r)<br></pre><br>9.闭包-概念<br>闭包(Closure):函数和其周围的状态(词法环境)的引用捆绑在一起形成闭包。可以在另一个作用域中调用一个函数的内部函数并访问到该函数的作用域中的成员。<br>闭包的本质:函数在执行的时候会放到一个执行栈上，当函数执行完毕后会从执行栈上移除，但是堆上的作用域成员因为被外部引用不能释放，因此内部函数依然可以访问外部函数的成员。<br>之前课程中的例子</p>
+<p><pre><br>function makeFn(){<br>    let msg = ‘Hello function’;<br>    return function(){<br>        console.log(msg);<br>    }<br>}<br></pre><br>就能体现关于闭包的概念。一般情况下，在makeFn中定义的变量msg会随着makeFn在执行栈中执行完毕被移除，但是因为return了一个函数，所以makeFn内部的成员不会被移除，依然能访问外部函数。<br>闭包延长了内部函数的作用范围。<br>10.闭包-案例<br>比如我们经常需要求一个数的平方/立方，那么就会用到Math.pow(4,2)，而我们需要经常传递第二个参数为2/3，我们想简化这个过程，不需要经常传递2/3</p>
+<p><pre><br>function makePower(power){<br>    return function(number){<br>        return Math.pow(number,power)<br>    }<br>}<br>//求平方<br>let power2 = makePower(2)<br>//求立方<br>let power3 = makePower(3)<br>//测试<br>console.log(power2(4))<br>console.log(power2(5))<br>console.log(power3(4))<br></pre><br>初步了解了闭包的例子，我们现在满足这样一个需求：求工资，也就是工资是由基本工资和绩效工资组成，每个职级的基本工资是固定的，但是绩效工资不一样，我们来求不同级别的员工生成工资的函数 </p>
+<p><pre><br>function getSalary(base){<br>    //参数base为基本工资<br>    return function(performance){<br>        //参数performance为绩效工资<br>        return base + performance<br>    }<br>}<br>//测试<br>let getSalaryLevel1 = getSalary(12000)<br>let getSalaryLevel2 = getSalary(15000)<br>console.log(getSalaryLevel1(2000))<br>console.log(getSalaryLevel2(3000))<br></pre><br>在这节课程中，我们可以打开浏览器调试工具，在程序中打断点观察程序的执行过程，了解执行栈和作用域<br>11.纯函数概念<br>纯函数:相同的输入永远会得到相同的输出，而且没有任何可观察的副作用(后面的课程会讲什么是副作用)。纯函数就类似数学中的函数(用来描述输入和输出之间的关系)，y=f(x)<br>lodash是一个纯函数的功能库，提供了对数组、数字、对象、字符串、函数等操作的一些方法。<br>数组的slice和splice分别是纯函数和不纯的函数:<br>·slice返回数组中指定部分，不会改变原数组<br>·splice对数组进行操作返回该数组，会改变原数组</p>
+<p><pre><br>let array = [1,2,3,4,5]<br>//纯函数<br>console.log(array.slice(0,3))<br>console.log(array.slice(0,3))<br>console.log(array.slice(0,3))<br>//非纯函数<br>console.log(array.splice(0,3))<br>console.log(array.splice(0,3))<br>console.log(array.splice(0,3))<br></pre><br>执行之后我们发现slice和splice之间的区别，也就是纯函数和非纯函数之间的区别</p>
+<p><pre><br>//纯函数<br>function getSum(n1,n2){<br>    return n1 + n2<br>}<br>console.log(getSum(1,2))<br>console.log(getSum(1,2))<br>console.log(getSum(1,2))<br></pre><br>对于getSum函数，我们每次输入1，2之后的输出结果都是相同的，也就是纯函数。举了简单例子来说明纯函数，后面我们将学习更多纯函数的用法。<br>函数式编程不会保留中间计算的结果，所以变量是不可变的(无状态的)<br>我们可以把一个函数的执行结果交给另一个函数去处理<br>12.lodash<br>lodash纯函数的代表<br>这个小节，我们会展示一些常用lodash的使用方法，我们可以用npm init -y初始化一个项目，并且安装lodash</p>
+<p><pre><br>//first/last/toUpper/reverse/each/includes/find/findIndex<br>const _ = require(‘lodash’);<br>const array = [‘jack’,’tom’,’lucy’,’kate’];<br>console.log(<em>.first(array))<br>console.log(</em>.last(array))<br>console.log(<em>.toUpper(</em>.first(array)))<br>console.log(_.reverse(array))<br>const r = _.each(array,(item,index)=&gt;{<br>    console.log(item,index)<br>})<br>console.log(r)<br></pre><br>剩下的几个我们可以自己练习<br>13.纯函数的好处<br>纯函数的好处:<br>(1)可缓存:因为纯函数对相同的输入始终有相同的结果，所以可以把纯函数的结果缓存起来<br>(2)可测试:纯函数让测试更方便<br>(3)并行处理:在多线程的环境下并行操作共享的内存数据很可能会出现意外的情况；纯函数不需要访问共享的内存数据，所以在并行环境下可以任意运行纯函数(Web Worker)<br>这里我们还是通过lodash的函数来演示，功能是求圆的面积</p>
+<p><pre><br>const _ = require(‘lodash’);<br>function getArea(r){<br>    console.log(r);//这里的console.log是为了展示，并非功能<br>    return Math.PI<em>r</em>r<br>}<br>let getAreaWithMemory = _.memoize(getArea)<br>console.log(getAreaWithMemory(4))<br>console.log(getAreaWithMemory(4))<br>console.log(getAreaWithMemory(4))<br></pre><br>当我们执行上面的代码发现，getArea的参数只打印了一次，因为我们用了lodash的记忆函数。接下来我们模拟memoize这个方法的实现</p>
+<p><pre><br>function memoize(f){<br>    let cache = {}<br>    return function(){<br>        let key = JSON.stringify(arguments)<br>        cache[key] = cache[key] || f.apply(f,arguments)<br>        return cache[key]<br>    }<br>}<br></pre><br>14.副作用<br>纯函数:对于相同的输入永远会得到相同的输出，而且没有任何可观察到副作用</p>
+<p><pre><br>//不纯的<br>//本例中如果mini的值改变就会导致调用checkAge对相同的数值输出不同的结果<br>let mini = 18<br>function checkAge (age) {<br>    return age &gt;= mini<br>}<br>//纯的(有硬编码，后续可以通过柯里化解决)<br>function checkAge (age) {<br>    let mini = 18<br>    return age &gt;= mini<br>}<br></pre><br>副作用让一个函数变的不纯(如上例)，纯函数的根据相同的输入返回相同的输出，如果函数依赖于外部的状态就无法保证输出相同，就会带来副作用。<br>副作用来源：<br>·配置文件<br>·数据库<br>·获取用户的输入<br>·……<br>所有的外部交互都有可能带来副作用，副作用也使得方法通用性下降不适合扩展和可重用性，同时副作用会给程序中带来安全隐患给程序带来不确定性，但是副作用不可能完全禁止，尽可能控制它们在可控范围内发生。<br>15.柯里化(Haskell Brooks Curry)<br>在上一小节中，checkAge这个函数有一个硬编码的问题，这里我们用柯里化解决</p>
+<p><pre><br>//有硬编码问题<br>function checkAge (age) {<br>    let mini = 18<br>    return age &gt;= mini<br>}<br>//改造为普通的纯函数<br>function checkAge (min,age) {<br>    return age &gt;= min<br>}<br>//测试<br>console.log(checkAge(18,20))<br>console.log(checkAge(18,24))<br>console.log(checkAge(22,24))<br>//改造为我们之前学的闭包函数<br>function checkAge(min){<br>    return function(age){<br>        return age &gt;= min<br>    }<br>}<br>//测试<br>let checkAge18 = checkAge(18)<br>let checkAge20 = checkAge(20)<br>console.log(checkAge18(20))<br>console.log(checkAge18(24))<br>//用箭头函数实现<br>let checkAge = min =&gt; (age =&gt; age &gt;= min)<br></pre><br>通过上面的改造我们可以大致了解柯里化的含义就是:当函数有多个参数的时候，我们可以对函数进行改造，我们可以调用一个函数只传递部分的参数并且让这个函数返回一个新的函数，新的函数接收剩余的参数，并且返回相应的结果。课程讲义里给的对于柯里化的总结是:<br>柯里化 (Currying)：<br>·当一个函数有多个参数的时候先传递一部分参数调用它（这部分参数以后永远不变）<br>·然后返回一个新的函数接收剩余的参数，返回结果<br>16.lodash中的柯里化方法</p>
+<p><pre>_.curry(func)</pre><br>·功能：创建一个函数，该函数接收一个或多个func的参数，如果func所需要的参数都被提供则执行func并返回执行的结果。否则继续返回该函数并等待接收剩余的参数。<br>·参数：需要柯里化的函数<br>·返回值：柯里化后的函数</p>
+<p><pre><br>//将多元(多个参数)函数转换为一元(一个参数)的函数<br>const _ = require(‘lodash’)<br>function getSum (a, b, c) {<br>    return a + b + c<br>}<br>let curried = _.lodash(getSum)<br>//测试<br>console.log(curried(1, 2, 3))<br>console.log(curried(1)(2)(3))<br>console.log(curried(1, 2)(3))<br></pre><br>17.柯里化案例<br>我们现在有这样的需求<br>‘’.match(/\s+/g)<br>‘’.match(/\d+/g)<br>很明显我们这样写不是优雅的写法<br>于是我们想到用函数方式</p>
+<p><pre><br>function match(reg,str){<br>    return str.match(reg)<br>}<br></pre><br>如果我们需要经常获取字符串中所有空白，那这个函数需要很多重复，于是我们想到柯里化函数，这里用lodash中的curry</p>
+<p><pre><br>const _ = require(‘lodash’)<br>const match = _.curry(function(reg,str){<br>    return str.match(reg)<br>})<br>const haveSpace = match(/\s+/g)<br>const haveNumber = match(/\d+/g)<br>console.log(haveSpace(‘hello world’))<br>console.log(haveNumber(‘25$’))<br></pre><br>现在我们将filter封装为一个柯里化函数</p>
+<p><pre><br>const filter = _.curry(function (func, array) {<br>    return array.filter(func)<br>})<br>console.log(filter(haveSpace, [‘John Connor’, ‘John_Donne’]))<br>//进一步改造<br>const findSpace = filter(haveSpace)<br>console.log(findSpace([‘John Connor’, ‘John_Donne’]))<br></pre><br>18.柯里化原理模拟</p>
+<p><pre><br>//const _ = require(‘lodash’)<br>function getSum (a, b, c) {<br>    return a + b + c<br>}<br>//const curried = <em>.curry(getSum)//换成我们自己写的curry测试<br>const curried = curry(getSum)<br>function curry(func){<br>    return function curriedFn (…args){<br>        // 判断实参和形参的个数<br>        if(args.length &lt; func.length){<br>            return function (){<br>                return curriedFn(…args.concat(Array.from(arguments)))<br>            }<br>        }<br>        // 实参和形参个数相同，调用 func，返回结果<br>        return func(…args)<br>    }<br>}<br>console.log(curried(1)(2)(3))<br>console.log(curried(1)(2,3))<br>console.log(curried(1,2)(3))<br></em></pre><br>19.柯里化总结<br>·柯里化可以让我们给一个函数传递较少的参数得到一个已经记住了某些固定参数的新函数<br>·这是一种对函数参数的’缓存’<br>·让函数变的更灵活，让函数的粒度更小<br>·可以把多元函数转换成一元函数，可以组合使用函数产生强大的功能<br>20.函数组合概念<br>·纯函数和柯里化很容易写出洋葱代码 h(g(f(x)))<br> ·获取数组的最后一个元素再转换成大写字母<br> <pre>.toUpper(<em>.first(</em>.reverse(array)))</pre><br>·函数组合可以让我们把细粒度的函数重新组合生成一个新的函数<br>管道<br>下面这张图表示程序中使用函数处理数据的过程，给 fn 函数输入参数 a，返回结果 b。可以想想 a 数据通过一个管道得到了 b 数据。<br><img src="https://snakexu.github.io/images/lagou/part_1/20_1.png"><br>当 fn 函数比较复杂的时候，我们可以把函数 fn 拆分成多个小函数，此时多了中间运算过程产生的 m 和 n。<br>下面这张图中可以想象成把 fn 这个管道拆分成了3个管道 f1, f2, f3，数据 a 通过管道 f3 得到结果 m，m 再通过管道 f2 得到结果 n，n 通过管道 f1 得到最终结果 b。对比上面直接通过管道fn生成所要结果，在f1、f2、f3中如果发生问题，我们更容易定位问题位置。<br><img src="https://snakexu.github.io/images/lagou/part_1/20_2.png"><br>使用伪代码描述下上图</p>
+<p><pre><br>fn = compose(f1, f2, f3) //在处理过程中f1，f2，f3会产生一些中间结果，我们忽视这些<br>b = fn(a)<br></pre><br>函数组合<br>·函数组合 (compose)：如果一个函数要经过多个函数处理才能得到最终值，这个时候可以把中间过程的函数合并成一个函数<br> ·函数就像是数据的管道，函数组合就是把这些管道连接起来，让数据穿过多个管道形成最终结果<br> ·函数组合默认是从右到左执行</p>
+<p><pre><br>//先假设我们需要一个两个函数组合的函数<br>function compose(f,g){<br>    return function(value){<br>        return f(g(value))<br>    }<br>}<br></pre><br>现在假设我们需要获取数组中最后一个元素，用先反转再获取到数组中第一个元素方法</p>
+<p><pre><br>//反转<br>function reverse(array){<br>    return array.reverse()<br>}<br>function first(array){<br>    return array[0]<br>}<br>const last = compose(first,reverse)<br>console.log(last([1,2,3,4]))<br></pre><br>21.lodash中的组合函数<br>·lodash 中组合函数 flow() 或者 flowRight()，他们都可以组合多个函数<br>·flow() 是从左到右运行<br>·flowRight() 是从右到左运行，使用的更多一些</p>
+<p><pre><br>const _ = require(‘lodash’)<br>const toUpper = s =&gt; s.toUpperCase()<br>const reverse = arr =&gt; arr.reverse()<br>const first = arr =&gt; arr[0]<br>const f = _.flowRight(toUpper, first, reverse)<br>console.log(f([‘one’, ‘two’, ‘three’]))<br></pre><br>22.组合函数原理模拟</p>
+<p><pre><br>// 多函数组合<br>function compose (…fns) {<br>    return function (value) {<br>        return fns.reverse().reduce(function (acc, fn) {<br>            return fn(acc)<br>        }, value)<br>    }<br>}<br>const toUpper = s =&gt; s.toUpperCase()<br>const reverse = arr =&gt; arr.reverse()<br>const first = arr =&gt; arr[0]<br>const f = compose(toUpper, first, reverse)<br>console.log(f([‘one’, ‘two’, ‘three’]))<br></pre><br>或者我们用箭头函数重写compose</p>
+<p><pre><br>const compose = (…fns) =&gt; value =&gt; fns.reverse().reduce((acc, fn) =&gt; fn(acc), value)<br></pre><br>23.函数组合-结合律<br>函数的组合要满足结合律 (associativity)：<br>·我们既可以把 g 和 h 组合，还可以把 f 和 g 组合，结果都是一样的<br>用代码描述就是</p>
+<p><pre><br>// 结合律（associativity）<br>let f = compose(f, g, h)<br>let associative = compose(compose(f, g), h) == compose(f, compose(g, h))<br>// true<br></pre><br>用lodash中的flowright来感受下</p>
+<p><pre><br>const _ = require(‘lodash’)<br>//这里我们不再用自己写的函数了，而是用lodash<br>const f = <em>.flowRight(</em>.toUpper, _.first, _.reverse)<br>const g = <em>.flowRight(</em>.flowRight(_.toUpper, _.first), _.reverse)<br>const h = <em>.flowRight(</em>.toUpper, <em>.flowRight(</em>.first, _.reverse))<br>console.log(f([‘one’, ‘two’, ‘three’])) // =&gt; THREE<br>console.log(g([‘one’, ‘two’, ‘three’])) // =&gt; THREE<br>console.log(h([‘one’, ‘two’, ‘three’])) // =&gt; THREE<br></pre><br>24.函数组合-调试<br>如何调试组合函数</p>
+<p><pre><br>const f = <em>.flowRight(</em>.toUpper, _.first, _.reverse)<br>console.log(f([‘one’, ‘two’, ‘three’]))<br></pre><br>需求:NEVER SAY DIE -&gt; never-say-die</p>
+<p><pre><br>//<em>.split与</em>.join都是有多个参数，而我们在函数组合的时候不能使用多个参数，于是我们略作修改<br>const split = <em>.curry((sep,str)=&gt;</em>.split(str,sep))//sep-分隔符，str-字符串<br>const join = <em>.curry((sep,array)=&gt;</em>.join(array,sep))<br>//打印下某个函数的执行结果<br>const log = v =&gt; {<br>    console.log(v)<br>    return v<br>}<br>//结果为n-e-v-e-r-,-s-a-y-,-d-i-e-<br>//const f = _.flowRight(join(‘-‘), _.toLower, split(‘ ‘))//发现结果并不是我们预期的<br>//查看中间某个过程的打印结果，这里打印的结果显示split之后的操作是符合我们预期的[“NEVER”,”SAY”,”DIE”]<br>//const f = _.flowRight(join(‘-‘), _.toLower, log, split(‘ ‘))<br>//发现了问题的所在，toLower把split分割成的数组转换为了字符串never,say,die<br>//const f = _.flowRight(join(‘-‘),log,  _.toLower, split(‘ ‘)<br>console.log(f(‘NEVER SAY DIE’))<br></pre><br>在上面代码中我们发现了问题，toLower函数将split分割的数组转化为了字符串，我们应该用map函数，即对数组进行操作</p>
+<p><pre><br>const split = <em>.curry((sep,str)=&gt;</em>.split(str,sep))<br>const join = <em>.curry((sep,array)=&gt;</em>.join(array,sep))<br>const map = <em>.curry((fn,array)=&gt;</em>.map(array,fn))<br>//为了解决log打印结果不清晰的问题，我们改造log<br>// const log = v =&gt; {<br>//      console.log(v)<br>//      return v<br>// }<br>const trace = _.curry((tag, v) =&gt; {<br>    console.log(tag, v)<br>    return v<br>})<br>//const f = <em>.flowRight(join(‘-‘), map(</em>.toLower), split(‘ ‘)//已经满足我们的需求<br>//如果我们两次打印log，不能区分是哪个log打印<br>//const f = <em>.flowRight(join(‘-‘), log, map(</em>.toLower), log, split(‘ ‘)<br>const f = <em>.flowRight(join(‘-‘), trace(‘map 之后’), map(</em>.toLower), trace(‘split 之后’), split(‘ ‘))<br>console.log(f(‘NEVER SAY DIE’))<br></pre><br>25.lodash-fp模块<br>·lodash 的 fp 模块提供了实用的对函数式编程友好的方法<br>·提供了不可变 auto-curried iteratee-first data-last 的方法</p>
+<p><pre><br>// lodash 模块<br>const _ = require(‘lodash’)<br>_.map([‘a’, ‘b’, ‘c’], _.toUpper)<br>// =&gt; [‘A’, ‘B’, ‘C’]<br>_.map([‘a’, ‘b’, ‘c’])<br>// =&gt; [‘a’, ‘b’, ‘c’]<br>_.split(‘Hello World’, ‘ ‘)<br>// lodash/fp 模块<br>const fp = require(‘lodash/fp’)<br>fp.map(fp.toUpper, [‘a’, ‘b’, ‘c’])<br>fp.map(fp.toUpper)([‘a’, ‘b’, ‘c’])<br>fp.split(‘ ‘, ‘Hello World’)<br>fp.split(‘ ‘)(‘Hello World’)<br></pre><br>我们看上面代码lodash中map方法是数据优先，函数滞后；当我们调用map方法只传递一个参数，会原封不动的返回这个参数数组。lodash的split方法也是，数据优先，函数滞后。<br>而lodash的fp模块函数优先，数据滞后。而如果给fp模块的map/split函数传递一个参数，会返回一个新的函数等待剩余的参数，说明在lodash中map/split都是柯里化的函数<br>我们上一节的需求:NEVER SAY DIE -&gt; never-say-die，为了满足需求我们做了很多操作，有了fp模块我们发现上一节的代码能精简很多</p>
+<p><pre><br>const fp = require(‘lodash/fp’)<br>const f = fp.flowRight(fp.join(‘-‘), fp.map(_.toLower), fp.split(‘ ‘))<br>console.log(f(‘NEVER SAY DIE’))<br></pre><br>26.lodash-map方法的小问题</p>
+<p><pre><br>//lodash和lodash/fp模块中map方法的区别<br>const _ = require(‘lodash’)<br>//把一个字符串数组中的所有元素都转换为整数<br>console.log(_.map([‘23’,’8’,’10’],parseInt))//打印结果[23,NaN,2]<br></pre><br>上面代码为什么没有得到我们想要的结果，我们要分析下parseInt(要被解析的字符串,要解析的数字的基数。该值介于 2 ~ 36 之间)，在上面函数执行过程中分别执行了<br>parseInt(‘23’,0,array)//这里需要了解下lodash的map函数的参数<br>parseInt(‘8’,1,array)<br>parseInt(‘10’,2,array)<br>也就不难理解了，23转换为0进制，程序理解为十进制，于是是23；8转换为1进制是不包含在2～36中的，于是为NaN；10转换为2进制就是2。如果要解决这个问题，我们需要自己封装一个parseInt来替代lodash中的parseInt，而lodash/fp中的map就不会出现这个问题</p>
+<p><pre><br>const fp = require(‘lodash/fp’);<br>console.log(fp.map(parseInt,[‘23’,’8’,’10’]))//是我们预期的[23,8,10]<br></pre><br>27.Pointfree<br>Point Free：我们可以把数据处理的过程定义成与数据无关的合成运算，不需要用到代表数据的那个参<br>数，只要把简单的运算步骤合成到一起，在使用这种模式之前我们需要定义一些辅助的基本运算函数。<br>·不需要指明处理的数据<br>·只需要合成运算过程<br>·需要定义一些辅助的基本运算函数·</p>
+<p><pre><br>//我们之前的课程中的案例<br>const f = fp.flowRight(fp.join(‘-‘), fp.map(_.toLower), fp.split(‘ ‘))<br></pre><br>案例演示</p>
+<p><pre><br>// 非 Point Free 模式<br>// Hello World =&gt; hello_world<br>function f (word) {<br>    return word.toLowerCase().replace(/\s+/g, ‘<em>‘);<br>}<br>// Point Free<br>const fp = require(‘lodash/fp’)<br>const f = fp.flowRight(fp.replace(/\s+/g, ‘</em>‘), fp.toLower)<br>console.log(f(‘Hello World’))<br></pre><br>28.Pointfree-案例<br>案例需求:使用 Point Free 的模式，把单词中的首字母提取并转换成大写</p>
+<p><pre><br>//world wild web =&gt; W.W.W<br>const fp = require(‘lodash/fp’)<br>//这里用了两次map，说起来是影响性能的<br>//const firstLetterToUpper = fp.flowRight(join(‘. ‘), fp.map(fp.first), fp.toUpper, fp.split(‘ ‘))<br>//于是我们对上面的代码进行修改，只用一次map<br>const firstLetterToUpper = fp.flowRight(join(‘. ‘), fp.map(fp.flowRight(fp.first, fp.toUpper)), fp.split(‘ ‘))<br>console.log(firstLetterToUpper(‘world wild web’))<br></pre><br>29.Functor(函子)<br>为什么要学函子<br>到目前为止已经已经学习了函数式编程的一些基础，但是我们还没有演示在函数式编程中如何把副作用控制在可控的范围内、异常处理、异步操作等。<br>什么是 Functor<br>·容器：包含值和值的变形关系(这个变形关系就是函数)<br>·函子：是一个特殊的容器，通过一个普通的对象来实现，该对象具有 map 方法，map 方法可以运行一个函数对值进行处理(变形关系)</p>
+<p><pre><br>// 一个容器，包裹一个值<br>class Container {<br>    constructor(value){<br>        this._value = value//这个值是内部的，不对外公布<br>    }<br>    map(fn){//这个map方法对应函子的概念-该对象具有 map 方法<br>        return new Container(fn(this._value))<br>    }<br>}<br>let r = new Container(5).map(x =&gt; x+1 ).map(x =&gt; x*x )//每次调用map都返回一个新的函子对象<br>console.log(r) //Container {_value: 36 }<br></pre><br>上面代码，每次调用都需要new一下用起来不是很方便，我们进行调整修改</p>
+<p><pre><br>// 一个容器，包裹一个值<br>class Container {<br>// of 静态方法，可以省略 new 关键字创建对象<br>    static of (value) {<br>        return new Container(value)<br>    }<br>    constructor (value) {<br>        this._value = value<br>    }<br>    // map 方法，传入变形关系，将容器里的每一个值映射到另一个容器<br>    map (fn) {<br>        return Container.of(fn(this._value))<br>    }<br>}<br>// 测试<br>let r = Container.of(3).map(x =&gt; x + 2).map(x =&gt; x * x)<br>console.log(r)<br></pre><br>30.Functor总结<br>·函数式编程的运算不直接操作值，而是由函子完成<br>·函子就是一个实现了 map 契约的对象<br>·我们可以把函子想象成一个盒子，这个盒子里封装了一个值<br>·想要处理盒子中的值，我们需要给盒子的 map 方法传递一个处理值的函数（纯函数），由这个函数来对值进行处理<br>·最终 map 方法返回一个包含新值的盒子（函子）</p>
+<p><pre><br>// 值如果不小心传入了空值(副作用)<br>Container.of(null) .map(x =&gt; x.toUpperCase())<br>// TypeError: Cannot read property ‘toUpperCase’ of null<br></pre><br>对于纯函数，对于相同输入的值必须有相同的输出，这里用null报错，是函数的副作用，我们下一小节会想办法解决这个问题<br>31.MayBe函子<br>·我们在编程的过程中可能会遇到很多错误，需要对这些错误做相应的处理<br>·MayBe 函子的作用就是可以对外部的空值情况做处理（控制副作用在允许的范围）</p>
+<p><pre><br>class MayBe{<br>    static of (value) {<br>        return new MayBe(value)<br>    }<br>    constructor (value) {<br>        this._value = value<br>    }<br>    // 如果对空值变形的话直接返回 值为 null 的函子<br>    map (fn) {<br>        return this.isNothing() ? MayBe.of(null) : MayBe.of(fn(this._value))<br>    }<br>    isNothing () {<br>        return this._value === null || this._value === undefined<br>    }<br>}<br>// 传入具体值<br>MayBe.of(‘Hello World’) .map(x =&gt; x.toUpperCase())<br>// 传入 null 的情况<br>MayBe.of(null) .map(x =&gt; x.toUpperCase()) // =&gt; MayBe { _value: null }<br>MayBe.of(‘hello world’).map(x =&gt; x.toUpperCase()).map(x =&gt; null) .map(x =&gt; x.split(‘ ‘)) // =&gt; MayBe { _value: null }//这里体现的问题是，虽然我们解决了null报错的问题，但是我们依然不知道是哪里输入了有问题的值<br></pre><br>32.Either函子<br>·Either 两者中的任何一个，类似于 if…else…的处理<br>·异常会让函数变的不纯，Either 函子可以用来做异常处理</p>
+<p><pre><br>class Left{<br>    static of (value) {<br>        return new Left(value)<br>    }<br>    constructor (value) {<br>        this._value = value<br>    }<br>    map (fn) {<br>        return this<br>    }<br>}<br>class Right{<br>    static of (value) {<br>        return new Right(value)<br>    }<br>    constructor (value) {<br>        this._value = value<br>    }<br>    map (fn) {<br>        return Right.of(fn(this._value))<br>    }<br>}<br>let r1 = Right.of(12).map(x =&gt; x+2)//Right{ _value: 14 }<br>let r1 = Left.of(12).map(x =&gt; x+2)//Left{ _value: 12 }<br>//直到上面代码，我们都还没有对错误信息作任何处理，接下来要开始处理错误信息<br>function parseJSON(json) {<br>    try {<br>        return Right.of(JSON.parse(json));<br>    } catch (e) {<br>        return Left.of({ error: e.message});<br>    }<br>}<br>let r3 = parseJSON(‘{ name: zs }’) // 报错<br>let r4 = parseJSON(‘{ “name”: “zs” }’).map(x =&gt; x.name.toUpperCase())<br>console.log(r4)<br></pre><br>33.IO函子<br>·IO 函子中的 _value 是一个函数，这里是把函数作为值来处理<br>·IO 函子可以把不纯的动作存储到 _value 中，延迟执行这个不纯的操作(惰性执行)，包装当前的操作纯<br>·把不纯的操作交给调用者来处理</p>
+<p><pre><br>const fp = require(‘lodash/fp’)<br>class IO {<br>    static of (x) {<br>        return new IO(function () { return x })<br>    }<br>    constructor (fn) {<br>        this._value = fn<br>    }<br>    map (fn) {<br>        // 把当前的 value 和 传入的 fn 组合成一个新的函数，把副作用延迟到调用的时候<br>        return new IO(fp.flowRight(fn, this._value))<br>    }<br>}<br>// 调用<br>let io = IO.of(process).map(p =&gt; p.execPath)//process.execPath当前进程的执行路径<br>console.log(io) //IO { _value:[Function] }<br>onsole.log(io._value())//打印了当前进程的执行路径<br></pre><br>34.Falktale<br>·异步任务的实现过于复杂，我们使用 folktale 中的 Task 来演示<br>·folktale 一个标准的函数式编程库<br> ·和 lodash、ramda 不同的是，他没有提供很多功能函数<br> ·只提供了一些函数式处理的操作，例如：compose、curry 等，一些函子 Task、Either、MayBe 等</p>
+<p><pre><br>const { compose, curry } = require(‘folktale/core/lambda’)<br>const { toUpper, first } = require(‘lodash/fp’)<br>// 第一个参数是传入函数的参数个数<br>let f = curry(2, function (x, y) {<br>    console.log(x + y)<br>})<br>f(3, 4) //7<br>f(3)(4) //7<br>// 函数组合<br>let f = compose(toUpper, first)<br>console.log(f([‘one’, ‘two’]))//ONE<br></pre><br>35.Task函子<br>Task 异步执行<br>·folktale(2.3.2) 2.x 中的 Task 和 1.0 中的 Task 区别很大，1.0 中的用法更接近我们现在演示的函子<br>·这里以 2.3.2 来演示</p>
+<p><pre><br>const fs = require(‘fs’)<br>const { task } = require(‘folktale/concurrency/task’)<br>function readFile(filename) {<br>    return task(resolver =&gt; {<br>        fs.readFile(filename, ‘utf-8’, (err, data) =&gt; {<br>            if (err) resolver.reject(err)<br>            resolver.resolve(data)<br>        })<br>    })<br>}<br>// 调用 run 执行<br>readFile(‘package.json’)<br>.map(split(‘\n’))//获取package.json文件中的信息后按行分割成数组<br>.map(find(x =&gt; x.includes(‘version’)))//获取version信息<br>.run().listen({<br>    onRejected: err =&gt; {<br>        console.log(err)<br>    },<br>    onResolved: value =&gt; {<br>        console.log(value)<br>    }<br>})<br></pre><br>36.Pointed函子<br>·Pointed 函子是实现了 of 静态方法的函子<br>·of 方法是为了避免使用 new 来创建对象，更深层的含义是 of 方法用来把值放到上下文Context（把值放到容器中，使用 map 来处理值）<br><img src="https://snakexu.github.io/images/lagou/part_1/36_1.png"></p>
+<p><pre><br>//这里主要是介绍Pointed函子的概念，之前我们已经用过了<br>class Container {<br>    static of (value) {<br>        return new Container(value)<br>    }<br>    ……<br>}<br>Contanier.of(2) .map(x =&gt; x + 5)<br></pre><br>37.IO函子问题</p>
+<p><pre><br>//这是我们之前内容的函子，我们用这个函子解决一个问题<br>//linux下cat命令是读取一个文件并打印出文件的内容<br>const fp = require(‘lodash/fp’)<br>const fs = require(‘fs’)<br>class IO {<br>    static of (x) {<br>        return new IO(function () { return x })<br>    }<br>    constructor (fn) {<br>        this._value = fn<br>    }<br>    map (fn) {<br>        return new IO(fp.flowRight(fn, this._value))<br>    }<br>}<br>let readFile = function(filename){<br>    //因为读取文件的时候会引起副作用让我们的函数变得不纯，所以延迟到执行的时候再调用<br>    return new IO(function(){<br>        return fs.readFileSync(filename,’utf-8’)<br>    })<br>}<br>let print = function(x){<br>    return new IO(function(){<br>        console.log(x)<br>        return x<br>    })<br>}<br>let cat = fp.flowRight(print, readFile)<br>let r1 = cat(‘package.json’)<br>console.log(r1)//IO { _value: [Function] }<br>let r2 = cat(‘package.json’)._value()._value()//这里嵌套函子的风格略显麻烦，下一节我们学习怎么修改<br>//r2才能拿到文件内容，第一个value把readFile的IO函子打印出来，<br></pre><br>38.Monad函子<br>·Monad 函子是可以变扁的 Pointed 函子，IO(IO(x))<br>·一个函子如果具有 join 和 of 两个方法并遵守一些定律就是一个 Monad</p>
+<p><pre><br>const fp = require(‘lodash/fp’)<br>const fs = require(‘fs’)<br>class IO {<br>    static of (x) {<br>        return new IO(function () { return x })<br>    }<br>    constructor (fn) {<br>        this._value = fn<br>    }<br>    map (fn) {<br>        return new IO(fp.flowRight(fn, this._value))<br>    }<br>    //整个例子是上节课中的内容，这里我们略作修改，加入了join和flatMap<br>    join () {<br>        return this._value()<br>    }<br>    flatMap (fn) {<br>        return this.map(fn).join()<br>    }<br>}<br>let readFile = function(filename){<br>    return new IO(function(){<br>        return fs.readFileSync(filename,’utf-8’)<br>    })<br>}<br>let print = function(x){<br>    return new IO(function(){<br>        console.log(x)<br>        return x<br>    })<br>}<br>let r = readFile(‘package.json’).flatMap(print).join()//拿到了package.json中的内容<br></pre><br>假设在上面代码中，我们读完文件要继续处理文件，比如把拿出来字符串全部转换成大写，我们该如何做</p>
+<p><pre><br>let r = readFile(‘package.json’).map(fp.toUpper).flatMap(print).join()<br></pre><br>39.总结</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/14/拉勾-函数式编程范式/" data-id="ckchm0rkl005b5ajhwuse84q8" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/函数式编程/">函数式编程</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/拉勾/">拉勾</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-拉勾-函数式编程范式-5-高阶函数-函数作为参数" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/14/拉勾-函数式编程范式-5-高阶函数-函数作为参数/" class="article-date">
+  <time datetime="2020-06-14T09:53:08.000Z" itemprop="datePublished">2020-06-14</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/14/拉勾-函数式编程范式-5-高阶函数-函数作为参数/">拉勾-函数式编程范式-5-高阶函数-函数作为参数</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>高阶函数<br>什么是高阶函数(Higher-order function):可以把函数作为参数传递给另一个函数；可以把函数作为另一个函数的返回结果</p>
+<pre>
+//高阶函数，函数作为参数
+function forEach(array,fn){
+    for(let i = 0; i < array.length; i++){
+        fn(array[i])
+    }
+}
+//测试
+let arr = [1,3,4,7,8]
+forEach(arr,function(item){
+    console.log(item)
+})
+</pre>
+在node环境执行上面代码，依次打印出arr的每一项，这里我们也就了解了forEach的原理，接着我们来模拟filter
+<pre>
+//这里第二个参数为什么是fn(函数)，因为我们通常需要去过滤满足一定条件的数据
+//而这个一定条件是不确定的，我们要让这个函数变得通用，那么函数就是很好的选择，我们在变化的位置传递一个函数
+function filter(array,fn){
+    let results = [];
+    for(let i = 0; i < array.length; i++){
+        if(fn(array[i])){
+            results.push(array[i])
+        }
+    }
+    return results
+}
+//测试
+let arr = [1,3,4,7,8]
+let r = filter(arr,function(item){
+    return item % 2 === 0
+})
+console.log(r)
+</pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/14/拉勾-函数式编程范式-5-高阶函数-函数作为参数/" data-id="ckchm0rcb000r5ajhqx11d71z" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/函数式编程范式/">函数式编程范式</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/拉勾/">拉勾</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-移动端APP开发工程师-H5移动端开发-1-1-7-canvas" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/13/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-7-canvas/" class="article-date">
+  <time datetime="2020-06-13T07:32:02.000Z" itemprop="datePublished">2020-06-13</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/13/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-7-canvas/">网易微专业-移动端APP开发工程师-H5移动端开发-1.1.7-canvas</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.canvas概念<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.7_1.png"><br>2.基础API和用法<br>2-1.兼容性内容替换<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.7_2.png"><br>2-2.canvas2d模版骨架<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.7_3.png"><br>2-3.canvas2d形状绘制<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.7_4.png"><br>3.样式与颜色<br>3-1.canvas2d色彩(colors)<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.7_5.png"><br><img src="https://snakexu.github.io/images/wangyi/app/1.1.7_6.png"><br>3-2.canvas2d线型(line styles)<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.7_7.png"><br>4.曲线和高级路径<br>4-1.贝塞尔曲线<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.7_8.png"><br><img src="https://snakexu.github.io/images/wangyi/app/1.1.7_9.png"><br><img src="https://snakexu.github.io/images/wangyi/app/1.1.7_10.png"><br>4-2.高级路径之Path2D<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.7_11.png"><br><img src="https://snakexu.github.io/images/wangyi/app/1.1.7_12.png"><br>5.状态、变形以及动画<br>5-1.canvas的状态控制<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.7_13.png"><br><img src="https://snakexu.github.io/images/wangyi/app/1.1.7_14.png"><br>5-2.动画的基本步骤<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.7_15.png"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/13/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-7-canvas/" data-id="ckchm0rgw004b5ajhhvnwgph6" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-学习手动创建react项目过程中" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/06/10/学习手动创建react项目过程中/" class="article-date">
@@ -89,7 +288,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/10/学习手动创建react项目过程中/" data-id="ckc39jer2000mojxqfzaa3o05" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/06/10/学习手动创建react项目过程中/" data-id="ckchm0rc8000m5ajhsb67al9x" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/react-babel/">react babel</a></li></ul>
@@ -135,7 +334,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/08/网易微专业-look直播，企业级全栈web应用搭建分享/" data-id="ckc39jerx0025ojxqjicw5y83" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/06/08/网易微专业-look直播，企业级全栈web应用搭建分享/" data-id="ckchm0rd700295ajhai9d6iqb" class="article-share-link">Share</a>
       
       
     </footer>
@@ -280,7 +479,7 @@ module.exports = AddStaticServer;
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/07/网易微专业-webpack实战演练-3-3-1-网易的webpack工程化实践/" data-id="ckc39jesd002uojxq7je8bs9f" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/06/07/网易微专业-webpack实战演练-3-3-1-网易的webpack工程化实践/" data-id="ckchm0rgl003o5ajhlxwgm399" class="article-share-link">Share</a>
       
       
     </footer>
@@ -406,7 +605,7 @@ plugins:[
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/06/网易微专业-webpack实战演练-3-2-6-webpack打包速度优化/" data-id="ckc39jesb002sojxqy2mzjpbt" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/06/06/网易微专业-webpack实战演练-3-2-6-webpack打包速度优化/" data-id="ckchm0rgk003m5ajh3x0nytnj" class="article-share-link">Share</a>
       
       
     </footer>
@@ -472,7 +671,7 @@ fs.writeFileSync(cachePath, lockHash);
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/03/网易微专业-单页应用-1-4-1-项目全面深度优化及打包上线之网易实践/" data-id="ckc39jesf002yojxqgf56yko3" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/06/03/网易微专业-单页应用-1-4-1-项目全面深度优化及打包上线之网易实践/" data-id="ckchm0rgp003v5ajhr1tjo5ur" class="article-share-link">Share</a>
       
       
     </footer>
@@ -509,7 +708,7 @@ fs.writeFileSync(cachePath, lockHash);
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/05/28/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-6-音频与视频/" data-id="ckc39jesx003gojxqhwax955v" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/05/28/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-6-音频与视频/" data-id="ckchm0rgv00495ajh5blsqgz0" class="article-share-link">Share</a>
       
       
     </footer>
@@ -546,118 +745,7 @@ fs.writeFileSync(cachePath, lockHash);
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/05/28/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-5-地理信息、本地存储、离线存储/" data-id="ckc39jesx003fojxqqk95bmlj" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-移动端APP开发工程师-H5移动端开发-1-1-4-跨文档消息通信" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/05/28/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-4-跨文档消息通信/" class="article-date">
-  <time datetime="2020-05-28T02:00:53.000Z" itemprop="datePublished">2020-05-28</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/28/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-4-跨文档消息通信/">网易微专业-移动端APP开发工程师-H5移动端开发-1.1.4-跨文档消息通信</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.跨文档通讯概念<br>html文档指的是html文件，跨文档通讯指的是跨html文件通讯。一个html文件被抽象成Bob的概念，而BOM的核心对象是window，所以从理解上来讲，html文档在程序中的代名词是window对象而不是document对象。document对象代表的是BOM模型下加载在内存之中的文档对象模型对外暴露的API接口。<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.4_1.png"><br>2.H5跨文档通讯<br>2-1.HTML5跨文档通讯核心——postMessage()方法<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.4_2.png"><br>2-2.HTML5跨文档通讯案例<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.4_3.png"><br><img src="https://snakexu.github.io/images/wangyi/app/1.1.4_4.png"><br>这里也会遇到浏览器报错的问题，解决的方法就是关闭本地浏览器的安全策略<br>3.扩展知识<br>3-1.浏览器兼容性<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.4_5.png"><br>3-2.message回调event事件对象<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.4_6.png"></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/05/28/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-4-跨文档消息通信/" data-id="ckc39jesw003eojxqaykqpo3x" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-移动端APP开发工程师-H5移动端开发-1-1-3-选择器-history-拖放" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/05/27/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-3-选择器-history-拖放/" class="article-date">
-  <time datetime="2020-05-27T07:12:13.000Z" itemprop="datePublished">2020-05-27</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/27/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-3-选择器-history-拖放/">网易微专业-移动端APP开发工程师-H5移动端开发-1.1.3-选择器/history/拖放</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.HTML5选择器<br>1-1.HTML5新增选择器<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.3_1.png"><br>1-2.CSS基础选择器<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.3_2.png"><br>1-3.选择器之层次选择器<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.3_3.png"><br>1-4.选择器之动态伪类选择器<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.3_4.png"><br>1-5.选择器之结构伪类选择器<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.3_5.png"><br>1-6.HTML5选择器之querySelector<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.3_6.png"><br>1-7.HTML5选择器之querySelectorAll<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.3_7.png"><br>2.HTML5拖放<br>2-1.定义和使用场景<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.3_8.png"><br>2-2.拖放主要事件<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.3_9.png"><br>2-3.HTML5拖放真实案例分析<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.3_10.png"><br>默认情况下，目标对象不接受ondrop方法，通过覆盖dragover方法，并且调用event对象的preventdefault方法来阻止默认的冒泡<br>3.HTML5 History<br>3-1.HTML5 History常用方法<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.3_11.png"><br>3-2.HTML5 History定义以及新特性<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.3_12.png"><br>3-3.pushState语法<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.3_13.png"><br>3-4.HTML5 History常用场景<br>3-4-1.最常用的场景之一:单页应用<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.3_14.png"><br>代码演示<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.3_15.png"><br>上面的代码会因为浏览器的安全策略而报错，我们在命令行(进入浏览器安装目录)执行下面的代码来解决<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.3_16.png"><br>HTML5的pushState并不会造成页面的刷新</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/05/27/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-3-选择器-history-拖放/" data-id="ckc39jet2003uojxquo18n1b7" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-移动端APP开发工程师-H5移动端开发-1-1-2-HTML5的新特性" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/05/27/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-2-HTML5的新特性/" class="article-date">
-  <time datetime="2020-05-27T02:46:13.000Z" itemprop="datePublished">2020-05-27</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/27/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-2-HTML5的新特性/">网易微专业-移动端APP开发工程师-H5移动端开发-1.1.2-HTML5的新特性</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.HTML5新增标签<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.2_1.png"><br>2.HTML5新增表单输入框的类型<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.2_2.png"><br>3.简单了解canvas，这里没做笔记，因为是非常初步的了解canvas，简单的定义画布，获取上下文<br>4.HTML5多媒体&amp;Audio<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.2_3.png"><br>这里老师还讲到，一个多媒体标签有时候因为遇到不同平台支持不同音/视频格式的原因，需要配置多个source，这里了解一下，更多内容看以后有没有讲解<br>5.HTML5的web存储功能<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.2_4.png"><br><img src="https://snakexu.github.io/images/wangyi/app/1.1.2_5.png"><br>6.HTML5的拖拽释放功能<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.2_6.png"></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/05/27/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-2-HTML5的新特性/" data-id="ckc39jesu003cojxqq191kh47" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/05/28/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-5-地理信息、本地存储、离线存储/" data-id="ckchm0rgv004a5ajhxr740opv" class="article-share-link">Share</a>
       
       
     </footer>
@@ -692,7 +780,7 @@ fs.writeFileSync(cachePath, lockHash);
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ECMAScript新特性/">ECMAScript新特性</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript异步编程/">JavaScript异步编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TypeScript语言/">TypeScript语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-babel/">react babel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/函数式编程/">函数式编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/函数式编程范式/">函数式编程范式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端路由/">前端路由</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/微信小程序/">微信小程序</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/手写Promise源码/">手写Promise源码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/拉勾/">拉勾</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/正则/">正则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业/">网易微专业</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-Flutter/">网易微专业 Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-node/">网易微专业 node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ECMAScript新特性/">ECMAScript新特性</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript异步编程/">JavaScript异步编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TypeScript语言/">TypeScript语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-babel/">react babel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/函数式编程/">函数式编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/函数式编程范式/">函数式编程范式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端路由/">前端路由</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工程化/">工程化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/微信小程序/">微信小程序</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/手写Promise源码/">手写Promise源码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/拉勾/">拉勾</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/拉勾，自动化构建/">拉勾，自动化构建</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/正则/">正则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业/">网易微专业</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-Flutter/">网易微专业 Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-node/">网易微专业 node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
     </div>
   </div>
 
@@ -702,7 +790,7 @@ fs.writeFileSync(cachePath, lockHash);
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/ECMAScript新特性/" style="font-size: 10px;">ECMAScript新特性</a> <a href="/tags/JavaScript异步编程/" style="font-size: 10px;">JavaScript异步编程</a> <a href="/tags/TypeScript语言/" style="font-size: 10px;">TypeScript语言</a> <a href="/tags/react-babel/" style="font-size: 10px;">react babel</a> <a href="/tags/函数式编程/" style="font-size: 10px;">函数式编程</a> <a href="/tags/函数式编程范式/" style="font-size: 10px;">函数式编程范式</a> <a href="/tags/前端路由/" style="font-size: 10px;">前端路由</a> <a href="/tags/微信小程序/" style="font-size: 10px;">微信小程序</a> <a href="/tags/手写Promise源码/" style="font-size: 10px;">手写Promise源码</a> <a href="/tags/拉勾/" style="font-size: 20px;">拉勾</a> <a href="/tags/数据结构/" style="font-size: 13.33px;">数据结构</a> <a href="/tags/正则/" style="font-size: 10px;">正则</a> <a href="/tags/算法/" style="font-size: 20px;">算法</a> <a href="/tags/网易微专业/" style="font-size: 10px;">网易微专业</a> <a href="/tags/网易微专业-Flutter/" style="font-size: 10px;">网易微专业 Flutter</a> <a href="/tags/网易微专业-node/" style="font-size: 10px;">网易微专业 node</a> <a href="/tags/设计模式/" style="font-size: 16.67px;">设计模式</a>
+      <a href="/tags/ECMAScript新特性/" style="font-size: 10px;">ECMAScript新特性</a> <a href="/tags/JavaScript异步编程/" style="font-size: 10px;">JavaScript异步编程</a> <a href="/tags/TypeScript语言/" style="font-size: 10px;">TypeScript语言</a> <a href="/tags/react-babel/" style="font-size: 10px;">react babel</a> <a href="/tags/函数式编程/" style="font-size: 10px;">函数式编程</a> <a href="/tags/函数式编程范式/" style="font-size: 10px;">函数式编程范式</a> <a href="/tags/前端路由/" style="font-size: 10px;">前端路由</a> <a href="/tags/工程化/" style="font-size: 10px;">工程化</a> <a href="/tags/微信小程序/" style="font-size: 10px;">微信小程序</a> <a href="/tags/手写Promise源码/" style="font-size: 10px;">手写Promise源码</a> <a href="/tags/拉勾/" style="font-size: 20px;">拉勾</a> <a href="/tags/拉勾，自动化构建/" style="font-size: 10px;">拉勾，自动化构建</a> <a href="/tags/数据结构/" style="font-size: 12.5px;">数据结构</a> <a href="/tags/正则/" style="font-size: 10px;">正则</a> <a href="/tags/算法/" style="font-size: 17.5px;">算法</a> <a href="/tags/网易微专业/" style="font-size: 10px;">网易微专业</a> <a href="/tags/网易微专业-Flutter/" style="font-size: 10px;">网易微专业 Flutter</a> <a href="/tags/网易微专业-node/" style="font-size: 10px;">网易微专业 node</a> <a href="/tags/设计模式/" style="font-size: 15px;">设计模式</a>
     </div>
   </div>
 
@@ -711,7 +799,7 @@ fs.writeFileSync(cachePath, lockHash);
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
     </div>
   </div>
 
@@ -724,23 +812,23 @@ fs.writeFileSync(cachePath, lockHash);
       <ul>
         
           <li>
+            <a href="/2020/07/08/拉勾-自动化构建/">拉勾-自动化构建</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/03/拉勾-脚手架工具/">拉勾-脚手架工具</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/03/拉勾-工程化概述/">拉勾-工程化概述</a>
+          </li>
+        
+          <li>
             <a href="/2020/06/28/拉勾-JavaScript性能优化/">拉勾-JavaScript性能优化</a>
           </li>
         
           <li>
             <a href="/2020/06/26/拉勾-TypeScript语言/">拉勾-TypeScript语言</a>
-          </li>
-        
-          <li>
-            <a href="/2020/06/21/拉勾-ECMAScript新特性/">拉勾-ECMAScript新特性</a>
-          </li>
-        
-          <li>
-            <a href="/2020/06/20/网易微专业-移动端APP开发工程师-微信小程序-3-1-1-创建微信小程序项目/">网易微专业-移动端APP开发工程师-微信小程序-3.1.1-创建微信小程序项目</a>
-          </li>
-        
-          <li>
-            <a href="/2020/06/18/拉勾-手写Promise源码/">拉勾-手写Promise源码</a>
           </li>
         
       </ul>

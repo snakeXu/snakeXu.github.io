@@ -62,6 +62,1062 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-基于Websocket的火拼俄罗斯-基础" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/12/21/基于Websocket的火拼俄罗斯-基础/" class="article-date">
+  <time datetime="2019-12-21T08:26:03.000Z" itemprop="datePublished">2019-12-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/12/21/基于Websocket的火拼俄罗斯-基础/">基于Websocket的火拼俄罗斯(基础)</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.关于websocket的简单介绍<br>我之前有过一篇相关记录：<a href="https://snakexu.github.io/2019/11/15/%E8%BD%AE%E8%AF%A2/" target="_blank" rel="noopener">https://snakexu.github.io/2019/11/15/%E8%BD%AE%E8%AF%A2/</a><br>2.首先我们需要搭建一个基于nodejs的websocket server,这里需要用到一个模块，叫做nodejs-websocket(<a href="https://github.com/sitegui/nodejs-websocket" target="_blank" rel="noopener">https://github.com/sitegui/nodejs-websocket</a> )，我们知道了通过npm install nodejs-websocket来安装该模块<br>3.我们简单了解下github上给出的例子</p>
+<pre>
+var ws = require("nodejs-websocket")
+// Scream server example: "hi" -> "HI!!!"
+var server = ws.createServer(function (conn) {
+    //conn代表这个连接
+    console.log("New connection")
+    //下面是当客户端有消息发过来会回调的一个函数
+    conn.on("text", function (str) {
+        console.log("Received "+str)
+        //客户端将收到的消息进行处理之后发回
+        conn.sendText(str.toUpperCase()+"!!!")
+    })
+    //连接关闭的时候
+    conn.on("close", function (code, reason) {
+        console.log("Connection closed")
+    })
+}).listen(8001)
+</pre>
+结合我们的index.html我们进行一些修改
+index.html
+<pre>
+< input id="sendText" type="text" name="">
+< button id="sendBtn">发送
+< div id="recv">
+< script type="text/javascript">
+  var websocket = new WebSocket("ws://localhost:3000");
+  websocket.onopen = function(){
+    console.log("websocket open");
+    document.getElementById("recv").innerHTML = "Connected";
+  }
+  websocket.onclose = function() {
+     console.log('websocket close')
+  }
+  websocket.onmessage = function(e){
+    console.log(e.data);
+    document.getElementById("recv").innerHTML = e.data;
+  }
+  document.getElementById("sendBtn").onclick = function(){
+    var txt = document.getElementById("sendText").value;
+    websocket.send(txt);
+  }
+< /script>
+</pre>
+wsServer.js(在上面给定例子的基础上做了简单的修改，将端口号设置为一个变量)
+<pre>
+var ws = require("nodejs-websocket")
+var PORT = 3000
+// Scream server example: "hi" -> "HI!!!"
+var server = ws.createServer(function (conn) {
+    console.log("New connection")
+    conn.on("text", function (str) {
+        console.log("Received "+str)
+        conn.sendText(str.toUpperCase()+"!!!")
+    })
+    conn.on("close", function (code, reason) {
+        console.log("Connection closed")
+    })
+    //这里是为了解决如果直接关掉index.html页面而报错的问题
+    conn.on("error", function(){
+        console.log("handle err");
+        console.log(err);
+    })
+}).listen(PORT)
+console.log("websocket server listening on port" + PORT)
+</pre>
+注意，运行上面程序需要在命令行输入node wsServer.js启动node程序
+4.我们在上面程序的基础上，做一个简单的聊天室程序
+index.html
+<pre>
+< input id="sendText" type="text" name="">
+< button id="sendBtn">发送< /button>
+< script type="text/javascript">
+  var websocket = new WebSocket("ws://localhost:3000");
+  function showMessage(str){
+    var div = document.createElement("div");
+    div.innerHTML = str;
+    document.body.appendChild(div)
+  }
+  websocket.onopen = function(){
+    console.log("websocket open");
+    document.getElementById("sendBtn").onclick = function(){
+      var txt = document.getElementById("sendText").value;
+      if(txt){
+        websocket.send(txt);
+      }
+    }
+  }
+  websocket.onclose = function() {
+     console.log('websocket close')
+  }
+  websocket.onmessage = function(e){
+    console.log(e.data);
+    showMessage(e.data);
+  }
+< /script>
+</pre>
+wsServer.js
+<pre>
+var ws = require("nodejs-websocket")
+var PORT = 3000
+var clientCount = 0;
+// Scream server example: "hi" -> "HI!!!"
+var server = ws.createServer(function (conn) {
+    console.log("New connection")
+    clientCount++;
+    conn.nickname = 'user' +  clientCount;
+    broadcast(conn.nickname + 'comes in')//通知客户端
+    conn.on("text", function (str) {
+        console.log("Received "+str)
+        //conn.sendText(str)
+        broadcast(str)
+    })
+    conn.on("close", function (code, reason) {
+        console.log("Connection closed")
+        broadcast(conn.nickname + 'left')
+    })
+    conn.on("error", function(){
+        console.log("handle err");
+        console.log(err);
+    })
+}).listen(PORT)
+console.log("websocket server listening on port" + PORT)
+function broadcast(str){
+    //server.connections取到server的所有连接
+    server.connections.forEach(function(connection){
+        connection.sendText(str)
+    })
+}
+</pre>
+经过上面的修改，我们重启服务，在浏览器中打开index.html会发现
+<img src="https://snakexu.github.io/images/mooc/websocket_5.png">
+再在浏览器中打开一个index.html，然后在这个页面的input中输入hello everyone点击发送，我们可以看到
+<img src="https://snakexu.github.io/images/mooc/websocket_2.png">
+<img src="https://snakexu.github.io/images/mooc/websocket_3.png">
+在第一次打开的index.html页面中我们看到user2上线的时候有通知，user2发送的消息user1页能够收到，然后我们关闭第一次打开的html页面，也就是user1的页面，可以看到
+<img src="https://snakexu.github.io/images/mooc/websocket_4.png">
+也就是说，user1的离开通知了user2
+简单的聊天室也就完成了，但是这个聊天室也确实过于简单了些，接下来的课程，将对这个聊天室进行一些优化
+5.进行了一些简单的修改，使进入/离开/聊天内容的颜色有了区分，并且能显示是谁发送了消息
+wsServer.js
+<pre>
+var ws = require("nodejs-websocket")
+var PORT = 3000
+var clientCount = 0;
+// Scream server example: "hi" -> "HI!!!"
+var server = ws.createServer(function (conn) {
+    console.log("New connection")
+    clientCount++;
+    conn.nickname = 'user' +  clientCount;
+    var mes = {};
+    mes.type = "enter";
+    mes.data = conn.nickname + ' comes in'
+    broadcast(JSON.stringify(mes))//通知客户端
+    conn.on("text", function (str) {
+        console.log("Received "+str)
+        //conn.sendText(str)
+        var mes = {};
+        mes.type = "message";
+        mes.data = conn.nickname + 'says: ' + str
+        broadcast(JSON.stringify(mes))
+    })
+    conn.on("close", function (code, reason) {
+        console.log("Connection closed")
+        var mes = {};
+        mes.type = "leave";
+        mes.data = conn.nickname + ' left'
+        broadcast(JSON.stringify(mes))
+    })
+    conn.on("error", function(){
+        console.log("handle err");
+        console.log(err);
+    })
+}).listen(PORT)
+console.log("websocket server listening on port" + PORT)
+function broadcast(str){
+    //server.connections取到server的所有连接
+    server.connections.forEach(function(connection){
+        connection.sendText(str)
+    })
+}
+</pre>
+index.html修改的内容比较少，我们只贴上需要修改的地方的代码
+<pre>
+function showMessage(str, type){
+    var div = document.createElement("div");
+    div.innerHTML = str;
+    if(type == "enter"){
+          div.style.color = "blue"
+    }else if(type == "leave"){
+          div.style.color = "red"
+    }
+    document.body.appendChild(div)
+}
+websocket.onmessage = function(e){
+    console.log(e.data);
+    var mes = JSON.parse(e.data)
+    showMessage(mes.data, mes.type);
+}
+</pre>
+<img src="https://snakexu.github.io/images/mooc/websocket_7.png">
+<img src="https://snakexu.github.io/images/mooc/websocket_8.png">
+
+6.终于进入正题，开始准备火拼俄罗斯的制作了，不过这里还是要先了解一下socket.io，官网：https://www.imooc.com/video/15322<br>
+首先安装了socket.io之后，将我们之前的聊天室改为用socket.io编写<br>
+index.html
+<pre>
+//客户端需要引入socket.io，我没有直接下载，用了官网的cdn
+< script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js">< /script>
+< input id="sendText" type="text" name="">
+< button id="sendBtn">发送< /button>
+< script type="text/javascript">
+  var socket = io("ws://localhost:3000");
+  function showMessage(str, type){
+    var div = document.createElement("div");
+    div.innerHTML = str;
+    if(type == "enter"){
+      div.style.color = "blue"
+    }else if(type == "leave"){
+      div.style.color = "red"
+    }
+    document.body.appendChild(div)
+  }
+  document.getElementById("sendBtn").onclick = function(){
+    var txt = document.getElementById("sendText").value;
+    if(txt){
+      socket.emit('message',txt);
+    }
+  }
+  socket.on("enter",function(data){
+    showMessage(data,"enter")
+  })
+  socket.on("message",function(data){
+    showMessage(data,"message")
+  })
+  socket.on("leave",function(data){
+    showMessage(data,"leave")
+  })
+< /script>
+</pre>
+wsServer.js
+<pre>
+var app = require("http").createServer()
+var io = require("socket.io")(app)
+var PORT = 3000
+var clientCount = 0;
+app.listen(PORT);
+io.on('connection',function(socket){
+    clientCount++;
+    socket.nickname = 'user' +  clientCount;
+    io.emit("enter",socket.nickname + ' comes in');
+    socket.on("message",function(str){
+        io.emit("message",socket.nickname + 'says: ' + str)
+    })
+    socket.on("disconnect",function() {
+        io.emit("leave",socket.nickname + ' left')
+    })
+})
+console.log("websocket server listening on port" + PORT)
+</pre>
+很明显看到wsServer.js的代码精简了很多。<br>
+socket.io官方网站是英文网站，我找到了别人博客里翻译的一些：
+socket.io官方文档翻译1 https://www.jianshu.com/p/b30bbf448e57<br>
+socket.io官方文档翻译2 https://www.jianshu.com/p/d1a6c1f46a9a<br>
+socket.io官方文档翻译3 https://www.jianshu.com/p/6395be36cc45<br>
+socket.io官方文档翻译4 https://www.jianshu.com/p/a0d8f7e8609c<br>
+一下子看完确实不太可能，不过还是希望能多看一下。毕竟我们知其然也要知道其所以然。<br>
+另外因为对于基础的，比如var app = require("http").createServer();var io = require("socket.io")(app);这些有疑问，简单的看了一下API。
+(1)由require('socket.io')暴露
+<pre>
+new Server(httpServer[, options])
+httpServer (http.Server) 服务器绑定.
+options (Object)
+用或者不用new实现：
+const io = require('socket.io')();
+// or
+const Server = require('socket.io');
+const io = new Server();
+</pre>
+(2)socket.emit(eventName[, …args][, ack])
+<pre>
+eventName (String)
+args
+ack (Function)
+Returns Socket
+通过字符串名称向socketio发出确定事件，可以包含其他任何参数，支持所有可序列化的数据结构，包括buffer。ack参数可选，并且与客户端返回内容一起调用
+</pre>
+(3)socket.on(eventName, callback)
+<pre>
+eventName (String)
+callback (Function)
+Returns Socket
+为给定事件注册一个新的处理程序。
+</pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/12/21/基于Websocket的火拼俄罗斯-基础/" data-id="ckdbzsilq004bjrxqqdlww1ye" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-模块化编程-4-2-3-依赖解析-依赖管理处理方案" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/12/20/网易微专业-模块化编程-4-2-3-依赖解析-依赖管理处理方案/" class="article-date">
+  <time datetime="2019-12-20T03:16:54.000Z" itemprop="datePublished">2019-12-20</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/12/20/网易微专业-模块化编程-4-2-3-依赖解析-依赖管理处理方案/">网易微专业-模块化编程-4.2.3-依赖解析-依赖管理处理方案</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!--https://www.cnblogs.com/beyonds/p/8992619.html-->
+<p>1.源码<br><br>startUp.js</p>
+<p><pre><br>(function(global) {<br>    var startUp = global.startUp = {<br>        version: “1.0.1”,<br>    }<br>    var data = {};<br>    var cache = {};<br>    var anonymousMeta = {};<br>    //模块的生命周期<br>    var status = {<br>        FETCHED: 1,<br>        SAVED: 2,<br>        LOADING: 3,<br>        LOADED: 4,<br>        EXECUTING: 5,<br>        EXECUTED: 6,<br>    }</pre></p>
+<pre><code>var isArray = function(obj) {
+    return toString.call(obj) === &quot;[object Array]&quot;;
+}
+
+var isFunction = function(obj) {
+    return toString.call(obj) === &quot;[object Function]&quot;;
+}
+
+//是否使用了别名
+function parseAlias(id) { //a  b
+    var alias = data.alias; //配置
+    return alias &amp;&amp; isString(alias[id]) ? alias[id] : id;
+}
+
+//不能以&quot;/&quot; &quot;:&quot;开头  结尾必须是一个&quot;/&quot; 后面跟随任意字符至少一个
+var PATHS_RE = /^([^\/:]+)(\/.+)$/; //([^\/:]+)   路径的短名称配置
+
+// 检测是否 书写路径短名称
+function parsePaths(id) {
+    var paths = data.paths; //配置
+    if (paths &amp;&amp; (m = id.match(PATHS_RE)) &amp;&amp; isString(paths[m[1]])) {
+        id = paths[m[1]] + m[2]
+    }
+    return id;
+}
+
+//检测是否添加后缀
+function normalize(path) {
+    var last = path.length - 1;
+    var lastC = path.charAt(last);
+    return (lastC === &quot;/&quot; || path.substring(last - 2) === &quot;.js&quot;) ? path : path + &quot;.js&quot;;
+
+}
+
+//添加根目录
+function addBase(id, uri) {
+    var result;
+    if (id.charAt(0) === &quot;.&quot;) {
+        result = relapath((uri ? uri.match(/[^?]*\//)[0] : data.cwd) + id);
+    } else {
+        result = data.cwd + id;
+    }
+    return result;
+}
+
+var DOT_RE = /\/.\//g; // 规范路径  &quot;/./&quot; =&gt; &quot;/&quot;   
+function relapath(path) {
+    path = path.replace(DOT_RE, &quot;/&quot;);
+    return path;
+}
+
+//生成绝对路径  parent child
+startUp.resolve = function(child, parent) {
+    if (!child) return &quot;&quot;;
+    child = parseAlias(child); //检测是否有别名
+    child = parsePaths(child); // 检测是否有路径别名 依赖模块中引包的模块路径地址 require(&quot;app/c&quot;);
+    child = normalize(child); //检测是否添加后缀
+    return addBase(child, parent); //添加根目录
+}
+
+startUp.request = function(url, callback) {
+    var node = document.createElement(&quot;script&quot;);
+    node.src = url;
+    document.body.appendChild(node);
+    node.onload = function() {
+        //node.onload = null;
+        //document.body.removeChild(node); 
+        callback();
+    }
+}
+
+//构造函数  模块初始化数据
+function Module(uri, deps) {
+    this.uri = uri;
+    this.deps = deps || [];
+    this.exports = null;
+    this.status = 0;
+    this._waitings = {};
+    this._remain = 0;
+}
+
+//分析主干 (左子树 | 右子树) 上的依赖项
+Module.prototype.load = function() {
+    var module = this;
+    module.status = status.LOADING;
+    var uris = module.resolve(); //获取主干上的依赖项
+    var len = module._remain = uris.length;
+    //console.log(uris)
+    //加载主干上的依赖项(模块)
+    var m;
+    for (var i = 0; i &lt; len; i++) {
+        m = Module.get(uris[i]); //  创建缓存信息
+        if (m.status &lt; status.LOADED) {
+            m._waitings[module.uri] = m._waitings[module.uri] || 1;
+        } else {
+            module._remain--;
+        }
+    }
+    //如果依赖列表模块全都加载完毕
+    if (module._remain == 0) {//考虑不全面，并没有考虑比如主模块依赖的a.js/b.js是否加载完毕
+        module.onload();
+    };
+
+    //准备执行根目录下的依赖列表中的模块
+    var requestCache = {};
+    for (var i = 0; i &lt; len; i++) {
+        m = Module.get(uris[i]);
+        if (m.status &lt; status.FETCHED) {
+            m.fetch(requestCache);
+        }
+    }
+
+    for (uri in requestCache) {
+        requestCache[uri]();
+    }
+}
+
+//加载依赖列表中的模块
+Module.prototype.fetch = function(requestCache) {
+    var module = this;
+    console.log(module)
+    module.status = status.FETCHED;
+    var uri = module.uri;
+    requestCache[uri] = sendRequest; //Document.createElement(&quot;script&quot;) 
+
+    function sendRequest() {
+        startUp.request(uri, onRequest);
+    }
+
+    function onRequest() {
+        if (anonymousMeta) {
+            module.save(uri, anonymousMeta);
+        }
+        module.load(); //递归 模块加载策略
+    }
+}
+
+Module.prototype.onload = function() {
+    var mod = this;
+    mod.status = status.LOADED;
+    if (mod.callback) {
+        mod.callback();
+    }
+    //伪递归
+    _waitings = mod._waitings;
+    var uri, m;
+    for (uri in _waitings) {
+        //console.log(uri);   //根目录对应的Module实例对象
+        m = cache[uri];
+        m._remain -= _waitings[uri];
+        if (m._remain == 0) {
+            m.onload()
+        };
+    }
+
+}
+
+//更改初始化数据 
+Module.prototype.save = function(uri, meta) {
+    var module = Module.get(uri); //是否在缓存
+    module.id = uri;
+    module.deps = meta.deps || [];
+    module.factory = meta.factory;
+    module.status = status.SAVED;
+}
+
+//获取模块对外的接口对象
+Module.prototype.exec = function() {
+    var module = this;
+    //防止重复执行
+    if (module.status &gt;= status.EXECUTING) {
+        return module.exports;
+    }
+    module.status = status.EXECUTING; //5
+    var uri = module.uri;
+
+    function require(id) {
+        //console.log(require.resolve(id));   //更新过后的数据
+        return Module.get(require.resolve(id)).exec(); //获取接口对象
+    }
+
+    require.resolve = function(id) {
+        return startUp.resolve(id, uri); 
+    }
+
+    var factory = module.factory;
+    var exports = isFunction(factory) ? factory(require, module.exports = {}, module) : factory;
+
+    if (exports === undefined) {
+        exports = module.exports;
+    }
+    module.exports = exports;
+    module.status = status.EXECUTED; 
+    return exports;
+}
+
+//资源定位 解析依赖项生成绝对路径
+Module.prototype.resolve = function() {
+    var mod = this;
+    var ids = mod.deps; //[&quot;./a&quot;,&quot;./b&quot;]
+    var uris = [];
+    for (var i = 0; i &lt; ids.length; i++) {
+        uris[i] = startUp.resolve(ids[i], mod.uri); //依赖项   (主干| 子树)
+    }
+    //console.log(uris)
+    return uris;
+}
+
+//定义一个模块
+Module.define = function(factory) {
+    var deps;
+    if (isFunction(factory)) {
+        //正则解析依赖项
+        deps = parseDependencies(factory.toString());
+    }
+    //存储当前模块的信息
+    var meta = {
+        id: &quot;&quot;,
+        uri: &quot;&quot;,
+        deps: deps,
+        factory: factory
+    }
+    anonymousMeta = meta;
+}
+
+//检测缓存对象上是否有当前模块信息
+Module.get = function(uri, deps) {
+    return cache[uri] || (cache[uri] = new Module(uri, deps));
+}
+
+Module.use = function(deps, callback, uri) {
+    var module = Module.get(uri, isArray(deps) ? deps : [deps]);
+    //所有模块都加载完毕
+    module.callback = function() {
+        var exports = []; //所以依赖项模块的接口对象
+        var uris = module.resolve();
+        for (var i = 0; i &lt; uris.length; i++) {
+            exports[i] = cache[uris[i]].exec(); //获取模块对外定义的接口对象
+        }
+        if (callback) {
+            callback.apply(global, exports);
+        }
+    }
+    module.load();
+}
+
+var _cid = 0;
+
+function cid() {
+    return _cid++;
+};
+
+data.preload = [];
+//获取当前项目文档的URL
+data.cwd = document.URL.match(/[^?]*\//)[0];
+Module.preload = function(callback) {
+    var length = data.preload.length;
+    if (!length) callback();
+    //length !== 0 先加载预先设定模块
+};
+
+startUp.use = function(list, callback) {
+    //检测有没有预先加载的模块  
+    Module.preload(function() {
+        Module.use(list, callback, data.cwd + &quot;_use_&quot; + cid()); //虚拟的根目录
+    });
+}
+
+var REQUIRE_RE = /\brequire\s*\(\s*([&quot;&apos;])(.+?)\1\s*\)/g
+
+function parseDependencies(code) {
+    var ret = []
+    code.replace(REQUIRE_RE, function(m, m1, m2) {
+        if (m2) ret.push(m2);
+    });
+    return ret
+};
+
+global.define = Module.define;
+</code></pre><p>})(this);<br><br>a.js</p>
+<p><pre><br>define(function( require, exports, module){<br>    var age = “30”;<br>    var b = require(“b.js”);<br>    console.log(b.sex);<br>    exports.age = age;<br>});<br></pre><br>b.js</p>
+<p><pre><br>define(function( require, exports, module){<br>    var sex = “男”;<br>    return {<br>        sex:sex,<br>    }<br>});<br></pre><br>html</p>
+<p><pre><br>startUp.use([“a.js”, “b.js”], function(a, b) {<br>    console.log(a);<br>    console.log(b);<br>    console.log(“startUp…”);<br>});<br></pre><br>2.回顾<br><img src="https://snakexu.github.io/images/wangyi/module/4.2.3_1.png"><br><img src="https://snakexu.github.io/images/wangyi/module/4.2.3_2.png"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/12/20/网易微专业-模块化编程-4-2-3-依赖解析-依赖管理处理方案/" data-id="ckdbzsij3003bjrxq4jopazrg" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-模块化编程-4-2-2-模块资源定位-异步加载" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/12/13/网易微专业-模块化编程-4-2-2-模块资源定位-异步加载/" class="article-date">
+  <time datetime="2019-12-13T09:30:50.000Z" itemprop="datePublished">2019-12-13</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/12/13/网易微专业-模块化编程-4-2-2-模块资源定位-异步加载/">网易微专业-模块化编程-4.2.2-模块资源定位-异步加载</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.资源定位-动态加载<br><img src="https://snakexu.github.io/images/wangyi/module/4.2.2_1.png"><br>2.源码<br>startUp.js</p>
+<pre>
+(function(global) {
+    var startUp = global.startUp = {
+        version: "1.0.1",
+    }
+    var data = {};
+    var cache = {};
+    var anonymousMeta  = {};
+    //模块的生命周期
+    var status = {
+        FETCHED: 1,
+        SAVED: 2,
+        LOADING: 3,
+        LOADED: 4,
+        EXECUTING: 5,
+        EXECUTED: 6,
+    }
+
+    var isArray = function(obj) {
+        return toString.call(obj) === "[object Array]";
+    }
+
+    //是否使用了别名
+    function parseAlias(id) { //a  b
+        var alias = data.alias; //配置
+        return alias && isString(alias[id]) ? alias[id] : id;
+    }
+
+    //不能以"/" ":"开头  结尾必须是一个"/" 后面跟随任意字符至少一个
+    var PATHS_RE = /^([^\/:]+)(\/.+)$/; //([^\/:]+)   路径的短名称配置
+
+    // 检测是否 书写路径短名称
+    function parsePaths(id) {
+        var paths = data.paths; //配置
+        if (paths && (m = id.match(PATHS_RE)) && isString(paths[m[1]])) {
+            id = paths[m[1]] + m[2]
+        }
+        return id;
+    }
+
+    //检测是否添加后缀
+    function normalize(path) {
+        var last = path.length - 1;
+        var lastC = path.charAt(last);
+        return (lastC === "/" || path.substring(last - 2) === ".js") ? path : path + ".js";
+
+    }
+
+    //添加根目录
+    function addBase(id, uri) {
+        var result;
+        if (id.charAt(0) === ".") {
+            result = relapath((uri ? uri.match(/[^?]*\//)[0] : data.cwd) + id);
+        } else {
+            result = data.cwd + id;
+        }
+        return result;
+    }
+
+    var DOT_RE = /\/.\//g; // 规范路径  "/./" => "/"   
+    function relapath(path) {
+        path = path.replace(DOT_RE, "/");
+        return path;
+    }
+
+    //生成绝对路径  parent child
+    startUp.resolve = function(child, parent) {
+        if (!child) return "";
+        child = parseAlias(child); //检测是否有别名
+        child = parsePaths(child); // 检测是否有路径别名 依赖模块中引包的模块路径地址 require("app/c");
+        child = normalize(child); //检测是否添加后缀
+        return addBase(child, parent); //添加根目录
+    }
+
+    startUp.request = function(url, callback) {
+        var node = document.createElement("script");
+        node.src = url;
+        document.body.appendChild(node);
+        node.onload = function() {
+            //node.onload = null;
+            //document.body.removeChild(node); 
+            callback();
+        }
+    }
+
+    //构造函数  模块初始化数据
+    function Module(uri, deps) {
+        this.uri = uri;
+        this.deps = deps || [];
+        this.exports = null;
+        this.status = 0;
+        this._waitings = {};
+        this._remain = 0;
+    }
+
+    //分析主干 (左子树 | 右子树) 上的依赖项
+    Module.prototype.load = function() {
+        var module = this;
+        module.status = status.LOADING;
+        var uris = module.resolve(); //获取主干上的依赖项
+        var len = module._remain = uris.length;
+        console.log(uris)
+        //加载主干上的依赖项(模块)
+        var m;
+        for (var i = 0; i < len; i++) {
+            m = Module.get(uris[i]); //  创建缓存信息
+            if (m.status < status.LOADED) {
+                m._waitings[module.uri] = m._waitings[module.uri] || 1;
+            } else {
+                module._remain--;
+            }
+        }
+        //如果依赖列表模块全都加载完毕
+        if (module._remain == 0) {
+            module.onload();
+        };
+
+        //准备执行根目录下的依赖列表中的模块
+        var requestCache = {};
+        for (var i = 0; i < len; i++) {
+            m = Module.get(uris[i]);
+            if (m.status < status.FETCHED) {
+                m.fetch(requestCache);
+            }
+        }
+
+        for (uri in requestCache) {
+            requestCache[uri]();
+        }
+    }
+
+    //加载依赖列表中的模块
+    Module.prototype.fetch = function(requestCache) {
+        var module = this;
+        console.log(module)
+        module.status = status.FETCHED;
+        var uri = module.uri;
+        requestCache[uri] = sendRequest; //Document.createElement("script") 
+        //document.cretaE
+
+        function sendRequest() {
+            startUp.request(uri, onRequest);
+        }
+
+        function onRequest() {
+            if (anonymousMeta) {
+                module.save(uri, anonymousMeta); 
+            }
+            module.load(); //递归 模块加载策略
+        }
+    }
+
+    //更改初始化数据 
+    Module.prototype.save = function(uri, meta){
+
+    }
+
+    //资源定位 解析依赖项生成绝对路径
+    Module.prototype.resolve = function() {
+        var mod = this;
+        var ids = mod.deps; //["./a","./b"]
+        var uris = [];
+        for (var i = 0; i < ids.length; i++) {
+            uris[i] = startUp.resolve(ids[i], mod.uri); //依赖项   (主干| 子树)
+        }
+        //console.log(uris)
+        return uris;
+    }
+
+    //定义一个模块
+    Module.define = function(factory) {
+
+    }
+
+    //检测缓存对象上是否有当前模块信息
+    Module.get = function(uri, deps) {
+        return cache[uri] || (cache[uri] = new Module(uri, deps));
+    }
+
+    Module.use = function(deps, callback, uri) {
+        var module = Module.get(uri, isArray(deps) ? deps : [deps]);
+        //所有模块都加载完毕
+        module.callback = function() {
+
+        }
+        module.load();
+    }
+
+    var _cid = 0;
+
+    function cid() {
+        return _cid++;
+    };
+
+    data.preload = [];
+    //获取当前项目文档的URL
+    data.cwd = document.URL.match(/[^?]*\//)[0];
+    Module.preload = function(callback) {
+        var length = data.preload.length;
+        if (!length) callback();
+        //length !== 0 先加载预先设定模块
+    };
+
+    startUp.use = function(list, callback) {
+        //检测有没有预先加载的模块  
+        Module.preload(function() {
+            Module.use(list, callback, data.cwd + "_use_" + cid()); //虚拟的根目录
+        });
+    }
+
+    global.define = Module.define;
+})(this);
+</pre>
+a.js
+<pre>
+define(function( require, exports, module){
+    var age = "30";
+    exports.age = age;
+});
+</pre>
+b.js
+<pre>
+define(function( require, exports, module){
+    var sex = "男";
+    return {
+        sex:sex,
+    }
+});
+</pre>
+html
+<pre>
+startUp.use(["a.js","b.js"], function(){
+    console.log("startUp...");
+});
+</pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/12/13/网易微专业-模块化编程-4-2-2-模块资源定位-异步加载/" data-id="ckdbzsij00038jrxqu6gp642l" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-模块化编程-4-2-1-Module构造器设计-模块数据初始化" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/12/13/网易微专业-模块化编程-4-2-1-Module构造器设计-模块数据初始化/" class="article-date">
+  <time datetime="2019-12-13T07:02:59.000Z" itemprop="datePublished">2019-12-13</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/12/13/网易微专业-模块化编程-4-2-1-Module构造器设计-模块数据初始化/">网易微专业-模块化编程-4.2.1-Module构造器设计 模块数据初始化</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.依赖加载策略<br><img src="https://snakexu.github.io/images/wangyi/module/4.2.1_1.png"><br>2.模块数据初始化<br><img src="https://snakexu.github.io/images/wangyi/module/4.2.1_2.png"><br><img src="https://snakexu.github.io/images/wangyi/module/4.2.1_3.png"><br>模块生命周期里的状态码存在的意义？<br>比如我们有个需求，a.js需要加载b.js，b.js又需要加载a.js，这时候会存在循环无限加载的问题么？不会的，因为我们有状态码，根据状态码决定是否要加载当前模块。比如我们当前模块状态码为6，那么我们是不会重复加载相同模块的。<br>3.源码<br>(1)startUp.js</p>
+<pre>
+(function(global){
+    var startUp = global.startUp = {
+        version = 1.0.1
+    }
+    var data = {}
+    var cache = {}
+    var status = {
+        FETCHED : 1,
+        SAVED : 2,
+        LOADING : 3,
+        LOADED : 4,
+        EXECUTING : 5,
+        EXECUTED : 6
+    }
+    var isArray = function(obj) {
+        return toString.call(obj) === "[object Array]";
+    }
+    //构造函数  模块初始化数据
+    function Module(uri, deps){
+        this.uri = uri;
+        this.deps = deps || [];
+        this.exports = null;
+        this.status = 0;
+        this._waitings = {};
+        this._remain = 0;
+    }
+    //分析主干 (左子树 | 右子树) 上的依赖项
+    Module.prototype.load = function(){
+        var module = this;
+        module.status = status.loading;
+        //var uris = module.resolve(); //获取主干上的依赖项
+        //var len = module._remain = uris.length;  
+        //加载主干上的依赖项(模块)
+    }
+    //资源定位
+    Module.prototype.resolve = function(){
+
+    }
+    //定义一个模块
+    Module.define = function(factory) {
+
+    }
+    //检测缓存对象上是否有当前模块信息
+    Module.get = function(uri, deps){
+        return cache[uri] || (cache[uri] = new Module(uri, deps));
+    }
+    Module.use = function(deps, callback, uri){
+        var module = Module.get(uri, isArray(deps) ? deps : [deps]);
+        //所有模块都加载完毕
+        module.callback = function() {
+
+        }
+        module.load();
+    }
+    var _cid = 0;
+    function cid(){
+        return _cid++
+    }
+    data.preload = [];
+    //获取当前项目文档的URL
+    data.cwd = document.URL.match(/[^?]*\//)[0];
+    Module.preload = funcrtion(callback){
+        var length = data.preload.length;
+        if(!length) calllback();
+        //length !== 0 先加载预先设定模块
+    }
+    startUp.use = function(list, callback){
+        //检测有没有预先加载的模块 
+        Module.preload(function(){
+            Module.use(list, callback, data.cwd + "_use" + cid())//虚拟根目录
+        })
+    }
+    global.define = Module.define
+})(this)
+</pre>
+a.js
+<pre>
+define(function( require, exports, module){
+    var age = "30";
+    exports.age = age;
+});
+</pre>
+b.js
+<pre>
+define(function( require, exports, module){
+    var sex = "男";
+    return {
+        sex:sex,
+    }
+});
+</pre>
+demo.html
+<pre>
+startUp.use(["a.js","b.js"], function(){
+    console.log("startUp...");
+});
+</pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/12/13/网易微专业-模块化编程-4-2-1-Module构造器设计-模块数据初始化/" data-id="ckdbzsiiz0036jrxq9mzl4dpu" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-js算法简单了解-堆排序" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/12/13/js算法简单了解-堆排序/" class="article-date">
@@ -88,7 +1144,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/13/js算法简单了解-堆排序/" data-id="ckchm0rbv00045ajh5zzapl65" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/12/13/js算法简单了解-堆排序/" data-id="ckdbzsigl0004jrxqq5ti3t3a" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法/">算法</a></li></ul>
@@ -157,7 +1213,7 @@ console.log(quicksort([42,20,17,13,28,14,23,15],0,8))--><br>function quickSort(a
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/12/js算法简单了解-快速排序/" data-id="ckchm0rc000085ajha7ylgiy4" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/12/12/js算法简单了解-快速排序/" data-id="ckdbzsigq0008jrxql50dxk7z" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法/">算法</a></li></ul>
@@ -293,7 +1349,7 @@ console.log('sortresult:',sortresult)
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/11/js算法简单了解-归并排序/" data-id="ckchm0rc4000b5ajhfafm37cn" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/12/11/js算法简单了解-归并排序/" data-id="ckdbzsigt000bjrxqlygqxmjl" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法/">算法</a></li></ul>
@@ -333,7 +1389,7 @@ console.log('sortresult:',sortresult)
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/10/js算法简单了解-希尔排序/" data-id="ckchm0rby00065ajhv59b25ie" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/12/10/js算法简单了解-希尔排序/" data-id="ckdbzsigo0006jrxqptsre8gd" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法/">算法</a></li></ul>
@@ -373,7 +1429,7 @@ console.log('sortresult:',sortresult)
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/10/js算法简单了解-插入排序/" data-id="ckchm0rc4000d5ajh7xeln33c" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/12/10/js算法简单了解-插入排序/" data-id="ckdbzsigu000djrxqcqaz06dh" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法/">算法</a></li></ul>
@@ -413,171 +1469,11 @@ console.log('sortresult:',sortresult)
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/10/js算法简单了解-选择排序/" data-id="ckchm0rc000075ajhs7edfi4j" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/12/10/js算法简单了解-选择排序/" data-id="ckdbzsigp0007jrxq3f8e6r72" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法/">算法</a></li></ul>
 
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-js算法简单了解-冒泡算法" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/12/10/js算法简单了解-冒泡算法/" class="article-date">
-  <time datetime="2019-12-10T02:02:50.000Z" itemprop="datePublished">2019-12-10</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/12/10/js算法简单了解-冒泡算法/">js算法简单了解-冒泡算法</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <!--为了补回算法了解，我也是real认真了，拿出了上学时候的教材——数据结构(C语言版)，清华大学出版社，还是很怀念上学做米虫的日子的，言归正传-->
-<p>1.其实就是把数组中相邻元素一个个比较，按照排序的条件进行互换，毫无技巧简单粗暴直接有效。不过这个算法在我看来是最容易学习的。<br>2.代码实现，例子里排序得到的结果是从小到大的，可以按照自己的需要更改比较条件</p>
-<p><pre><br>function BubbleSort(arr){<br>    var temp;//临时变量<br>    for(var i=0; i &lt; arr.length-1; i++){   //表示趟数，一共arr.length-1次。<br>        var count = 0; //打印用的参数<br>        for(var j=arr.length-1; j&gt;i; j–){<br>            if(arr[j] &lt; arr[j-1]){<br>                temp = arr[j];<br>                arr[j] = arr[j-1];<br>                arr[j-1] = temp;<br>                count++;<br>            }<br>        }<br>        console.log(‘第’+i+’轮的比较次数为’+count);<br>    }<br>    return arr;<br>}<br>var arr = [93,72,35,48,42,37,15,2];<br>BubbleSort(arr)<br></pre><br>执行结果如图所示：<br><img src="https://snakexu.github.io/images/algorithm/bubble_1.png"><br>3.时间复杂度:O(N^2)(N的平方)</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/10/js算法简单了解-冒泡算法/" data-id="ckchm0rbu00035ajhmjqydfuv" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法/">算法</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-模块化编程-4-1-2-加载器结构设计导论-自研模块加载器" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/12/07/网易微专业-模块化编程-4-1-2-加载器结构设计导论-自研模块加载器/" class="article-date">
-  <time datetime="2019-12-07T09:54:59.000Z" itemprop="datePublished">2019-12-07</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/12/07/网易微专业-模块化编程-4-1-2-加载器结构设计导论-自研模块加载器/">网易微专业-模块化编程-4.1.2-加载器结构设计导论-自研模块加载器</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.结构导论<br><img src="https://snakexu.github.io/images/wangyi/module/4.1.2_1.png"><br>2.数据初始化<br><img src="https://snakexu.github.io/images/wangyi/module/4.1.2_2.png"><br>3.模块存储<br><img src="https://snakexu.github.io/images/wangyi/module/4.1.2_3.png"><br>4.资源定位<br><img src="https://snakexu.github.io/images/wangyi/module/4.1.2_4.png"><br>5.动态加载script文件<br><img src="https://snakexu.github.io/images/wangyi/module/4.1.2_5.png"><br>6.资源定位实现思路<br><img src="https://snakexu.github.io/images/wangyi/module/4.1.2_6.png"></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/07/网易微专业-模块化编程-4-1-2-加载器结构设计导论-自研模块加载器/" data-id="ckchm0rgn003s5ajhskmvk1hp" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-模块化编程-4-1-1-模块系统概述-自定义模块规范-书写约定" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/12/07/网易微专业-模块化编程-4-1-1-模块系统概述-自定义模块规范-书写约定/" class="article-date">
-  <time datetime="2019-12-07T06:52:12.000Z" itemprop="datePublished">2019-12-07</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/12/07/网易微专业-模块化编程-4-1-1-模块系统概述-自定义模块规范-书写约定/">网易微专业-模块化编程-4.1.1-模块系统概述-自定义模块规范-书写约定</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>一.什么是模块化<br><br>1.模块化就是把系统分离成独立功能的方法，这样我们需要什么功能，就加载什么功能。<br><br>(1)当一个项目开发的越来越复杂时，会遇到一些问题:<br><br>(1-1)命名冲突<br><br>(1-2)文件依赖<br><br>(2)使用模块化开发，可以避免以上问题，并且提高开发效率<br><br>(2-1)可维护性<br><br>(2-2)可复用性<br><br>总结:在生产角度，模块化开发是一种生产方式，这种方式生产效率高，维护成本低<br><br>二.模块化开发演变<br><img src="https://snakexu.github.io/images/wangyi/module/4.1.1_1.png"><br>三.Commonjs<br><br>CommonJS规范加载模块是同步的，也就是说，加载完成才执行后面的操作。<br><br>Node.js主要用于服务器编程，模块都是存在本地硬盘中加载比较快，所以Node.js采用CommonJS规范。<br><br>CommonJS规范分为三部分：module(模块标识) require(模块引用)  exports(模块定义)<br><br>·module变量在每个模块内部，就代表当前模块；<br><br>·exports属性是对外接口，用于导出当前模块的方法或变量；<br><br>·require()用来加载外部模块，读取并执行js文件，返回该模块的exports对象；<br><br>四.AMD(requirejs)<br><br>AMD也就是异步模块定义。它采用异步方式加载模块，通过define方式去定义模块，require方法去加载模块<br><br>AMD模块定义<br><br>如果这个模块还需要依赖其他模块，那么define函数的第一个参数， 必须是一个数组，指明该模块的依赖。<br></p>
-<p><pre>define([tools],function(){})</pre><br>AMD模块的加载</p>
-<p><pre>requeire([‘modules’],callback);</pre><br>·第一个参数[‘modules’]，是一个数组，里面的成员就是要加载的模块<br><br>·第二个参数callback，则是加载成功之后的回调函数。例如加载Math.js。<br></p>
-<p><pre>require([‘math’],function(){})</pre><br>require异步加载Math,浏览器不会失去响应；它指定的回调函数，只有前面的模块都加载成功后，才会运行，解决了依赖性的问题<br><br>五.CMD(seajs)<br><br>CMD即通用模块定义，CMD规范是国内发展出来的；正如AMD有requirejs，CMD有个浏览器的实现Seajs；Seajs要解决的问题和requirejs一样，只不过在模块定义方式和模块加载方式上有所不同<br><br>在CMD规范中，一个模块就是一个文件。代码的书写格式如下：</p>
-<p><pre>define(function(require,exports,module){<br>//模块代码<br>})</pre><br><i><br>    ·require是可以把其他模块导入进来的一个参数，<br><br>    ·exports可以把模块内的一些属性和方法导出；<br><br>    ·module是一个对象，上面存储了与当前模块相关联的一些属性和方法。<br><br></i><br>CMD推崇依赖就近，延迟执行。文件是提前加载好的，只有在require的时候才去执行文件</p>
-<p><pre><br>define(functioln(require,exports,module){<br>    var Math = require(‘./Math’);<br>    Math.add()<br>})<br></pre><br>六.ES6模块化<br><br>ES6 Module<br><br>在ES6之前没有模块化，为了解决问题，提出了Commonjs、AMD、CMD；ES6模块化汲取了Commonjs和AMD的优点，语法简介，支持异步加载，未来可以成为浏览器和服务器通用的模块化解决方案。<br><br>ES6中模块的定义<br><br>ES6新增了两个关键字：export和import。<br><br>·export用于把模块里的内容暴露出来<br><br>·import用于引入模块提供的功能<br><br>ES6中模块的加载<br><br>import加载模块：<br></p>
-<p><pre>import{bar,foo,test,obj} from ‘./lib’<br>    foo()<br></pre><br>注：可以使用export default命令，为模块指定默认输出，一个模块只能有一个默认输出，所以export default只能用一次。<br><br>ES6模块运行机制<br><br>ES6模块是动态引用，如果使用import从一个模块加载变量(即import foo from ‘foo’),变量不会被缓存，而是成为一个指向被加载模块的引用。等脚本执行时，根据只读引用，到被加载到那个模块中去取值。<br><br>七.自定义规范-书写约定<br><br>书写约定<br><br>自定义加载器<br><br>模块的定义<br><br>·约定：所有的Javascript文件都应该用模块的形式来书写，并且一个文件只包含一个模块；<br><br>·使用全局函数define来定义模块 define(factory[require、export、module])；<br><br>·factroy函数在调用时，会始终传入三个参数require、export和module，这三个参数在所有模块代码里可用。<br></p>
-<p><pre><br>    define(function(require, exports, module){<br>        //模块代码<br>    })<br></pre><br>·exports用来向外提供模块的API || 使用return语句直接向外提供API。<br><br>·require函数用来模仿其他模块提供的API。<br><br>·module参数存储模块的元信息。(id模块的唯一标识 deps依赖列表 exports对外提供的接口对象)<br><br><br><br>factory函数在调用时，会始终传入三个参数：require、exports和module，这三个参数在所有模块代码里可用。<br></p>
-<p><pre><br>    define(function(require, exports, module){<br>        //模块代码<br>    })<br></pre><br>模块加载器会从factory.toString()中解析出当前模块所依赖的模块，它是由一个模块标识组成的数组。<br><br>所以：<br><br>1.在模块代码中，第一个参数必须命名为require。<br><br>2.不要重命名require函数，或在任何作用域总给require重新赋值。<br><br>3.require的参数值必须是字符串的直接量不能是表达式。<br></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/07/网易微专业-模块化编程-4-1-1-模块系统概述-自定义模块规范-书写约定/" data-id="ckchm0rgo003t5ajh894lygfu" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-HTTP和HTTPS协议" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/12/06/HTTP和HTTPS协议/" class="article-date">
-  <time datetime="2019-12-06T08:37:32.000Z" itemprop="datePublished">2019-12-06</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/12/06/HTTP和HTTPS协议/">HTTP和HTTPS协议</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>写在前面<br><br>版权声明：本文为CSDN博主「会飞的狗~」的原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接及本声明。<br>原文链接：<a href="https://blog.csdn.net/xiaoming100001/article/details/81109617" target="_blank" rel="noopener">https://blog.csdn.net/xiaoming100001/article/details/81109617</a><br><br>文章对http和https解释的比较详细，但是也略有一些不足，比如三次握手的图略有差池，但是瑕不掩瑜，整体来说还是了解http和https一篇比较好的文章<br><br>一、前言：<br><img src="https://snakexu.github.io/images/http&https/http_1.jpeg"><br><img src="https://snakexu.github.io/images/http&https/http_2.jpeg"><br>先来观察这两张图，第一张访问域名<a href="http://www.12306.cn，谷歌浏览器提示不安全链接，第二张是https://kyfw.12306.cn/otn/regist/init，浏览器显示安全，为什么会这样子呢？2017年1月发布的Chrome" target="_blank" rel="noopener">http://www.12306.cn，谷歌浏览器提示不安全链接，第二张是https://kyfw.12306.cn/otn/regist/init，浏览器显示安全，为什么会这样子呢？2017年1月发布的Chrome</a> 56浏览器开始把收集密码或信用卡数据的HTTP页面标记为“不安全”，若用户使用2017年10月推出的Chrome 62，带有输入数据的HTTP页面和所有以无痕模式浏览的HTTP页面都会被标记为“不安全”，此外，苹果公司强制所有iOS App在2017年1月1日前使用HTTPS加密。<br><br>二、HTTP和HTTPS发展历史<br><br>什么是HTTP?<br><br>超文本传输协议，是一个基于请求与响应，无状态的，应用层的协议，常基于TCP/IP协议传输数据，互联网上应用最为广泛的一种网络协议,所有的WWW文件都必须遵守这个标准。设计HTTP的初衷是为了提供一种发布和接收HTML页面的方法。<br><br>发展历史：<br><img src="https://snakexu.github.io/images/http&https/http_3.png"><br><img src="https://snakexu.github.io/images/http&https/http_4.png"><br>这个Akamai公司建立的一个官方的演示，使用HTTP/1.1和HTTP/2同时请求379张图片，观察请求的时间，明显看出HTTP/2性能占优势。<br><img src="https://snakexu.github.io/images/http&https/http_5.jpeg"><br>多路复用：通过单一的HTTP/2连接请求发起多重的请求-响应消息，多个请求stream共享一个TCP连接，实现多留并行而不是依赖建立多个TCP连接。<br><br><br>HTTP报文格式<br><img src="https://snakexu.github.io/images/http&https/http_6.png"><br>什么是HTTPS？<br><br>《图解HTTP》这本书中曾提过HTTPS是身披SSL外壳的HTTP。HTTPS是一种通过计算机网络进行安全通信的传输协议，经由HTTP进行通信，利用SSL/TLS建立全信道，加密数据包。HTTPS使用的主要目的是提供对网站服务器的身份认证，同时保护交换数据的隐私与完整性。<br><br>PS:TLS是传输层加密协议，前身是SSL协议，由网景公司1995年发布，有时候两者不区分。<br><br>三、HTTP VS HTTPS<br><br>HTTP特点：<br><br>1.无状态：协议对客户端没有状态存储，对事物处理没有“记忆”能力，比如访问一个网站需要反复进行登录操作<br><br>2.无连接：HTTP/1.1之前，由于无状态特点，每次请求需要通过TCP三次握手四次挥手，和服务器重新建立连接。比如某个客户机在短时间多次请求同一个资源，服务器并不能区别是否已经响应过用户的请求，所以每次需要重新响应请求，需要耗费不必要的时间和流量。<br><br>3.基于请求和响应：基本的特性，由客户端发起请求，服务端响应<br><br>4.简单快速、灵活<br><br>5.通信使用明文、请求和响应不会对通信方进行确认、无法保护数据的完整性<br><br>下面通过一个简单的抓包实验观察使用HTTP请求传输的数据：<br><img src="https://snakexu.github.io/images/http&https/http_7.jpeg"><br><img src="https://snakexu.github.io/images/http&https/http_8.jpeg"><br>结果分析：HTTP协议传输数据以明文形式显示<br><br>针对无状态的一些解决策略：<br><br>场景：逛电商商场用户需要使用的时间比较长，需要对用户一段时间的HTTP通信状态进行保存，比如执行一次登陆操作，在30分钟内所有的请求都不需要再次登陆。<br><br>1.通过Cookie/Session技术<br><br>2.HTTP/1.1持久连接（HTTP keep-alive）方法，只要任意一端没有明确提出断开连接，则保持TCP连接状态，在请求首部字段中的Connection:keep-alive即为表明使用了持久连接<br><br>HTTPS特点：<br><br>基于HTTP协议，通过SSL或TLS提供加密处理数据、验证对方身份以及数据完整性保护<br><img src="https://snakexu.github.io/images/http&https/http_9.jpeg"><br>通过抓包可以看到数据不是明文传输，而且HTTPS有如下特点：<br><br>1.内容加密：采用混合加密技术，中间者无法直接查看明文内容<br><br>2.验证身份：通过证书认证客户端访问的是自己的服务器<br><br>3.保护数据完整性：防止传输的内容被中间人冒充或者篡改<br><br><strong>混合加密：</strong>结合非对称加密和对称加密技术。客户端使用对称加密生成密钥对传输数据进行加密，然后使用非对称加密的公钥再对秘钥进行加密，所以网络上传输的数据是被秘钥加密的密文和用公钥加密后的秘密秘钥，因此即使被黑客截取，由于没有私钥，无法获取到加密明文的秘钥，便无法获取到明文数据。<br><br><strong>数字摘要：</strong>通过单向hash函数对原文进行哈希，将需加密的明文“摘要”成一串固定长度(如128bit)的密文，不同的明文摘要成的密文其结果总是不相同，同样的明文其摘要必定一致，并且即使知道了摘要也不能反推出明文。<br><br><strong>数字签名技术：</strong>数字签名建立在公钥加密体制基础上，是公钥加密技术的另一类应用。它把公钥加密技术和数字摘要结合起来，形成了实用的数字签名技术。<br><br>·收方能够证实发送方的真实身份；<br><br>·发送方事后不能否认所发送过的报文；<br><br>·收方或非法者不能伪造、篡改报文。<br><br><img src="https://snakexu.github.io/images/http&https/http_10.png"><br>非对称加密过程需要用到公钥进行加密，那么公钥从何而来？其实公钥就被包含在数字证书中，数字证书通常来说是由受信任的数字证书颁发机构CA，在验证服务器身份后颁发，证书中包含了一个密钥对（公钥和私钥）和所有者识别信息。数字证书被放到服务端，具有服务器身份验证和数据传输加密功能。<br><br>四、HTTP通信传输<br><img src="https://snakexu.github.io/images/http&https/http_11.jpeg"><br>客户端输入URL回车，DNS解析域名得到服务器的IP地址，服务器在80端口监听客户端请求，端口通过TCP/IP协议（可以通过Socket实现）建立连接。HTTP属于TCP/IP模型中的运用层协议，所以通信的过程其实是对应数据的入栈和出栈。<br><img src="https://snakexu.github.io/images/http&https/http_12.jpeg"><br>报文从运用层传送到运输层，运输层通过TCP三次握手和服务器建立连接，四次挥手释放连接。<br><img src="https://snakexu.github.io/images/http&https/http_13.png"><br>为什么需要三次握手呢？为了防止已失效的连接请求报文段突然又传送到了服务端，因而产生错误。<br><br>比如：client发出的第一个连接请求报文段并没有丢失，而是在某个网络结点长时间的滞留了，以致延误到连接释放以后的某个时间才到达server。本来这是一个早已失效的报文段，但是server收到此失效的连接请求报文段后，就误认为是client再次发出的一个新的连接请求，于是就向client发出确认报文段，同意建立连接。假设不采用“三次握手”，那么只要server发出确认，新的连接就建立了，由于client并没有发出建立连接的请求，因此不会理睬server的确认，也不会向server发送数据，但server却以为新的运输连接已经建立，并一直等待client发来数据。所以没有采用“三次握手”，这种情况下server的很多资源就白白浪费掉了。<br><img src="https://snakexu.github.io/images/http&https/http_14.png"><br>为什么需要四次挥手呢？TCP是全双工模式，当client发出FIN报文段时，只是表示client已经没有数据要发送了，client告诉server，它的数据已经全部发送完毕了；但是，这个时候client还是可以接受来server的数据；当server返回ACK报文段时，表示它已经知道client没有数据发送了，但是server还是可以发送数据到client的；当server也发送了FIN报文段时，这个时候就表示server也没有数据要发送了，就会告诉client，我也没有数据要发送了，如果收到client确认报文段，之后彼此就会愉快的中断这次TCP连接。<br><br>五、HTTPS实现原理<br><br>SSL建立连接过程<br><br><img src="https://snakexu.github.io/images/http&https/http_15.png"><br>1.client向server发送请求<a href="https://baidu.com，然后连接到server的443端口，发送的信息主要是随机值1和客户端支持的加密算法。" target="_blank" rel="noopener">https://baidu.com，然后连接到server的443端口，发送的信息主要是随机值1和客户端支持的加密算法。</a><br><br>2.server接收到信息之后给予client响应握手信息，包括随机值2和匹配好的协商加密算法，这个加密算法一定是client发送给server加密算法的子集。<br><br>3.随即server给client发送第二个响应报文是数字证书。服务端必须要有一套数字证书，可以自己制作，也可以向组织申请。区别就是自己颁发的证书需要客户端验证通过，才可以继续访问，而使用受信任的公司申请的证书则不会弹出提示页面，这套证书其实就是一对公钥和私钥。传送证书，这个证书其实就是公钥，只是包含了很多信息，如证书的颁发机构，过期时间、服务端的公钥，第三方证书认证机构(CA)的签名，服务端的域名信息等内容。<br><br>4.客户端解析证书，这部分工作是由客户端的TLS来完成的，首先会验证公钥是否有效，比如颁发机构，过期时间等等，如果发现异常，则会弹出一个警告框，提示证书存在问题。如果证书没有问题，那么就生成一个随即值（预主秘钥）。<br><br>5.客户端认证证书通过之后，接下来是通过随机值1、随机值2和预主秘钥组装会话秘钥。然后通过证书的公钥加密会话秘钥。<br><br>6.传送加密信息，这部分传送的是用证书加密后的会话秘钥，目的就是让服务端使用秘钥解密得到随机值1、随机值2和预主秘钥。<br><br>7.服务端解密得到随机值1、随机值2和预主秘钥，然后组装会话秘钥，跟客户端会话秘钥相同。<br><br>8.客户端通过会话秘钥加密一条消息发送给服务端，主要验证服务端是否正常接受客户端加密的消息。<br><br>9.同样服务端也会通过会话秘钥加密一条消息回传给客户端，如果客户端能够正常接受的话表明SSL层连接建立完成了。<br><br>问题：<br><br>1.怎么保证保证服务器给客户端下发的公钥是真正的公钥，而不是中间人伪造的公钥呢？<br><br><img src="https://snakexu.github.io/images/http&https/http_16.png"><br>2.证书如何安全传输，被掉包了怎么办？<br><img src="https://snakexu.github.io/images/http&https/http_17.png"><br>数字证书内容<br><br>包括了加密后服务器的公钥、权威机构的信息、服务器域名，还有经过CA私钥签名之后的证书内容（经过先通过Hash函数计算得到证书数字摘要，然后用权威机构私钥加密数字摘要得到数字签名)，签名计算方法以及证书对应的域名。<br><br>验证证书安全性过程<br><br>1.当客户端收到这个证书之后，使用本地配置的权威机构的公钥对证书进行解密得到服务端的公钥和证书的数字签名，数字签名经过CA公钥解密得到证书信息摘要。<br><br>2.然后证书签名的方法计算一下当前证书的信息摘要，与收到的信息摘要作对比，如果一样，表示证书一定是服务器下发的，没有被中间人篡改过。因为中间人虽然有权威机构的公钥，能够解析证书内容并篡改，但是篡改完成之后中间人需要将证书重新加密，但是中间人没有权威机构的私钥，无法加密，强行加密只会导致客户端无法解密，如果中间人强行乱修改证书，就会导致证书内容和证书签名不匹配。<br><br>那第三方攻击者能否让自己的证书显示出来的信息也是服务端呢？（伪装服务端一样的配置）显然这个是不行的，因为当第三方攻击者去CA那边寻求认证的时候CA会要求其提供例如域名的whois信息、域名管理邮箱等证明你是服务端域名的拥有者，而第三方攻击者是无法提供这些信息所以他就是无法骗CA他拥有属于服务端的域名。<br><br>六、运用与总结<br><br>安全性考虑：<br><br>1.HTTPS协议的加密范围也比较有限，在黑客攻击、拒绝服务攻击、服务器劫持等方面几乎起不到什么作用<br><br>2.SSL证书的信用链体系并不安全，特别是在某些国家可以控制CA根证书的情况下，中间人攻击一样可行<br><br>中间人攻击（MITM攻击）是指，黑客拦截并篡改网络中的通信数据。又分为被动MITM和主动MITM，被动MITM只窃取通信数据而不修改，而主动MITM不但能窃取数据，还会篡改通信数据。最常见的中间人攻击常常发生在公共wifi或者公共路由上。<br><br>成本考虑：<br><br>1.SSL证书需要购买申请，功能越强大的证书费用越高<br><br>2.SSL证书通常需要绑定IP，不能在同一IP上绑定多个域名，IPv4资源不可能支撑这个消耗（SSL有扩展可以部分解决这个问题，但是比较麻烦，而且要求浏览器、操作系统支持，Windows XP就不支持这个扩展，考虑到XP的装机量，这个特性几乎没用）。<br><br>3.根据ACM CoNEXT数据显示，使用HTTPS协议会使页面的加载时间延长近50%，增加10%到20%的耗电。<br><br>4.HTTPS连接缓存不如HTTP高效，流量成本高。<br><br>5.HTTPS连接服务器端资源占用高很多，支持访客多的网站需要投入更大的成本。<br><br>6.HTTPS协议握手阶段比较费时，对网站的响应速度有影响，影响用户体验。比较好的方式是采用分而治之，类似12306网站的主页使用HTTP协议，有关于用户信息等方面使用HTTPS。<br><br><br><br><br><br>另外还看到分节介绍，更详细的介绍了一些相关细节的博文：<br><a href="https://blog.csdn.net/hherima/article/details/52469267" target="_blank" rel="noopener">https://blog.csdn.net/hherima/article/details/52469267</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/06/HTTP和HTTPS协议/" data-id="ckchm0rfe002a5ajhq08g42nz" class="article-share-link">Share</a>
-      
-      
     </footer>
   </div>
   
@@ -642,23 +1538,23 @@ console.log('sortresult:',sortresult)
       <ul>
         
           <li>
+            <a href="/2020/07/29/拉勾-规范化标准/">拉勾-规范化标准</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/28/拉勾-其他打包工具/">拉勾-其他打包工具</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/17/拉勾-Webpack打包/">拉勾-Webpack打包</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/15/拉勾-模块化开发/">拉勾-模块化开发</a>
+          </li>
+        
+          <li>
             <a href="/2020/07/08/拉勾-自动化构建/">拉勾-自动化构建</a>
-          </li>
-        
-          <li>
-            <a href="/2020/07/03/拉勾-脚手架工具/">拉勾-脚手架工具</a>
-          </li>
-        
-          <li>
-            <a href="/2020/07/03/拉勾-工程化概述/">拉勾-工程化概述</a>
-          </li>
-        
-          <li>
-            <a href="/2020/06/28/拉勾-JavaScript性能优化/">拉勾-JavaScript性能优化</a>
-          </li>
-        
-          <li>
-            <a href="/2020/06/26/拉勾-TypeScript语言/">拉勾-TypeScript语言</a>
           </li>
         
       </ul>

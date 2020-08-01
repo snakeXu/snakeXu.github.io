@@ -62,6 +62,229 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-网易微专业-node-1-1-6-Redis入门及应用" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/04/13/网易微专业-node-1-1-6-Redis入门及应用/" class="article-date">
+  <time datetime="2020-04-13T05:22:33.000Z" itemprop="datePublished">2020-04-13</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/04/13/网易微专业-node-1-1-6-Redis入门及应用/">网易微专业-node-1.1.6-Redis入门及应用</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.Redis简介<br>1-1.Redis简介<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.6_1.png"><br>1-2.Redis与其他数据库及软件的对比<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.6_2.png"><br>2.Redis安装及配置<br>2-1.安装<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.6_3.png"><br>Redis最好不要在windows中安装，可以在windows中使用客户端<br>官网:<a href="https://redis.io/" target="_blank" rel="noopener">https://redis.io/</a><br>下载并解压安装包，进入解压缩目录的根目录，make MALLOC=libc，执行make install<br>Redis启动方式<br>(1)直接启动<br>按照老师的安装方式，可以在任何目录下输入redis-server启动redis服务。但是这种启动方式，并不能在后台挂载起来，只能在命令行使用<br>(2)cd /tmp/redis安装目录，找到目录下的redis.conf文件，vim redis.conf，找到文件内daemonize no，改成daemonize yes，:wq保存退出文件，并且将文件拷贝，例如拷贝到/etc/文件夹下，就是执行命令cp /etc/redis.conf，启动redis-server /etc/redis.conf，这时候查看启动进程ps -ef|grep redis,，如下图<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.6_5.png"><br>可以看到该进程号为2395，关闭这样启动的redis可以使用命令kill -9 2395<br>(3)进入/tmp/redis安装目录，进入安装目录下的utils文件夹，找到install_server.sh，vim install_server.sh查看这个文件，发现是个命令行文件，./install_server.sh，会让你进行一系列配置，可以选择默认，老师进行了如下配置<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.6_6.png"><br>进程提示已经安装成功，我们试图关闭，执行service redis_6379 stop命令，如果发现并不能关闭，那么我们需要rm /var/run/redis_6379.pid，再次启动redis就能启动了service redis_6379 start，如果需要配置开机启动:systemctl enable redis_6379<br>2-2.Redis常用配置<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.6_7.png"><br>bind:只有bind指定的才能链接<br>protectd-mode:默认是开启的，如果没有指定bind和masterauth那么开启这个参数，redis只能在本地进行访问，会拒绝外部访问。如果把bind解除但是没有开masterauth，可以链接上redis，但是不能进行操作<br>3.Redis数据结构及应用<br>3-1.Redis提供的五种结构<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.6_4.png"><br>3-2.Redis在Node.js中的应用<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.6_8.png"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/04/13/网易微专业-node-1-1-6-Redis入门及应用/" data-id="ckdbzsiia002gjrxqz30n2g7v" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-node-1-1-5-Nginx反向代理-静态资源服务" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/04/12/网易微专业-node-1-1-5-Nginx反向代理-静态资源服务/" class="article-date">
+  <time datetime="2020-04-12T06:55:28.000Z" itemprop="datePublished">2020-04-12</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/04/12/网易微专业-node-1-1-5-Nginx反向代理-静态资源服务/">网易微专业-node-1.1.5-Nginx反向代理 静态资源服务</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.Nginx简介<br>1-1.简介<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.5_1.png"><br>1-2.选择Nginx的理由<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.5_2.png"><br>2.Nginx安装与配置<br>2-1.Nginx安装前准备<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.5_3.png"><br><a href="http://nginx.org/" target="_blank" rel="noopener">http://nginx.org/</a> Nginx官网<br>2-2.Nginx编译安装<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.5_4.png"><br>2-3.Nginx配置与优化<br>·配置文件结构<br>·虚拟主机配置<br>·日志配置与切割<br>·压缩输出配置<br>···<br>基本配置文件位于cd /usr/local/nginx/conf/，下面列表的nginx的主配置文件是vim nginx.conf(vim是查看文件内容命令)，下面几个图是关于nginx.conf的介绍<br>(1)全局区域<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.5_5.png"><br>在全局区域可以做一些全局的设置，比如#user nobody是一个用户和一个组，user www(一个用户) www(一个组);(这个分号是nginx配置文件后面要加分号结尾)</p>
+<pre>
+#使用的用户和组
+#user nobody;
+#指定工作衍生的进程
+worker_processes 1;
+#指定错误日志的存放路径
+#error_log logs/error.log;
+#error_log logs/error.log notice;
+#error_log logs/error.log info;
+#pid nginx启动起来之后的主进程ID
+#pid       logs/nginx.pid;
+#指定使用的网络I/O模型
+events {
+    worker_connections 1024;//允许的最大连接数
+}
+</pre>
+(2)event区域
+<img src="https://snakexu.github.io/images/wangyi/node/1.1.5_6.png">
+(3)http区域(http区域其实是从event区域下面开始到最后，这里截图只有一部分)
+<img src="https://snakexu.github.io/images/wangyi/node/1.1.5_7.png">
+log_format是用来设置日志的格式，放在http中是全局的，如下图；如果放在http中的server中则表示单个的server的作用
+<img src="https://snakexu.github.io/images/wangyi/node/1.1.5_8.png">
+access_log是用来指定日志的格式、存放路径、缓存大小
+2-4.gzip压缩
+nginx采用的是gzip的压缩，gzip可以压缩到原来大小的30%。进行gzip压缩需要浏览器和服务端都支持。首先由服务端进行压缩，把压缩文件传输到浏览器，浏览器对gizp文件进行解压并且解析，目前为止大部分的浏览器对gzip都是支持的。
+关于配置gzip，首先在上面nginx.conf文件中开启gzip on
+<pre>
+gzip on;//开启gzip支持
+gzip_min_length 1k;//gzip的最小长度
+gzip_buffers 4 16k;
+gzip_http_version 1.1;//gzip默认支持的http协议是1.0版本
+gzip_comp_level 2;
+gzip_types text/plain application/x-javascript text/css application/xml;//设置gzip支持的压缩文件类型
+gzip_vary on;
+</pre>
+3.Nginx高级应用
+3-1.Rewrite重写
+<img src="https://snakexu.github.io/images/wangyi/node/1.1.5_9.png">
+首先还是打开conf/nginx.conf文件，找到location
+<pre>
+location / {
+    root html;
+    rewrite ^(.*).htmp$ /rewrite.html;//把htmp结尾的文件重定向到rewrite.html
+    index index.html index.htm;
+}
+</pre>
+3-2.代理与反向代理
+代理就是代理的是客户端；反向代理代理的是服务端
+<img src="https://snakexu.github.io/images/wangyi/node/1.1.5_10.png">
+反向代理配置
+打开文件 /usr/local/nginx/conf/nginx.conf
+<pre>
+server {
+    #端口
+    listen 80;
+    #主机名
+    server_name daili.com;
+    location / {
+        //http地址也可以写下面upstream中的名字http://myserver，这样相当于一个域名配置多个服务器，即负载均衡
+        proxy_pass http://192.168.2.114:8080;
+        index index.html index.php;
+    }
+}
+</pre>
+<!--执行nginx -t命令-->
+3-3.负载均衡
+<img src="https://snakexu.github.io/images/wangyi/node/1.1.5_11.png">
+nginx自带的负载均衡是轮寻的方式。负载均衡就是一个服务器别名可以放多个服务器
+配置负载均衡
+打开文件 /usr/local/nginx/conf/nginx.conf，在http中配置下面代码
+<pre>
+upstream myserver {
+    server 192.168.2.114:8080
+    server 192.168.2.114:8081
+}
+</pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/04/12/网易微专业-node-1-1-5-Nginx反向代理-静态资源服务/" data-id="ckdbzsiia002fjrxqotdqm7ar" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-node-1-1-3-Linux快速上手玩转典型应用" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/04/11/网易微专业-node-1-1-3-Linux快速上手玩转典型应用/" class="article-date">
+  <time datetime="2020-04-11T02:40:28.000Z" itemprop="datePublished">2020-04-11</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/04/11/网易微专业-node-1-1-3-Linux快速上手玩转典型应用/">网易微专业-node-1.1.3-Linux快速上手玩转典型应用</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.Linux简介<br>1-1.Linux简介<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.3_1.png"><br>1-2.Linux应用领域<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.3_2.png"><br>1-3.Linux安装<br>1-3-1.安装虚拟机<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.3_3.png"><br>1-3-2.安装CentOS-7<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.3_4.png"><br>2.常用命令<br>2-1.查看ip<br>ifconfig mini版没有安装此命令，需要自己安装<br>ip addr  显示ip信息<br>2-2.yum命令<br>·yum是一个在CentOS中shell前端软件包管理器<br>·yum update  更新所有的软件<br>·yum install 安装指定的软件<br>·yum remove  删除指定的软件<br>···<br>yum install net-tools可以安装上面提到过的ifconfig(ifconfig包含在net-tools中)。但是执行安装程序需要连网，在虚拟机里就是要设置网络和IP等，需要设置一个文件，再在虚拟机选项中选择桥接模式，再重启虚拟机。<br>2-3.vi/vim命令<br>·命令模式<br> ·i 切换到输入模式<br> ·x 删除当前光标所在处字符<br> ·: 切换到底线命令模式<br>·输入模式<br>·底线命令模式<br> ·q 推出程序<br> ·w 保存文件<br> ·set number 显示行号<br> 2-4.系统信息<br> ·free -m 内存信息<br> ·df -h   硬盘信息<br> ·cat/proc/cpuinfo cpu信息<br> ···<br> 2-5.文件系统<br> ·cd 进入目录<br> ·ls 列出目录信息，ls-al(ll)列出详细信息<br> ·touch 新建文件<br> ·mkdir 新建目录<br> ·rm 删除文件或目录<br> ·cp 复制<br> ·mv 移动(重命名)<br> ···<br> 2-6.搜索、查找、读取<br> ·tail 从文件尾部读取<br> ·head 从文件头部读取<br> ·cat  读取整个文件<br> ·more/less 分页读取<br> ·grep 搜索关键字<br> ·find 查找文件<br> ·| 通过管道传递命令<br> ···<br> 2-7.压缩和解压<br> ·tar 用于压缩和解压<br> ·tar -czvf 打包压缩<br> ·tar -tzvf 列出压缩文件内容<br> ·tar -xzvf 解压文件<br> ···<br> 2-8.用户操作<br> ·useradd/adduser 添加用户<br> ·passwd 设置密码<br> ·userdel 删除用户<br> ·sudo 提权<br> 2-9.更换yum源<br> <img src="https://snakexu.github.io/images/wangyi/node/1.1.3_5.png"><br> 这里需要通过wget将cent-os下载到本地，如果没有安装wget需要先安装wget，那么上面图中第一步的备份就先不要做，要先安装wget<br> <a href="http://mirrors.163.com/.help/centos.html" target="_blank" rel="noopener">http://mirrors.163.com/.help/centos.html</a> 网易Cent-OS的镜像<br>3.玩转典型应用<br>3-1.防火墙<br>3-1-1.服务设置<br>(1)安装 yum install firewalld<br>(2)启动 service firewalld start<br>(3)检查服务状态 service firewalld status<br>(4)关闭/禁用 service firewalld stop/disabled<br>3-1-2.防火墙设置<br>·查询服务 firewall-cmd –list-services<br>·查询开放端口 firewall-cmd –list-ports<br>·查询端口 firewall-cmd –quert-port=80/tcp<br>·添加开放端口 firewall-cmd –add-port=3306/tcp<br>3-2.Apache<br>3-2-1.服务设置<br>·安装 yum install httpd<br>·启动 service httpd start<br>·检查服务状态 service httpd status<br>·关闭/重启 service httpd stop/restart<br>ps -ef 可以查看正在运行的进程<br>ps -ef | grep httpd 查看http进程<br>3-2-2.Apache设置<br>·虚拟主机设置<br>·伪静态操作<br>cd /etc/httpd<br>cd conf<br>vim httpd.conf<br>可以另外开一个窗口，看一下http服务相关的<br>cd /etc/httpd/<br>ll<br>可以看到列表中conf.modules.d是所有模块<br>这里还教了如何配置虚拟主机，也就是一个服务器上可以放置多个网站<br>伪静态就是类似于我们看到的博客详细页面是.html结尾的，但是这只是在服务器上设置的，并非是真的每篇文章一个静态.html文件，这个设置需要在服务器上设置，本节课也有讲到<br>3-2-3.PHP<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.3_6.png"><br>3-3.MySQL<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.3_7.png"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/04/11/网易微专业-node-1-1-3-Linux快速上手玩转典型应用/" data-id="ckdbzsii9002ejrxqks8hhuv6" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-node-1-1-2-Node-js原理-基础API-搭建静态服务器" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/04/10/网易微专业-node-1-1-2-Node-js原理-基础API-搭建静态服务器/" class="article-date">
+  <time datetime="2020-04-10T07:28:16.000Z" itemprop="datePublished">2020-04-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/04/10/网易微专业-node-1-1-2-Node-js原理-基础API-搭建静态服务器/">网易微专业-node-1.1.2-Node.js原理/基础API/搭建静态服务器</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.Node.js原理<br>1-1.Node.js简介<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.2_1.png"><br><img src="https://snakexu.github.io/images/wangyi/node/1.1.2_2.png"><br>1-2.开发平台<br>什么是开发平台<br>·有对应的编程语言<br>·要有语言运行时<br>·必须要有实现特定功能API<br>1-3.Node.js特点<br>·事件驱动<br>·非阻塞I/O模型<br>·单线程<br>·拥有世界上最大的开源系统(NPM)<br>另外，node.js开发的网站应用是不需要web容器的，因为它本身就是一个web容器<br>1-4.Node安装与管理<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.2_3.png"><br>2.基础API<br>2-1.path(路径)<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.2_4.png"><br>2-2.fs(文件系统)<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.2_5.png"><br>2-3.http(HTTP服务)<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.2_6.png"><br>3.搭建静态服务器<br>3-1.开启http服务步骤<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.2_7.png"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/04/10/网易微专业-node-1-1-2-Node-js原理-基础API-搭建静态服务器/" data-id="ckdbzsii6002bjrxq5mwct7km" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-网易微专业-node-1-1-1-es6快速入门" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/04/09/网易微专业-node-1-1-1-es6快速入门/" class="article-date">
@@ -281,7 +504,7 @@ timeout(1000).then(value=>console.log(value))
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/04/09/网易微专业-node-1-1-1-es6快速入门/" data-id="ckchm0rg700305ajhlsy68i3z" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/04/09/网易微专业-node-1-1-1-es6快速入门/" data-id="ckdbzsii6002cjrxqlwl3e70j" class="article-share-link">Share</a>
       
       
     </footer>
@@ -320,7 +543,7 @@ timeout(1000).then(value=>console.log(value))
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/04/01/js实现重载和重写/" data-id="ckchm0rbt00025ajhl437z9c1" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/04/01/js实现重载和重写/" data-id="ckdbzsigj0002jrxq9o1egko5" class="article-share-link">Share</a>
       
       
     </footer>
@@ -356,7 +579,7 @@ timeout(1000).then(value=>console.log(value))
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/04/01/网易微专业-MV-组件化开发React专题-React生态-2-4-3-Redux源码解析分享/" data-id="ckchm0rck001b5ajh0peb6iyv" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/04/01/网易微专业-MV-组件化开发React专题-React生态-2-4-3-Redux源码解析分享/" data-id="ckdbzsihe001cjrxq51ev484z" class="article-share-link">Share</a>
       
       
     </footer>
@@ -631,7 +854,7 @@ function removeNode( dom ) {
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/03/29/网易微专业-MV-组件化开发React专题-React生态-2-4-2-实现React-下-so-diff/" data-id="ckchm0rg2002s5ajh7aqsovxj" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/03/29/网易微专业-MV-组件化开发React专题-React生态-2-4-2-实现React-下-so-diff/" data-id="ckdbzsilw004qjrxq1tymrkef" class="article-share-link">Share</a>
       
       
     </footer>
@@ -674,7 +897,7 @@ function removeNode( dom ) {
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/03/26/网易微专业福利期-异步编程-3-1-理解异步/" data-id="ckchm0rh0004o5ajhlvbp80c0" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/03/26/网易微专业福利期-异步编程-3-1-理解异步/" data-id="ckdbzsiji0043jrxqlthgszc0" class="article-share-link">Share</a>
       
       
     </footer>
@@ -710,416 +933,7 @@ function removeNode( dom ) {
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/03/26/网易微专业-VuePress项目实战-4-1-2-基本配置/" data-id="ckchm0rcx001v5ajhkhegjxx2" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-VuePress项目实战-4-1-1-设计-运行原理" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/03/26/网易微专业-VuePress项目实战-4-1-1-设计-运行原理/" class="article-date">
-  <time datetime="2020-03-26T06:57:08.000Z" itemprop="datePublished">2020-03-26</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/03/26/网易微专业-VuePress项目实战-4-1-1-设计-运行原理/">网易微专业-VuePress项目实战-4.1.1-设计-运行原理</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.什么是VuePress<br><img src="https://snakexu.github.io/images/wangyi/VuePress/4.1.1_1.png"><br><img src="https://snakexu.github.io/images/wangyi/VuePress/4.1.1_2.png"><br>2.快速上手VuePress<br><img src="https://snakexu.github.io/images/wangyi/VuePress/4.1.1_3.png"><br><img src="https://snakexu.github.io/images/wangyi/VuePress/4.1.1_4.png"><br>2-1.新建项目想换主题<br><img src="https://snakexu.github.io/images/wangyi/VuePress/4.1.1_5.png"><br><img src="https://snakexu.github.io/images/wangyi/VuePress/4.1.1_6.png"><br>如何使用一个主题</p>
-<p><pre><br>//.vuepress/config.js<br>module.exports = {<br>    theme:’vuepress-theme-xx’,<br>    themeConfig:{<br>        //…<br>    }<br>}<br></pre><br>3.VuePress主题<br>如何自定义一个主题<br><img src="https://snakexu.github.io/images/wangyi/VuePress/4.1.1_7.png"><br>上面是自定义一个主题的完整的目录结构<br>global-components：被自动注册为全局组件<br>components：vue组件存放的地方<br>layouts：本身是一个布局组件，是一个必须存在的目录结构，我们所有的页面将默认会使用layout.vue作为布局组件，对于那些匹配不到的，路由将会使用404.vue<br>styles：定义全局的样式/调色板<br>index.js：主题文件的入口文件<br><img src="https://snakexu.github.io/images/wangyi/VuePress/4.1.1_8.png"><br>老师用官网上介绍vuepress的模型讲述了vuepress，详情看官网 <a href="https://v1.vuepress.vuejs.org/zh/plugin/" target="_blank" rel="noopener">https://v1.vuepress.vuejs.org/zh/plugin/</a><br>4.插件<br>如何书写一个VuePress插件<br><img src="https://snakexu.github.io/images/wangyi/VuePress/4.1.1_9.png"><br>插件案例<br><img src="https://snakexu.github.io/images/wangyi/VuePress/4.1.1_10.png"></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/03/26/网易微专业-VuePress项目实战-4-1-1-设计-运行原理/" data-id="ckchm0rd200205ajhofgzd97t" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-VuePress项目实战-4-1-0-VuePress课程导学" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/03/26/网易微专业-VuePress项目实战-4-1-0-VuePress课程导学/" class="article-date">
-  <time datetime="2020-03-26T06:46:05.000Z" itemprop="datePublished">2020-03-26</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/03/26/网易微专业-VuePress项目实战-4-1-0-VuePress课程导学/">网易微专业-VuePress项目实战-4.1.0-VuePress课程导学</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.什么是VuePress<br>VuePress由两部分组成:<br>·第一部分是一个极简静态网站生成器，它包含由Vue驱动的主题系统和插件API<br>·第二部分是为书写技术文档而优化的默认主题，它的诞生初衷是为了支持Vue及其子项目的文档需求</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/03/26/网易微专业-VuePress项目实战-4-1-0-VuePress课程导学/" data-id="ckchm0rcy001w5ajh0iby2si6" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-MV-组件化开发React专题-React生态-2-4-1-实现React-下-state" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/03/20/网易微专业-MV-组件化开发React专题-React生态-2-4-1-实现React-下-state/" class="article-date">
-  <time datetime="2020-03-20T03:10:26.000Z" itemprop="datePublished">2020-03-20</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/03/20/网易微专业-MV-组件化开发React专题-React生态-2-4-1-实现React-下-state/">网易微专业-MV-组件化开发React专题-React生态-2.4.1-实现React(下)-state</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <pre>
-import React from 'react'
-import ReactDOM from 'react-dom'
-class  App extends React.Component{
-    constructor(props) {
-        super(props);
-        this.state = {
-          num: 1,
-        }
-    }
-    add(){
-        this.setState({num:3})
-        this.setState({num:4})
-        this.setState({num:5})
-        this.setState({num:8})
-    }
-    render() {
-        console.log("hello")
-        return (
-            < div>
-            hello world {this.state.num} < button onClick={e => {
-            this.add()
-            } }>add< /button>
-            < /div>
-        );
-    }
-}
-ReactDOM.render(< App/>,document.getElementById('root'))
-</pre>
-看到上面的代码，在add中我们执行了四次setState，按照我们之前的理解，render的console.log('hello')会执行四次，但是实际上只执行了一次。
-<img src="https://snakexu.github.io/images/wangyi/react/2.4.2_1.png">
-<img src="https://snakexu.github.io/images/wangyi/react/2.4.2_2.png">
-在我们过去的理解中，当调用setState进行调用的时候，页面就会进行重绘，这里视图只重绘了一次，所以我们发现react的setState不会立即执行，而是把这些状态推到一个队列中去，在一定的时间之后才会执行，把队列里所有的数据做一次性处理。
-这里还有一个地方就是setState可以传入一个数据也可以传入一个函数
-<pre>
-import React from 'react'
-import ReactDOM from 'react-dom'
-class  App extends React.Component{
-    constructor(props) {
-        super(props);
-        this.state = {
-          num: 1,
-        }
-    }
-    add(){
-        this.setState({num:3})
-        this.setState(function(preState){
-            return {
-                num : preState.num * 2
-            }
-        })
-    }
-    render() {
-        console.log("hello")
-        return (
-            < div>
-            hello world {this.state.num} < button onClick={e => {
-            this.add()
-            } }>add< /button>
-            < /div>
-        );
-    }
-}
-ReactDOM.render(< App/>,document.getElementById('root'))
-</pre>
-下面我们实现react数据队列的更新。
-react-index.js
-<pre>
-import setAttribute from './setAttribute'
-let setStateQueue = []//定义一个队列，当前变化的组件
-let renderQueue = []//页面上需要重绘的所有队列
-// reRender 只在 队列的最后，执行一次
-function defer( fn ) {
-    return Promise.resolve().then( fn );
-}
-// APp demo setState
-function enqueueSetState(stateChange, component) {
-    //stateChange描述新状态的一个参数，component组件
-    if(setStateQueue.length === 0){ 
-        defer(reRender)//这里是一个小技巧，当前同步队列执行完毕之后开始执行reRender
-    }
-    setStateQueue.push({
-        stateChange,
-        component
-    })
-    if(!renderQueue.some(item => item === component)) {
-        renderQueue.push(component)
-    }
-}
-function reRender(){
-    let item,component
-    while(item = setStateQueue.shift()){
-        const {stateChange,component} = item;
-        if(!component.prevState){
-            component.prevState = Object.assign({},component.state)
-        }
-        if(typeof stateChange === 'function'){
-            Object.assign(component.state,stateChange(component.prevState))
-        }else{
-            Object.assign(component.state,stateChange)
-        }
-        component.prevState = component.state//stateChange可能是函数
-    }
-    while(component = renderQueue.shift()){
-        renderComponent(component)
-    }
-}
-function createElement( tag, attrs, ...children ) {
-  return {
-    tag,
-    attrs,
-    children
-  }
-}
-function render( vnode, container ) {
-  return container.appendChild( _render( vnode ) );
-}
-function _render( vnode ) {
-  if ( vnode === undefined || vnode === null || typeof vnode === 'boolean' ) vnode = '';
-  if ( typeof vnode === 'number' ) vnode = String( vnode );
-  if ( typeof vnode === 'string' ) {
-    let textNode = document.createTextNode( vnode );
-    return textNode;
-  }
-  if ( typeof vnode.tag === 'function' ) {
-    const component = createComponent( vnode.tag, vnode.attrs );
-    setComponentProps( component, vnode.attrs );
-    return component.base;
-  }
-  const dom = document.createElement( vnode.tag );
-  if ( vnode.attrs ) {
-    Object.keys( vnode.attrs ).forEach( key => {
-      const value = vnode.attrs[ key ];
-      setAttribute( dom, key, value );
-    } );
-  }
-  vnode.children.forEach( child => render( child, dom ) );    // 递归渲染子节点
-  return dom;
-}
-
-class Component {
-  constructor( props = {} ) {
-    this.state = {};
-    this.props = props;
-  }
-  setState( stateChange ) {
-    // 将修改合并到state
-    // Object.assign( this.state, stateChange );
-    // renderComponent( this );
-    enqueueSetState( stateChange, this );
-  }
-}
-function createComponent( component, props ) {
-  let inst;
-  // 如果是类定义组件，则直接返回实例
-  if ( component.prototype && component.prototype.render ) {
-    inst = new component( props );
-    // 如果是函数定义组件，则将其扩展为类定义组件
-  } else {
-    inst = new Component( props );
-    inst.constructor = component;
-    inst.render = function() {
-      return this.constructor( props );
-    }
-  }
-  return inst;
-}
-function setComponentProps( component, props ) {
-  if ( !component.base ) {
-    if ( component.componentWillMount ) component.componentWillMount();
-  } else if ( component.componentWillReceiveProps ) {
-    component.componentWillReceiveProps( props );
-  }
-  component.props = props;
-  renderComponent( component );
-}
-export function renderComponent( component ) {
-  let base;
-  const renderer = component.render();
-  if ( component.base && component.componentWillUpdate ) {
-    component.componentWillUpdate();
-  }
-  base = _render( renderer );
-  if ( component.base ) {
-    if ( component.componentDidUpdate ) component.componentDidUpdate();
-  } else if ( component.componentDidMount ) {
-    component.componentDidMount();
-  }
-  if ( component.base && component.base.parentNode ) {
-    component.base.parentNode.replaceChild( base, component.base );
-  }
-  component.base = base;
-  base._component = component;
-
-}
-export const React = {
-  createElement,
-  Component
-}
-export const ReactDOM = {
-  render: ( vnode, container ) => {
-    container.innerHTML = '';
-    return render( vnode, container );
-  }
-}
-export const tool = {
-  renderComponent
-}
-</pre>
-react.js
-<pre>
-import {React} from './react-index'
-export default React
-</pre>
-react-dom.js
-<pre>
-import {ReactDOM} from './react-index'
-export default ReactDOM
-</pre>
-index.js
-<pre>
-import React from './react';
-import ReactDOM from './react-dom';
-class  App extends React.Component{
-    constructor(props) {
-        super(props);
-        this.state = {
-          num: 1,
-        }
-    }
-    add(){
-        this.setState({num:3})
-        this.setState({num:4})
-        this.setState(function(preState){
-             console.log(preState.num)
-             return {
-                 num : preState.num * 2
-             }
-        })
-        this.setState(function(preState){
-             console.log(preState.num)
-             return {
-                 num : preState.num * 2
-             }
-        })
-    }
-    render() {
-        console.log("hello")
-        return (
-            < div>
-            hello world {this.state.num} < button onClick={e => {
-            this.add()
-            } }>add< /button>
-            < /div>
-        );
-    }
-}
-ReactDOM.render(< App/>,document.getElementById('root'))
-</pre>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/03/20/网易微专业-MV-组件化开发React专题-React生态-2-4-1-实现React-下-state/" data-id="ckchm0rcn001f5ajhm084p63q" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-MV-组件化开发React专题-React生态-2-4-1-实现React" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/03/18/网易微专业-MV-组件化开发React专题-React生态-2-4-1-实现React/" class="article-date">
-  <time datetime="2020-03-18T07:54:35.000Z" itemprop="datePublished">2020-03-18</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/03/18/网易微专业-MV-组件化开发React专题-React生态-2-4-1-实现React/">网易微专业-MV-组件化开发React专题-React生态-2.4.1-实现React</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>因为这节课程没有给代码，所以不是太能猜测出来项目初始化都安装了什么依赖，就搜索了一下如何模拟react，搜索到这个 <a href="https://segmentfault.com/a/1190000019994139" target="_blank" rel="noopener">https://segmentfault.com/a/1190000019994139</a> ，个人觉得还不错，先放到这里<br>1.</p>
-<p><pre><br>function createElement(tag,attrs,…children){<br>    return {<br>        tag,<br>        attrs,<br>        children<br>    }<br>}<br>const React = {<br>    createElement<br>}<br>let vnode = {<br>    &lt; div&gt;<br>        actions<br>        &lt; span&gt;aa&lt; /span&gt;<br>        &lt; p&gt;bb&lt; /p&gt;<br>    &lt; /div&gt;<br>}<br>console.log(vnode)<br></pre><br>上面代码中我们并没有调用createElement这个函数，可是为什么会生效？原因是虚拟dom会自动传入这个函数中，我们通过实现createElement方法来实现react，控制台打印结果如下<br><img src="https://snakexu.github.io/images/wangyi/react/2.4.1_1.png"><br>打印出来的数据结构已经和react的很类似了，如果我们想通过ReactDOM.render(vnode,document.getElementById(‘root’))渲染到页面上，我们就需要完善ReactDOM</p>
-<p><pre><br>function createElement(tag,attrs,…children){<br>    return {<br>        tag,<br>        attrs,<br>        children<br>    }<br>}<br>function render(vnode,container){<br>    container.appendChild(_render(vnode));//把树形结构转换为真实DOM<br>}<br>function _render(vnode){<br>    //我们从之前的控制台打印可以看出vnode有多种形式，所以这里做一下判断<br>    if( vnode === undefined || vnode === null || typeof vnode === ‘boolean’ ) vnode =’’<br>    if( typeof vnode === ‘number’ ) vnode = String(vnode)<br>    if( typeof vnode === ‘string’ ){<br>        let textNode = document.createElement(vnode);<br>        return textNode<br>    }<br>    const dom = document.createElement(vnode.tag)<br>    vnode.children.forEach(child=&gt;{<br>        render(child,dom)//渲染子节点<br>    })<br>    return dom<br>}<br>const React = {<br>    createElement<br>}<br>const ReactDOM = {<br>    render(vnode,container)<br>}<br>let vnode = {<br>    &lt; div&gt;<br>        actions<br>        &lt; span&gt;aa&lt; /span&gt;<br>        &lt; p&gt;bb&lt; /p&gt;<br>    &lt; /div&gt;<br>}<br>ReactDOM.render(vnode,document.getElementById(‘root’))<br></pre><br><img src="https://snakexu.github.io/images/wangyi/react/2.4.1_2.png"><br>这时候已经能把虚拟dom渲染到页面上了，下面我们想渲染一个组件。</p>
-<p><pre><br>function setAttribute(dom,name,value){<br>    //如果属性名称是className，则改为class<br>    if(name === ‘className’) name=’class’;<br>    //如果属性名是onXXX，则是一个事件监听方法<br>    if(/on\w+/.test(name)){<br>        name = name.toLowerCase();<br>        dom[name] = value || ‘’;<br>        //如果属性名是style，则更新style对象<br>    }else if(name === ‘style’){<br>        if(!value || typeof value === ‘string’){<br>            dom.style.cssText = value || ‘’<br>        }else if( value &amp;&amp; typeof value === ‘object’){<br>            for(let name in value){<br>                //可以通过style={widht:20}这种形式来设置样式，可以省略掉单位px<br>                dom.style[name] = typeof value[name] === ‘number’ ? value[name] + ‘px’ : value[name]<br>            }<br>        }<br>        //普通属性则直接更新属性<br>    }else{<br>        if(name in dom){<br>            dom[name] = value || ‘’<br>        }<br>        if(value){<br>            dom.setAttribute(name,value)<br>        }else{<br>            dom.removeAttribute(name)<br>        }<br>    }<br>}<br>function createElement(tag,attrs,…children){<br>    return {<br>        tag,<br>        attrs,<br>        children<br>    }<br>}<br>function render(vnode,container){<br>    container.appendChild(_render(vnode));<br>}<br>function _render(vnode){<br>    if( vnode === undefined || vnode === null || typeof vnode === ‘boolean’ ) vnode =’’<br>    if( typeof vnode === ‘number’ ) vnode = String(vnode)<br>    if( typeof vnode === ‘string’ ){<br>        let textNode = document.createTextNode(vnode);<br>        return textNode<br>    }<br>    if( typeof vnode.tag === ‘function’){<br>        const component = createComponent(vnode.tag,vnode.attrs)//返回一个实例化组件<br>        setComponentProps(component,vnode.attrs)//更新属性，生命周期<br>        //为什么把创建组件和设置组件属性拆开？因为组件的属性在不断变化的时候会有componentreceiveprops这样一个过程，<br>        //在接收属性的时候一些相应的生命周期的方法需要触发<br>        return component.base<br>    }<br>    //console.log(typeof vnode.tag,vnode) //这行的控制台打印结果是下面的2.4.1_3<br>    const dom = document.createElement(vnode.tag)<br>    if(vnode.attrs){<br>        Object.keys(vnode.attrs).forEach(key=&gt;{<br>            const value = vnode.attrs[key]<br>            setAttribute(dom,key,value)<br>        })<br>    }<br>    vnode.children.forEach(child=&gt;{<br>        render(child,dom)//渲染子节点<br>    })<br>    return dom<br>}<br>function createComponent(component,props){<br>    console.log(component)<br>    console.log(new component(props))<br>    console.log(props)<br>    return new component(props)<br>}<br>function setComponentProps(component,props){<br>    //组件属性的变化的触发<br>    if(!component.base){<br>        //如果组件已经被创建<br>        if(component.componentWillMount){<br>            component.componentWillMount()<br>        }else if(component.componentWillReceiveProps){<br>            component.componentWillReceiveProps(props)<br>        }<br>    }<br>    component.props = props   //组件属性的变化的触发<br>    renderComponent(component)//组件的重绘<br>}<br>function renderComponent(component){<br>    let base;<br>    console.log(component)<br>    const renderer = component.render()//返回的是树状结构<br>    //判断组件是否被挂载到页面上<br>    if(component.base &amp;&amp; component.componentWillUpdate){<br>        component.componentWillUpdate();<br>    }<br>    base = _render(renderer)//base 当前虚拟dom转化成的真实dom<br>    if(component.base &amp;&amp; component.base.parentNode){<br>        //如果存在父节点，则把父节点替换成当前的dom结构<br>        component.base.parentNode.replaceChild(base,component.base)<br>    }<br>    component.base = base;<br>    base._component = component;<br>}<br>class Component{<br>    constructor(props){<br>        this.props = props<br>        this.state = {}<br>    }<br>    setState(stateChange){<br>        Object.assign(this.state,stateChange);//合并<br>        renderComponent(this)//组件重绘<br>    }<br>}<br>const React = {<br>    createElement,<br>    Component<br>}<br>const ReactDOM = {<br>    render(vnode,container){<br>        container.innerHtml = ‘’<br>        render(vnode,container)<br>    }<br>}<br>class Demo extends React.Component{<br>    state = {<br>        value:1<br>    }<br>    render(){<br>        return (<br>            &lt; div&gt;<br>                &lt; p&gt;{this.state.value}&lt; /p&gt;<br>                &lt; button onClick={(e)=&gt;{<br>                this.setState({value:2})<br>                }}&gt;aaa&lt; /button&gt;<br>                actions {this.props.name}<br>                &lt; span&gt;aa&lt; /span&gt;<br>                &lt; p&gt;bb&lt; /p&gt;<br>            &lt; /div&gt;<br>        )<br>    }<br>}<br>ReactDOM.render(&lt; Demo name=”aa”/&gt;,document.getElementById(‘root’))<br></pre><br><img src="https://snakexu.github.io/images/wangyi/react/2.4.1_3.png"><br><img src="https://snakexu.github.io/images/wangyi/react/2.4.1_4.png"><br><img src="https://snakexu.github.io/images/wangyi/react/2.4.1_5.png"><br>上面代码，我们的页面重绘是一个略粗暴的方法，整个页面dom的重绘，真实的react是有一个diff算法的；react的setState方法做了一个异步的优化，可以连续多次调用setState，可是最后在页面上只会调用执行一次，这里有一个优化项的操作。这些都是后面学习的内容。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/03/18/网易微专业-MV-组件化开发React专题-React生态-2-4-1-实现React/" data-id="ckchm0rd200215ajh6omrfvjo" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/03/26/网易微专业-VuePress项目实战-4-1-2-基本配置/" data-id="ckdbzsihz0021jrxqo3vqsdiu" class="article-share-link">Share</a>
       
       
     </footer>
@@ -1186,23 +1000,23 @@ ReactDOM.render(< App/>,document.getElementById('root'))
       <ul>
         
           <li>
+            <a href="/2020/07/29/拉勾-规范化标准/">拉勾-规范化标准</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/28/拉勾-其他打包工具/">拉勾-其他打包工具</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/17/拉勾-Webpack打包/">拉勾-Webpack打包</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/15/拉勾-模块化开发/">拉勾-模块化开发</a>
+          </li>
+        
+          <li>
             <a href="/2020/07/08/拉勾-自动化构建/">拉勾-自动化构建</a>
-          </li>
-        
-          <li>
-            <a href="/2020/07/03/拉勾-脚手架工具/">拉勾-脚手架工具</a>
-          </li>
-        
-          <li>
-            <a href="/2020/07/03/拉勾-工程化概述/">拉勾-工程化概述</a>
-          </li>
-        
-          <li>
-            <a href="/2020/06/28/拉勾-JavaScript性能优化/">拉勾-JavaScript性能优化</a>
-          </li>
-        
-          <li>
-            <a href="/2020/06/26/拉勾-TypeScript语言/">拉勾-TypeScript语言</a>
           </li>
         
       </ul>

@@ -1,0 +1,1587 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>拉勾-Webpack打包 | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1.模块打包工具的由来·ES Modules存在环境兼容问题·模块文件过多，网络请求频繁·所有前端资源都需要模块化(css、html等文件)所以模块化是必要的思考下，我们对于模块化的需求总结为·新特性代码编译·模块化JavaScript打包·支持不同类型的资源模块2.模块打包工具概要前端有几个打包工具很好的解决了我们在上一节课中总结出来的模块化的需求，这几个工具主要包括webpack、parcel">
+<meta property="og:type" content="article">
+<meta property="og:title" content="拉勾-Webpack打包">
+<meta property="og:url" content="http://yoursite.com/2020/07/17/拉勾-Webpack打包/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="1.模块打包工具的由来·ES Modules存在环境兼容问题·模块文件过多，网络请求频繁·所有前端资源都需要模块化(css、html等文件)所以模块化是必要的思考下，我们对于模块化的需求总结为·新特性代码编译·模块化JavaScript打包·支持不同类型的资源模块2.模块打包工具概要前端有几个打包工具很好的解决了我们在上一节课中总结出来的模块化的需求，这几个工具主要包括webpack、parcel">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_2/webpack/6_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_2/webpack/6_2.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_2/webpack/6_3.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_2/webpack/6_4.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_2/webpack/6_5.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_2/webpack/6_6.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_2/webpack/6_7.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_2/webpack/6_8.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_2/webpack/6_9.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_2/webpack/10_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_2/webpack/13_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_2/webpack/15_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_2/webpack/15_2.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_2/webpack/21_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_2/webpack/22_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_2/webpack/22_2.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_2/webpack/22_3.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_2/webpack/29_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_2/webpack/29_2.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_2/webpack/31_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_2/webpack/46_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_2/webpack/47_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_2/webpack/48_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_2/webpack/48_2.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_2/webpack/54_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_2/webpack/56_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_2/webpack/57_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_2/webpack/57_2.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_2/webpack/60_1.png">
+<meta property="og:updated_time" content="2020-08-01T05:23:24.894Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="拉勾-Webpack打包">
+<meta name="twitter:description" content="1.模块打包工具的由来·ES Modules存在环境兼容问题·模块文件过多，网络请求频繁·所有前端资源都需要模块化(css、html等文件)所以模块化是必要的思考下，我们对于模块化的需求总结为·新特性代码编译·模块化JavaScript打包·支持不同类型的资源模块2.模块打包工具概要前端有几个打包工具很好的解决了我们在上一节课中总结出来的模块化的需求，这几个工具主要包括webpack、parcel">
+<meta name="twitter:image" content="https://snakexu.github.io/images/lagou/part_2/webpack/6_1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-拉勾-Webpack打包" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/07/17/拉勾-Webpack打包/" class="article-date">
+  <time datetime="2020-07-17T04:27:15.000Z" itemprop="datePublished">2020-07-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      拉勾-Webpack打包
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.模块打包工具的由来<br>·ES Modules存在环境兼容问题<br>·模块文件过多，网络请求频繁<br>·所有前端资源都需要模块化(css、html等文件)<br>所以模块化是必要的<br>思考下，我们对于模块化的需求总结为<br>·新特性代码编译<br>·模块化JavaScript打包<br>·支持不同类型的资源模块<br>2.模块打包工具概要<br>前端有几个打包工具很好的解决了我们在上一节课中总结出来的模块化的需求，这几个工具主要包括webpack、parcel、rollup。以webpack为例，能很好的满足我们上一节总结的需求。webpack作为一个模块化打包工具，能很好的解决JavaScript打包的问题，可以将零散的模块代码打包到同一个js文件当中，对于代码中有环境兼容问题的代码，我们就可以在打包的过程中通过模块加载器Loader对其进行编译转换；其次，webpack还具备代码拆分(code splitting)能力，能够将应用中所有的代码按照我们的需要进行打包；最后，webpack支持我们在JavaScript当中以模块化方式载入任意类型的文件。剩下两个打包工具功能类似，所有打包工具都是以前端模块化为目标(不仅仅是js模块化)，可以使我们更好的使用模块化带来的优势，而忽略模块化带来的影响<br>3.Webpack快速上手<br>首先创建一个项目，目录结构为<br>|-root<br>|–index.html<br>|–src<br>|—heading.js<br>|—index.js</p>
+<pre>
+//index.html
+< !DOCTYPE html >
+< html lang="en" >
+< head >
+    < meta charset="UTF-8" >
+    < title >webpack-快速上手< /title >
+    < meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" / >
+< /head >
+< body >
+< script type="module" src="src/index.js" >< /script >
+< /body >
+< /html >
+//heading.js
+export default () => {
+    const element = document.createElement('h2')
+    element.textContent = 'hello world'
+    element.addEventListener('click', () => {
+        alert('hello webpack')
+    })
+    return element
+}
+//index.js
+import createHeading from './heading.js'
+const heading  = createHeading()
+document.body.append(heading)
+</pre>
+启动服务，就能在浏览器中看到结果了
+想要尝试webpack，我们要初始化项目，即npm init / yarn init ，然后安装webpack和webpack-cli，然后执行webpack命令，可以看到在根目录下生成文件夹dist，里面的main.js就是我们打包的结果，在index.html中进行修改，引入我们打包的文件
+<pre>
+< !DOCTYPE html >
+< html lang="en" >
+< head >
+    < meta charset="UTF-8" >
+    < title >webpack-快速上手< /title >
+    < meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" / >
+< /head >
+< body >
+< script src="dist/main.js" >< /script >
+< /body >
+< /html >
+</pre>
+再次启动服务，可以看到和刚才一样的页面了
+4.webpack配置文件
+webpack4以后的版本支持0配置启动打包，整个打包过程会按照约定将src/index.js作为打包入口，最终打包结果存放到'dist/main.js'中。但是项目中我们往往需要的是自定义一些东西，比如上节课的项目中，我们将index.js改名为main.js，那么我们的入口文件就是main.js，就需要自定义webpack打包入口。这时候我们就需要给webpack添加配置文件。在根目录下新建文件webpack.config.js，这个文件运行在node环境下的js文件，也就是说我们需要按照CommonJs的方式去编写代码
+<pre>
+const path = require('path')
+module.exports = {
+    entry: './src/main.js',//入口文件，如果是相对路径，那么./是不能省略的
+    output: { //出口文件
+        filename: 'bundle.js',
+        path: path.join(__dirname, 'output'),//需要绝对路径
+    }
+}
+</pre>
+5.webpack工作模式
+可以有三种模式(可以直接在命令行中 webpack --mode development ，即 webpack --mode 打包模式)
+默认production会启动优化打包结果(比如压缩打包文件等等)
+development模式会优化打包速度，添加一些调试过程中需要的辅助到打包代码
+none模式运行最原始状态的打包，不会做任何额外的处理
+具体三种模式差异，可以在官方文档 https://webpack.js.org/configuration/mode/ 中找到
+或者在配置文件中添加mode属性
+<pre>
+const path = require('path')
+module.exports = {
+    mode: 'development',
+    entry: './src/main.js',
+    output: {
+        filename: 'bundle.js',
+        path: path.join(__dirname, 'output'),
+    }
+}
+</pre>
+6.webpack打包结果运行原理
+为了更好理解原理，我们将mode设置为最原始的none方式
+<pre>
+const path = require('path')
+module.exports = {
+    mode: 'none',
+    entry: './src/main.js',
+    output: {
+        filename: 'bundle.js',
+        path: path.join(__dirname, 'output'),
+    }
+}
+</pre>
+我们把打包结果折叠之后看到
+<img src="https://snakexu.github.io/images/lagou/part_2/webpack/6_1.png">
+可以看出来，webpack的打包结果是一个立即执行函数，接收一个modules参数，调用的时候传入一个数组，展开这个数组，数组中每一个元素都是一个参数列表相同的函数，
+<img src="https://snakexu.github.io/images/lagou/part_2/webpack/6_2.png">
+这里的函数对应的就是我们源代码中的模块
+<img src="https://snakexu.github.io/images/lagou/part_2/webpack/6_3.png">
+我们每一个模块最终都会包裹到这样一个函数当中，从而实现模块的私有作用域。
+展开webpack入口函数，看到最开始定义一个对象，用于缓存(存放)已经加载过的模块，
+<img src="https://snakexu.github.io/images/lagou/part_2/webpack/6_4.png">
+定义了一个require函数，用来加载模块
+<img src="https://snakexu.github.io/images/lagou/part_2/webpack/6_5.png">
+在require上挂载一些其他的数据和一些工具函数，这些并不重要
+<img src="https://snakexu.github.io/images/lagou/part_2/webpack/6_6.png">
+后面这个函数调用了require函数，传入了一个0开始去加载模块
+<img src="https://snakexu.github.io/images/lagou/part_2/webpack/6_7.png">
+这个模块id就是我们上面元素数组的下标，这里才开始加载源代码中的所谓入口模块。
+如果想更细致的了解，那么就启动本地服务，通过打断点的方式单步执行，去了解更细节的内容
+7.webpack资源模块加载
+我们给项目添加一个css文件并且把webpack的入口文件改成这个css文件，执行webpack命令，会发现报错，因为webpack默认只处理JavaScript文件。但是webpack也给了我们提示，需要配置处理当前类型文件的加载器。那么我们开始安装css-loader，安装之后，还要在配置文件中配置一下
+<pre>
+module: {
+    rules: [
+        {
+            test: /\.css$/,//正则表达式，匹配打包过程中的文件路径
+            use: 'css-loader'//匹配所需要的loader
+        }
+    ]
+}
+</pre>
+即使我们安装了css-loader，但是依然发现，没有作用，因为css-loader的作用就是将css文件转换成为js模块，具体实现就是将css代码push到一个数组当中，这个数组是css-loader内部一个模块提供的，整个过程并没有任何一个地方用到这个数组。所以这里我们需要安装一个style-loader，这个loader的作用就是将css-loader转换的结果通过style标签的形式追加到页面上
+<pre>
+module: {
+    rules: [
+        {
+            test: /\.css$/,//正则表达式，匹配打包过程中的文件路径
+            use: [
+            'style-loader',
+            'css-loader'
+            ]//匹配所需要的loader
+            //注意，如果配置了多个loader，那么是从后往前执行的
+        }
+    ]
+}
+</pre>
+在我们打包好的文件中可以看到
+<img src="https://snakexu.github.io/images/lagou/part_2/webpack/6_8.png">
+也就是style-loader的作用了，在页面上就可以看到
+<img src="https://snakexu.github.io/images/lagou/part_2/webpack/6_9.png">
+loader是webpack的核心特性，通过loader就可以加载任何类型的资源
+8.webpack导入资源模块
+虽然我们知道如何处理js意外的文件类型了，但是一般而言，打包入口还是js文件，因为打包入口某种程度上来说就是运行入口。我们先将之前css的入口文件改回main.js，然后在main.js中import(导入)main.css文件，因为只需要去执行css文件，所以直接
+<pre>import './main.css</pre>
+正常情况下，页面是可以正常运行的。我们在写一个heading.css放到heading.js中
+<pre>
+//heading.css
+.heading{
+    padding:20px;
+    background: #343a40;
+    color: #fff;
+}
+//heading.js
+import './heading.css'
+export default () => {
+    const element = document.createElement('h2')
+    element.textContent = 'hello world'
+    element.classList.add('heading') //在这里添加了类名，因为css是用类的
+    element.addEventListener('click', () => {
+        alert('hello webpack')
+    })
+    return element
+}
+</pre>
+再次运行，还是能正常加载的
+在这里我们需要理解，webpack是鼓励把任何当前代码需要的资源文件引入到当前代码中，也就是根据代码的需要动态导入资源，需要资源的不是应用而是此时编写的代码，也就是你这里的代码想要正常工作就必须去加载的资源。试想一下如果样式等还是单独引入到页面文件当中，如果当前代码更新了，不再需要这个资源，又会怎样。所以通过JavaScript代码去引入资源文件或者说建立js和资源文件中的依赖关系是有很明显优势的。JavaScript驱动了整个前端应用，当我们建立了这些依赖关系，逻辑合理，js确实需要这些资源文件；确保上线资源不缺失，都是必要的。总结一下就是，学习新事物，学习的是它的思想和突破点，因为只是了解新事物，大部分人都能做到，比如照着文档学习各种前端技术。
+9.webpack文件资源加载器
+webpack的loader非常多，只要合理的需求，都能找到相应的loader，这里我们演示几个有代表性的loader。大部分loader都是类似于css-loader，将资源模块转换为js代码的方式去做，但是字体、图片这些，是没有办法通过js的方式去表示的，对于这类的资源，需要用到文件资源加载器，也就是file-loader
+<pre>
+//main.js
+import createHeading from './heading.js'
+import './main.css'
+import logo from './logo.png'
+const heading  = createHeading()
+document.body.append(heading)
+const img = new Image()
+img.src = logo
+document.body.append(img)
+//webpack.config.js
+module: {
+        rules: [
+        {
+            test: /\.css$/,//正则表达式，匹配打包过程中的文件路径
+            use: [
+            'style-loader',
+            'css-loader'
+            ]//匹配所需要的loader
+            //注意，如果配置了多个loader，那么是从后往前执行的
+        },
+        {
+            test: /.png$/,
+            use: 'file-loader'
+        }
+    ]
+}
+</pre>
+加载图片原理比较简单，就是把刚刚生成图片的名称导出，并在相应入口模块导入刚刚导出的文件路径。
+但是运行之后我们发现，图片并不能正常展示。打开开发人员工具看到图片src直接加载了网站根目录下的图片，但是我们网站根目录下并没有这张图片，正确地址应该在网站根目录下的dist文件夹中，这里是由于index.html并没有生成到dist目录而是放在了项目根目录下，所以把项目根目录作为网站根目录，而webpack默认认为所有打包结果都会在网站根目录下，解决的办法就是告诉webpack打包文件在网站的位置
+<pre>
+output: {
+    filename: 'bundle.js',
+    path: path.join(__dirname, 'dist'),//需要绝对路径
+    publicPath: 'dist/' //默认值为空字符串，表示网站的根目录，我们放在dist下，这里斜线不能省略
+},
+</pre>
+总结一下文件加载器的工作过程：
+webpack在打包时遇到图片文件，然后根据配置文件的配置，匹配到对应的文件加载器，此时文件加载器就开始工作了，先将导入的文件拷贝到输出的目录，然后将文件拷贝到输出目录的路径作为当前模块的返回值返回，我们就可以通过模块拿到这个资源的访问路径
+10.webpack URL加载器
+除了file-loader这种通过拷贝物理文件形式去处理文件资源以外，通过Data URLs去表示文件的方式也非常常见。Data URLs是一种特殊的URL协议，可以用来直接表示一个文件。传统URL一般要求服务器上有一个对应文件，然后我们通过请求这个地址得到服务器上的对应文件。而Data URLs是一种当前URL就可以直接表示文件内容的方式，也就是说这种url文本就已经包含文件的内容，使用的时候不需要发送http请求。比如
+<pre>data:text/html;charset=UTF-8,< h1 >html content< /h1 ></pre>
+浏览器能根据这段内容解析出来，这是一段html类型文件内容，编码是utf-8，内容是一段包含h1标签的html代码。
+对于图片、字体这种无法直接通过文本表示的二进制类型文件，我们可以通过将文件内容进行base64编码，把编码结果去表示文件的内容。在webpack打包静态资源文件的时候，我们同样可以通过这种方式去实现(通过dataURLs就可以以代码的方式表示任意类型的文件)，需要安装url-loader
+<pre>
+module: {
+    rules: [
+        {
+            test: /\.css$/,//正则表达式，匹配打包过程中的文件路径
+            use: [
+            'style-loader',
+            'css-loader'
+            ]//匹配所需要的loader
+            //注意，如果配置了多个loader，那么是从后往前执行的
+        },
+        {
+            test: /.png$/,
+            use: 'url-loader'
+        }
+    ]
+}
+</pre>
+再次打包之后我们发现，dist目录下不再有图片文件，打开bundle.js文件，可以看到
+<img src="https://snakexu.github.io/images/lagou/part_2/webpack/10_1.png">
+图片文件被转换为base64编码，base64已经包含了文件的内容，就不再需要独立的物理文件了。这种方式比较适合小的资源，因为大的资源会导致文件体积过大。
+最佳实践:
+·小文件使用Data URLs，减少请求次数
+·大文件单独提取存放，提高加载速度
+那么如何通过url-loader实现上面的最佳实践呢
+<pre>
+{
+    test: /.png$/,
+    use: {
+        loader: 'url-loader',
+        options: {
+            limit: 10 * 1024 //10kb
+        }
+    }
+}
+</pre>
+超出10kb文件单独提取存放，小于10kb文件转换为Data URLs嵌入代码中。注意如果按照上面的limit方式使用url-loader，就要安装file-loader，因为超出限制的文件，url-loader会调用file-loader
+11.webpack常用加载器分类
+编译转换类-把资源模块转换为JavaScript代码，例如css-loader
+文件操作类-把资源模块拷贝到输出目录，同时将文件的访问路径向外导出，例如file-loader
+代码检查类-对加载的资源代码进行校验
+12.webpack与ES2015
+因为模块打包需要，所以处理import和export，除此之外，并不会转换es6的其他代码特性。如果我们需要webpack对其他es6的特性进行转换，需要配置额外的编译型loader，npm i babel-loader @babel/core @babel/preset-env --save-dev
+<pre>
+{
+    test: /.js$/,
+    use: {
+        loader: 'babel-loader',
+        options: {
+            presets: ['@babel/preset-env'] 
+        }
+    }
+}
+</pre>
+13.webpack加载资源的方式
+除了处理import可以触发模块的加载，webpack还提供了其他几种资源加载的方式：
+·遵循ES Modules 标准的 import 声明
+·遵循CommonJs标准的require函数(如果通过require函数导入一个module，需要注意对esmodule的默认导出，需要导入结果的default属性去获取)
+<img src="https://snakexu.github.io/images/lagou/part_2/webpack/13_1.png">
+·遵循AMD标准的define函数和require函数
+·样式代码中的@import指令和url函数
+·HTML代码中图片标签的src属性
+以上标准虽然webpack都支持，但是除非必要情况，否则不要混合使用，因为这会大大降低项目的可维护性。
+loader加载的非JavaScript也会触发资源加载，样式代码中的@import指令和url函数也会触发相应模块的资源模块的加载。HTML代码中图片标签的src属性也会触发相应模块的加载
+<pre>
+//main.js
+import './main.css'
+//main.css
+body{
+    min-height: 100vh;
+    background: #f4f8fb;
+    background-image: url(heart.png);
+    background-size: cover;
+}
+</pre>
+webpack会用css-loader去打包css文件，但是上面我们加了背景图片，会把这张图片作为一个资源模块加入到打包过程，webpack根据配置文件当中针对我们遇到的文件找到相应的loader。
+重新打包启动服务，看到背景图片已经生效了，证明url确实可以触发模块的加载。
+<pre>
+//main.css
+@import url(reset.css)
+body{
+    min-height: 100vh;
+    background: #f4f8fb;
+    background-image: url(heart.png);
+    background-size: cover;
+}
+//reset.css
+*{
+    margin: 0px;
+    padding: 0px;
+}
+</pre>
+重新打包启动服务，看到我们在reset.css中写的样式已经在页面生效了。以上是css-loader在加载样式时，样式文件中触发文件加载的两种方式。
+下面看html文件加载额外的资源的一些方式
+<pre>
+//main.js
+import './main.css'
+import footerHtml from './footer.html'
+document.write(footerHtml)
+//footer.html
+< footer >
+    < img src="good.png" alt="good" width="256" >
+< /footer >
+</pre>
+html文件默认会将html代码作为字符串导出，所以需要接收导出的字符串，然后通过document.write输出到页面当中。还要为html模块配置对应的loader，否则webpack不能识别html文件，安装html-loader
+<pre>
+{
+    test: /.html$/,
+    use: {
+        loader:  'html-loader'
+    }
+}
+</pre>
+然后回到终端，重新执行webpack打包命令，启动服务，可以看到图片都可以正常显示，说明html文件中src属性也可以触发资源模块文件的加载。html文件中不止有img的src需要依赖资源，其他标签也有可能需要一些资源的依赖，例如a标签的href属性
+<pre>
+//main.js
+import './main.css'
+import footerHtml from './footer.html'
+document.write(footerHtml)
+//footer.html
+< footer >
+    < a href="good.png" download="good" >download ping< /a >
+< /footer >
+</pre>
+重新执行webpack打包命令，启动服务，下载图片居然404，因为html-loader默认只处理img标签的src属性，如果其他标签属性也需要出发打包，可以添加相应的一些配置
+<pre>
+{
+    test: /\.html$/i,
+    loader: 'html-loader',
+    options: {
+        attributes: {
+            list: [
+                {
+                    tag: 'img',
+                    attribute: 'src',
+                    type: 'src',
+                },
+                {
+                    tag: 'a',
+                    attribute: 'href',
+                    type: 'src',
+                },
+            ]
+        }
+    }
+}
+</pre>
+这里我踩到一个坑：Chrome出于安全考虑，禁止从页面打开 Data URI
+14.webpack核心工作原理
+我们的项目中散落着各种各样的代码和资源文件(js/css/html/png/scss/json...),webpack会根据配置找到文件作为打包入口，一般这个入口会是js文件，然后顺着入口文件的代码，根据代码中的import/require等解析推断这个文件所依赖的资源模块，然后分别解析每个资源模块对应的依赖，最后形成整个项目之间所有依赖关系的依赖树，webpack递归依赖树，找到每个节点所对应的资源文件，根据配置文件中的rules属性找到对应资源的加载器，把资源加载器加载的结果放到打包生成的文件中。loader是webpack的核心
+15.webpack 开发一个loader
+我们考虑一个需求：markdown-loader，也就是markdown文件加载器，用这个加载器直接在代码中导入markdown文件。
+一点点来，首先了解一下loader的输入输出
+<pre>
+//main.js
+import about from './about.md'
+console.log(about)
+//markdown-loader.js
+module.exports = source => { //参数就是我们所加载到的资源文件的内容
+    console.log(source)
+    return 'hello ~' //输出，就是加工过后的结果
+}
+//webpack.config.js
+{
+    test: /\.md$/,
+    use: './markdown-loader' // 这里可以用相对路径
+}
+</pre>
+执行webpack命令后得到结果
+<img src="https://snakexu.github.io/images/lagou/part_2/webpack/15_1.png">
+可以看到，我的md文件的中文已经打印到控制台了，但是为什么还报错呢？因为webpack要求loader最后的输出必须是JavaScript代码，但是我们返回的是字符串
+我们稍微作一些修改
+<pre>
+//main.js
+import about from './about.md'
+console.log(about)
+//markdown-loader.js
+module.exports = source => { 
+    console.log(source)
+    return 'console.log("hello ~")'
+}
+//webpack.config.js
+{
+    test: /\.md$/,
+    use: './markdown-loader' 
+}
+</pre>
+再次打包就可以看到
+<img src="https://snakexu.github.io/images/lagou/part_2/webpack/15_2.png">
+webpack把我们打包的结果直接拼接了，所以如果不返回js代码，语法就可能不通过。先安装一个md文件解析器 npm i marked --save-dev 
+<pre>
+const marked = require('marked')
+module.exports = source => {
+    const html = marked(source) //marked直接返回的是html
+    return `module.exports = ${JSON.stringify(html)}`
+}
+</pre>
+或者
+<pre>
+const marked = require('marked')
+module.exports = source => {
+    const html = marked(source)
+    return `export default ${JSON.stringify(html)}`//改了这行，支持ES Modules导出
+}
+</pre>
+也可以就是返回html，再安装一个html-loader去处理
+<pre>
+//markdown-loader.js
+const marked = require('marked')
+module.exports = source => {
+    const html = marked(source)
+    return html
+}
+//webpack.config.js
+{
+    test: /\.md$/,
+    use: ['html-loader', ./markdown-loader' ]
+}
+</pre>
+16.webpack插件机制介绍
+插件机制是为了增强webpack自动化的能力。loader专注实现各种资源模块的加载，plugin解决除了资源加载以外其他自动化工作，例如自动清除打包前的dist目录等
+17.webpack 自动清除输出目录插件
+npm i webpack-clean-plugin
+<pre>
+//webpack.config.js
+const {CleanwWbpackPlugin} = require('clean-webpack-plugin')
+module.exports = {
+    plugins:[
+        new CleanwWbpackPlugin()
+    ]
+}
+</pre>
+18.webpack 自动生成HTML插件(上)
+通过webpack生成HTML能省去我们自己手动改变HTML文件中打包路径等问题。安装html-webpack-plugin插件
+<pre>
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+plugins:[
+    new HtmlWebpackPlugin()
+]
+</pre>
+在这里，因为之前课程配置的loader我都没有修改，导致报错，因为和babel-loader产生了冲突，解决方案就是
+<pre>
+{
+    test: /.js$/,
+    use: {
+        loader: 'babel-loader',
+        options: {
+            presets: ['@babel/preset-env'] 
+        }
+    },
+        exclude: /node_modules/ //就是这一行，因为提示的报错里有与babel-loader冲突的意思
+},
+</pre>
+另外上面配置打包成功之后我们发现生成的index.html中的bundle.js路径还是dist/bundle.js，实际应该是当前目录下bundle.js。这是因为在webpack.config.js中配置了publicPath: 'dist/'，注释掉即可
+19.webpack 自动生成HTML插件(中)
+指定html模版和模版中的一些内容
+<pre>
+// src/index.html
+< div class="container" >
+        < h1 ><%= htmlwebpackplugin.options.title="" %="">< /h1 >
+< /div >
+//webpack.config.js
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+plugins:[
+    new HtmlWebpackPlugin({
+        title:'webpack sample',
+        meta:{
+            viewport:'width=device-width'
+        },
+        template:'./src/index.html'
+    })
+]
+</%=></pre>
+20.webpack 自动生成HTML插件(下)
+同时输出多个页面文件
+<pre>
+plugins:[
+    new HtmlWebpackPlugin({
+        title:'webpack sample',
+        meta:{
+            viewport:'width=device-width'
+        },
+        template:'./src/index.html'
+    }),
+    new HtmlWebpackPlugin({
+        filename:'about.html',
+    })
+]
+</pre>
+21.webpack 插件使用总结
+对于项目中不需要参与构建的文件(例如favicon.ico)一般放在public文件夹中，使用 copy-webpack-plugin 处理
+其实我这里遇到了问题
+<img src="https://snakexu.github.io/images/lagou/part_2/webpack/21_1.png">
+当前我电脑webpack版本4.6.0，copy-webpack-plugin 版本6.0.3 ，查到的这个问题产生的原因给的解释都是由于webpack版本和copy-webpack-plugin不匹配产生的问题，也就是要么升级webpack版本要么降低copy-webpack-plugin版本，但是由为了不给我现在工作中的项目造成困扰(我工作中的项目在node 11 情况下安装的依赖，切换到node14就不能正常工作)先不对webpack本地版本进行修改，此处留坑，先赶进度
+22.webpack 开发一个插件
+相比loader，plugin拥有更宽的能力范围。plugin通过钩子机制实现，webpack留了很多钩子，具体可以查看官方文档。webpack要求插件必须是函数或者包含apply方法的对象
+<pre>
+//webpack.config.js
+class MyPlugin{
+    apply(compiler){ //会在webpack启动时自动被调用
+        // compiler就是webpack工作中最核心的一个对象，包含了此次构建对象的所有配置信息
+        // 我们也是通过这个对象去注册钩子函数
+        // 我们的需求是用这个插件清除webpack打包中生成的注释信息
+        // API官网找到emit钩子，在webpack往输出目录输出文件时执行
+        console.log('MyPlugin')
+        compiler.hooks.emit.tap('MyPlugin', compilation => {
+            // compilation 可以理解成我们此次打包过程中的上下文
+            // 我们所有打包过程中产生的结果都会放到 compilation 对象中
+            // assets 获取即将写入的目录中的资源文件信息 
+            for(const name in compilation.assets){
+                console.log(name)
+            }
+        })
+    }
+}
+</pre>
+然后在plugins中加入MyPlugin插件
+<pre>
+new MyPlugin()
+</pre>
+执行打包命令可以看到
+<img src="https://snakexu.github.io/images/lagou/part_2/webpack/22_1.png">
+在打包一开始，我们的文件名都被输出了。稍作修改
+<pre>
+class MyPlugin{
+    apply(compiler){ 
+        console.log('MyPlugin')
+        compiler.hooks.emit.tap('MyPlugin', compilation => {
+            for(const name in compilation.assets){
+                console.log(compilation.assets[name].source())
+            }
+        })
+    }
+}
+</pre>
+<img src="https://snakexu.github.io/images/lagou/part_2/webpack/22_2.png">
+<img src="https://snakexu.github.io/images/lagou/part_2/webpack/22_3.png">
+打包文件的内容和html等相关文件等内容被输出了，我们截取了部分展示在这里。下面是我们这次自己写的全部plugin的内容
+<pre>
+class MyPlugin{
+    apply(compiler){ 
+        console.log('MyPlugin')
+        compiler.hooks.emit.tap('MyPlugin', compilation => {
+            for(const name in compilation.assets){
+                if (name.endsWith('.js')) {
+                    const content = compilation.assets[name].source()
+                    const widthoutComments = content.replace(/\/\*\*+\*\//g,'')
+                    compilation.assets[name] = {
+                        source: () => widthoutComments,
+                        size: () => widthoutComments.length // webpack内部要求的必须的方法
+                    }
+                }
+            }
+        })
+    }
+}
+</pre>
+再次执行打包命令，bundle.js 的注释就被去掉了。通过这个过程我们了解了插件是通过在生命周期的钩子函数中挂载函数扩展实现的。
+23.webpack开发体验问题
+理想状态：
+·通过http-server去预览
+·自动编译+自动刷新
+·提供source map 支持
+对于以上需求，webpack已经有功能实现了，我们一起了解，增强开发体验
+24.webpack自动编译
+用watch监听变化，然后重新打包，具体用法就是在启动webpack命令的时候，加入watch参数，即 webpack --watch
+25.webpack自动刷新浏览器
+在全局安装Browsersync，一边监听一边Browsersync刷新浏览器，但是这样一边不断写入磁盘，一边从磁盘读取，开销略大
+26.webpack dev server
+提供用于开发的http server ，集成自动编译和自动刷新浏览器等功能。不会每次都生成打包的dist目录，把打包结果缓存到内存中。安装之后直接执行webpack dev server 命令即可，还可以webpack dev server --open ，自动打开浏览器，具体见 https://webpack.docschina.org/guides/development/#choosing-a-development-tool
+27.webpack dev server 静态资源访问
+只要是webpack打包并输出的文件都可以正常被访问到，但是如果一些静态资源也想被访问到serve，就需要额外告诉webpack，方法就是在配置文件中添加对应配置。虽然之前讲过copy-webpack-plugin 可以复制资源到打包文件目录，但是开发阶段使用这个插件效率较低
+28.webpack dev server 代理API
+webpack dev server 支持配置代理。
+目标：将github API 代理到开发服务器
+github的其中一个接口https://api.github.com/users
+<pre>
+devServer: { //开发阶段
+    contentBase: './public',
+    proxy: {
+        '/api': {//需要被代理的请求路径的前缀
+            // https://localhost:8080/api/users -> https://api.github.com/api/users
+            target: 'https://api.github.com/',
+            pathRewrite: { // 实现代理路径的重写，会以正则替换的方式请求路径
+                '^/api': '' //把以 /api 开头的代理为 ''
+            },
+            // 默认使用发起请求端的主机名，服务器会根据主机名判断这个请求属于哪一个网站，把请求指派到对应网站
+            // 这里用changeOrigin为true ，使用实际代理请求主机名去发起请求
+            changeOrigin: true 
+        }
+    }
+},
+</pre>
+29.source map 介绍
+<img src="https://snakexu.github.io/images/lagou/part_2/webpack/29_1.png">
+<img src="https://snakexu.github.io/images/lagou/part_2/webpack/29_2.png">
+简单看一下jquery的map文件
+version：当前文件所使用的source-map的版本
+sources：转换之前源文件的名称，因为有可能是多个文件合并，所以这里是一个数组
+names：源代码当中的成员名称。转换之前的变量名(转换的时候通常把有意义的变量名转换为单个字母等用以压缩代码体积)，这里记录的是原始名称
+mappings：核心属性，是一个base64-vlq编码的字符串，记录转换之后代码字符与转换之前的对应关系
+source map 解决了源代码与运行代码不一致所产生的问题
+在source map文件结尾添加一行 //# sourceMappingURL=jquery-3.4.1.min.map 开启服务在浏览器查看的时候，会引入转换之前的文件 
+30.webpack 配置 source map
+webpack也可以配置source map，由于模式比较多，导致初学者比较懵。
+<pre>
+devtool: 'source-map'
+</pre>
+在webpack.config.js中加入上面一行代码，执行webpack命令，可以看到在生成bundle.js的同时也生成了bundle.js.map文件，并且bundle.js文件末尾有 //# sourceMappingURL=bundle.js.map 也就是指向source-map文件
+webpack支持12种不同方式，每种方式的效果和效率各不相同
+31.webpack eval模式的source map
+下面是几种不同source-map模式从四种角度出发的对比
+<img src="https://snakexu.github.io/images/lagou/part_2/webpack/31_1.png">
+在eval模式下，将每个模块转换过后的代码都放在eval函数中去执行，并且在eval函数执行的字符串最后，通过sourceURL的方式去说明所对应的文件路径，这样浏览器在执行这段代码的时候就知道这段代码所对应的源文件，但是也只能到源文件的程度，并不知道在文件中的具体位置。在这种模式下并不会生成source-map文件。
+32.webpack devtool 模式对比(上)
+在webpack的配置对象可以是一个数组，每一个数组都是一个单独的打包模式，这样就可以在一次打包过程中执行多个打包任务
+<pre>
+module.exports = [
+{
+    entry: './src/main.js',
+    output: {
+        filename: 'a.js'
+    }
+},
+{
+    entry: './src/main.js',
+    output: {
+        filename: 'b.js'
+    }
+}
+]
+</pre>
+执行打包命令，就会有两个子任务同时进行，同时生成两个打包结果。
+这样我们就可以把devtool的模式组成一个数组，遍历这个数组，生成多个不同的子任务，最后生成打包结果，这样就可以比较每种打包模式的特点
+<pre>
+const HtmlWebpackPlugin = requrie('html-webpack-plugin')
+const allModes = [
+'eval',
+'cheap-eval-source-map',
+'cheap-module-eval-source-map',
+'eval-source-map',
+'cheap-source-map',
+'cheap-module-source-map',
+'inline-cheap-module-source-map',
+'source-map',
+'inline-source-map',
+'hidden-source-map',
+'nosources-source-map'
+]
+module.exports = allModes.map(item => {
+    return {
+        devtool: item,
+        mode: 'none',
+        entry: './src/main.js',
+        output: {
+            filename: `js/${item}.js`
+        },
+        module: {
+            rules: [
+                test: /\.js$/,
+                use: {
+                    loader:'bable-loader',
+                    options: {
+                        presets: ['@babel/preset-env']
+                    }
+                }
+            ]
+        },
+        plugins: [
+            new HtmlWebpackPlugin({
+                filename: `${item}.html`
+            })
+        ]
+    }
+})
+</pre>
+执行webpack打包命令之后，就会生成相应的js文件，由于我们把生成的文件都放在js目录下，会比较直观的看到不同结果打包模式的页面
+33.webpack devtool 模式对比(下)
+eval:只能定位到文件
+cheap-eval-source-map:可以定位到文件的行，生成source-map文件，文件被babel等加工过后的结果
+cheap-module-eval-source-map:文件没有被babel等加工的结果
+eval-source-map:可以定位到文件的行和列，生成source-map文件
+cheap-source-map:
+cheap-module-source-map:
+inline-cheap-module-source-map:
+source-map:
+inline-source-map:把source-map文件以dataURL嵌入到代码中
+hidden-source-map:看不到source-map
+nosources-source-map:提供了行列信息，能看到错误位置，但是点击错误看不到源代码，这是为了保护源代码。
+34.webpack 选择source map 模式
+在开发环境下可选:
+cheap-module-eval-source-map——1.老师编写代码每行不会超过80个字符2.代码经过loader转换过后的差异较大3.首次打包速度慢无所谓，重写打包相对较快
+生产模式:none——1.source-map会暴露源代码2.调试是开发阶段的事
+选择没有绝对，理解不同模式差异，适配不同环境
+35.webpack自动刷新的问题
+webpack-dev-server 提供对开发者友好的开发服务器。但是每次都是刷新页面。如何在页面不刷新的前提下，模块也可以及时更新。
+36.webpack HMR 体验
+Hot Module Replacement 模块热替换，在应用运行过程中实时替换某个模块，应用状态不受影响
+37.webpack 开启 HMR
+HMR已经集成在webpack-dev-server当中，不需要单独安装，在运行webpack-dev-server --hot 通过hot参数启动hmr
+<pre>
+const webpack = require('webpack')
+devServer: {
+    hot: true 
+},
+plugins: [
+new webpack.HotModuleReplacementPlugin()
+]
+</pre>
+经过上面的配置，只需直接执行webpack-dev-server，无需再添加参数。但是这里我们发现，只有样式文件实现了热更新，修改js文件页面还是刷新了
+38.webpack HMR疑问
+webpack的HMR并不可以开箱即用，也就是说HMR还需要一些额外的操作才可以使用。样式文件可以开箱即用是因为loader(这里可以说是style-loader)帮我们做了处理。而对于js文件非常复杂，所以没有统一规律可循，所以没有统一的HMR，但是在框架下(比如vue react)相当于有了规则，就比较容易做到热更新了。通用脚手架创建的项目内部都集成了HMR方案。
+总结：我们需要手动处理JS模块更新后的热替换。
+39.webpack 使用 HMR API
+由于main.js是入口，所有模块都是从这里导入/更新，所以在这处理热替换
+<pre>
+// accept用于我们某一个模块更新过后的处理函数
+// 参数依次是 依赖模块的路径，依赖更新过后的处理函数
+module.hot.accept('./editor', () => {
+    console.log('editor模块更新了，需要手动处理热替换逻辑')
+})
+</pre>
+由于这我们手动处理了editor的刷新，就不会再自动触发刷新，否则会触发自动刷新。
+40.webpack处理js模块热替换
+<pre>
+// editor.js
+export default () => {
+    const editorElement = document.createElement('div')
+    editorElement.contentEditable = true
+    editorElement.id = 'editor' //添加了一行
+    console.log('editor init completed')
+    return editorElement
+}
+// main.js
+import createEditor from './editor'
+const editor = createEditor()
+document.body.appendChild(editor)
+let lastEditor = editor
+module.hot.accept('./editor', () => {
+    const value = lastEditor.innerHTML //保存上次元素中的内容
+    document.body.appendChild(lastEditor)
+    const newEditor = createEditor()
+    newEditor.innerHTML = value // 模块热更新后将元素内容放回到模块中
+    document.body.appendChild(newEditor)
+    lastEditor = newEditor
+})
+</pre>
+以上仅仅是div元素简单内容的热替换，但是如果元素更多更复杂，那么替换的方式就更不能确定，所以webpack无法提供一个通用的替换方式
+41.webpack处理图片模块热替换
+<pre>
+module.hot.accept('./better.png', () => {
+    img.src = background //background就是更新过后的路径
+})
+</pre>
+这里简单介绍了HMR相关的，具体要不要使用要看开发者的需要，但是一般对于需要持续维护的项目，很多时候利大于弊。
+42.webpack HMR 注意事项
+·处理HMR的代码报错会导致自动刷新
+我们代码手误写错了，依旧自动刷新导致我们不能正确发现错误
+<pre>
+devServer: {
+    hotOnly: true // 换一种方式
+}
+</pre>
+·没启用HMR的情况下，HMR API 报错
+没有在plugin中开启new webpack.HotModuleReplacementPlugin()
+<pre>
+if(mdoule.hot){ //判断是否存在
+    module.hot.accept('./better.png', () => {
+        img.src = background 
+    })
+}
+</pre>
+·代码中多了一些与业务无关的代码
+不会影响生产环境的状态
+43.webpack生产环境优化
+上面我们引入越来越多的代码，虽然产生了更好的开发体验，但是也会造成代码的臃肿。webpack为了实现这些特性，会自动往打包结果中添加一些额外的内容，但是这些额外的代码对生产环境来讲，是冗余的，因为生产环境和开发环境有很大差异。生产环境注重运行效率，开发环境只注重开发效率。所以webpack4出现了mode模式的用法，为不同模式设置了一些预设的配置，同时webpack推荐为不同的环境创建不同的配置
+44.webpack不同环境下的配置
+·配置文件根据环境不同导出不同的配置
+·一个环境对应一个配置文件
+<pre>
+const path = require('path')
+const webpack = require('webpack')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+module.exports = (env, argv) => { //env是通过cli传递的环境参数，argv是运行cli过程中接收到的所有参数
+    const config = {
+        // 配置
+        mode: 'development',
+        entry: './src/main.js',
+        output: {
+            filename: 'bundle.js',
+            path: path.join(__dirname, 'dist'),
+        },
+        devServer: {
+            hot: true 
+        },
+        devtool: 'source-map',
+        module: {
+            rules: [
+                {
+                    test: /.js$/,
+                    use: {
+                        loader: 'babel-loader',
+                        options: {
+                            presets: ['@babel/preset-env'] 
+                        }
+                    },
+                       exclude: /node_modules/
+                },
+                {
+                    test: /\.css$/,//正则表达式，匹配打包过程中的文件路径
+                    use: [
+                    'style-loader',
+                    'css-loader'
+                    ]//匹配所需要的loader
+                    //注意，如果配置了多个loader，那么是从后往前执行的
+                },
+                {
+                    test: /.png$/,
+                    use: {
+                        loader: 'url-loader',
+                        options: {
+                            limit: 10 * 1024 //10kb
+                        }
+                    }
+                },
+                {
+                    test: /\.md$/,
+                    use: './markdown-loader' // 这里可以用相对路径
+                }
+            ]
+        },
+        plugins:[
+            new CleanWebpackPlugin(),
+            new HtmlWebpackPlugin({
+                title:'webpack sample',
+                meta:{
+                    viewport:'width=device-width'
+                },
+                template:'./src/index.html'
+            }),
+            new webpack.HotModuleReplacementPlugin()
+        ]
+    }
+    if (env === 'production') {
+        config.mode = 'production'
+        config.devtool = false
+        config.plugins = [
+            ...config.plugins,
+            new CleanWebpackPlugin(),
+            //new CopyWebpackPlugin({patterns: [ //这里我自己的文件打包是有问题的
+            //        { from: './public', to: 'dist' }
+            //    ]
+            //})
+        ]
+    }
+    return config
+}
+</pre>
+45.webpack不同环境的配置文件
+上面通过不同环境名参数配置不同对象只适用于中小型项目，因为随着项目的变大，配置文件也变得复杂起来。对于大型项目建议使用不同环境对应不同配置文件的方式来实现。一般这种情况会有三个不同文件，一个生产环境、一个开发环境、一个公共文件。对于不同环境的配置文件的合并，建议用webpack-merge
+46.webpack DefinePlugin
+webpack4新增的production模式下面内部开启了很多通用的优化功能，对于使用者而言非常方便，但是对于学习者就导致我们忽略很多需要了解的东西。我们先从DefinePlugin了解开始
+DefinePlugin为代码注入全局成员，在production模式下默认启用，并且往代码中注入了process.env.NODE_ENV
+<pre>
+//webpack.config.js
+const webpack = require('webpack')
+module.exports = {
+    mode: 'none',
+    entry: './src/main.js',
+    output: {
+        filename: 'bundle.js'
+    },
+    plugins: [
+        new webpack.DefinePlugin({
+            // 参数是一个对象，对象中每个键值都会被注入到代码中
+            API_BASE_URL: 'https://www.example.com',//定义了API_BASE_URL，为我们代码注入API服务地址
+        })
+    ]
+}
+//main.js
+console.log(API_BASE_URL)
+</pre>
+执行webpack打包命令之后可以看到如下结果
+<img src="https://snakexu.github.io/images/lagou/part_2/webpack/46_1.png">
+看到definePlugin就是直接把我们定义的值注入了代码当中，我们设置的值的内容就是https://www.example.com 这个字符串，字符串中并没有包含引号，所以替换进来是没有引号的，语法上就有问题
+<pre>
+//webpack.config.js
+const webpack = require('webpack')
+module.exports = {
+    mode: 'none',
+    entry: './src/main.js',
+    output: {
+        filename: 'bundle.js'
+    },
+    plugins: [
+        new webpack.DefinePlugin({
+            // 键我们自己定义了，值其实要求是js代码片段，所以https://www.example.com字符串需要加引号
+            API_BASE_URL: '"https://www.example.com"',
+        })
+    ]
+}
+</pre>
+再次打包之后，就可以看到我们想要的结果。这里还有一个小技巧
+<pre>
+API_BASE_URL: JSON.stringify('https://www.example.com'),
+</pre>
+这个代码可以为我们注入一些可能会发生变化的值
+47.webpack体验Tree Shaking
+"摇"掉代码中未引用的部分，也就是"摇掉"未引用代码(dead code)
+<pre>
+// components.js
+export const Button = () => {
+    return document.createElement('button');
+    console.log('dead-code')
+}
+export const Link = () => {
+    return document.createElement('a');
+}
+export const Heading = level => {
+    return document.createElement('h'+level);
+    console.log('dead-code')
+}
+// main.js
+import {Button} from './components'
+document.body.appendChild(Button())
+</pre>
+这里我们在main.js只引用了components.js中的Button，另外的link和heading都没有被引用，执行打包命令之后看到
+<img src="https://snakexu.github.io/images/lagou/part_2/webpack/47_1.png">
+未被引用的link和heading代码都没有被输出，这就是tree-shaking的效果，并且tree-shaking会自动在生产模式开启
+48.webpack使用Tree Shaking
+Tree Shaking不是一个配置选项，是一组功能搭配使用后的优化效果，会在production模式下自动启用。还是我们上节课的例子，我们直接在none模式下打包，可以在打包结果中看到
+<img src="https://snakexu.github.io/images/lagou/part_2/webpack/48_1.png">
+不管我们在别的地方是否用到了，components.js中所有组件都被打包到bundle.js中。我们修改一下webpack.config.js
+<pre>
+module.exports = {
+    mode: 'none',
+    entry: './src/main.js',
+    output: {
+        filename: 'bundle.js'
+    },
+    optimization:{  //在这里集中配置webpack的优化功能
+        usedExports: true, //只导出在外部使用的成员
+    }
+}
+</pre>
+再次打包
+<img src="https://snakexu.github.io/images/lagou/part_2/webpack/48_2.png">
+可以看到在main.js没有被引用的Link、Heading组件的变化，就没有被打包了。再加一个压缩功能
+<pre>
+module.exports = {
+    mode: 'none',
+    entry: './src/main.js',
+    output: {
+        filename: 'bundle.js'
+    },
+    optimization:{  //在这里集中配置webpack的优化功能
+        usedExports: true, //只导出在外部使用的成员，负责标记未被使用到的代码
+        minimize: true, // 代码压缩，负责去掉未被使用的代码
+    }
+}
+</pre>
+再次打包之后，bundle.js中未被引用的代码就都被移除掉了
+49.webpack合并模块
+除了上节课讲的，我们还可以用concatenateModules来继续优化输出。普通打包结果将每一个模块放到一个单独的函数当中，如果模块很多，输出结果中会有很多模块函数
+<pre>
+module.exports = {
+    mode: 'none',
+    entry: './src/main.js',
+    output: {
+        filename: 'bundle.js'
+    },
+    optimization:{ 
+        usedExports: true,
+        concatenateModules: true,
+        // minimize: true, // 为了更好的看到结果，这里先注释掉
+    }
+}
+</pre>
+concatenateModules的作用是尽可能将所有模块合并到一个输出函数中。 既提升了运行效率，又减少了代码体积。这个特性又被称之为scope hoisting，也就是作用域提升
+50.webpack tree shaking与babel
+tree shaking 的实现前提就是使用ES Modules，由webpack打包的代码必须使用ESM。webpak在打包之前先是将模块根据不同的配置交给loader去处理，最后将所有loader处理的结果打包到一起。为了转换打包代使用的ES6+的新特性，很多时候需要使用babel-loader，而babel会将ESmodules转换为commonJS，当然这取决于我们有没有使用转换ESModules的插件，例如@babel/preset-env就会将ESModules -> commonJS ，所以这时候tree-shaking就不能生效。这里我们在webpack.config.js中仅开启usedExports: true ，但是打包之后发现tree shaking并没有失效，未被使用的代码并没有被打包进来，这是因为最新的babel-loader中自动帮我们关闭了ESMoudules-commonJS。可以在@babel/preset-env中强制开启esmodules 转commonjs 尝试下
+<pre>
+module: {
+    rules: [
+        {
+            test: /.js$/,
+            use: {
+                loader: 'babel-loader',
+                options: {
+                    presets: [
+                        ['@babel/preset-env', {modules: 'commonjs'}]
+                    ] 
+                }
+            },
+            exclude: /node_modules/
+        }
+    ]
+}
+</pre>
+打包之后发现tree-shaking确实失效了，如果想确保tree-shaking不失效，那么
+<pre>
+presets: [
+    ['@babel/preset-env', {modules: false}]
+]
+</pre>
+51.webpack sideEffects
+sideEffects 允许我们通过配置的方式标识代码是否有副作用——模块执行时除了导出成员之外所做的事情。sideEffects一般用于npm包标记是否有副作用。在配置的时候，要先在webpack.config.js中设置sideEffects: true开启这个功能，在package.json中配置sideEffects标识代码没有副作用
+<pre>
+//webpack.config.js
+module.exports = {
+    mode: 'none',
+    entry: './src/main.js',
+    output: {
+        filename: 'bundle.js'
+    },
+    optimization:{ 
+        usideEffects: true,
+    }
+}
+//package.json
+{
+    "name": "sideEffects",
+    "version": "0.1.0",
+    ...
+    "sideEffects": false
+}
+</pre>
+52.webpack sideEffects 注意
+使用sideEffects的前提就是确定你的代码真的没有副作用，对于一些css模块等都会被看作是副作用，或者原型链添加一些方法等，都会被移除掉。如果不想这些代码被移除。解决办法就是在package.json中关掉副作用，或者标识一下哪些文件有副作用
+<pre>
+//package.json
+{
+    "name": "sideEffects",
+    "version": "0.1.0",
+    ...
+    "sideEffects": [
+        './src/extend.js',
+        '*.css'
+    ]
+}
+</pre>
+53.webpack代码分割
+webpack将所有代码打包到一起，打包结果bundle体积过大。在实际项目中，并不是所有模块在启动时都是必要的，那么就有一个按需加载的需求。代码分割可以通过多入口的打包方式或者通过动态导入的方式
+54.webpack多入口打包
+多入口打包一般适用于传统的多页应用程序，最常见的话的规则就是一个页面对应一个打包入口，公共部分单独提取，项目具体就不在这里写了，简单的两个页面，然后在main.js中引入、处理。下面主要写一下webpack.config.js的配置
+<pre>
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+module.exports = {
+    mode: 'none',
+    entry: { //注意这里只有写成对象才能打包成多个文件，写成数组只会打包成一个文件
+        './src/index.js',
+        './src/album.js'
+    },
+    output: {
+        filename: '[name].bundle.js',
+        path: path.join(__dirname, 'dist')
+    },
+    module: {
+        rules: [
+            {
+                test: /\.css$/,
+                use: [
+                'style-loader',
+                'css-loader'
+                ]
+            }
+        ]
+    },
+    plugins:[
+        new CleanWebpackPlugin(),
+        new HtmlWebpackPlugin({
+            title:'multi entry 1',
+            template:'./src/index.html',
+            filename: 'index.html'
+        }),
+        new HtmlWebpackPlugin({
+            title:'multi entry 2',
+            template:'./src/album.html',
+            filename: 'album.html'
+        })
+    ]
+}
+</pre>
+上面的配置能完成然后执行打包命令，就能在输出文件夹中看到两个打包结果，但是我们会发现，两个打包结果被同时被引入输出的html文件
+<img src="https://snakexu.github.io/images/lagou/part_2/webpack/54_1.png">
+所以需要对webpack.config.js进行简单的修改
+<pre>
+plugins:[
+    new CleanWebpackPlugin(),
+    new HtmlWebpackPlugin({
+        title:'multi entry 1',
+        template:'./src/index.html',
+        filename: 'index.html',
+        chunk: ['index']
+    }),
+    new HtmlWebpackPlugin({
+        title:'multi entry 2',
+        template:'./src/album.html',
+        filename: 'album.html',
+        chunk: ['album']
+    })
+]
+</pre>
+55.webpack提取公共模块
+<pre>
+optimization:{ 
+    splitChunks: {
+        chunks: 'all'
+    }
+}
+</pre>
+56.webpack 动态导入
+webpack支持动态导入的方式实现按需加载，动态导入的模块会被自动分包。
+我们需要注释掉页面一开始就import 模块，而在需要使用模块的地方再执行import
+<img src="https://snakexu.github.io/images/lagou/part_2/webpack/56_1.png">
+打包结果会有两个动态导入的模块和提取的公共代码
+57.webpack 魔法注释
+默认通过动态导入产生的bundle文件只是一个序号，如果需要命名，就通过webpack的魔法注释去实现
+<img src="https://snakexu.github.io/images/lagou/part_2/webpack/57_1.png">
+<img src="https://snakexu.github.io/images/lagou/part_2/webpack/57_2.png">
+如果使用了相同的chunkname，那么相同chunkname的模块就会被打包到一起
+58.webpack MiniCssExtractPlugin
+MiniCssExtractPlugin可以提取css到单个文件，首先安装，然后在webpack.config.js中引入，再注册到plugin中
+<pre>
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+module.exports = {
+    module: {
+        rules: [
+            {
+                test: /\.css$/,
+                use: [
+                //由于使用了MiniCssExtractPlugin，css被单独存放于文件中
+                //不需要style标签，而是直接通过link引入，所以不再需要style-loader
+                //'style-loader',
+                //通过MiniCssExtractPlugin提供的loader去用link引入样式
+                MiniCssExtractPlugin.loader,
+                'css-loader'
+                ]
+            }
+        ]
+    },
+    plugins:[
+        new CleanWebpackPlugin(),
+        new HtmlWebpackPlugin({
+            title:'multi entry 1',
+            template:'./src/index.html',
+            filename: 'index.html',
+            chunk: ['index']
+        }),
+        new HtmlWebpackPlugin({
+            title:'multi entry 2',
+            template:'./src/album.html',
+            filename: 'album.html',
+            chunk: ['album']
+        }),
+        new MiniCssExtractPlugin()
+    ]
+}
+</pre>
+如果css文件很小，比如小于150kb，那么直接嵌入代码中减少一次请求更好，大于一定值通过link标签加载引入才有价值
+59.webpack OptimizeCssAssetsWebpackPlugin
+webpack对于生产模式的打包，仅支持js文件的压缩，剩下的压缩都需要额外的插件支持。OptimizeCssAssetsWebpackPlugin压缩输出的css文件
+<pre>
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin')
+module.exports = {
+    module: {
+        rules: [
+            {
+                test: /\.css$/,
+                use: [
+                MiniCssExtractPlugin.loader,
+                'css-loader'
+                ]
+            }
+        ]
+    },
+    plugins:[
+        new CleanWebpackPlugin(),
+        new HtmlWebpackPlugin({
+            title:'multi entry 1',
+            template:'./src/index.html',
+            filename: 'index.html',
+            chunk: ['index']
+        }),
+        new HtmlWebpackPlugin({
+            title:'multi entry 2',
+            template:'./src/album.html',
+            filename: 'album.html',
+            chunk: ['album']
+        }),
+        new MiniCssExtractPlugin(),
+        new OptimizeCssAssetsWebpackPlugin()
+    ]
+}
+</pre>
+上面我们直接把OptimizeCssAssetsWebpackPlugin放到了plugin中，但是webpack官方的建议是放到optimization.minimizer中，是因为可以通过minimizer统一控制，在生产模式minimizer自动开启
+<pre>
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin')
+module.exports = {
+    module: {
+        rules: [
+            {
+                test: /\.css$/,
+                use: [
+                MiniCssExtractPlugin.loader,
+                'css-loader'
+                ]
+            }
+        ]
+    },
+    optimization: {
+        minimizer: [
+            new OptimizeCssAssetsWebpackPlugin()
+        ]
+    },
+    plugins:[
+        new CleanWebpackPlugin(),
+        new HtmlWebpackPlugin({
+            title:'multi entry 1',
+            template:'./src/index.html',
+            filename: 'index.html',
+            chunk: ['index']
+        }),
+        new HtmlWebpackPlugin({
+            title:'multi entry 2',
+            template:'./src/album.html',
+            filename: 'album.html',
+            chunk: ['album']
+        }),
+        new MiniCssExtractPlugin()
+    ]
+}
+</pre>
+但是这样配置，minimizer认为我们要自定义所使用的插件，没有要求js压缩，内置的js压缩器就会被覆盖掉，所以js文件不会自动被压缩
+<pre>
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin')
+const TerserWebpackPlugin = require('terser-webpack-plugin')
+module.exports = {
+    module: {
+        rules: [
+            {
+                test: /\.css$/,
+                use: [
+                MiniCssExtractPlugin.loader,
+                'css-loader'
+                ]
+            }
+        ]
+    },
+    optimization: {
+        minimizer: [
+            new TerserWebpackPlugin(), //webpack内置js压缩plugin
+            new OptimizeCssAssetsWebpackPlugin()
+        ]
+    },
+    plugins:[
+        new CleanWebpackPlugin(),
+        new HtmlWebpackPlugin({
+            title:'multi entry 1',
+            template:'./src/index.html',
+            filename: 'index.html',
+            chunk: ['index']
+        }),
+        new HtmlWebpackPlugin({
+            title:'multi entry 2',
+            template:'./src/album.html',
+            filename: 'album.html',
+            chunk: ['album']
+        }),
+        new MiniCssExtractPlugin()
+    ]
+}
+</pre>
+60.webpack输出文件名hash
+服务器在部署前端文件的时候，都会启用静态资源缓存，这样对于用户浏览器就能缓存静态资源，后续就不用请求这些资源，提升了响应速度。但是开启了缓存，如果设定缓存时间过长，更新不及时；如果设定时间过短，效果不明显。所以建议在生产模式下，给文件名增加hash值，一旦资源文件发生改变，文件名也发生了变化。对于客户端，全新的文件名就是全新的请求，可以把缓存的时间设置的非常长。
+项目级的hash，一旦项目中有任何改动，项目中的hash就会跟着一起改动
+<pre>
+//本节课的代码重点放在哪里可以带hash，至于文件目录级别是否在一起，并没有特意匹配
+output: {
+    filename: '[name]-[hash].bundle.js'
+}
+new MiniCssExtractPlugin({
+    filename: '[name]-[hash].bundle.css'
+})
+</pre>
+chunkhash在打包过程中，只要是同一路(比如一个文件的css/js是同一路的)的打包，chunkhash都是相同的
+<pre>
+output: {
+    filename: '[name]-[chunkhash].bundle.js'
+}
+new MiniCssExtractPlugin({
+    filename: '[name]-[chunkhash].bundle.css'
+})
+</pre>
+<img src="https://snakexu.github.io/images/lagou/part_2/webpack/60_1.png">
+可以看到同一路的hash名是一致的
+contenthash，文件级别的hash，根据输出文件的内容输出的hash，也就是不同的文件就有不同的hash
+<pre>
+output: {
+    filename: '[name]-[contenthash].bundle.js'
+}
+new MiniCssExtractPlugin({
+    filename: '[name]-[contenthash].bundle.css'
+})
+</pre>
+另外，如果觉得默认的20位长度的hash太长，还可以指定hash长度
+<pre>
+output: {
+    filename: '[name]-[contenthash:8].bundle.js'
+}
+new MiniCssExtractPlugin({
+    filename: '[name]-[contenthash:8].bundle.css'
+})
+</pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/07/17/拉勾-Webpack打包/" data-id="ckdbzsiui0062jrxq24k2alou" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/07/28/拉勾-其他打包工具/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          拉勾-其他打包工具
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/07/15/拉勾-模块化开发/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">拉勾-模块化开发</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/拉勾/">拉勾</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ECMAScript新特性/">ECMAScript新特性</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript异步编程/">JavaScript异步编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TypeScript语言/">TypeScript语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-babel/">react babel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/函数式编程/">函数式编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/函数式编程范式/">函数式编程范式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端路由/">前端路由</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工程化/">工程化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/微信小程序/">微信小程序</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/手写Promise源码/">手写Promise源码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/拉勾/">拉勾</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/拉勾，自动化构建/">拉勾，自动化构建</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/正则/">正则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业/">网易微专业</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-Flutter/">网易微专业 Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-node/">网易微专业 node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/ECMAScript新特性/" style="font-size: 10px;">ECMAScript新特性</a> <a href="/tags/JavaScript异步编程/" style="font-size: 10px;">JavaScript异步编程</a> <a href="/tags/TypeScript语言/" style="font-size: 10px;">TypeScript语言</a> <a href="/tags/react-babel/" style="font-size: 10px;">react babel</a> <a href="/tags/函数式编程/" style="font-size: 10px;">函数式编程</a> <a href="/tags/函数式编程范式/" style="font-size: 10px;">函数式编程范式</a> <a href="/tags/前端路由/" style="font-size: 10px;">前端路由</a> <a href="/tags/工程化/" style="font-size: 10px;">工程化</a> <a href="/tags/微信小程序/" style="font-size: 10px;">微信小程序</a> <a href="/tags/手写Promise源码/" style="font-size: 10px;">手写Promise源码</a> <a href="/tags/拉勾/" style="font-size: 20px;">拉勾</a> <a href="/tags/拉勾，自动化构建/" style="font-size: 10px;">拉勾，自动化构建</a> <a href="/tags/数据结构/" style="font-size: 12.5px;">数据结构</a> <a href="/tags/正则/" style="font-size: 10px;">正则</a> <a href="/tags/算法/" style="font-size: 17.5px;">算法</a> <a href="/tags/网易微专业/" style="font-size: 10px;">网易微专业</a> <a href="/tags/网易微专业-Flutter/" style="font-size: 10px;">网易微专业 Flutter</a> <a href="/tags/网易微专业-node/" style="font-size: 10px;">网易微专业 node</a> <a href="/tags/设计模式/" style="font-size: 15px;">设计模式</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/07/29/拉勾-规范化标准/">拉勾-规范化标准</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/28/拉勾-其他打包工具/">拉勾-其他打包工具</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/17/拉勾-Webpack打包/">拉勾-Webpack打包</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/15/拉勾-模块化开发/">拉勾-模块化开发</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/08/拉勾-自动化构建/">拉勾-自动化构建</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

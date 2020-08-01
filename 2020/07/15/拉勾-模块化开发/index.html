@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>拉勾-模块化开发 | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1.模块化概述内容概要·模块化演变过程·模块化规范·常用的模块化打包工具·基于模块化工具构建现代web应用·打包工具的优化技巧2.模块化演变过程stage-1.文件划分方式每个文件一个功能，通过script标签引入，容易形成全局变量等，早起模块化完全依靠约定stage-2.命名空间方式约定每一个模块暴露一个全局对象，所有模块成员挂载到全局对象上。将每个模块包裹成一个全局对象的方式stage-3.I">
+<meta property="og:type" content="article">
+<meta property="og:title" content="拉勾-模块化开发">
+<meta property="og:url" content="http://yoursite.com/2020/07/15/拉勾-模块化开发/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="1.模块化概述内容概要·模块化演变过程·模块化规范·常用的模块化打包工具·基于模块化工具构建现代web应用·打包工具的优化技巧2.模块化演变过程stage-1.文件划分方式每个文件一个功能，通过script标签引入，容易形成全局变量等，早起模块化完全依靠约定stage-2.命名空间方式约定每一个模块暴露一个全局对象，所有模块成员挂载到全局对象上。将每个模块包裹成一个全局对象的方式stage-3.I">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_2/modular/2_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_2/modular/8_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_2/modular/13_1.png">
+<meta property="og:updated_time" content="2020-07-17T02:02:07.347Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="拉勾-模块化开发">
+<meta name="twitter:description" content="1.模块化概述内容概要·模块化演变过程·模块化规范·常用的模块化打包工具·基于模块化工具构建现代web应用·打包工具的优化技巧2.模块化演变过程stage-1.文件划分方式每个文件一个功能，通过script标签引入，容易形成全局变量等，早起模块化完全依靠约定stage-2.命名空间方式约定每一个模块暴露一个全局对象，所有模块成员挂载到全局对象上。将每个模块包裹成一个全局对象的方式stage-3.I">
+<meta name="twitter:image" content="https://snakexu.github.io/images/lagou/part_2/modular/2_1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-拉勾-模块化开发" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/07/15/拉勾-模块化开发/" class="article-date">
+  <time datetime="2020-07-15T04:16:48.000Z" itemprop="datePublished">2020-07-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      拉勾-模块化开发
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.模块化概述<br>内容概要<br>·模块化演变过程<br>·模块化规范<br>·常用的模块化打包工具<br>·基于模块化工具构建现代web应用<br>·打包工具的优化技巧<br>2.模块化演变过程<br>stage-1.文件划分方式<br>每个文件一个功能，通过script标签引入，容易形成全局变量等，早起模块化完全依靠约定<br>stage-2.命名空间方式<br>约定每一个模块暴露一个全局对象，所有模块成员挂载到全局对象上。将每个模块包裹成一个全局对象的方式<br>stage-3.IIFE<br>前两种方式都没有实现私有成员，IIFE的实现方式就是<br><img src="https://snakexu.github.io/images/lagou/part_2/modular/2_1.png"><br>并且可以清楚的看到引用依赖(可以作为参数传入)<br>以上是早起在没有工具和规范的情况下，对模块化的落地方式<br>3.模块化规范的出现<br>虽然有了模块化的雏形，但是还有很多问题，我们依然通过script标签引入，这样就很容易在加载大量文件的时候出现各种问题，比如少引入文件等。这时发现我们需要模块化标准+模块化加载器。<br>在nodejs中模块化标准为commontjs规范，在这个规范中约定<br>·一个文件就是一个模块<br>·每个模块都有单独的作用域<br>·通过module.exports导出成员<br>·通过require函数载入模块<br>commonJs是以同步方式加载模块，这种加载方式在node是没什么问题的，但是前端如果采用同步加载，容易产生很多问题，所以为浏览器端制定了A(Asynchronous)M(Module)D(Definitino)规范，同期推出Require.目前绝大多数第三方库都支持AMD规范。AMD使用起来相对复杂，模块js文件请求频繁。此外还有淘宝团队的sea.js+CMD等<br>4.模块化标准规范<br>目前浏览器统一使用ESModules实现模块化规范，nodeJs使用CommonJs实现模块化规范。但是要注意，ESModules是ECMAScript2015也就是俗称的ES6才被定义的标准，会产生兼容问题，目前一部分浏览器已经兼容了，但是随着webpack等工具的出现，这一规范已经比较普及了。<br>5.ES Modules特性<br>可以从两个维度学习<br>(1)作为一个标准/规范，约定了哪些特性和语法<br>(2)如果通过一些工具/方案解决运行环境中兼容性带来的问题<br>通过给script标签添加type=module的属性就可以以ES Module的标准执行其中的JS代码了</p>
+<pre>
+< script type="module" >
+    console.log('this is es module')
+< /script >
+< script type="module" >
+    var foo = 100;
+    console.log(foo)//可以正常打印
+< /script >
+< script type="module" >
+    console.log(foo) //报错
+< /script >
+</pre>
+上面的代码可以正常在浏览器中执行了，但是对于普通js会有一些不同:
+(1)ESM 自动采用严格模式，忽略'use strict'(比如在严格模式下不能全局使用this)
+(2)每个ESMdoules都是运行在单独的私有作用域中
+(3)ESModules是通过CORS方式请求外部  如果js模块不在同源地址下，就需要请求的服务端地址在响应的响应头必须提供有效的CORS标头
+(4)ESM的script标签会延迟执行脚本    
+6.ES Modules导出
+导入:import，导出:export
+<pre>
+export const name = "xiaoming"
+export function hello (){
+    console.log('hello')
+}
+export class Person{}
+//or
+const name = "xiaoming"
+function hello (){
+    console.log('hello')
+}
+class Person{}
+export {name, person, hello}
+//or 重命名方式
+export{
+    name as fullName,
+    hello as fullHello
+}
+</pre>
+要注意，导出的成员如果定义名称为default，那么这个成员就会作为当前模块默认的导出成员，导入这个成员的时候，就必须给这个成员命名，default是一个关键词，我们不能把它当作变量使用。也可以export default name，在导入时候直接import一个变量名的方式默认导入一个成员
+7.ES Modules导入导出的注意事项
+<pre>
+export { name, age } //不同于字面量，这里只是export的语法
+export default { name, age } //这里是对象字面量的范围 export default 可以跟一个变量，也可以跟一个值
+</pre>
+同样，import 导入的时候，也不是解构，只是一个import的用法
+export导出成员的时候导出的是对这个成员的一个引用
+<pre>
+//module.js
+var name = 'jack'
+var age = 18
+export { name, age }
+setTimeout(function(){
+    name = 'ben'
+},1000)
+//app.js
+import { name, age } from './module.js'
+console.log(name, age) //jack 18
+setTimeout(function(){
+    console.log(name, age) //age 18
+},1500)
+</pre>
+但是暴露出来的关系是只读的，也就是说不能在模块外部修改成员
+<pre>
+//module.js
+var name = 'jack'
+var age = 18
+export { name, age }
+setTimeout(function(){
+    name = 'ben'
+},1000)
+//app.js
+import { name, age } from './module.js'
+console.log(name, age) //jack 18
+name = 'tom' //报错，因为暴露出来的关系是只读的
+setTimeout(function(){
+    console.log(name, age)
+},1500)
+</pre>
+8.ES Modules导入用法
+原生的import引入文件的时候
+(1)不能简写扩展名，比如引入module.js，必须写成 import { name } from './module.js'，不能写成import { name } from './module'
+(2)如果引入的是index.js，也不能省略index.js，比如 import {lowercase} from './utils/index.js' 不能写成 import {lowercase} from './utils'
+(3)支持文件路径方式 './' '/' 'http://'，也就是说支持相对路径、绝对路径引入
+(4)import {} from  './module.js' 是执行模块，不需要提取模块中的成员，简写语法 import './module.js'
+(5)import * as mod from './modules'导入模块中所有被导出成员，被放入mod对象中，每一个导出成员都是mod对象的一个属性
+(6)需要动态导入模块(就是路径不确定的情况)，不能 import {name} from 变量 。es module 提供了一个全局的函数 import 用来动态导入模块。用法 import(需要导入模块的路径)，这里的import返回一个promise
+<img src="https://snakexu.github.io/images/lagou/part_2/modular/8_1.png">
+(7)如果在同一个模块中导出了一些命名成员和一个默认成员，可以正常导入命名成员，再用default as 重命名 的方式导入默认成员，或者用逗号分隔，逗号左边是默认成员，右边是命名成员
+<pre>
+import {name, age, default as title } from './module.js'
+import title, {name, age } from './module.js' //用逗号分隔方式引入默认成员，title为默认成员的别名
+</pre>
+9.ES Modules导入导出成员
+直接把导入成员作为当前模块的导出成员，那么在当前作用域中不能访问这些成员，一般用来写index文件，导出成员给外部使用
+<pre>
+export {foo, bar} from './module.js'
+console.log(foo,bar)
+</pre>
+10.ES Modules 浏览器环境Polyfill
+我们可以通过ES Module Loader 去解决浏览器不支持es语法的问题，可以在unpkg.com提供的cdn服务来拿到js文件。ES Module Loader的用法可以看相关介绍，另外由于在最新IE中不支持promise，我们需要引入一个promise的polyfill。如果我们正常在html页面中引入上面提到的polyfill会导致支持esmodule的浏览器执行两遍代码，一遍是浏览器执行的，另外一遍是polyfill执行的，可以用script的nomodule的属性，这个属性只有在不支持esmodule语法的情况下才执行
+<pre>
+< script type="nomodule" >
+alert('123')//只有在不支持esmodule语法的浏览器才会弹出123(IE说，别看我，我不支持我也没办法)
+< /script >
+但是nomodule属性在运行的时候是动态解析脚本，效率会比较差，不适宜在生产阶段使用
+</pre>
+11.ES Modules in Node.js 支持情况
+node的8.5以上版本已经以实验的特性开始支持ES Module的语法了。要在node环境中使用ES Module，首先要把扩展名的js改为mjs，然后在命令行当前目录下输入node --experimental-modules index.mjs (这里index.mjs为文件名) ，node会提示这是实验特性，不要在生产环境使用
+第三方模块都是导出默认成员，不能 import {toLowerCase} from 'lodash'，但是node官方模块因为做了兼容，可以这么使用 
+12.ES Modules in Node.js 与commonjs模块交互
+<pre>
+//按ES Module标准编写的es-module.mjs
+import mod from './commonjs.js'
+console.log(mod)
+//按commonjs标准编写的commonjs.js
+module.exports = {
+    foo: 'commonjs exports value'
+}
+</pre>
+然后在命令行执行 node --experimental-modules es-module.mjs ，可以看到在命令行中输出 { foo: 'commonjs exports value'} (之前会提示ExperimentalWarning: The ESM module loader is experimental) 。这说明我们可以在ES Module中载入CommonJs的成员。也可以写成
+<pre>
+//按ES Module标准编写的es-module.mjs
+import mod from './commonjs.js'
+console.log(mod)
+//按commonjs标准编写的commonjs.js
+exports.foo = 'commonjs exports value'
+</pre>
+要注意，在ESModules中引入commonJs标准的成员，commonJs始终只会导出一个默认成员，也就是说如果按照下面的方式是执行，命令行是会报错的
+<pre>
+//按ES Module标准编写的es-module.mjs
+//注意，不能直接提取成员，注意import不是解构导出对象
+import {mod} from './commonjs.js'
+console.log(mod)
+//按commonjs标准编写的commonjs.js
+exports.foo = 'commonjs exports value'
+</pre>
+上面我们用ESModule载入了CommonJs，如果我们用CommonJs载入ESModule呢？try 一下
+<pre>
+//按ES Module标准编写的es-module.mjs
+export const foo = 'es module export value'
+//按commonjs标准编写的commonjs.js
+const mod = require('./es-module.mjs')
+console.log(mod)
+</pre>
+在命令行中执行 node --experimental-modules commonjs.js ，会报错。可以得出不能在CommonJs模块中通过require载入ESModule
+以上都是在node原生环境中执行的，如果用webpack打包工具等，执行结果可能会不一样
+结论：
+·ES Modules 中可以导入 CommonJs 模块
+·CommonJs 中不能导入 ES Modules 模块
+·CommonJs 始终只会导出一个默认成员
+·注意import不是解构导出对象
+13.ES Modules in Node.js 与commonjs模块的差异
+<pre>
+//cjs.js CommonJs 标准写的 
+//单独执行node --experimental-modules cjs.js 是可以执行的
+//加载模块函数
+console.log(require)
+//模块对象
+console.log(module)
+//导出对象别名
+console.log(exports)
+//当前文件的绝对路径
+console.log(__filename)
+//当前文件所在目录
+console.log(__dirname)
+//esm.mjs ES Modules标准写的
+//执行 node --experimental-modules esm.mjs 会报错
+console.log(require)
+console.log(module)
+console.log(exports)
+console.log(__filename)
+console.log(__dirname)
+</pre>
+可以看出ESM中没有CommonJs中的那些模块的全局成员了
+ESModules中有一个fileURLToPath方法，我们可以通过这个方法去获取文件路径
+<pre>
+import {fileURLToPath} from 'url'
+import {dirname} from 'path'
+const __filename = fileURLToPath{import.meata.url}
+console.log(__filename)
+const __dirname = dirname(__filename)
+console.log(__dirname)
+</pre>
+<img src="https://snakexu.github.io/images/lagou/part_2/modular/13_1.png">
+14.ES Modules in Node.js 新版本进一步支持ESM
+先把node切换到12.10.0的版本，并且确定没有任何问题，打开项目中的package.json文件，写入
+<pre>
+{
+    "type":"module"
+}
+</pre>
+然后把我们改成.mjs扩展名的文件改会.js扩展名，执行node --experimental-modules index.js 是可以执行的。但是如果我们执行commonjs的文件，需要把扩展名改为.cjs
+15.ES Modules in Node.js Babel兼容方案
+早日的nodejs版本，我们可以用Babel去实现ESModules的兼容，因为是低版本node，所以我们切换node版本为8.0.0，yarn add @babel/node @babel/core @babel/preset-env --dev，然后就可以通过yarn babel-node去运行这个命令，但是直接运行这个命令会报错，因为babel的preset-env是预设高版本js的转换，所以执行命令的正确姿势是yarn babel-node index.js --presets=@babel/preset-env，如果觉得每次都加入presets比较麻烦，可以在文件中添加.babelrc文件，然后在文件中写入
+<pre>
+{
+    "presets": ["@babel/preset-env"]
+}
+</pre>
+然后就可以直接通过yarn babel-node index.js运行了
+或者也可以通过一个单独的插件yarn add @babel/plugin-transform-modules-commonjs --dev，然后修改.babelrc文件
+<pre>
+{
+    "plugins": ["@babel/plugin-transform-modules-commonjs"]
+}
+</pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/07/15/拉勾-模块化开发/" data-id="ckdbzsilu004kjrxqmdwzhze7" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/07/17/拉勾-Webpack打包/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          拉勾-Webpack打包
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/07/08/拉勾-自动化构建/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">拉勾-自动化构建</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/拉勾/">拉勾</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ECMAScript新特性/">ECMAScript新特性</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript异步编程/">JavaScript异步编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TypeScript语言/">TypeScript语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-babel/">react babel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/函数式编程/">函数式编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/函数式编程范式/">函数式编程范式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端路由/">前端路由</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工程化/">工程化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/微信小程序/">微信小程序</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/手写Promise源码/">手写Promise源码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/拉勾/">拉勾</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/拉勾，自动化构建/">拉勾，自动化构建</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/正则/">正则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业/">网易微专业</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-Flutter/">网易微专业 Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-node/">网易微专业 node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/ECMAScript新特性/" style="font-size: 10px;">ECMAScript新特性</a> <a href="/tags/JavaScript异步编程/" style="font-size: 10px;">JavaScript异步编程</a> <a href="/tags/TypeScript语言/" style="font-size: 10px;">TypeScript语言</a> <a href="/tags/react-babel/" style="font-size: 10px;">react babel</a> <a href="/tags/函数式编程/" style="font-size: 10px;">函数式编程</a> <a href="/tags/函数式编程范式/" style="font-size: 10px;">函数式编程范式</a> <a href="/tags/前端路由/" style="font-size: 10px;">前端路由</a> <a href="/tags/工程化/" style="font-size: 10px;">工程化</a> <a href="/tags/微信小程序/" style="font-size: 10px;">微信小程序</a> <a href="/tags/手写Promise源码/" style="font-size: 10px;">手写Promise源码</a> <a href="/tags/拉勾/" style="font-size: 20px;">拉勾</a> <a href="/tags/拉勾，自动化构建/" style="font-size: 10px;">拉勾，自动化构建</a> <a href="/tags/数据结构/" style="font-size: 12.5px;">数据结构</a> <a href="/tags/正则/" style="font-size: 10px;">正则</a> <a href="/tags/算法/" style="font-size: 17.5px;">算法</a> <a href="/tags/网易微专业/" style="font-size: 10px;">网易微专业</a> <a href="/tags/网易微专业-Flutter/" style="font-size: 10px;">网易微专业 Flutter</a> <a href="/tags/网易微专业-node/" style="font-size: 10px;">网易微专业 node</a> <a href="/tags/设计模式/" style="font-size: 15px;">设计模式</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/07/29/拉勾-规范化标准/">拉勾-规范化标准</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/28/拉勾-其他打包工具/">拉勾-其他打包工具</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/17/拉勾-Webpack打包/">拉勾-Webpack打包</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/15/拉勾-模块化开发/">拉勾-模块化开发</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/08/拉勾-自动化构建/">拉勾-自动化构建</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

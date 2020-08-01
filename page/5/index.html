@@ -62,6 +62,251 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-网易微专业-node-1-2-3-ES6-异步编程解决方案" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/04/23/网易微专业-node-1-2-3-ES6-异步编程解决方案/" class="article-date">
+  <time datetime="2020-04-23T03:50:52.000Z" itemprop="datePublished">2020-04-23</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/04/23/网易微专业-node-1-2-3-ES6-异步编程解决方案/">网易微专业-node-1.2.3-ES6+异步编程解决方案</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.异步编程优势<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.3_1.png"><br>2.异步编程难点<br>2-1.异常处理<br>·过去异常处理</p>
+<p><pre><br>try{<br>    JSON.parse(json);<br>}cache(e){<br>    //TODO<br>}<br></pre><br>·这对于异步编程而言并不一定适用<br>·只能捕获当次事件循环内的异常，对’callback’执行时抛出的异常行为将无能为力</p>
+<p><pre><br>try{<br>    async(callback);<br>}cache(e){<br>    //TODO<br>}<br></pre><br>·node在处理异常形成了一种约定，将异常作为回调函数的第一个参数传回<br>·必须执行调用者传入的回调函数<br>·正确传递异常供调用者判断<br>·另一个容易犯的错误是对用户传递的回调函数进行异常捕获<br>错误示范:</p>
+<p><pre><br>try{<br>    req.body = JSON.parse(buf,options,reviver);<br>    callback();<br>}cache(err){<br>    err.body = buf;<br>    err.status = 400;<br>    callback(400);<br>}<br></pre><br>2-2.函数嵌套过深<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.3_2.png"><br>2-3.其它难点<br>·多线程编程<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.3_3.png"><br>·异步转同步<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.3_4.png"><br>3.异步编程解决方案<br>解决方案:<br>·事件发布/订阅模式<br>·async流程控制<br>·promise模式<br>·…<br>假设我们现在有三个文件dev.json、prod.json、test.json，相应的内容分别为{“dev”:”devdev”}、{“prod”:”prodprod”}、{“test”:”testtest”}，并且这三个文件和下面的代码文件在同一个跟目录下<br>index.js</p>
+<p><pre><br>const fs = require(‘fs’);<br>let files = [‘/dev.json’, ‘/test.json’, ‘/prod.json’];<br>fs.readFile(<strong>dirname + files[0], ‘utf8’, (err, data) =&gt; {<br>    let result = [];<br>    if (err) console.log(‘Error: ‘ + err);<br>    result.push(data);<br>    fs.readFile(</strong>dirname + files[1], ‘utf8’, (err, data) =&gt; {<br>        if (err) console.log(‘Error: ‘ + err);<br>        result.push(data);<br>        fs.readFile(__dirname + files[2], ‘utf8’, (err, data) =&gt; {<br>            if (err) console.log(“Error: “ + err);<br>            result.push(data);<br>            console.log(result);<br>        });<br>    });<br>});<br></pre><br>执行上面index.js代码，得到如下结果<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.3_5.png"><br>但是index.js的代码已经看到了回调地狱的趋势，于是我们想用发布/订阅模式来使代码看起来更容易理解。<br>首先封装一个m.js</p>
+<p><pre><br>const fs = require(‘fs’);<br>module.exports = function(filename,cb){<br>    fs.readFile(__dirname + filename, ‘utf8’, (err, data) =&gt; {<br>        cb(err,data)<br>    });<br>}<br></pre><br>index1.js</p>
+<p><pre><br>const fn = require(‘./m’)//引入m.js<br>const events = require(‘events’);<br>let files = [‘/dev.json’, ‘/test.json’, ‘/prod.json’];<br>const emitter = new events.EventEmitter();<br>var done = after(times,cb,(res)=&gt;{<br>    console.log(res)<br>})<br>emitter.on(‘done’,done);<br>function after(times,cb){<br>    let count = 0, result = [];<br>    return function(data){<br>        result.push(data);<br>        count++;<br>        if(count === times){<br>            cb(result)<br>        }<br>    }<br>}<br>files.forEach((filename)=&gt;{<br>    fn(filename,(err,data)=&gt;{<br>        //if(err) TODO<br>        emitter.emit(‘done’,data)<br>    })<br>})<br></pre><br>可以看到index1.js的执行结果和上面我们用回调写的代码执行结果还是一样的，说明代码没有问题<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.3_6.png"><br>多执行几次代码，我们发现，文件读取顺序是不一样的<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.3_7.png"><br>emitter.on默认在node中只能绑定10次，超过10次就会报错，认为内存泄漏，可以通过emitter.setMaxListeners(100)这样绑定修改最大值<br>我们还可以在项目中安装async库来实现需求。async库安装之后，新建一个index2.js</p>
+<p><pre><br>const fn = require(‘./m’)<br>const async = require(‘async’)<br>let files = [‘/dev.json’, ‘/test.json’, ‘/prod.json’];<br>async.waterfall([<br>    (cb) =&gt; {<br>        fn(files[0], (err, data) =&gt; {<br>            cb(err, data);<br>        });<br>    },<br>    (data1, cb) =&gt; {<br>        fn(files[1], (err, data) =&gt; {<br>            cb(err, data1, data)<br>        });<br>    },<br>    (data1, data2, cb) =&gt; {<br>        fn(files[2], (err, data) =&gt; {<br>            cb(err, data1, data2, data);<br>        });<br>    }<br>], (err, data1, data2, data3) =&gt; {<br>    if (err) console.log(err);<br>    let result = [data1, data2, data3];<br>    console.log(result);<br>});<br></pre><br>执行index2.js会按照我们写的函数顺序去读取文件，也就是说读取文件的顺序是确定的，如果中间哪个文件读取出错，后面就不会再执行了(不会执行后面的读取，但是整个函数还是会执行)<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.3_8.png"><br>另外就是使用Promise来满足我们的需求<br>index3.js</p>
+<p><pre><br>const fn = require(‘./m’);<br>let files = [‘/dev.json’, ‘/test.json’, ‘/prod.json’];<br>function toPromiseStyle(fn) {<br>    return (…args) =&gt; {<br>        return new Promise((resolve, reject) =&gt; {<br>            fn(…args, (err, data) =&gt; {<br>                if (err) reject(err);<br>                resolve(data);<br>            });<br>        });<br>    }<br>}<br>let op = toPromiseStyle(fn);<br>let result = [];<br>op(files[0])<br>    .then((data) =&gt; {<br>        result.push(data);<br>        return op(files[1]);<br>    })<br>    .then((data) =&gt; {<br>        result.push(data);<br>        return op(files[2]);<br>    })<br>    .then((data) =&gt; {<br>        result.push(data);<br>        console.log(relust);<br>    }).catch((err) =&gt; {<br>        console.log(err);<br>        console.log(result);<br>    });<br>function* getResult() {<br>    let res;<br>    try {<br>        res = yield op(files[0]);<br>        res = yield op(files[1]);<br>        res = yield op(files[2]);<br>        return res;<br>    } catch (error) {<br>        return console.log(err);<br>    }<br>}<br>async function getResult1() {<br>    let res;<br>    try {<br>        res = await op(files[0]);<br>        res = await op(files[1]);<br>        res = await op(files[2]);<br>        return res;<br>    } catch (error) {<br>        return console.log(err);<br>    }<br>}<br></pre><br>promise这个和async相同之处就是会按照代码定义顺序去读取文件，如果中间出错，就会直接打印最后结果，出错文件之后的文件不会再读取。getResult和getResult1两个函数分别是gentor函数和async函数去执行promise，其实也就是讲述了async的原理</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/04/23/网易微专业-node-1-2-3-ES6-异步编程解决方案/" data-id="ckdbzsiie002mjrxq0ryx5pye" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-node-1-2-2-异步编程的优势与难点" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/04/22/网易微专业-node-1-2-2-异步编程的优势与难点/" class="article-date">
+  <time datetime="2020-04-22T04:00:37.000Z" itemprop="datePublished">2020-04-22</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/04/22/网易微专业-node-1-2-2-异步编程的优势与难点/">网易微专业-node-1.2.2-异步编程的优势与难点</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.事件驱动<br>1-1.事件机制<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.2_1.png"><br>事件机制的实现<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.2_2.png"><br>2.异步I/O模型<br>2-1.异步I/O的必要性<br>2-1-1.实现I/O并行<br>(1)多线程单进程<br>多线程设计之初就是为了共享程序空间，例如java、c++等，但是缺点在于执行过程中要进行线程与线程之间的切换，即执行时上下文要交换，开销会比较大，还有就是两个线程操作同一个文件，如果两个线程对同一个文件的同一变量进行不同操作，产生了锁的机制同步状态，产生了状态同步的问题，使程序更加复杂化。<br>(2)单线程多进程<br>为了避免多线程使用不便的问题，就使用了单线程保持调用的简单，但是启动的时候会启动多个进程来达到充分利用cpu和整体并行能力的问题。但是缺点在于，业务逻辑复杂的时候，业务进程不能分布到多个进程之间，处理起来可能比多线程还要复杂。<br>2-1-2.异步I/O的必要性<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.2_4.png"><br>2-2.阻塞与非阻塞、异步与同步<br>2-2-1.I/O的阻塞与非阻塞<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.2_5.png"><br>2-2-2.I/O的异步与同步<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.2_6.png"><br>另：当进行非阻塞I/O调用时，要读取完整的数据，应用程序需要进行多次轮询，才能确保数据读取完成，以进行下一步操作。<br>2-3.理想的异步I/O<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.2_7.png"><br>2-4.Node.js中的异步I/O<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.2_8.png"><br><img src="https://snakexu.github.io/images/wangyi/node/1.2.2_9.png"><br>3.事件循环<br>3-1.高并发策略<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.2_10.png"><br>3-2.Node.js运行原理<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.2_11.png"><br>3-3.事件循环实现原理<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.2_12.png"><br><img src="https://snakexu.github.io/images/wangyi/node/1.2.2_13.png"><br><img src="https://snakexu.github.io/images/wangyi/node/1.2.2_14.png"><br><img src="https://snakexu.github.io/images/wangyi/node/1.2.2_15.png"><br>3-4.业务场景<br>·不适用场景<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.2_16.png"><br>·适用场景<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.2_17.png"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/04/22/网易微专业-node-1-2-2-异步编程的优势与难点/" data-id="ckdbzsiic002jjrxqsiyj7njt" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-node-1-2-1-异步I-O实现现状" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/04/21/网易微专业-node-1-2-1-异步I-O实现现状/" class="article-date">
+  <time datetime="2020-04-21T07:34:37.000Z" itemprop="datePublished">2020-04-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/04/21/网易微专业-node-1-2-1-异步I-O实现现状/">网易微专业-node-1.2.1-异步I/O实现现状</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.模块化概述<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.1_1.png"><br><img src="https://snakexu.github.io/images/wangyi/node/1.2.1_2.png"><br>1-1.CommonJs特点<br><img src="https://snakexu.github.io/images/wangyi/node/1.2.1_3.png"><br>a.js</p>
+<pre>
+let name = 'evan'
+let getName = function(name){
+    console.log(name)
+}
+module.exports = {
+    name:name,
+    getName:getName
+}
+</pre>
+b.js
+<pre>
+let person = require('a.js')
+console.log(person)
+console.log(person.name)
+person.getName('study163')
+person.name = 'updateName'
+console.log(person)
+</pre>
+执行结果
+<img src="https://snakexu.github.io/images/wangyi/node/1.2.1_4.png">
+2.module对象详解
+2-1.module对象的属性
+<img src="https://snakexu.github.io/images/wangyi/node/1.2.1_5.png">
+03-module.js
+<pre>
+module.exports = {
+    name:'evan',
+    getName:function(name){
+        console.log(name)
+    }
+}
+console.log(module)
+</pre>
+执行结果
+<img src="https://snakexu.github.io/images/wangyi/node/1.2.1_6.png">
+2-2.模块分类
+2-2-1.核心模块
+<img src="https://snakexu.github.io/images/wangyi/node/1.2.1_7.png">
+2-2-2.文件模块
+<img src="https://snakexu.github.io/images/wangyi/node/1.2.1_8.png">
+2-3.module.exports与exports
+<img src="https://snakexu.github.io/images/wangyi/node/1.2.1_9.png">
+04-exports-module-exports.js
+<pre>
+var module = {
+    exports:{}
+}
+var exports = module.exports
+function change(exports){
+    //通过形参的方式传入的exports
+    exports.name = 'evan';
+    exports={
+        age:18
+    }
+    console.log(exports)
+}
+change(exports)
+console.log(module.exports)
+</pre>
+执行结果
+<img src="https://snakexu.github.io/images/wangyi/node/1.2.1_10.png">
+要注意的是在change函数中exports={}，相当于改变了change函数中形参exports的指向；而如果用module.exports={}这样赋值就解决了(其实个人以为这就是对象指针指向问题，另外change函数对exports的赋值还说明了参数是传值而不是传引用的)
+3.require方法详解
+3-1.模块引入规则
+<img src="https://snakexu.github.io/images/wangyi/node/1.2.1_11.png">
+3-2.加载步骤
+(1)路径分析(模块标识符分析)
+·核心模块
+·以'./'或者'../'开始的相对路径文件模块
+·以/开始的绝对路径模块
+·非路径形式的模块
+(2)文件定位
+·扩展名分析
+·目标文件和包分析
+(3)编译执行
+3-3.
+<pre>
+//a、b引入同一个对象
+var a = require('aa.js');
+var b = require('aa.js')
+console.log(a===b)//true 
+//在a引入aa.js之后，aa.js会在缓存中，b=require('aa.js')再次引入则是在缓存中查找，所以a===b
+</pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/04/21/网易微专业-node-1-2-1-异步I-O实现现状/" data-id="ckdbzsiic002kjrxqtx5kaqdp" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业福利期-3-2-Event-Loop机制" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/04/20/网易微专业福利期-3-2-Event-Loop机制/" class="article-date">
+  <time datetime="2020-04-20T09:28:59.000Z" itemprop="datePublished">2020-04-20</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/04/20/网易微专业福利期-3-2-Event-Loop机制/">网易微专业福利期-3.2-Event Loop机制</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.浏览器的Event Loop<br>异步实现:<br>(1)宏观:浏览器多线程<br>(2)微观:Event Loop事件循环</p>
+<p><pre><br>console.log(‘1’);<br>setTimeout(function(){<br>    console.log(‘2’)<br>},0)<br>Promise.resolve().then(function(){<br>    console.log(‘3’)<br>})<br>console.log(‘4’)<br>//143undefined2<br></pre><br><img src="https://snakexu.github.io/images/fuliqi/javascript/3.2_1.png"><br><img src="https://snakexu.github.io/images/fuliqi/javascript/3.2_2.png"><br><img src="https://snakexu.github.io/images/fuliqi/javascript/3.2_3.png"></p>
+<p><pre><br>console.log(‘start’);<br>setTimeout(()=&gt;{<br>    console.log(‘setTimeout’);<br>    new Promise(resolve=&gt;{<br>        console.log(‘promise inner1’);<br>        resolve();<br>    }).then(()=&gt;{<br>        console.log(‘promise then1’)<br>    })<br>},0)<br>new Promise(resolve=&gt;{<br>    console.log(‘promise inner2’);<br>    resolve();<br>}).then(()=&gt;{<br>        console.log(‘promise then2’)<br>})<br></pre><br>上面代码的运行结果<br><img src="https://snakexu.github.io/images/fuliqi/javascript/3.2_4.png"></p>
+<p><pre><br>async function async1(){<br>    console.log(‘async1 start’)<br>    await async2()<br>    console.log(‘async1 end’)<br>}<br>async function async2(){<br>    return Promise.resolve().then(_=&gt;{<br>        console.log(‘async2 promise’)<br>    })<br>}<br>console.log(‘start’)<br>setTimeout(function(){<br>    console.log(‘setTimeout’)<br>},0)<br>async1()<br>new Promise(function(resolve){<br>    console.log(‘promise1’)<br>    resolve()<br>}).then(function(){<br>    console.log(‘promise2’)<br>})<br></pre><br>上面代码的运行结果<br><img src="https://snakexu.github.io/images/fuliqi/javascript/3.2_5.png"><br>2.Node.js的Event Loop<br><img src="https://snakexu.github.io/images/fuliqi/javascript/3.2_6.png"><br><img src="https://snakexu.github.io/images/fuliqi/javascript/3.2_7.png"><br><img src="https://snakexu.github.io/images/fuliqi/javascript/3.2_8.png"><br><img src="https://snakexu.github.io/images/fuliqi/javascript/3.2_9.png"></p>
+<p><pre><br>const fs = require(‘fs’)<br>function someAsyncOperation(callback){<br>    fs.readFile(__dirname,callback);<br>}<br>const timeoutScheduled = Date.now()<br>setTimeout(()=&gt;{<br>    const delay = Date.now() - timeoutScheduled;<br>    console.log(<code>${delay}ms have passed since I was scheduled</code>)<br>},100)<br>someAsyncOperation(()=&gt;{<br>    const startCallback = Date.now();<br>    while(Date.now() - startCallback &lt; 200){<br>        //do something<br>    }<br>})<br></pre><br>上面代码执行结果<br><img src="https://snakexu.github.io/images/fuliqi/javascript/3.2_10.png"></p>
+<p><pre><br>const fs = require(‘fs’)<br>fs.readFile(__filename,<em>=&gt;{<br>    setTimeout(</em>=&gt;{<br>        console.log(‘setTimeout’)<br>    },0)<br>    setImmediate(_=&gt;{<br>        console.log(‘setImmediate’)<br>    })<br>})<br></pre><br>上面代码执行结果<br><img src="https://snakexu.github.io/images/fuliqi/javascript/3.2_11.png"><br><img src="https://snakexu.github.io/images/fuliqi/javascript/3.2_12.png"></p>
+<p><pre><br>const fs = require(‘fs’)<br>fs.readFile(__filename,<em>=&gt;{<br>    setTimeout(</em>=&gt;{<br>        console.log(‘setTimeout’)<br>    },0)<br>    setImmediate(<em>=&gt;{<br>        console.log(‘setImmediate’)<br>        process.nextTick(</em>=&gt;{<br>            console.log(‘nextTick2’)<br>        })<br>    })<br>    process.nextTick(_=&gt;{<br>        console.log(‘nextTick1’)<br>    })<br>})<br></pre><br>上面代码执行结果<br><img src="https://snakexu.github.io/images/fuliqi/javascript/3.2_13.png"><br>nextTick会让整个event loop停下来，先把nextTick中的callback执行完之后再继续event loop</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/04/20/网易微专业福利期-3-2-Event-Loop机制/" data-id="ckdbzsijg003xjrxq7did67u7" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-网易微专业福利期-2-6-常用函数" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/04/19/网易微专业福利期-2-6-常用函数/" class="article-date">
@@ -196,7 +441,7 @@ rst(2);//3
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/04/19/网易微专业福利期-2-6-常用函数/" data-id="ckchm0rgz004k5ajh69xpjc99" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/04/19/网易微专业福利期-2-6-常用函数/" data-id="ckdbzsijf003ujrxqiwy2pyan" class="article-share-link">Share</a>
       
       
     </footer>
@@ -323,7 +568,7 @@ foo('hello',callback);
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/04/19/网易微专业福利期-2-5-高阶函数/" data-id="ckchm0rh0004q5ajhmax6376d" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/04/19/网易微专业福利期-2-5-高阶函数/" data-id="ckdbzsijh0041jrxqasu2l3u2" class="article-share-link">Share</a>
       
       
     </footer>
@@ -365,7 +610,7 @@ foo('hello',callback);
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/04/17/网易微专业福利期-2-4-compose函数和pipe函数/" data-id="ckchm0rgy004h5ajhmmqzwt83" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/04/17/网易微专业福利期-2-4-compose函数和pipe函数/" data-id="ckdbzsijd003qjrxqoub3h2q6" class="article-share-link">Share</a>
       
       
     </footer>
@@ -402,7 +647,7 @@ foo('hello',callback);
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/04/16/网易微专业-node-1-1-9-通信协议/" data-id="ckchm0rgc00375ajhbjo5jins" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/04/16/网易微专业-node-1-1-9-通信协议/" data-id="ckdbzsiib002hjrxqfir0krw0" class="article-share-link">Share</a>
       
       
     </footer>
@@ -439,7 +684,7 @@ foo('hello',callback);
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/04/15/网易微专业-node-1-1-8-MySQL入门与应用/" data-id="ckchm0rgb00365ajhtar0jhv5" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/04/15/网易微专业-node-1-1-8-MySQL入门与应用/" data-id="ckdbzsiib002ijrxqprjhkcqj" class="article-share-link">Share</a>
       
       
     </footer>
@@ -478,230 +723,7 @@ foo('hello',callback);
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/04/14/网易微专业-node-1-1-7-MongoDB入门与应用/" data-id="ckchm0rga00355ajhuhsidhst" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-node-1-1-6-Redis入门及应用" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/04/13/网易微专业-node-1-1-6-Redis入门及应用/" class="article-date">
-  <time datetime="2020-04-13T05:22:33.000Z" itemprop="datePublished">2020-04-13</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/04/13/网易微专业-node-1-1-6-Redis入门及应用/">网易微专业-node-1.1.6-Redis入门及应用</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.Redis简介<br>1-1.Redis简介<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.6_1.png"><br>1-2.Redis与其他数据库及软件的对比<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.6_2.png"><br>2.Redis安装及配置<br>2-1.安装<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.6_3.png"><br>Redis最好不要在windows中安装，可以在windows中使用客户端<br>官网:<a href="https://redis.io/" target="_blank" rel="noopener">https://redis.io/</a><br>下载并解压安装包，进入解压缩目录的根目录，make MALLOC=libc，执行make install<br>Redis启动方式<br>(1)直接启动<br>按照老师的安装方式，可以在任何目录下输入redis-server启动redis服务。但是这种启动方式，并不能在后台挂载起来，只能在命令行使用<br>(2)cd /tmp/redis安装目录，找到目录下的redis.conf文件，vim redis.conf，找到文件内daemonize no，改成daemonize yes，:wq保存退出文件，并且将文件拷贝，例如拷贝到/etc/文件夹下，就是执行命令cp /etc/redis.conf，启动redis-server /etc/redis.conf，这时候查看启动进程ps -ef|grep redis,，如下图<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.6_5.png"><br>可以看到该进程号为2395，关闭这样启动的redis可以使用命令kill -9 2395<br>(3)进入/tmp/redis安装目录，进入安装目录下的utils文件夹，找到install_server.sh，vim install_server.sh查看这个文件，发现是个命令行文件，./install_server.sh，会让你进行一系列配置，可以选择默认，老师进行了如下配置<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.6_6.png"><br>进程提示已经安装成功，我们试图关闭，执行service redis_6379 stop命令，如果发现并不能关闭，那么我们需要rm /var/run/redis_6379.pid，再次启动redis就能启动了service redis_6379 start，如果需要配置开机启动:systemctl enable redis_6379<br>2-2.Redis常用配置<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.6_7.png"><br>bind:只有bind指定的才能链接<br>protectd-mode:默认是开启的，如果没有指定bind和masterauth那么开启这个参数，redis只能在本地进行访问，会拒绝外部访问。如果把bind解除但是没有开masterauth，可以链接上redis，但是不能进行操作<br>3.Redis数据结构及应用<br>3-1.Redis提供的五种结构<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.6_4.png"><br>3-2.Redis在Node.js中的应用<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.6_8.png"></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/04/13/网易微专业-node-1-1-6-Redis入门及应用/" data-id="ckchm0rg900335ajhzibabtmk" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-node-1-1-5-Nginx反向代理-静态资源服务" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/04/12/网易微专业-node-1-1-5-Nginx反向代理-静态资源服务/" class="article-date">
-  <time datetime="2020-04-12T06:55:28.000Z" itemprop="datePublished">2020-04-12</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/04/12/网易微专业-node-1-1-5-Nginx反向代理-静态资源服务/">网易微专业-node-1.1.5-Nginx反向代理 静态资源服务</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.Nginx简介<br>1-1.简介<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.5_1.png"><br>1-2.选择Nginx的理由<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.5_2.png"><br>2.Nginx安装与配置<br>2-1.Nginx安装前准备<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.5_3.png"><br><a href="http://nginx.org/" target="_blank" rel="noopener">http://nginx.org/</a> Nginx官网<br>2-2.Nginx编译安装<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.5_4.png"><br>2-3.Nginx配置与优化<br>·配置文件结构<br>·虚拟主机配置<br>·日志配置与切割<br>·压缩输出配置<br>···<br>基本配置文件位于cd /usr/local/nginx/conf/，下面列表的nginx的主配置文件是vim nginx.conf(vim是查看文件内容命令)，下面几个图是关于nginx.conf的介绍<br>(1)全局区域<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.5_5.png"><br>在全局区域可以做一些全局的设置，比如#user nobody是一个用户和一个组，user www(一个用户) www(一个组);(这个分号是nginx配置文件后面要加分号结尾)</p>
-<pre>
-#使用的用户和组
-#user nobody;
-#指定工作衍生的进程
-worker_processes 1;
-#指定错误日志的存放路径
-#error_log logs/error.log;
-#error_log logs/error.log notice;
-#error_log logs/error.log info;
-#pid nginx启动起来之后的主进程ID
-#pid       logs/nginx.pid;
-#指定使用的网络I/O模型
-events {
-    worker_connections 1024;//允许的最大连接数
-}
-</pre>
-(2)event区域
-<img src="https://snakexu.github.io/images/wangyi/node/1.1.5_6.png">
-(3)http区域(http区域其实是从event区域下面开始到最后，这里截图只有一部分)
-<img src="https://snakexu.github.io/images/wangyi/node/1.1.5_7.png">
-log_format是用来设置日志的格式，放在http中是全局的，如下图；如果放在http中的server中则表示单个的server的作用
-<img src="https://snakexu.github.io/images/wangyi/node/1.1.5_8.png">
-access_log是用来指定日志的格式、存放路径、缓存大小
-2-4.gzip压缩
-nginx采用的是gzip的压缩，gzip可以压缩到原来大小的30%。进行gzip压缩需要浏览器和服务端都支持。首先由服务端进行压缩，把压缩文件传输到浏览器，浏览器对gizp文件进行解压并且解析，目前为止大部分的浏览器对gzip都是支持的。
-关于配置gzip，首先在上面nginx.conf文件中开启gzip on
-<pre>
-gzip on;//开启gzip支持
-gzip_min_length 1k;//gzip的最小长度
-gzip_buffers 4 16k;
-gzip_http_version 1.1;//gzip默认支持的http协议是1.0版本
-gzip_comp_level 2;
-gzip_types text/plain application/x-javascript text/css application/xml;//设置gzip支持的压缩文件类型
-gzip_vary on;
-</pre>
-3.Nginx高级应用
-3-1.Rewrite重写
-<img src="https://snakexu.github.io/images/wangyi/node/1.1.5_9.png">
-首先还是打开conf/nginx.conf文件，找到location
-<pre>
-location / {
-    root html;
-    rewrite ^(.*).htmp$ /rewrite.html;//把htmp结尾的文件重定向到rewrite.html
-    index index.html index.htm;
-}
-</pre>
-3-2.代理与反向代理
-代理就是代理的是客户端；反向代理代理的是服务端
-<img src="https://snakexu.github.io/images/wangyi/node/1.1.5_10.png">
-反向代理配置
-打开文件 /usr/local/nginx/conf/nginx.conf
-<pre>
-server {
-    #端口
-    listen 80;
-    #主机名
-    server_name daili.com;
-    location / {
-        //http地址也可以写下面upstream中的名字http://myserver，这样相当于一个域名配置多个服务器，即负载均衡
-        proxy_pass http://192.168.2.114:8080;
-        index index.html index.php;
-    }
-}
-</pre>
-<!--执行nginx -t命令-->
-3-3.负载均衡
-<img src="https://snakexu.github.io/images/wangyi/node/1.1.5_11.png">
-nginx自带的负载均衡是轮寻的方式。负载均衡就是一个服务器别名可以放多个服务器
-配置负载均衡
-打开文件 /usr/local/nginx/conf/nginx.conf，在http中配置下面代码
-<pre>
-upstream myserver {
-    server 192.168.2.114:8080
-    server 192.168.2.114:8081
-}
-</pre>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/04/12/网易微专业-node-1-1-5-Nginx反向代理-静态资源服务/" data-id="ckchm0rga00345ajhb39llkpy" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-node-1-1-3-Linux快速上手玩转典型应用" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/04/11/网易微专业-node-1-1-3-Linux快速上手玩转典型应用/" class="article-date">
-  <time datetime="2020-04-11T02:40:28.000Z" itemprop="datePublished">2020-04-11</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/04/11/网易微专业-node-1-1-3-Linux快速上手玩转典型应用/">网易微专业-node-1.1.3-Linux快速上手玩转典型应用</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.Linux简介<br>1-1.Linux简介<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.3_1.png"><br>1-2.Linux应用领域<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.3_2.png"><br>1-3.Linux安装<br>1-3-1.安装虚拟机<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.3_3.png"><br>1-3-2.安装CentOS-7<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.3_4.png"><br>2.常用命令<br>2-1.查看ip<br>ifconfig mini版没有安装此命令，需要自己安装<br>ip addr  显示ip信息<br>2-2.yum命令<br>·yum是一个在CentOS中shell前端软件包管理器<br>·yum update  更新所有的软件<br>·yum install 安装指定的软件<br>·yum remove  删除指定的软件<br>···<br>yum install net-tools可以安装上面提到过的ifconfig(ifconfig包含在net-tools中)。但是执行安装程序需要连网，在虚拟机里就是要设置网络和IP等，需要设置一个文件，再在虚拟机选项中选择桥接模式，再重启虚拟机。<br>2-3.vi/vim命令<br>·命令模式<br> ·i 切换到输入模式<br> ·x 删除当前光标所在处字符<br> ·: 切换到底线命令模式<br>·输入模式<br>·底线命令模式<br> ·q 推出程序<br> ·w 保存文件<br> ·set number 显示行号<br> 2-4.系统信息<br> ·free -m 内存信息<br> ·df -h   硬盘信息<br> ·cat/proc/cpuinfo cpu信息<br> ···<br> 2-5.文件系统<br> ·cd 进入目录<br> ·ls 列出目录信息，ls-al(ll)列出详细信息<br> ·touch 新建文件<br> ·mkdir 新建目录<br> ·rm 删除文件或目录<br> ·cp 复制<br> ·mv 移动(重命名)<br> ···<br> 2-6.搜索、查找、读取<br> ·tail 从文件尾部读取<br> ·head 从文件头部读取<br> ·cat  读取整个文件<br> ·more/less 分页读取<br> ·grep 搜索关键字<br> ·find 查找文件<br> ·| 通过管道传递命令<br> ···<br> 2-7.压缩和解压<br> ·tar 用于压缩和解压<br> ·tar -czvf 打包压缩<br> ·tar -tzvf 列出压缩文件内容<br> ·tar -xzvf 解压文件<br> ···<br> 2-8.用户操作<br> ·useradd/adduser 添加用户<br> ·passwd 设置密码<br> ·userdel 删除用户<br> ·sudo 提权<br> 2-9.更换yum源<br> <img src="https://snakexu.github.io/images/wangyi/node/1.1.3_5.png"><br> 这里需要通过wget将cent-os下载到本地，如果没有安装wget需要先安装wget，那么上面图中第一步的备份就先不要做，要先安装wget<br> <a href="http://mirrors.163.com/.help/centos.html" target="_blank" rel="noopener">http://mirrors.163.com/.help/centos.html</a> 网易Cent-OS的镜像<br>3.玩转典型应用<br>3-1.防火墙<br>3-1-1.服务设置<br>(1)安装 yum install firewalld<br>(2)启动 service firewalld start<br>(3)检查服务状态 service firewalld status<br>(4)关闭/禁用 service firewalld stop/disabled<br>3-1-2.防火墙设置<br>·查询服务 firewall-cmd –list-services<br>·查询开放端口 firewall-cmd –list-ports<br>·查询端口 firewall-cmd –quert-port=80/tcp<br>·添加开放端口 firewall-cmd –add-port=3306/tcp<br>3-2.Apache<br>3-2-1.服务设置<br>·安装 yum install httpd<br>·启动 service httpd start<br>·检查服务状态 service httpd status<br>·关闭/重启 service httpd stop/restart<br>ps -ef 可以查看正在运行的进程<br>ps -ef | grep httpd 查看http进程<br>3-2-2.Apache设置<br>·虚拟主机设置<br>·伪静态操作<br>cd /etc/httpd<br>cd conf<br>vim httpd.conf<br>可以另外开一个窗口，看一下http服务相关的<br>cd /etc/httpd/<br>ll<br>可以看到列表中conf.modules.d是所有模块<br>这里还教了如何配置虚拟主机，也就是一个服务器上可以放置多个网站<br>伪静态就是类似于我们看到的博客详细页面是.html结尾的，但是这只是在服务器上设置的，并非是真的每篇文章一个静态.html文件，这个设置需要在服务器上设置，本节课也有讲到<br>3-2-3.PHP<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.3_6.png"><br>3-3.MySQL<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.3_7.png"></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/04/11/网易微专业-node-1-1-3-Linux快速上手玩转典型应用/" data-id="ckchm0rg800325ajh8085ox96" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-node-1-1-2-Node-js原理-基础API-搭建静态服务器" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/04/10/网易微专业-node-1-1-2-Node-js原理-基础API-搭建静态服务器/" class="article-date">
-  <time datetime="2020-04-10T07:28:16.000Z" itemprop="datePublished">2020-04-10</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/04/10/网易微专业-node-1-1-2-Node-js原理-基础API-搭建静态服务器/">网易微专业-node-1.1.2-Node.js原理/基础API/搭建静态服务器</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.Node.js原理<br>1-1.Node.js简介<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.2_1.png"><br><img src="https://snakexu.github.io/images/wangyi/node/1.1.2_2.png"><br>1-2.开发平台<br>什么是开发平台<br>·有对应的编程语言<br>·要有语言运行时<br>·必须要有实现特定功能API<br>1-3.Node.js特点<br>·事件驱动<br>·非阻塞I/O模型<br>·单线程<br>·拥有世界上最大的开源系统(NPM)<br>另外，node.js开发的网站应用是不需要web容器的，因为它本身就是一个web容器<br>1-4.Node安装与管理<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.2_3.png"><br>2.基础API<br>2-1.path(路径)<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.2_4.png"><br>2-2.fs(文件系统)<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.2_5.png"><br>2-3.http(HTTP服务)<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.2_6.png"><br>3.搭建静态服务器<br>3-1.开启http服务步骤<br><img src="https://snakexu.github.io/images/wangyi/node/1.1.2_7.png"></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/04/10/网易微专业-node-1-1-2-Node-js原理-基础API-搭建静态服务器/" data-id="ckchm0rg800315ajhzfhmmeid" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/04/14/网易微专业-node-1-1-7-MongoDB入门与应用/" data-id="ckdbzsiie002njrxq240ghh1z" class="article-share-link">Share</a>
       
       
     </footer>
@@ -768,23 +790,23 @@ upstream myserver {
       <ul>
         
           <li>
+            <a href="/2020/07/29/拉勾-规范化标准/">拉勾-规范化标准</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/28/拉勾-其他打包工具/">拉勾-其他打包工具</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/17/拉勾-Webpack打包/">拉勾-Webpack打包</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/15/拉勾-模块化开发/">拉勾-模块化开发</a>
+          </li>
+        
+          <li>
             <a href="/2020/07/08/拉勾-自动化构建/">拉勾-自动化构建</a>
-          </li>
-        
-          <li>
-            <a href="/2020/07/03/拉勾-脚手架工具/">拉勾-脚手架工具</a>
-          </li>
-        
-          <li>
-            <a href="/2020/07/03/拉勾-工程化概述/">拉勾-工程化概述</a>
-          </li>
-        
-          <li>
-            <a href="/2020/06/28/拉勾-JavaScript性能优化/">拉勾-JavaScript性能优化</a>
-          </li>
-        
-          <li>
-            <a href="/2020/06/26/拉勾-TypeScript语言/">拉勾-TypeScript语言</a>
           </li>
         
       </ul>

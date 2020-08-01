@@ -62,6 +62,879 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-网易微专业-移动端APP开发工程师-微信小程序-3-1-1-创建微信小程序项目" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/20/网易微专业-移动端APP开发工程师-微信小程序-3-1-1-创建微信小程序项目/" class="article-date">
+  <time datetime="2020-06-20T00:51:32.000Z" itemprop="datePublished">2020-06-20</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/20/网易微专业-移动端APP开发工程师-微信小程序-3-1-1-创建微信小程序项目/">网易微专业-移动端APP开发工程师-微信小程序-3.1.1-创建微信小程序项目</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>这里主要讲解了一下注册小程序账号，下载微信开发者工具，初步了解开发者工具，所以不赘述。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/20/网易微专业-移动端APP开发工程师-微信小程序-3-1-1-创建微信小程序项目/" data-id="ckdbzsijd003pjrxqodt77lmu" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/微信小程序/">微信小程序</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/网易微专业/">网易微专业</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-拉勾-手写Promise源码" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/18/拉勾-手写Promise源码/" class="article-date">
+  <time datetime="2020-06-18T00:56:08.000Z" itemprop="datePublished">2020-06-18</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/18/拉勾-手写Promise源码/">拉勾-手写Promise源码</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.Promise类核心逻辑的实现<br>首先我们来分析一下Promise的一些特性:<br>·Promise就是一个类，在执行这个类的时候需要传递一个执行器进去，执行器会立即执行<br>·Promise中有三种状态，分别为 等待-pending 成功-fulfilled 失败-rejected<br>  pending -&gt; fulfilled<br>  pending -&gt; rejected<br>  一旦状态确定就不可更改<br>·resolve和reject函数是用来更改状态的<br>  resolve:fulfilled<br>  reject:rejected<br>·then方法内部做的事情就是判断状态。如果状态是成功，调用成功的回调函数；如果状态是失败，调用失败的回调函数。then方法是被定义在原型对象中的<br>·then成功回调有一个参数，表示成功之后的值；then失败回调有一个参数，表示失败后的原因<br>下面开始用代码实现这些功能(也就是模拟promise的实现)<br>myPromise.js</p>
+<pre>
+//把状态定义成常量，编辑器会有提示，同时也有利于代码的复用
+const PENDING = 'pending' //等待
+const FULFILLED = 'fulfilled' //成功
+const REJECTED = 'rejected' //失败
+class myPromise{
+    constructor(executor){
+        //接收执行器，并且这个执行器是立即执行的
+        executor(this.resolve,this.reject)
+    }
+    //promise状态
+    status = PENDING;
+    //每一个promise对象成功之后都有自己成功的值
+    value = undefined;
+    //每一个promise对象失败之后都有自己失败的原因
+    reason = undefined;
+    //定义成箭头函数是因为箭头函数在定义的时候就确定this的指向
+    resolve = value => {
+        //如果状态不是等待，阻止程序向下执行
+        if(this.status !== PENDING) return ;
+        //将状态更改为成功
+        this.status = FULFILLED
+        //保存成功之后的值
+        this.value = value
+    }
+    reject = reason => {
+        //如果状态不是等待，阻止程序向下执行
+        if(this.status !== PENDING) return ;
+        //将状态更改为失败
+        this.status = REJECTED
+        //保存失败之后的原因
+        this.reason = reason
+    }
+    then(successCallback,failCallback){
+        //判断状态
+        if(this.status === FULFILLED){
+            successCallback(this.value)
+        }else if(this.status === REJECTED){
+            failCallback(this.reason)
+        }
+    }
+}
+module.exports = myPromise;
+</pre>
+index.js
+<pre>
+const myPromise = require('./myPromise')
+const promise = new myPromise((resolve,reject)=>{
+    //resolve('成功')
+    reject('失败')
+})
+promise.then(value=>{
+    console.log(value)
+},reason =>{
+    console.log(reason)
+})
+</pre>
+2.在Promise类中加入异步逻辑
+myPromise.js
+<pre>
+//把状态定义成常量，编辑器会有提示，同时也有利于代码的复用
+const PENDING = 'pending' //等待
+const FULFILLED = 'fulfilled' //成功
+const REJECTED = 'rejected' //失败
+class myPromise{
+    constructor(executor){
+        //接收执行器，并且这个执行器是立即执行的
+        executor(this.resolve,this.reject)
+    }
+    //promise状态
+    status = PENDING;
+    //每一个promise对象成功之后都有自己成功的值
+    value = undefined;
+    //每一个promise对象失败之后都有自己失败的原因
+    reason = undefined;
+    //成功回调
+    successCallback = undefined;
+    //失败回调
+    failCallback = undefined;
+    //定义成箭头函数是因为箭头函数在定义的时候就确定this的指向
+    resolve = value => {
+        //如果状态不是等待，阻止程序向下执行
+        if(this.status !== PENDING) return ;
+        //将状态更改为成功
+        this.status = FULFILLED
+        //保存成功之后的值
+        this.value = value
+        //判断成功回调是否存在，如果存在就调用
+        this.successCallback && this.successCallback(this.value)
+    }
+    reject = reason => {
+        //如果状态不是等待，阻止程序向下执行
+        if(this.status !== PENDING) return ;
+        //将状态更改为失败
+        this.status = REJECTED
+        //保存失败之后的原因
+        this.reason = reason
+        //判断失败回调是否存在，如果存在就调用
+        this.failCallback && this.failCallback(this.reason)
+    }
+    then(successCallback,failCallback){
+        //判断状态
+        if(this.status === FULFILLED){
+            successCallback(this.value)
+        }else if(this.status === REJECTED){
+            failCallback(this.reason)
+        }else{
+            //走到这里证明当前状态是等待pending
+            //将成功回调和失败回调存储起来
+            this.successCallback = successCallback
+            this.failCallback = failCallback
+        }
+    }
+}
+module.exports = myPromise;
+</pre>
+index.js
+<pre>
+const myPromise = require('./myPromise')
+const promise = new myPromise((resolve,reject)=>{
+    setTimeout(()=>{
+        resolve('成功')
+    },2000)
+    // reject('失败')
+})
+promise.then(value=>{
+    console.log(value)
+},reason =>{
+    console.log(reason)
+})
+</pre>
+3.实现then方法多次调用添加多个处理函数
+同一个promise对象下面的then方法是可以被多次调用的，当then方法被多次调用，每一次then方法当中传递的回调函数都是要被执行的，如何执行呢？
+myPromise.js
+<pre>
+//把状态定义成常量，编辑器会有提示，同时也有利于代码的复用
+const PENDING = 'pending' //等待
+const FULFILLED = 'fulfilled' //成功
+const REJECTED = 'rejected' //失败
+class myPromise{
+    constructor(executor){
+        //接收执行器，并且这个执行器是立即执行的
+        executor(this.resolve,this.reject)
+    }
+    //promise状态
+    status = PENDING;
+    //每一个promise对象成功之后都有自己成功的值
+    value = undefined;
+    //每一个promise对象失败之后都有自己失败的原因
+    reason = undefined;
+    //成功回调
+    successCallback = [];//数组才可以存储多个可能的then方法的回调函数，failCallback同理
+    //失败回调
+    failCallback = [];
+    //定义成箭头函数是因为箭头函数在定义的时候就确定this的指向
+    resolve = value => {
+        //如果状态不是等待，阻止程序向下执行
+        if(this.status !== PENDING) return ;
+        //将状态更改为成功
+        this.status = FULFILLED
+        //保存成功之后的值
+        this.value = value
+        //判断成功回调是否存在，如果存在就调用
+        //this.successCallback && this.successCallback(this.value)//用数组存储回调事件，这里就不能再用了
+        while(this.successCallback.length){
+            this.successCallback.shift()(this.value)
+        }
+    }
+    reject = reason => {
+        //如果状态不是等待，阻止程序向下执行
+        if(this.status !== PENDING) return ;
+        //将状态更改为失败
+        this.status = REJECTED
+        //保存失败之后的原因
+        this.reason = reason
+        //判断失败回调是否存在，如果存在就调用
+        //this.failCallback && this.failCallback(this.reason)
+        while(this.failCallback.length){
+            this.failCallback.shift()(this.reason)
+        }
+    }
+    then(successCallback,failCallback){
+        //判断状态
+        if(this.status === FULFILLED){
+            successCallback(this.value)
+        }else if(this.status === REJECTED){
+            failCallback(this.reason)
+        }else{
+            //走到这里证明当前状态是等待pending
+            //将成功回调和失败回调存储起来
+            this.successCallback.push(successCallback)
+            this.failCallback.push(failCallback)
+        }
+    }
+}
+module.exports = myPromise;
+</pre>
+index.js
+<pre>
+const myPromise = require('./myPromise')
+const promise = new myPromise((resolve,reject)=>{
+    // setTimeout(()=>{
+    //     resolve('成功')
+    // },2000)
+    resolve('成功')
+    // reject('失败')
+})
+promise.then(value=>{
+    console.log(1)
+    console.log(value)
+},reason => {
+    console.log(reason)
+})
+promise.then(value=>{
+    console.log(2)
+    console.log(value)
+},reason => {
+    console.log(reason)
+})
+promise.then(value=>{
+    console.log(3)
+    console.log(value)
+},reason => {
+    console.log(reason)
+})
+</pre>
+4.实现then方法的链式调用(一) && 5.实现then方法的链式调用(二)
+myPromise.js
+<pre>
+//把状态定义成常量，编辑器会有提示，同时也有利于代码的复用
+const PENDING = 'pending' //等待
+const FULFILLED = 'fulfilled' //成功
+const REJECTED = 'rejected' //失败
+class myPromise{
+    constructor(executor){
+        //接收执行器，并且这个执行器是立即执行的
+        executor(this.resolve,this.reject)
+    }
+    //promise状态
+    status = PENDING;
+    //每一个promise对象成功之后都有自己成功的值
+    value = undefined;
+    //每一个promise对象失败之后都有自己失败的原因
+    reason = undefined;
+    //成功回调
+    successCallback = [];//数组才可以存储多个可能的then方法的回调函数，failCallback同理
+    //失败回调
+    failCallback = [];
+    //定义成箭头函数是因为箭头函数在定义的时候就确定this的指向
+    resolve = value => {
+        //如果状态不是等待，阻止程序向下执行
+        if(this.status !== PENDING) return ;
+        //将状态更改为成功
+        this.status = FULFILLED
+        //保存成功之后的值
+        this.value = value
+        //判断成功回调是否存在，如果存在就调用
+        //this.successCallback && this.successCallback(this.value)//用数组存储回调事件，这里就不能再用了
+        while(this.successCallback.length){
+            this.successCallback.shift()(this.value)
+        }
+    }
+    reject = reason => {
+        //如果状态不是等待，阻止程序向下执行
+        if(this.status !== PENDING) return ;
+        //将状态更改为失败
+        this.status = REJECTED
+        //保存失败之后的原因
+        this.reason = reason
+        //判断失败回调是否存在，如果存在就调用
+        //this.failCallback && this.failCallback(this.reason)
+        while(this.failCallback.length){
+            this.failCallback.shift()(this.reason)
+        }
+    }
+    then(successCallback,failCallback){
+        let promise2 = new myPromise((resolve,reject) => {
+            //判断状态
+            if(this.status === FULFILLED){
+                let  x = successCallback(this.value);
+                //resolve(x)
+                //判断x的值是普通值还是promise对象
+                //如果是普通值，直接resolve
+                //如果是promise对象，查看promise对象返回的结果
+                //再根据promise对象返回的结果，决定调用resolve还是reject
+                resolvePromise(x, resolve, reject)
+            }else if(this.status === REJECTED){
+                failCallback(this.reason)
+            }else{
+                //走到这里证明当前状态是等待pending
+                //将成功回调和失败回调存储起来
+                this.successCallback.push(successCallback)
+                this.failCallback.push(failCallback)
+            }
+        });
+        return promise2 
+    }
+}
+function resolvePromise(x, resolve, reject){
+    if(x instanceof myPromise){
+        //promise对象
+        //x.then(value=>resolve(value),reason=>reject(reason))
+        x.then(resolve,reject)
+    }else{
+        //普通值
+        resolve(x)
+    }
+}
+module.exports = myPromise;
+</pre>
+index.js
+<pre>
+const myPromise = require('./myPromise')
+const promise = new myPromise((resolve,reject)=>{
+    resolve('成功')
+    // reject('失败')
+})
+function other(){
+    return new myPromise((resolve,reject)=>{
+        resolve('other')
+    })
+}
+promise.then(value=>{
+    console.log(value)
+    return other()
+}).then(value =>{
+    console.log(value)
+})
+</pre>
+6.then方法链式调用识别Promise对象返回自
+如果循环调用本身的promise对象，如下面代码
+<pre>
+var promise = new Promise(function(resolve,reject){
+    resolve(100)
+})
+var p1 = promise.then(function(value)=>{
+    console.log(value)
+    p1
+})
+</pre>
+那么程序是会报错的，我们如何判断这种情况呢
+<pre>
+//把状态定义成常量，编辑器会有提示，同时也有利于代码的复用
+const PENDING = 'pending' //等待
+const FULFILLED = 'fulfilled' //成功
+const REJECTED = 'rejected' //失败
+class myPromise{
+    constructor(executor){
+        //接收执行器，并且这个执行器是立即执行的
+        executor(this.resolve,this.reject)
+    }
+    //promise状态
+    status = PENDING;
+    //每一个promise对象成功之后都有自己成功的值
+    value = undefined;
+    //每一个promise对象失败之后都有自己失败的原因
+    reason = undefined;
+    //成功回调
+    successCallback = [];//数组才可以存储多个可能的then方法的回调函数，failCallback同理
+    //失败回调
+    failCallback = [];
+    //定义成箭头函数是因为箭头函数在定义的时候就确定this的指向
+    resolve = value => {
+        //如果状态不是等待，阻止程序向下执行
+        if(this.status !== PENDING) return ;
+        //将状态更改为成功
+        this.status = FULFILLED
+        //保存成功之后的值
+        this.value = value
+        //判断成功回调是否存在，如果存在就调用
+        //this.successCallback && this.successCallback(this.value)//用数组存储回调事件，这里就不能再用了
+        while(this.successCallback.length){
+            this.successCallback.shift()(this.value)
+        }
+    }
+    reject = reason => {
+        //如果状态不是等待，阻止程序向下执行
+        if(this.status !== PENDING) return ;
+        //将状态更改为失败
+        this.status = REJECTED
+        //保存失败之后的原因
+        this.reason = reason
+        //判断失败回调是否存在，如果存在就调用
+        //this.failCallback && this.failCallback(this.reason)
+        while(this.failCallback.length){
+            this.failCallback.shift()(this.reason)
+        }
+    }
+    then(successCallback,failCallback){
+        let promise2 = new myPromise((resolve,reject) => {
+            //判断状态
+            if(this.status === FULFILLED){
+                //在所有同步代码执行完毕后再执行，能顺利获取promise2
+                setTimeout(()=>{
+                    let  x = successCallback(this.value);
+                    //resolve(x)
+                    //判断x的值是普通值还是promise对象
+                    //如果是普通值，直接resolve
+                    //如果是promise对象，查看promise对象返回的结果
+                    //再根据promise对象返回的结果，决定调用resolve还是reject
+                    resolvePromise(promise2, x, resolve, reject)
+                },0)
+            }else if(this.status === REJECTED){
+                failCallback(this.reason)
+            }else{
+                //走到这里证明当前状态是等待pending
+                //将成功回调和失败回调存储起来
+                this.successCallback.push(successCallback)
+                this.failCallback.push(failCallback)
+            }
+        });
+        return promise2 
+    }
+}
+function resolvePromise(promise2, x, resolve, reject){
+    if(promise2 === x){
+        return reject(new TypeError('Chaining cycle detected for promise #< promise >'))
+    }
+    if(x instanceof myPromise){
+        //promise对象
+        //x.then(value=>resolve(value),reason=>reject(reason))
+        x.then(resolve,reject)
+    }else{
+        //普通值
+        resolve(x)
+    }
+}
+module.exports = myPromise;
+</pre>
+index.js
+<pre>
+const myPromise = require('./myPromise')
+const promise = new myPromise((resolve,reject)=>{
+    resolve('成功')
+    // reject('失败')
+})
+function other(){
+    return new myPromise((resolve,reject)=>{
+        resolve('other')
+    })
+}
+let p1 = promise.then(value=>{
+    console.log(value)
+    return p1
+})
+p1.then(value =>{
+    console.log(value)
+},reason=>{
+    console.log(reason.message)
+})
+</pre>
+7.捕获错误及then链式调用其他状态代码补充
+8.将then方法变成可选参数(确认参数是否存在，不存在设置默认参数返回)
+9.Promise.all方法的实现
+首先我们了解下Promise.all方法的主要特点，以我们下面的代码为例
+<pre>
+function p1(){
+    return new Promise(function(resolve,reject){
+        setTimeout(function(){
+            resolve('p1')
+        },2000)
+    })
+}
+function p2(){
+    return new Promise(function(resolve,reject){
+        resolve('p2')
+    })
+}
+Promise.all(['a','b',p1(),p2(),'c']).then(function(result){
+    //result->['a','b','p1','p2','c']
+})
+</pre>
+Promise.all主要是解决异步代码的并发问题，允许我们按照异步代码调用的顺序得到异步代码执行的结果，上面代码，如果先调用p1，再调用p2，那么p2会先执行，因为p1有setTimeout定时器延时，但是如果我们把p1，p2放入Promise.all方法，会按放入的先后顺序执行，也就是先放入p1就执行p1。
+Promise.all方法接收一个数组作为参数，在数组中我们可以放入任何值，包括普通值和promise对象，数组中值的顺序一定是我们得到的结果中的顺序。Promise.all的返回值也是一个Promise对象，所以我们也可以链式调用then方法。如果all方法中所有promise对象的状态都是成功的，则all方法最好的结果也是成功的，如果有一个失败的，那么all方法就是失败的。
+myPromise.js
+<pre>
+//把状态定义成常量，编辑器会有提示，同时也有利于代码的复用
+const PENDING = 'pending' //等待
+const FULFILLED = 'fulfilled' //成功
+const REJECTED = 'rejected' //失败
+class myPromise{
+    constructor(executor){
+        //捕获执行过程中的错误
+        try{
+            //接收执行器，并且这个执行器是立即执行的
+            executor(this.resolve,this.reject)
+        } catch(e){
+            this.reject(e)
+        }
+    }
+    //promise状态
+    status = PENDING;
+    //每一个promise对象成功之后都有自己成功的值
+    value = undefined;
+    //每一个promise对象失败之后都有自己失败的原因
+    reason = undefined;
+    //成功回调
+    successCallback = [];//数组才可以存储多个可能的then方法的回调函数，failCallback同理
+    //失败回调
+    failCallback = [];
+    //定义成箭头函数是因为箭头函数在定义的时候就确定this的指向
+    resolve = value => {
+        //如果状态不是等待，阻止程序向下执行
+        if(this.status !== PENDING) return ;
+        //将状态更改为成功
+        this.status = FULFILLED
+        //保存成功之后的值
+        this.value = value
+        //判断成功回调是否存在，如果存在就调用
+        //this.successCallback && this.successCallback(this.value)//用数组存储回调事件，这里就不能再用了
+        while(this.successCallback.length){
+            this.successCallback.shift()()
+        }
+    }
+    reject = reason => {
+        //如果状态不是等待，阻止程序向下执行
+        if(this.status !== PENDING) return ;
+        //将状态更改为失败
+        this.status = REJECTED
+        //保存失败之后的原因
+        this.reason = reason
+        //判断失败回调是否存在，如果存在就调用
+        //this.failCallback && this.failCallback(this.reason)
+        while(this.failCallback.length){
+            this.failCallback.shift()()
+        }
+    }
+    then(successCallback,failCallback){
+        successCallback = successCallback ? successCallback : value => value ;
+        failCallback = failCallback ? failCallback : reason => {throw reason} ;
+        let promise2 = new myPromise((resolve,reject) => {
+            //判断状态
+            if(this.status === FULFILLED){
+                //在所有同步代码执行完毕后再执行，能顺利获取promise2
+                setTimeout(()=>{
+                    try{
+                        let  x = successCallback(this.value);
+                        //resolve(x)
+                        //判断x的值是普通值还是promise对象
+                        //如果是普通值，直接resolve
+                        //如果是promise对象，查看promise对象返回的结果
+                        //再根据promise对象返回的结果，决定调用resolve还是reject
+                        resolvePromise(promise2, x, resolve, reject)
+                    }catch(e){
+                        reject(e)
+                    }
+                },0)
+            }else if(this.status === REJECTED){
+                setTimeout(()=>{
+                    try{
+                        let  x = failCallback(this.reason);
+                        //resolve(x)
+                        //判断x的值是普通值还是promise对象
+                        //如果是普通值，直接resolve
+                        //如果是promise对象，查看promise对象返回的结果
+                        //再根据promise对象返回的结果，决定调用resolve还是reject
+                        resolvePromise(promise2, x, resolve, reject)
+                    }catch(e){
+                        reject(e)
+                    }
+                },0)
+            }else{
+                //走到这里证明当前状态是等待pending
+                //将成功回调和失败回调存储起来
+                this.successCallback.push(()=>{
+                    setTimeout(()=>{
+                        try{
+                            let  x = successCallback(this.value);
+                            //resolve(x)
+                            //判断x的值是普通值还是promise对象
+                            //如果是普通值，直接resolve
+                            //如果是promise对象，查看promise对象返回的结果
+                            //再根据promise对象返回的结果，决定调用resolve还是reject
+                            resolvePromise(promise2, x, resolve, reject)
+                        }catch(e){
+                            reject(e)
+                        }
+                    },0)
+                })
+                this.failCallback.push(()=>{
+                    setTimeout(()=>{
+                        try{
+                            let  x = failCallback(this.reason);
+                            //resolve(x)
+                            //判断x的值是普通值还是promise对象
+                            //如果是普通值，直接resolve
+                            //如果是promise对象，查看promise对象返回的结果
+                            //再根据promise对象返回的结果，决定调用resolve还是reject
+                            resolvePromise(promise2, x, resolve, reject)
+                        }catch(e){
+                            reject(e)
+                        }
+                    },0)
+                })
+            }
+        });
+        return promise2 
+    }
+    //类相当于实例的原型，所有在类中定义的方法，都会被实例继承。
+    //如果在一个方法前，加上static关键字，就表示该方法不会被实例继承，
+    //而是直接通过类来调用（通过类调用指在该类之外调用），这就称为“静态方法”。
+    static all(array){
+        let result = []
+        let index = 0
+        return new myPromise((resolve,reject)=>{
+            function addData(key, value){
+                result[key] = value;
+                index++
+                if(index === array.length){
+                    resolve(result)
+                }
+            }
+            for(let i=0;i<array.length;i++){ let="" current="array[i];" if(current="" instanceof="" mypromise){="" 是一个promise对象，要执行这个对象="" current.then(value=""> addData(i,value),reason => reject(reason))
+                }else{
+                    //current 是一个普通值
+                    addData(i,array[i])
+                }
+            }
+            //resolve(result)
+        })
+    }
+}
+function resolvePromise(promise2, x, resolve, reject){
+    if(promise2 === x){
+        return reject(new TypeError('Chaining cycle detected for promise #<promise>'))
+    }
+    if(x instanceof myPromise){
+        //promise对象
+        //x.then(value=>resolve(value),reason=>reject(reason))
+        x.then(resolve,reject)
+    }else{
+        //普通值
+        resolve(x)
+    }
+}
+module.exports = myPromise;
+</promise></array.length;i++){></pre>
+index.js
+<pre>
+const myPromise = require('./myPromise')
+function p1(){
+    return new myPromise(function(resolve,reject){
+        setTimeout(function(){
+            resolve('p1')
+        },2000)
+    })
+}
+function p2(){
+    return new myPromise(function(resolve,reject){
+        resolve('p2')
+    })
+}
+myPromise.all(['a','b',p1(),p2(),'c'])
+.then(function(result){
+    //result->['a','b','p1','p2','c']
+    console.log(result)
+})
+</pre>
+10.Promise.resolve方法的实现
+Promise.resolve方法的作用是将给定的值转换为promise对象
+这个代码并不复杂，所以就不把整段myPromise代码都展示在这里了
+<pre>
+static resolve(value){
+    if(value instanceof myPromise) return value;
+    return new myPromise(resolve => resolve(value))
+}
+</pre>
+11.finally方法的实现
+promise最终的状态无论是成功还是失败，finally方法都会被执行一次；在finally对象的后面我们还可以链式调用then方法拿到最终返回的结果。并且在finally中如果返回一个异步函数，是会等待异步对象执行完成的。
+<pre>
+finally(callback){
+        return this.then(value=>{
+            // callback()
+            // return value//注释掉的两行是不考虑finally中return一个异步函数的情况
+            return myPromise.resolve(callback()).then(() => value)//考虑finally中return一个异步函数的情况
+        },reason=>{
+            // callback()
+            // throw reason
+            return myPromise.resolve(callback()).then(() => {throw reason})
+        })
+    }
+</pre>
+12.catch方法的实现
+用来处理当前promise对象最终为失败的情况
+<pre>
+catch(failCallback){
+    return this.then(undefined, failCallback)
+}
+</pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/18/拉勾-手写Promise源码/" data-id="ckdbzsips005jjrxq8as84qt5" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/手写Promise源码/">手写Promise源码</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/拉勾/">拉勾</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-拉勾-JavaScript异步编程" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/17/拉勾-JavaScript异步编程/" class="article-date">
+  <time datetime="2020-06-17T02:46:47.000Z" itemprop="datePublished">2020-06-17</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/拉勾/">拉勾</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/17/拉勾-JavaScript异步编程/">拉勾-JavaScript异步编程</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.概述<br>1-1.采用单线程模式工作的原因<br>最早JavaScript是运行在浏览器中的脚本语言，为了实现页面上的动态交互，实现页面操作的核心是DOM操作，这也就决定了必须使用单线程，否则会出现很复杂的线程交互问题。比如JavaScript中多个线程一起工作，其中一个线程修改了元素，另外一个线程删除了该元素，浏览器就无法明确应该以哪个结果为准，为了避免这种问题，JavaScript被设计为单线程模式工作，也就成了这门语言最为核心的特性之一。<br>这里所说的单线程指的是在js执行环境中负责执行代码的线程只有一个。<br>所以每次只能执行一个任务，如果有多个任务就需要排队执行。优点是更安全更简单，缺点是如果遇到一个很耗时的任务，后面的任务都要等待导致整个程序会被拖延出现假死的情况。为了解决耗时任务阻塞的问题，JavaScript将任务的执行模式分为同步模式和异步模式。<br>1-2.我们这里主要关注异步模式:<br>·同步模式与异步模式<br>·事件循环与消息队列<br>·异步编程的几种方式<br>·Promise异步方案、宏任务/微任务队列<br>·Generator异步方案、async/await语法糖<br>2.同步模式<br>同步模式:代码中的任务依次执行，后面的任务必须等待前面的任务结束才能开始执行，程序的执行顺序与代码的编写顺序完全一致。在单线程情况下，大多数任务都会以同步模式执行(同步模式不是指同时执行，而是指排队执行)<br>同步模式代码例子:</p>
+<p><pre><br>console.log(‘global begin’)<br>function bar () {<br>  console.log(‘bar task’)<br>}<br>function foo () {<br>  console.log(‘foo task’)<br>  bar()<br>}<br>foo()<br>console.log(‘global end’)<br></pre><br>下面几个图简单模拟了上面代码在函数调用栈中的执行(纯同步模式)<br><img src="https://snakexu.github.io/images/lagou/part_1/asyncmode/2_1.png"><br><img src="https://snakexu.github.io/images/lagou/part_1/asyncmode/2_2.png"><br><img src="https://snakexu.github.io/images/lagou/part_1/asyncmode/2_3.png"><br><img src="https://snakexu.github.io/images/lagou/part_1/asyncmode/2_4.png"><br><img src="https://snakexu.github.io/images/lagou/part_1/asyncmode/2_5.png"><br><img src="https://snakexu.github.io/images/lagou/part_1/asyncmode/2_6.png"><br><img src="https://snakexu.github.io/images/lagou/part_1/asyncmode/2_7.png"><br><img src="https://snakexu.github.io/images/lagou/part_1/asyncmode/2_8.png"><br><img src="https://snakexu.github.io/images/lagou/part_1/asyncmode/2_9.png"><br><img src="https://snakexu.github.io/images/lagou/part_1/asyncmode/2_10.png"><br><img src="https://snakexu.github.io/images/lagou/part_1/asyncmode/2_11.png"><br><img src="https://snakexu.github.io/images/lagou/part_1/asyncmode/2_12.png"><br>我们之前也了解到，同步模式最大的问题就是如果某个操作十分耗时，而我们无法继续执行程序，就会造成程序的假死，用户体验变差，所以ajax/大文件读取等都采用异步操作<br>3.异步模式<br>异步模式不会等待这个任务的结束才开始执行下一个任务，对于耗时操作，都是开启过后就立即往后执行下一个任务，耗时任务的后续逻辑一般通过回调函数的方式定义，在内部耗时任务完成之后就会自动执行传入的回调函数。异步模式对JavaScript非常重要，如果没有异步模式单线程的JavaScript就无法同时处理大量耗时任务。对于开发者而言，单线程执行环境下的难点就是代码执行的顺序并不会像同步代码通俗易懂，需要理解和习惯。<br>下面我们通过一个例子开始了解</p>
+<p><pre><br>console.log(‘global begin’)<br>setTimeout(function timer1 () {<br>  console.log(‘timer1 invoke’)<br>}, 1800)<br>setTimeout(function timer2 () {<br>  console.log(‘timer2 invoke’)<br>  setTimeout(function inner () {<br>    console.log(‘inner invoke’)<br>  }, 1000)<br>}, 1000)<br>console.log(‘global end’)<br></pre><br>执行过程大致如下<br><img src="https://snakexu.github.io/images/lagou/part_1/asyncmode/3_1.png"><br><img src="https://snakexu.github.io/images/lagou/part_1/asyncmode/3_2.png"><br><img src="https://snakexu.github.io/images/lagou/part_1/asyncmode/3_3.png"><br><img src="https://snakexu.github.io/images/lagou/part_1/asyncmode/3_4.png"><br><img src="https://snakexu.github.io/images/lagou/part_1/asyncmode/3_5.png"><br><img src="https://snakexu.github.io/images/lagou/part_1/asyncmode/3_6.png"><br><img src="https://snakexu.github.io/images/lagou/part_1/asyncmode/3_7.png"><br><img src="https://snakexu.github.io/images/lagou/part_1/asyncmode/3_8.png"><br><img src="https://snakexu.github.io/images/lagou/part_1/asyncmode/3_9.png"><br><img src="https://snakexu.github.io/images/lagou/part_1/asyncmode/3_10.png"><br><img src="https://snakexu.github.io/images/lagou/part_1/asyncmode/3_11.png"><br>到这里整体的匿名函数调用基本完成，调用栈清空，Event Loop上场，负责监听调用栈和消息队列，一旦调用栈所有任务都结束，事件循环就会从消息队列中取出第一个回调函数压入调用栈。此时当前代码的消息队列是空的，什么都没有，执行被暂停。现在我们看看倒计时器，自从被放入我们就没再关注过，而是直接往后执行<br><img src="https://snakexu.github.io/images/lagou/part_1/asyncmode/3_12.png"><br>由于timer2是1秒后执行比timer1的1.8秒早，那么timer2倒计时会先结束，会先被放入消息队列的第一位，然后timer1倒计时结束，被放入消息队列第二位<br><img src="https://snakexu.github.io/images/lagou/part_1/asyncmode/3_13.png"><br><img src="https://snakexu.github.io/images/lagou/part_1/asyncmode/3_14.png"><br>一旦消息队列发生变化就会被事件循环监听到，就会把消息队列的第一个也就是timer2放到调用栈去执行timer2<br><img src="https://snakexu.github.io/images/lagou/part_1/asyncmode/3_15.png"><br>此时对调用栈来讲，相当于开启了新一轮的执行，执行过程与我们刚分析的是一样的<br><img src="https://snakexu.github.io/images/lagou/part_1/asyncmode/3_16.png"><br><img src="https://snakexu.github.io/images/lagou/part_1/asyncmode/3_17.png"><br><img src="https://snakexu.github.io/images/lagou/part_1/asyncmode/3_18.png"><br><img src="https://snakexu.github.io/images/lagou/part_1/asyncmode/3_19.png"><br><img src="https://snakexu.github.io/images/lagou/part_1/asyncmode/3_20.png"><br><img src="https://snakexu.github.io/images/lagou/part_1/asyncmode/3_21.png"><br><img src="https://snakexu.github.io/images/lagou/part_1/asyncmode/3_22.png"><br><img src="https://snakexu.github.io/images/lagou/part_1/asyncmode/3_23.png"><br><img src="https://snakexu.github.io/images/lagou/part_1/asyncmode/3_24.png"><br>我们可以这样理解:调用栈-正在执行的工作表，消息队列-待办工作表。js执行引擎先去执行调用栈中的任务，再通过事件循环从消息队列中取一个任务出来，以此类推。在这个过程中我们随时可以往消息队列中再放入任务，这些任务会在消息队列中排队等待放入事件循环。整个过程都是通过消息队列和事件循环去实现的。我们这里是分开分析的，但是不要因此认为这个步骤有先后顺序，各自有各自的timeline，例如倒计时器开始过后就会自动开始倒计时，跟本不会管调用栈/队列的情况。<br><img src="https://snakexu.github.io/images/lagou/part_1/asyncmode/3_25.png"><br>在这理要理解，虽然JavaScript是单线程执行的，但是浏览器并不是单线程的，浏览器会有 GUI 渲染线程、JavaScript引擎线程、定时触发器线程、事件触发线程、异步http请求线程。我们这里说的同步/异步是说运行环境提供的API是以同步/异步模式的方式工作。<br>4.回调函数<br>回调函数是所有异步编程方案的根基。<br>由调用者定义，交给执行者执行函数的函数就是回调函数。其实就是把函数作为参数传递，但是这种方式不利于阅读。除了传递回调参数以外，还有事件机制、发布订阅都是异步的实现方式。<br>5.Promise概述<br>用传统方式去完成复杂的异步流程就难免出现大量的回调函数的嵌套，也就是回调地狱问题。为了避免回调地狱，我们找到了promise这个解决方案(具体promise如何出现本处不细表)。<br>promise可以理解为一个对象，表示一个异步任务结束过后是成功还是失败。<br><img src="https://snakexu.github.io/images/lagou/part_1/asyncmode/5_1.png"><br>6.Promise基本用法</p>
+<p><pre><br>// Promise 基本示例<br>const promise = new Promise(function (resolve, reject) {<br>  // 这里用于“兑现”承诺<br>  // resolve(100) // 承诺达成<br>  reject(new Error(‘promise rejected’)) // 承诺失败<br>})<br>promise.then(function (value) {<br>  // 即便没有异步操作，then 方法中传入的回调仍然会被放入队列，等待下一轮执行<br>  console.log(‘resolved’, value)<br>}, function (error) {<br>  console.log(‘rejected’, error)<br>})<br>console.log(‘end’)<br></pre><br>7.Promise使用案例</p>
+<p><pre><br>// Promise 方式的 AJAX<br>function ajax (url) {<br>  return new Promise(function (resolve, reject) {<br>    var xhr = new XMLHttpRequest()<br>    xhr.open(‘GET’, url)<br>    xhr.responseType = ‘json’<br>    xhr.onload = function () {<br>      if (this.status === 200) {<br>        resolve(this.response)<br>      } else {<br>        reject(new Error(this.statusText))<br>      }<br>    }<br>    xhr.send()<br>  })<br>}<br>ajax(‘/api/foo.json’).then(function (res) {<br>  console.log(res)<br>}, function (error) {<br>  console.log(error)<br>})<br></pre><br>8.Promise常见误区<br>从表象上来看，promise的本质也是使用回调函数定义异步任务结束过后所需要执行的任务，只不过这里的回调函数是通过then方法传递的。按照这种思路，仍然会形成回调地狱，promise也就没有任何意义，还增加了额外的复杂度。<br>嵌套使用的方式是使用promise最常见的错误，实际上是借助于promise then方法链式调用的特点，尽量保证异步任务扁平化。<br>9.Promise链式调用</p>
+<p><pre><br>// Promise 链式调用<br>function ajax (url) {<br>  return new Promise(function (resolve, reject) {<br>    var xhr = new XMLHttpRequest()<br>    xhr.open(‘GET’, url)<br>    xhr.responseType = ‘json’<br>    xhr.onload = function () {<br>      if (this.status === 200) {<br>        resolve(this.response)<br>      } else {<br>        reject(new Error(this.statusText))<br>      }<br>    }<br>    xhr.send()<br>  })<br>}<br>var promise = ajax(‘/api/users.json’)<br>var promise2 = promise.then(<br>  function onFulfilled (value) {<br>    console.log(‘onFulfilled’, value)<br>  },<br>  function onRejected (error) {<br>    console.log(‘onRejected’, error)<br>  }<br>)<br>console.log(promise2)//这里是说明promise内部返回的也是一个promise对象<br>console.log(promise2 === promise)//false<br></pre><br>promise!==promise2说明这里的链式调用返回的是一个全新的promise，不是传统的this来链式调用 </p>
+<p><pre><br>ajax(‘/api/users.json’)<br>  .then(function (value) {<br>    console.log(1111)<br>    return ajax(‘/api/urls.json’)<br>  }) // =&gt; Promise<br>  .then(function (value) {<br>    console.log(2222)<br>    console.log(value)<br>    return ajax(‘/api/urls.json’)<br>  }) // =&gt; Promise<br>  .then(function (value) {<br>    console.log(3333)<br>    return ajax(‘/api/urls.json’)<br>  }) // =&gt; Promise<br>  .then(function (value) {<br>    console.log(4444)<br>    return ‘foo’<br>  }) // =&gt; Promise<br>  .then(function (value) {<br>    console.log(5555)<br>    console.log(value)<br>  })<br></pre><br>如果不断的链式调用then，这里每个then方法都是在为上一个then方法返回的promise添加状态明确过后的回调。promise会依次执行，那么回调函数也就回从前到后依次执行。也可以在then中手动执行返回一个promise对象。如果我们在回调当中返回的是一个普通的值，这个值会作为当前then方法返回的promise中的值，在下一个then方法中接收的回调参数就是这个值。<br>下图返回了上面代码的部分执行结果<br><img src="https://snakexu.github.io/images/lagou/part_1/asyncmode/9_1.png"><br>小结:<br>·Promise对象的then方法会返回一个全新的Promise对象(可以使用链式调用)<br>·后面的then方法就是在为上一个then返回的Promise注册回调<br>·前面then方法中回调函数的返回值会作为后面then方法回调的参数<br>·如果回调中返回的是Promise，那后面then方法的回调会等待它的结束<br>10.Promise异常处理<br>promise结果一旦失败就会调用我们传入的rejected函数，如果在promise执行过程中出现异常或者手动抛出异常rejected回调也会被执行。<br>一般我们会用catch去执行一场回调，这里catch相当于给前面的then方法执行异常回调。用catch和用resolve/reject不同之处在于，resolve/reject相当于给指定promise做回调，而catch相当于给catch之前的then做回调</p>
+<p><pre><br>ajax(‘/api/users.json’)<br>  .then(function onFulfilled (value) {<br>    console.log(‘onFulfilled’, value)<br>    return ajax(‘/error-url’)<br>  }, function onRejected (error) {<br>    console.log(‘onRejected’, error)//这里不能捕获ajax(‘/error-url’)的异常，只能捕获ajax(‘/api/users.json’)的异常<br>  })<br></pre></p>
+<p><pre><br>ajax(‘/api/users.json’)<br>  .then(function onFulfilled (value) {<br>    console.log(‘onFulfilled’, value)<br>    return ajax(‘/error-url’)<br>  })<br>  .catch(function onRejected (error) {<br>  //这里的catch相当于给ajax(‘/error-url’)做的回调，不能捕获ajax(‘/api/users.json’)的异常<br>    console.log(‘onRejected’, error)<br>  })<br></pre><br>所以链式调用的情况下我们尽量用catch方法，这样如果有异常就会被回调。或者我们可以注册一个全局异常事件处理代码中没有被捕获的异常<br>在window环境中</p>
+<p><pre><br>window.addEventListener(‘unhandledrejection’,event =&gt; {<br>    const { reason,promise } = event<br>    console.log(reason,promise)<br>    //reason =&gt; Promise 失败原因，一般是一个错误对象<br>    // promise =&gt; 出现异常的 Promise 对象<br>    event.preventDefault()<br>},false)<br></pre><br>在node环境中</p>
+<p><pre><br>process.on(‘unhandledRejection’, (reason, promise) =&gt; {<br>  console.log(reason, promise)<br>  // reason =&gt; Promise 失败原因，一般是一个错误对象<br>  // promise =&gt; 出现异常的 Promise 对象<br>})<br></pre><br>最好的方法是在代码中明确捕获每一个可能的异常，所以全局捕获的方法并不推荐使用<br>11.Promise静态方法<br>11-1.Promise.resolve()//快速把一个值转换为promise对象，返回一个状态为fullfilled的promise对象<br><img src="https://snakexu.github.io/images/lagou/part_1/asyncmode/11_1.png"></p>
+<p><pre><br>Promise.resolve(‘foo’)<br>  .then(function (value) {<br>    console.log(value)<br>  })<br>//这里两种方法是等价的，返回foo这个字符串<br>new Promise(function (resolve, reject) {<br>  resolve(‘foo’)<br>})<br></pre><br>如果传入的是一个 Promise 对象，Promise.resolve 方法原样返回</p>
+<p><pre><br>var promise = ajax(‘/api/users.json’)<br>var promise2 = Promise.resolve(promise)<br>console.log(promise === promise2)//true<br></pre><br>如果传入的是带有一个跟 Promise 一样的 then 方法的对象，Promise.resolve 会将这个对象作为 Promise 执行<br><img src="https://snakexu.github.io/images/lagou/part_1/asyncmode/11_2.png"><br>11-2.Promise.reject//快速创建一个失败状态的promise对象，传入的数据会作为失败的原因<br><img src="https://snakexu.github.io/images/lagou/part_1/asyncmode/11_3.png"><br>12.Promise并行执行<br>12-1.Promise.all()将多个promise合并为一个promise去管理，会在所有任务结束后才会结束</p>
+<p><pre><br>var promise = Promise.all([<br>  ajax(‘/api/users.json’),<br>  ajax(‘/api/posts.json’)<br>])//返回一个全新的promise<br>//当内部所有的promise都完成了，所返回的全新promise才会完成<br>promise.then(function (values) {<br>  console.log(values)<br>}).catch(function (error) {<br>  console.log(error)<br>})<br></pre><br>这里promise对象拿到的结果是一个数组，在数组中包含每一个异步任务执行的结果<br><img src="https://snakexu.github.io/images/lagou/part_1/asyncmode/12_1.png"></p>
+<p><pre><br>ajax(‘/api/urls.json’)//去请求包含所有url的对象<br>  .then(value =&gt; {<br>    const urls = Object.values(value)<br>    const tasks = urls.map(url =&gt; ajax(url))<br>    return Promise.all(tasks)<br>  })<br>  .then(values =&gt; {<br>    console.log(values)<br>  })<br></pre><br>12-2.Promise.race()把多个promise对象组合为一个全新的promise对象，只会等待所有任务中第一个结束的任务</p>
+<p><pre><br>const request = ajax(‘/api/posts.json’)<br>const timeout = new Promise((resolve, reject) =&gt; {<br>  setTimeout(() =&gt; reject(new Error(‘timeout’)), 500)<br>})<br>Promise.race([<br>  request,<br>  timeout<br>])<br>.then(value =&gt; {<br>  console.log(value)<br>})<br>.catch(error =&gt; {<br>  console.log(error)<br>})<br></pre><br><img src="https://snakexu.github.io/images/lagou/part_1/asyncmode/12_2.png"><br>13.Promise执行时序<br>即便promise中并没有任何异步操作，它的回调函数仍然会进入到回调队列当中排队，也就是说我们要等当前同步代码执行完毕才能promise中的回调。当然，这句话并不是十分严谨</p>
+<p><pre><br>console.log(‘global start’)<br>Promise.resolve().then(()=&gt;{<br>    console.log(‘promise’)<br>})<br>console.log(‘global end’)<br></pre><br>上面代码执行结果<br>global start<br>global end<br>promise</p>
+<p>那如果我们稍作修改</p>
+<p><pre><br>console.log(‘global start’)<br>Promise.resolve()<br>  .then(() =&gt; {<br>    console.log(‘promise’)<br>  })<br>  .then(() =&gt; {<br>    console.log(‘promise 2’)<br>  })<br>  .then(() =&gt; {<br>    console.log(‘promise 3’)<br>  })<br>console.log(‘global end’)<br></pre><br>则执行结果为<br>global start<br>global end<br>promise<br>promise 2<br>promise 3</p>
+<p>如果再加上setTimeout呢</p>
+<p><pre><br>console.log(‘global start’)<br>// setTimeout 的回调是 宏任务，进入回调队列排队<br>setTimeout(() =&gt; {<br>  console.log(‘setTimeout’)<br>}, 0)<br>// Promise 的回调是 微任务，本轮调用末尾直接执行<br>Promise.resolve()<br>  .then(() =&gt; {<br>    console.log(‘promise’)<br>  })<br>  .then(() =&gt; {<br>    console.log(‘promise 2’)<br>  })<br>  .then(() =&gt; {<br>    console.log(‘promise 3’)<br>  })<br>console.log(‘global end’)<br></pre><br>我们发现执行结果为<br>global start<br>global end<br>promise<br>promise 2<br>promise 3<br>setTimeout</p>
+<p>如何理解上面的执行结果呢<br>我们一般将回调队列中的任务称之为”宏任务”，宏任务执行过程当中可以临时加上一些额外需求，这些临时额外需求可以选择作为一个新的宏任务进到队列中排队，也可以作为当前任务的”微任务”，直接在当前任务结束过后立即执行。Promise的回调会作为微任务执行，会在本轮调用结束的末尾去执行，而setTimmeout会作为宏任务进入回调队列的末尾，所以先打印promise，再打印setTimeout。<br>微任务的概念是在后来才被引入js中的，目的是为了提高整体相应能力。目前绝大多数异步调用都是作为宏任务执行，但是promise和MutationObserver以及node当中的process.nextTick都会作为微任务直接在本轮调用的末尾执行。<br>14.Generator 异步方案(上)<br>Promise虽然解决异步回调的回调地狱问题已经很好了，但是如果我们想更清晰的像看同步代码一样的可读性，可以了解下ES2015提供的Generator</p>
+<p><pre><br>function * foo () {<br>  console.log(‘start’)<br>  yield ‘foo’<br>}<br>const generator = foo()<br>const result = generator.next()<br>console.log(result)<br></pre><br>上面代码我们需要了解生成器函数只有在next()调用的时候才会执行，我们也可以在next()对象返回值中拿到yield的返回值<br><img src="https://snakexu.github.io/images/lagou/part_1/asyncmode/14_1.png"><br>另外我们还可以看到返回值里有个done属性，用来表示生成器是否已经全部执行完成，yield只是暂停函数的执行，并不是结束函数的执行，直到我们下次调用next方法，就会继续从yield位置往下执行。</p>
+<p><pre><br>function * foo () {<br>  console.log(‘start’)<br>  yield ‘foo’<br>}<br>const generator = foo()<br>const result = generator.next()<br>console.log(result)<br></pre><br><img src="https://snakexu.github.io/images/lagou/part_1/asyncmode/14_2.png"><br>也就是说如果我们调用next方法的时候传递参数，会作为yield语句的返回值，也就是说我们可以定义变量，把yield的返回值赋给这个变量</p>
+<p><pre><br>function * foo () {<br>  console.log(‘start’)<br>  try {<br>    const res = yield ‘foo’<br>    console.log(res)<br>  } catch (e) {<br>    console.log(e)<br>  }<br>}<br>const generator = foo()<br>const result = generator.next()<br>console.log(result)<br>// generator.next(‘bar’)<br>generator.throw(new Error(‘Generator error’))<br></pre><br>如果我们在外部调用生成器对象的throw方法，就可以对生成器函数内部抛出一个异常，内部往下执行的时候就会得到这个异常，我们可以通过try/catch去捕获这个异常<br><img src="https://snakexu.github.io/images/lagou/part_1/asyncmode/14_3.png"><br>15.Generator 异步方案(中)<br>借助yield可以暂停生成器函数执行的特点来使用生成器函数来实现更优的异步编程体验<br><img src="https://snakexu.github.io/images/lagou/part_1/asyncmode/15_1.png"><br><img src="https://snakexu.github.io/images/lagou/part_1/asyncmode/15_2.png"><br>16.Generator 异步方案(下)<br>用递归的方式实现一个更通用的函数生成器</p>
+<p><pre><br>// Async / Await 语法糖<br>function ajax (url) {<br>  return new Promise((resolve, reject) =&gt; {<br>    var xhr = new XMLHttpRequest()<br>    xhr.open(‘GET’, url)<br>    xhr.responseType = ‘json’<br>    xhr.onload = () =&gt; {<br>      if (xhr.status === 200) {<br>        resolve(xhr.response)<br>      } else {<br>        reject(new Error(xhr.statusText))<br>      }<br>    }<br>    xhr.send()<br>  })<br>}<br>function co (generator) {<br>  const g = generator()<br>  function handleResult (result) {<br>    if (result.done) return // 生成器函数结束<br>    result.value.then(data =&gt; {<br>      handleResult(g.next(data))<br>    }, error =&gt; {<br>      g.throw(error)<br>    })<br>  }<br>  handleResult(g.next())<br>}<br>async function main () {<br>  try {<br>    const users = await ajax(‘/api/users.json’)<br>    console.log(users)<br>    const posts = await ajax(‘/api/posts.json’)<br>    console.log(posts)<br>    const urls = await ajax(‘/api/urls.json’)<br>    console.log(urls)<br>  } catch (e) {<br>    console.log(e)<br>  }<br>}<br>// co(main)<br>const promise = main()<br>promise.then(() =&gt; {<br>  console.log(‘all completed’)<br>})<br></pre><br>17.Async函数<br>async/await语法糖是语言层面的异步标准编程，有了async/await我们不再用generator这样的函数，因为generator需要配合co等执行器。async函数返回一个promise对象，await目前只能在async函数内使用。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/17/拉勾-JavaScript异步编程/" data-id="ckdbzsinv0053jrxq48bwsix0" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript异步编程/">JavaScript异步编程</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/拉勾/">拉勾</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-移动端APP开发工程师-移动UI框架Flutter-2-1-1-Flutter概述及开发环境" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/15/网易微专业-移动端APP开发工程师-移动UI框架Flutter-2-1-1-Flutter概述及开发环境/" class="article-date">
+  <time datetime="2020-06-15T08:18:19.000Z" itemprop="datePublished">2020-06-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/15/网易微专业-移动端APP开发工程师-移动UI框架Flutter-2-1-1-Flutter概述及开发环境/">网易微专业-移动端APP开发工程师-移动UI框架Flutter-2.1.1-Flutter概述及开发环境</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.初识Flutter<br>1-1.Flutter是什么<br><img src="https://snakexu.github.io/images/wangyi/app/2.1.1_1.png"><br>1-2.跨平台开发方案<br><img src="https://snakexu.github.io/images/wangyi/app/2.1.1_2.png"><br>下面图中三个部分依次对应三个不同的跨平台开发方案的时代<br><img src="https://snakexu.github.io/images/wangyi/app/2.1.1_3.png"><br>上图左上角对应web时代开发方案:主要采用原生应用内嵌于浏览器空间webview。并且定义html5和原生代码交互协议，将部分原生系统能力暴露给html5，从而扩展html5的边界，这类交互协议就是我们通常说的jsBridge。一个完整html5页面的展示要经历浏览器的控件的加载、解析、渲染三大过程，浏览器消耗要比原生开发增加了N个数量级。html5页面的展示是比较复杂的，这和原生开发通过简单直接的创建控件、设置属性后即可完成页面渲染有很大的差异。web和原生在UI渲染和系统功能调用各司其职。<br>右上角是泛web容器时代解决方案的原理图:泛web容器时代优化了web容器时代的加载、解析和渲染这三大过程。它把影响他们独立运行的web标准进行了裁剪，以相对简单的方式支持构建移动端页面的web标准，也保证了便捷的开发体验。同时这个时代的开发方案基本完全放弃了浏览器控件的渲染，而是采用了原生自带的UI组件实现代替了核心的渲染引擎，仅保持必要的基本控件渲染能力，从而使得渲染过程更加简化，也保证了良好的渲染性能。也就是说在web容器时代我们仍然采用的是前端由JavaScript进行开发，整体加载渲染机制大大简化，并且由原生接管绘制。<br>最后中间的图是自绘引擎时代的开发原理:泛web时代采用的是使用原生控件承载界面渲染，固然解决了不少性能问题，但是也同时带来了一些新的问题。抛开框架本身需要大量平台相关的逻辑，随着系统版本的变化和API的变化，我们可能需要处理不同平台原生控件渲染能力的差异，修复各类奇奇怪怪的bug。而在自绘引擎时代，这一新时期的代表Flutter则开辟了一个全新的思路，从头到尾重写了一套跨平台UI框架，包括渲染逻辑甚至是开发语言。Flutter的渲染引擎依靠跨平台的Skia图形库来实现。Skia引擎会将使用大的构建的抽象视图数据加工成GPU数据，然后交由OpenGL，最终提供给GPU渲染，因此可以在最大程度上保证一款应用在不同平台不同设备上的体验一致性。而对于开发语言来讲，开发语言选用的是同时支持JIT和AOT模式的Dart语言。不仅保证了开发效率，更是提升了执行效率。<br>1-3.我该选择哪一类跨平台开发方案<br><img src="https://snakexu.github.io/images/wangyi/app/2.1.1_4.png"><br>1-4.Flutter框架结构<br><img src="https://snakexu.github.io/images/wangyi/app/2.1.1_5.png"><br>2.开发环境搭建<br>2-1.开发环境搭建<br><img src="https://snakexu.github.io/images/wangyi/app/2.1.1_6.png"><br>3.Flutter项目结构</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/15/网易微专业-移动端APP开发工程师-移动UI框架Flutter-2-1-1-Flutter概述及开发环境/" data-id="ckdbzsijg003wjrxqsu7ga1k5" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/网易微专业-Flutter/">网易微专业 Flutter</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-拉勾-函数式编程范式" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/06/14/拉勾-函数式编程范式/" class="article-date">
@@ -141,7 +1014,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/14/拉勾-函数式编程范式/" data-id="ckchm0rkl005b5ajhwuse84q8" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/06/14/拉勾-函数式编程范式/" data-id="ckdbzsips005hjrxq8r9v1fpr" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/函数式编程/">函数式编程</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/拉勾/">拉勾</a></li></ul>
@@ -212,7 +1085,7 @@ console.log(r)
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/14/拉勾-函数式编程范式-5-高阶函数-函数作为参数/" data-id="ckchm0rcb000r5ajhqx11d71z" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/06/14/拉勾-函数式编程范式-5-高阶函数-函数作为参数/" data-id="ckdbzsih2000sjrxq3upuiil7" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/函数式编程范式/">函数式编程范式</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/拉勾/">拉勾</a></li></ul>
@@ -251,7 +1124,7 @@ console.log(r)
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/13/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-7-canvas/" data-id="ckchm0rgw004b5ajhhvnwgph6" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/06/13/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-7-canvas/" data-id="ckdbzsijc003ojrxqrx6b4mcq" class="article-share-link">Share</a>
       
       
     </footer>
@@ -288,7 +1161,7 @@ console.log(r)
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/10/学习手动创建react项目过程中/" data-id="ckchm0rc8000m5ajhsb67al9x" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/06/10/学习手动创建react项目过程中/" data-id="ckdbzsigy000mjrxq6gwgg5tr" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/react-babel/">react babel</a></li></ul>
@@ -334,7 +1207,7 @@ console.log(r)
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/08/网易微专业-look直播，企业级全栈web应用搭建分享/" data-id="ckchm0rd700295ajhai9d6iqb" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/06/08/网易微专业-look直播，企业级全栈web应用搭建分享/" data-id="ckdbzsii7002djrxqowjnfffh" class="article-share-link">Share</a>
       
       
     </footer>
@@ -479,273 +1352,7 @@ module.exports = AddStaticServer;
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/07/网易微专业-webpack实战演练-3-3-1-网易的webpack工程化实践/" data-id="ckchm0rgl003o5ajhlxwgm399" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-webpack实战演练-3-2-6-webpack打包速度优化" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/06/06/网易微专业-webpack实战演练-3-2-6-webpack打包速度优化/" class="article-date">
-  <time datetime="2020-06-06T03:02:23.000Z" itemprop="datePublished">2020-06-06</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/06/06/网易微专业-webpack实战演练-3-2-6-webpack打包速度优化/">网易微专业-webpack实战演练-3.2.6-webpack打包速度优化</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.打包结果分析<br>1-1.chunks和module<br>chunks:即代码块，即webpack把js分割成了几块代码<br>module:模块，每一个文件即一个模块<br>1-2.如何可视化的获取打包结果分析<br>·官方版本<br>Mac:webpack –profile –json &gt;stats.json<br>Window:webpack –profile –json &gt;stats.json<br>在项目中执行上述命令之后，打开下面的网站<br><a href="http://webpack.github.io/analyse/" target="_blank" rel="noopener">http://webpack.github.io/analyse/</a><br>选择刚才打包生成的stats.json<br><img src="https://snakexu.github.io/images/wangyi/node/3.2.6_1.png"><br>·社区版本<br>(1)webpack-bundle-analyzer<br>2.优化打包速度<br>2-1.有哪些可以优化的点<br>·项目本身<br>(1)减少依赖嵌套深度<br>(2)使用尽可能少的处理<br>·webpack层面<br>(1)Dll处理<br>(2)通过include减少loader范围<br>(3)HappyPack<br>(4)Uglify优化<br>(5)减少resolve、sourcemap、cache-loader，用新版本的node和webpack</p>
-<p>webpack.dll.js</p>
-<pre>
-const webpack = require('webpack')
-module.exports = {
-    entry:{
-        vendor:['jquery','loadsh']
-    },
-    output:{
-        path:__dirname+'/src/dll',
-        filename:"./[name].js",
-        library:"[name]_library"//引用名
-    },
-    plugins:[
-        new webpack.DllPlugin({
-            path:__dirname+"/src/dll/[name].json",
-            name:"[name]_library",//这里要与引用名一致(也就是与output.library一致)
-        })//告诉打包命令，我们已经处理过jquery和lodash文件了
-    ]
-}
-</pre>
-保存之后，在命令行项目文件夹下，输入webpack --config webpack.dll.js，我们可以看到项目src文件夹下生成了一个dll文件夹，里面有vendor.js和vendor.json文件，vendor.json文件会给到真正的打包配置中。
-在webpack.config.js文件的plugin中添加:
-<pre>
-new webpack.DllReferencePlugin({
-     manifest:require('./src/dll/vendor.json')
-}),
-</pre>
-到这里，我们只是完成了dll打包，但是我们dll打包的文件并没有被引入到html页面中，我们可以通过
-<pre>
-new htmlWebpackPlugin({
-    filename:"index.html",
-    template:"./src/index.html",
-    vendorPath:"../src/dll/vendor.js",//在这里引入dll生成的文件
-    chunks:['app','runtime']
-})
-</pre>
-并且在html页面通过模版字符串的方式引入
-<pre>
-< script type="text/javascript" src="${htmlWebpackPlugin.options.vendorPath}">< /script >
-</pre>
-
-<p>HappyPack由于webpack是node编写的，而node可以开工作进程，所以通过这个思路，HappyPack开启多线程。HappyPack是要通过npm下载的，假设我们要用happypack处理vue文件</p>
-<pre>
-rules:[
-{
-    test:/\.vue$/,
-    loader:'happypack/loader?id=happyvue'
-}
-]
-</pre>
-在配置生产环境的配置文件中
-<pre>
-const HappyPack = require('happypack');
-const os = require('os')
-const happyThreadpool = HappyPack.ThreadPool({size:os.cpus().length})//根据cpu决定建几个线程
-const vueLoaderConfig = require('./vue-loader.conf.js')
-//这里只是需要修改plugins中的内容，并不是说plugins在文件中层级关系
-plugins:[
-    new HappyPack({
-        id:'happyvue',//对应我们在上面定义的id
-        loaders:[
-        {
-            path:"vue-loader",
-            cache:true,
-            options:vueLoaderConfig
-        }
-        ],
-        threadPool:happyThreadPool
-    })
-]
-</pre>
-其实在webpack中任何操作都是需要增加打包时间的(包括优化操作)，所以在运用优化操作的时候，尽可能却确定优化操作比直接打包更值得
-3.长缓存优化
-3-1.把hash改为chunkhash
-我们在用webpack打包项目的时候，输出文件名通常会加hash，而每次项目中页面有内容变化，整个项目再次打包生成的文件hash代码会改变，影响浏览器生成缓存，我们可以将hash改成chunkhash
-<pre>
-output:{
-    path:__dirname+"/dist",
-    filename:"./[name].[chunkhash].js",
-}
-</pre>
-3-2.NamedChunksPlugin和NamedModulesPlugin
-上面的把hash改为chunkhash并不完美，当模块发生变动的时候，并不能保证hash的稳定。我们用3-2的方案完善
-在webpack配置文件中做如下修改
-<pre>
-plugins:[
-    new webpack.NamedChunksPlugin(),
-    new webpack.NamedModulesPlugin()
-]
-</pre>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/06/网易微专业-webpack实战演练-3-2-6-webpack打包速度优化/" data-id="ckchm0rgk003m5ajh3x0nytnj" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-单页应用-1-4-1-项目全面深度优化及打包上线之网易实践" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/06/03/网易微专业-单页应用-1-4-1-项目全面深度优化及打包上线之网易实践/" class="article-date">
-  <time datetime="2020-06-03T08:31:56.000Z" itemprop="datePublished">2020-06-03</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/06/03/网易微专业-单页应用-1-4-1-项目全面深度优化及打包上线之网易实践/">网易微专业-单页应用-1-4-1-项目全面深度优化及打包上线之网易实践</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>优化方向<br>——效率<br>  开发效率(组件、指令、工具函数的优化和积累)<br>  部署效率(打包优化)<br>  协作效率(协作方式的优化)<br>——质量<br>  性能监控<br>  自动化测试(单元测试、端到端测试等)<br>——性能体验<br>  首屏性能<br>  页面加载性能、图片性能</p>
-<p>1.工程优化<br>1-1.esline-plugin-vue去安装一些eslint关于vue代码的检测，具体可见eslint-plugin-vue官网 eslint.vuejs.org 会有比如缩进提示/v-if和v-for最好不要一起使用等plugin<br>1-2.其他loader<br>01.@vusion/md-vue-loader(vusion是网易研发的一套框架)md文件转vue的一个loader<br>02.css-sprite-loader<br>03.icon-font-loader<br>这里一个是讲了vue.config.js的一些配置方法(如下面代码),另外是讲了自己写一个vue-plugin如何在项目中测试引入，简单的说就是在项目中建立一个plugin的文件夹，里面有package.json依赖文件，index入口文件，我们在项目的package.json文件中引入这个plugin，在项目的node_modules文件夹中通过ln -s ../vue-plugin vue-plugin，然后我们通过ls -al vue-plugin(这里vue-plugin是你自己做的plugin的名称)</p>
-<p><pre><br>const CSSSpritePlugin = require(‘css-sprite-loader’).Plugin;</pre></p>
-<p>function chainCSSOneOfs(config, chainOneOf) {<br>    // ‘postcss’ 留给用户自定义吧<br>    [‘css’, ‘scss’, ‘sass’, ‘less’, ‘stylus’].forEach((rule) =&gt; {<br>        const ruleCSS = config.module.rule(rule);<br>        chainOneOf(ruleCSS.oneOf(‘vue-modules’), true);<br>        chainOneOf(ruleCSS.oneOf(‘vue’), false);<br>        chainOneOf(ruleCSS.oneOf(‘normal-modules’), true);<br>        chainOneOf(ruleCSS.oneOf(‘normal’), false);<br>    });<br>}</p>
-<p>module.exports = {<br>    chainWebpack(config) {<br>        config.plugin(‘css-sprite’).use(CSSSpritePlugin, [])</p>
-<pre><code>    chainCSSOneOfs(config, (oneOf) =&gt; {
-        oneOf.use(&apos;css-sprite-loader&apos;)
-            .loader(&apos;css-sprite-loader&apos;)
-            .end();
-    });
-}
-</code></pre><p>};<br><br>2.部署优化<br>部署优化我们可以从以下4个方面考虑<br>01.git pull 拉取代码<br>02.npm install 安装npm<br>02-1.利用package.json缓存node_modules<br>下面代码展示了如何利用package-lock.json作为缓存节省npm i的安装时间(如果package-lock.json没有改变的话，会从缓存安装，节省很多时间)</p>
-<p><pre><br>const fs = require(‘fs’);<br>const path = require(‘path’);<br>const shell = require(‘shelljs’);<br>const crypto = require(‘crypto’);<br>const md5 = function (str, len = 16) {<br>    const md5 = crypto.createHash(‘md5’);<br>    return md5.update(str).digest(‘hex’).substr(0, len);<br>};<br>const cachePath = path.join(<strong>dirname, ‘./node_modules/.cache/package-lock.log’);<br>if (!fs.existsSync(path.join(cachePath, ‘../..’))) {<br>    fs.mkdirSync(path.join(cachePath, ‘../..’), {<br>        recursive: true,<br>    });<br>}<br>const lockHash = md5(fs.readFileSync(path.join(</strong>dirname, ‘./package-lock.json’)).toString());<br>let cache = false;<br>if (fs.existsSync(cachePath)) {<br>    if (lockHash === fs.readFileSync(cachePath).toString()) {<br>        cache = true;<br>        console.log(‘Installed from cache.’);<br>    }<br>}<br>if (!cache) {<br>    /**</pre></p>
-<pre><code> * Install npm packages
- */
-console.time(&apos;npm install&apos;);
-console.log(&apos;Installing npm packages ...&apos;);
-const result = shell.exec(&apos;npm --no-audit --progress=false --registry=https://registry.npm.taobao.org install&apos;);
-if (result.code)
-    throw new Error(String(result.stderr));
-/**
- * Log Versions
- */
-const nodeVersion = shell.exec(&apos;node -v&apos;, { silent: true }).stdout.trim();
-console.log(&apos;node version:&apos;, nodeVersion);
-const npmVersion = shell.exec(&apos;npm -v&apos;, { silent: true }).stdout.trim();
-console.log(&apos;npm version:&apos;, npmVersion);
-console.timeEnd(&apos;npm install&apos;);
-fs.writeFileSync(cachePath, lockHash);
-</code></pre><p>}<br><br>02-2.利用webpack Dll(build和浏览器可以同时缓存)<br>……<br>03.npm run build webpack构建<br>04.cp -r 拷贝到指定目录<br>3.组件优化<br>01.虚拟列表<br>02.mixins<br>03.指令</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/03/网易微专业-单页应用-1-4-1-项目全面深度优化及打包上线之网易实践/" data-id="ckchm0rgp003v5ajhr1tjo5ur" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-移动端APP开发工程师-H5移动端开发-1-1-6-音频与视频" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/05/28/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-6-音频与视频/" class="article-date">
-  <time datetime="2020-05-28T10:25:54.000Z" itemprop="datePublished">2020-05-28</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/28/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-6-音频与视频/">网易微专业-移动端APP开发工程师-H5移动端开发-1.1.6-音频与视频</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.HTML5之前多媒体的方案<br>1-1.HTML5之前多媒体的方案<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.6_1.png"><br>1-2.HTML5多媒体的方案<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.6_2.png"><br>1-3.浏览器支持<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.6_3.png"><br>2.Audio音频<br>2-1.音频使用实例<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.6_4.png"><br>2-2.音频格式及浏览器支持<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.6_5.png"><br>3.Video视频<br>3-1.视频使用实例<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.6_6.png"><br>3-2.视频格式及浏览器支持<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.6_7.png"><br>3-3.flv.js<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.6_8.png"><br>3-4.video.js<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.6_9.png"><br>4.DOM控制<br>4-1.使用DOM控制<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.6_10.png"><br>4-2.相关操作<br>其中myVideo为获取的video元素<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.6_11.png"></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/05/28/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-6-音频与视频/" data-id="ckchm0rgv00495ajh5blsqgz0" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-移动端APP开发工程师-H5移动端开发-1-1-5-地理信息、本地存储、离线存储" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/05/28/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-5-地理信息、本地存储、离线存储/" class="article-date">
-  <time datetime="2020-05-28T07:32:42.000Z" itemprop="datePublished">2020-05-28</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/28/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-5-地理信息、本地存储、离线存储/">网易微专业-移动端APP开发工程师-H5移动端开发-1.1.5-地理信息、本地存储、离线存储</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.地理信息<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_1.png"><br>1-1.HTML5判断浏览器是否支持地理信息<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_2.png"><br>1-2.HTML5使用地理定位<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_3.png"><br>1-3.HTML5获取地理信息实例<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_4.png"><br>实例的相关参数:<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_5.png"><br>2.Web存储<br>2-1.WEB存储API<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_6.png"><br>2-2.localStorage(本地存储)浏览器支持<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_7.png"><br>2-3.localStorage(本地存储)对象常用方法<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_8.png"><br>2-4.localStorage(本地存储)实例<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_9.png"><br>2-5.localStorage(本地存储)删除数据实例<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_10.png"><br>2-6.localStorage(本地存储)存储JSON实例<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_11.png"><br>2-7.sessionStorage(会话存储)语法<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_12.png"><br>2-8.sessionStorage(会话存储)实例<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_13.png"><br>3.离线存储<br>3-1.离线存储(应用程序缓存)定义<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_14.png"><br>3-2.离线存储优势<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_15.png"><br>3-3.离线存储浏览器支持<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_16.png"><br>3-4.Cache Manifest基础<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_17.png"><br>3-5.manifest文件实例<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_18.png"><br>3-6.离线缓存实例<br><img src="https://snakexu.github.io/images/wangyi/app/1.1.5_19.png"><br>HTML5的离线缓存是基于应用程序的，本地测试会失败，这里老师教了在vscode中基于live server的服务环境:</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/05/28/网易微专业-移动端APP开发工程师-H5移动端开发-1-1-5-地理信息、本地存储、离线存储/" data-id="ckchm0rgv004a5ajhxr740opv" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/06/07/网易微专业-webpack实战演练-3-3-1-网易的webpack工程化实践/" data-id="ckdbzsiiv0031jrxqhrfm2m8j" class="article-share-link">Share</a>
       
       
     </footer>
@@ -812,23 +1419,23 @@ fs.writeFileSync(cachePath, lockHash);
       <ul>
         
           <li>
+            <a href="/2020/07/29/拉勾-规范化标准/">拉勾-规范化标准</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/28/拉勾-其他打包工具/">拉勾-其他打包工具</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/17/拉勾-Webpack打包/">拉勾-Webpack打包</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/15/拉勾-模块化开发/">拉勾-模块化开发</a>
+          </li>
+        
+          <li>
             <a href="/2020/07/08/拉勾-自动化构建/">拉勾-自动化构建</a>
-          </li>
-        
-          <li>
-            <a href="/2020/07/03/拉勾-脚手架工具/">拉勾-脚手架工具</a>
-          </li>
-        
-          <li>
-            <a href="/2020/07/03/拉勾-工程化概述/">拉勾-工程化概述</a>
-          </li>
-        
-          <li>
-            <a href="/2020/06/28/拉勾-JavaScript性能优化/">拉勾-JavaScript性能优化</a>
-          </li>
-        
-          <li>
-            <a href="/2020/06/26/拉勾-TypeScript语言/">拉勾-TypeScript语言</a>
           </li>
         
       </ul>

@@ -62,6 +62,262 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-js算法简单了解-归并排序" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/12/11/js算法简单了解-归并排序/" class="article-date">
+  <time datetime="2019-12-11T01:51:58.000Z" itemprop="datePublished">2019-12-11</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/12/11/js算法简单了解-归并排序/">js算法简单了解-归并排序</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.描述<br>先递归的分解数列，再合并数列（分治思想的典型应用）<br>（1）将一个数组拆成A、B两个小组，两个小组继续拆，直到每个小组只有一个元素为止。<br>（2）按照拆分过程逐步合并小组，由于各小组初始只有一个元素，可以看做小组内部是有序的，合并小组可以被看做是合并两个有序数组的过程。<br>（3）对左右两个小数列重复第二步，直至各区间只有1个数。<br>下面对数组[42,20,17,13,28,14,23,15]进行归并排序，模拟排序过程如下：<br>第一步：拆分数组，一共需要拆分三次（logN）;<br>第一次拆成[42,20,17,13]，[28,14,23,15];<br>第二次拆成[42,20]，[17,13]，[28,14]，[23,15];<br>第三次拆成[42]，[20]，[17]，[13]，[28]，[14]，[23]，[15];<br>第二步：逐步归并数组，采用合并两个有序数组的方法，每一步其算法复杂度基本接近于O(N);<br>第一次归并为[20,42]，[13,17]，[14,28]，[15,23];<br>第二次归并为[13,17,20,42]，[14,15,23,28];<br>第三次归并为[13, 14, 15, 17, 20, 23, 28, 42];<br>2.代码</p>
+<pre>
+function mergearr(arr1,arr2){
+    //console.log('arr1:',arr1)
+    //console.log('arr2:',arr2)
+    var arr3 = new Array()
+    var len1 = arr1.length;
+    var len2 = arr2.length;
+    var i=0,j=0,k=0;
+    while(i < len1 && j < len2){
+        if(arr1[i] < arr2[j]){
+            arr3[k++] = arr1[i++]
+        }else{
+            arr3[k++] = arr2[j++]
+        }
+    }
+    while(i < len1){
+        arr3[k++] = arr1[i++]
+    }
+    while(j < len2){
+        arr3[k++] = arr2[j++]
+    }
+    return arr3
+}
+function mergesort(arr){
+    //console.log('mergesort',arr)
+    var len = arr && arr.length;
+    if(len < = 1){
+        return arr;
+    }
+    var mid = Math.floor(len/2);
+    var left = arr.slice(0,mid);
+    var right = arr.slice(mid,len);
+    return mergearr(mergesort(left),mergesort(right));
+}
+var sortresult = mergesort([42,20,17,13,28,14,23,15])
+console.log('sortresult:',sortresult)
+</pre>
+上面代码的执行结果：
+<img src="https://snakexu.github.io/images/algorithm/mergesort_1.png">
+3.时间复杂度O(NlogN)  空间复杂度O(N) 稳定排序
+4.额外的
+上面是用递归的方法实现归并排序，但是算法(第四版)给我们提供了另外一种思路
+<pre>
+function mergearr(arr1,arr2){
+    //console.log('arr1:',arr1)
+    //console.log('arr2:',arr2)
+    var arr3 = new Array()
+    var len1 = arr1.length;
+    var len2 = arr2.length;
+    var i=0,j=0,k=0;
+    while(i < len1 && j < len2){
+        if(arr1[i] < arr2[j]){
+            arr3[k++] = arr1[i++]
+        }else{
+            arr3[k++] = arr2[j++]
+        }
+    }
+    while(i < len1){
+        arr3[k++] = arr1[i++]
+    }
+    while(j < len2){
+        arr3[k++] = arr2[j++]
+    }
+    return arr3
+}
+function mergesort(arr){
+    var len = arr && arr.length; 
+    var arrresult;
+    if(len< =1)return arr;
+    var sz = 1,i,arrresult;
+    for( ; sz < len; sz+=sz){
+        arrresult = []
+        for(i=0; i < = len - sz; i+= sz + sz){
+            var mid = i+sz
+            var left = arr.slice(mid-sz,mid)
+            var right = arr.slice(mid,Math.min(mid+sz,len))
+            var midarr = mergearr(left,right)
+            arrresult = arrresult.concat(midarr)
+        }
+        arr = arrresult
+    }
+    return arr
+}
+var sortresult = mergesort([42,20,17,13,28,14,23,15])
+console.log('sortresult:',sortresult)
+</pre>
+
+
+
+
+
+
+
+
+
+
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/12/11/js算法简单了解-归并排序/" data-id="ckeeij2zd0006joxqckl1eoco" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法/">算法</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-js算法简单了解-希尔排序" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/12/10/js算法简单了解-希尔排序/" class="article-date">
+  <time datetime="2019-12-10T09:18:20.000Z" itemprop="datePublished">2019-12-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/12/10/js算法简单了解-希尔排序/">js算法简单了解-希尔排序</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.描述<br>插入排序对于大规模乱序数组排序很慢，希尔排序为了加快速度简单的改进了插入排序，交换不相邻元素以对数组的局部进行片排序，并最终用插入排序将局部有序数组排序。<br>（1）按照某一增量，将数组分为若干子序列，对子序列分别进行插入排序。<br>（2）逐渐减小增量，并重复此过程，直到增量为1，此时序列基本有序，最后进行插入排序。<br>2.代码</p>
+<p><pre><br>function shellsort(arr){<br>    var len = arr &amp;&amp; arr.length;<br>    var h = 1;<br>    while(h &lt; len/3){ h = 3 * h + 1}//理论上这里h可以取任意大于0的正整数<br>    while(h &gt;= 1){<br>        for(var i = h; i &lt; len; i++){<br>            //这个for循环很有意思，相当于从当前第i个元素开始，再与它之前应属于同组的元素比较<br>            //也就是说，当循环到这个元素的时候，它之前的同组元素已经做好了插入排序<br>            for(var j = i; j &gt;= h &amp;&amp; arr[j] &lt; arr[j-h]; j -= h){<br>                var temp = arr[j];<br>                arr[j] = arr[j-h];<br>                arr[j-h] = temp;<br>            }<br>        }<br>        //console.log(arr)<br>        h = parseInt(h / 3)<br>    }<br>}<br>var arr = [49,38,65,101,76,13,27,49,55,1]<br>shellsort(arr)<br></pre><br>3.时间复杂度O(N^1.5)   空间复杂度O(1)</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/12/10/js算法简单了解-希尔排序/" data-id="ckeeij2za0004joxqalgwiuy5" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法/">算法</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-js算法简单了解-插入排序" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/12/10/js算法简单了解-插入排序/" class="article-date">
+  <time datetime="2019-12-10T06:37:09.000Z" itemprop="datePublished">2019-12-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/12/10/js算法简单了解-插入排序/">js算法简单了解-插入排序</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.描述<br>插入排序的工作原理就是将未排序数据，对已排序数据序列从后向前扫描，找到对应的位置并插入。插入排序通常采用占位的形式，空间复杂度为O(1),因此，在从后向前扫描的过程中，需要反复的把已排序的元素逐步向后挪位，为新插入元素提供插入的位置。<br>(1）从第一个元素开始，该元素可以被认为已经被排序<br>(2）取出下一个元素，在已经排好序的序列中从后往前扫描<br>(3）直到找到小于或者等于该元素的位置<br>(4）将该位置后面的所有已排序的元素从后往前依次移一位<br>(5)将该元素插入到该位置<br>(6)重复步骤2-5<br>另外，插入排序所需的时间取决于输入中元素的初始顺序。<br>2.代码</p>
+<p><pre><br>function insertsort(arr){<br>    var len = arr &amp;&amp; arr.length,i=1,j;<br>    for( ; i &lt; len; i++){<br>        for(j = i; j &gt; 0 &amp;&amp; arr[j] &lt; arr[j-1]; j–){<br>            var temp = arr[j];<br>            arr[j] = arr[j-1]<br>            arr[j-1] = temp;<br>        }<br>        //console.log(arr)这里是为了打印每轮比较的结果<br>    }<br>    return arr<br>}<br>var arr = [49,38,65,101,76,13,27,49,55,1]<br>insertsort(arr)<br></pre><br>结果打印<br><img src="https://snakexu.github.io/images/algorithm/insertsort_1.png"><br>3.时间复杂度最好为O(N) 最坏为(N^2) 平均为O(N^2)   空间复杂度为O(1) 稳定<br>4.额外<br>4.1数组是部分有序的：数组中倒置的数量小于数组大小的某个倍数，那么我们说这个数组是部分有序的。下面是几种典型的部分有序的数组：<br>(1)数组中每个元素距离它最终位置都不远<br>(2)一个有序的大数组接一个小数组<br>(3)数组中只有几个元素的位置不正确<br>——以上来自：算法(第四版)<br><br>插入排序对这样的数组很有效。<br><br>4.2要大幅提高插入排序的速度并不难，只需要在内循环中将较大的元素都向右移动而不总是交换两个元素(这样访问数组的次数就能减半)</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/12/10/js算法简单了解-插入排序/" data-id="ckeeij2zj000bjoxqdhgtu4i5" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法/">算法</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-js算法简单了解-选择排序" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/12/10/js算法简单了解-选择排序/" class="article-date">
+  <time datetime="2019-12-10T03:50:51.000Z" itemprop="datePublished">2019-12-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/12/10/js算法简单了解-选择排序/">js算法简单了解-选择排序</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.描述<br>在长度为N的无序数组中，第一次遍历n-1个数，找到最小的数值与第一个元素交换；第二次遍历n-2个数，找到最小的数值与第二个元素交换；。。。第n-1次遍历，找到最小的数值与第n-1个元素交换，排序完成。相较其他算法，选择排序的运行时间与数据初始状态无关，总会进行大约N2/2(N的平方除以2)次比较，而其他算法更善于利用数据初始状态<br>2.代码实现</p>
+<p><pre><br>function selectsort(arr){<br>    var len = arr &amp;&amp; arr.length,i=0,j,min;<br>    for( ; i &lt; len - 1; i++){<br>        min = i;<br>        for(j = i+1; j &lt; len; j++){<br>            if(a[j] &lt; a[min])<br>                min = j;<br>        }<br>        if(min != i){<br>            var temp = a[i];<br>            a[i] = a[min];<br>            a[min] = temp;<br>        }<br>    }<br>    return arr<br>}<br></pre><br>3.时间复杂度均为O(N^2)    空间复杂度为O(1)  不稳定(不稳定的意思就是，如果有个数组arr = [4,5,2,3,3,1],在排序之后，a[3]依然在a[4]前边)</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/12/10/js算法简单了解-选择排序/" data-id="ckeeij2zl000djoxq6p73we7r" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法/">算法</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-js算法简单了解-冒泡算法" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/12/10/js算法简单了解-冒泡算法/" class="article-date">
@@ -91,7 +347,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/10/js算法简单了解-冒泡算法/" data-id="ckdbzsigk0003jrxq04oymk9q" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/12/10/js算法简单了解-冒泡算法/" data-id="ckeeij2z80003joxqusz7v8dm" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法/">算法</a></li></ul>
@@ -130,7 +386,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/07/网易微专业-模块化编程-4-1-2-加载器结构设计导论-自研模块加载器/" data-id="ckdbzsiix0034jrxqsxi41wii" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/12/07/网易微专业-模块化编程-4-1-2-加载器结构设计导论-自研模块加载器/" data-id="ckeeij31k0039joxq0120tm0t" class="article-share-link">Share</a>
       
       
     </footer>
@@ -175,7 +431,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/07/网易微专业-模块化编程-4-1-1-模块系统概述-自定义模块规范-书写约定/" data-id="ckdbzsiiz0037jrxqao7yhvz4" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/12/07/网易微专业-模块化编程-4-1-1-模块系统概述-自定义模块规范-书写约定/" data-id="ckeeij31j0037joxqbycls5kf" class="article-share-link">Share</a>
       
       
     </footer>
@@ -212,7 +468,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/06/HTTP和HTTPS协议/" data-id="ckdbzsiln0046jrxqmbrqlhif" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/12/06/HTTP和HTTPS协议/" data-id="ckeeij3490048joxq8z0qudq3" class="article-share-link">Share</a>
       
       
     </footer>
@@ -306,7 +562,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/06/我的typescript学习-接口/" data-id="ckdbzsilr004cjrxqos5t608z" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/12/06/我的typescript学习-接口/" data-id="ckeeij34d004hjoxqtnmo8aun" class="article-share-link">Share</a>
       
       
     </footer>
@@ -403,282 +659,7 @@ console.log(fibonacci.cache);
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/02/网易微专业-Undersocre-3-4-1-Underscore-partial偏函数or-memoize缓存/" data-id="ckdbzsihw001xjrxqfyxcivl0" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-Undersocre-3-3-2-Underscore-unique去重函数-源码拾遗" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/12/02/网易微专业-Undersocre-3-3-2-Underscore-unique去重函数-源码拾遗/" class="article-date">
-  <time datetime="2019-12-02T02:05:46.000Z" itemprop="datePublished">2019-12-02</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/12/02/网易微专业-Undersocre-3-3-2-Underscore-unique去重函数-源码拾遗/">网易微专业-Undersocre-3.3.2-Underscore unique去重函数&amp;源码拾遗</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <ol>
-<li>_.unique<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.3.2_1.png"></li>
-<li>_.compact<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.3.2_2.png"><br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.3.2_3.png"></li>
-<li>_.range<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.3.2_4.png"><br>4.<br><pre><br>_.unique = function(array, isSorted, iteratee, context){<br> //参数isSorted作用是被处理数组array是否是有序的<br> if(!_.isBoolean(isSorted)){<pre><code>context = iteratee;
-iteratee = isSorted;
-isSorted = false;
-</code></pre> }<br> if(iteratee != null){<pre><code>iteratee = cb(iteratee,context)
-</code></pre> }<br> var result = []<br> var seen<br> for(var i = 0; i &lt; array.length; i++){<pre><code>var computed = iteratee ? iteratee(value, i, array) : array[i];
-// 如果是有序数组,则当前元素只需跟上一个元素对比即可
-// 用 seen 变量保存上一个元素
-if(isSorted){
-    if(!i || !seen !== computed)
-        result.push(computed);
-    seen = computed;
-}else if(result.indexOf(computed)=== -1){
-        result.push(computed)
-}
-</code></pre> }<br>}<br>//predicate  真值检测(重点: 返回值)<br>_.filter = _.select = function(obj, predicate, context) {<br> var results = [];<br> predicate = cb(predicate, context);<br> _.each(obj, function(value, index, list) {<pre><code>if (predicate(value, index, list)) results.push(value);
-</code></pre> });<br> return results;<br>};<br>//去掉数组中所有的假值   _.identity = function(value){return value};<br>_.compact = function(array) {<br> return _.filter(array, _.identity);<br>};<br>_.range = function(start, stop, step){<br> if(stop == null){<pre><code>stop = start || 0;
-start = 0
-</code></pre> }<br> step = step || 1;<br> var length = Math.max((Math.ceil(stop - start) / step), 0);<br> var range = Array(length);<br> for(var index = 0; index &lt; length; index++, start+=step){<pre><code>range[index] = start
-</code></pre> }<br> return range<br>}<br></pre><br>这一节内容丰满了我们之前的_.unique的程序，添加了数组有序的情况下如何处理，在数组有序的情况下，如果再一一查找，显然是浪费性能的，这里给了一个更好的方法。上面的_.filter在判断是否是真值的时候用了很聪明的方法。</li>
-</ol>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/02/网易微专业-Undersocre-3-3-2-Underscore-unique去重函数-源码拾遗/" data-id="ckdbzsihy001zjrxqx8lkovnq" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-Undersocre-3-3-1-Underscore数组定位与摊平数组" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/12/01/网易微专业-Undersocre-3-3-1-Underscore数组定位与摊平数组/" class="article-date">
-  <time datetime="2019-12-01T13:42:29.000Z" itemprop="datePublished">2019-12-01</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/12/01/网易微专业-Undersocre-3-3-1-Underscore数组定位与摊平数组/">网易微专业-Undersocre-3.3.1-Underscore数组定位与摊平数组</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.<em>.initial与</em>.flatten<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.3.1_1.png"><br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.3.1_2.png"><br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.3.1_3.png"><br>2.代码</p>
-<p><pre><br>//摊平数组<br>var flatten = function(array, shallow) {<br>    var ret = [];<br>    var index = 0;<br>    for (var i = 0; i &lt; array.length; i++) {<br>        var value = array[i]; //展开一次<br>        if (_.isArray(value) || _.isArguments(value)) {<br>            //递归全部展开<br>            if (!shallow) {<br>                value = flatten(value, shallow);<br>            }<br>            var j = 0,<br>                len = value.length;<br>            //个人以为，这个地方，思路值得学习<br>            ret.length += len;<br>            while (j &lt; len) {<br>                ret[index++] = value[j++];<br>            }<br>        } else {<br>            ret[index++] = value;<br>        }<br>    }<br>    return ret;<br>}<br>_.flatten = function(array, shallow) {<br>    return flatten(array, shallow);<br>}<br>//返回数组中除了最后一个元素外的其他全部元素。 在arguments对象上特别有用。<br>_.initial = function(array, n) {<br>    return [].slice.call(array, 0, Math.max(0, array.length - (n == null ? 1 : n)));<br>};<br>//返回数组中除了第一个元素外的其他全部元素。传递 n 参数将返回从n开始的剩余所有元素<br><em>.rest = function(array, n, guard) {<br>    return [].slice.call(array, n == null ? 1 : n);<br>};<br></em></pre><br>Underscore看到现在，这里应该是比较简单的一节了，这节摊平数组主要是递归函数，但是整理摊平出来的数组也就是递归语句下面生成新数组的思路，还是很值得学习的。.initial和_.rest很容易理解，就不多说了。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/01/网易微专业-Undersocre-3-3-1-Underscore数组定位与摊平数组/" data-id="ckdbzsihv001wjrxqmpyoxgoc" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-Underscore-3-2-3-乱序数组-洗牌算法" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/11/27/网易微专业-Underscore-3-2-3-乱序数组-洗牌算法/" class="article-date">
-  <time datetime="2019-11-27T08:17:34.000Z" itemprop="datePublished">2019-11-27</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/11/27/网易微专业-Underscore-3-2-3-乱序数组-洗牌算法/">网易微专业-Underscore-3.2.3-乱序数组-洗牌算法</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.洗牌算法<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.2.3_1.png"><br>2.没啥说的，撸代码吧</p>
-<pre>
-_.clone = function(obj) {
-    return _.isArray(obj) ? obj.slice() : _.extend({}, obj);
-};
-
-//返回乱序之后的数组副本
-_.shuffle = function(array){
-   //array.length
-   return _.sample(array,Infinity);
-}
-//抽样函数  10  11 
-_.sample = function(array, n){
-   if(n == null){
-      return  array[_.random(array.length-1)];
-   }
-   var sample = _.clone(array);
-   var length = sample.length;
-   var last = length-1;
-   n = Math.max(Math.min(n, length),0);
-   for(var index = 0; index < n; index++){
-       //随机数   index  n
-       var rand = _.random(index, last);
-       var temp = sample[index];
-       sample[index] = sample[rand];   //交换
-       sample[rand] = temp;  //交换
-   }
-   return sample.slice(0, n);
-}
-</pre>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/27/网易微专业-Underscore-3-2-3-乱序数组-洗牌算法/" data-id="ckdbzsiht001ujrxqpge12tch" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-Underscore-3-2-2-条件查询-背后索引查询器实现" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/11/27/网易微专业-Underscore-3-2-2-条件查询-背后索引查询器实现/" class="article-date">
-  <time datetime="2019-11-27T06:44:38.000Z" itemprop="datePublished">2019-11-27</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/11/27/网易微专业-Underscore-3-2-2-条件查询-背后索引查询器实现/">网易微专业-Underscore-3.2.2-条件查询-背后索引查询器实现</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.indexOf lastIndexOf条件查询<br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.2.2_1.png"><br><img src="https://snakexu.github.io/images/wangyi/Underscore/3.2.2_2.png"><br>2.代码奉上<br>这节课，老师主要讲的其实是二分查找的算法。二分查找，就是在数组为有序数组的前提下，每次只查找数组长度的一半。最简单的来说，如果我们一个个按序对比，时间复杂度为n，如果采用二分查找，时间复杂度为log以2为底n的对数，在数据量大的时候，和明显二分查找效率更高</p>
-<pre>
-// (dir === 1 => 从前往后找)  (dir === -1 => 从后往前找) 
-function createPredicateIndexFinder(dir) {
-    return function(array, predicate, context) {
-        predicate = cb(predicate, context);  // _.isNaN
-        var length = array.length;
-        // 根据 dir 变量来确定数组遍历的起始位置
-        var index = dir > 0 ? 0 : length - 1;
-
-        for (; index >= 0 && index < length; index += dir) {
-            // 找到第一个符合条件的元素
-            // 并返回下标值
-            if (predicate(array[index], index, array))   //true
-                return index;
-        }
-        return -1;
-    };
-}
-_.findIndex = createPredicateIndexFinder(1);
-_.findLastIndex = createPredicateIndexFinder(-1);
-
-_.isNaN = function(obj) {   // NaN
-    return _.isNumber(obj) && obj !== obj;
-};
-
-_.sortedIndex = function(array, obj, iteratee, context) {
-    // 重点:cb函数 if (iteratee == null) {return function(value){return value;}}
-    iteratee = cb(iteratee, context, 1);
-    var value = iteratee(obj);
-    var low = 0,
-        high = array.length;
-    // 二分查找
-    while (low < high) {  //4  4 
-        var mid = Math.floor((low + high) / 2);   //4
-        if (iteratee(array[mid]) < value)    //  5 < 5
-            low = mid + 1;  //4
-        else
-            high = mid;   //4
-    }
-
-    return low;     //4
-};
-
-function createIndexFinder(dir, predicateFind, sortedIndex) {
-    // API 调用形式
-    // _.indexOf(array, value, [isSorted])
-    return function(array, item, idx) {
-        var i = 0,
-            length = array.length;
-        // 第三个参数true用二分查找优化 否则 遍历查找
-        if (sortedIndex && _.isBoolean(idx) && length) {
-            // 能用二分查找加速的条件
-            // 用 _.sortedIndex 找到有序数组中 item 正好插入的位置
-            idx = sortedIndex(array, item);
-            return array[idx] === item ? idx : -1;
-        }
-
-        //特殊情况 如果要查找的元素是 NaN 类型  NaN !== NaN
-        if (item !== item) {
-            idx = predicateFind(slice.call(array, i, length), _.isNaN);
-            return idx >= 0 ? idx + i : -1;
-        }
-
-        // 非上述情况正常遍历
-        for (idx = dir > 0 ? i : length - 1; idx >= 0 && idx < length; idx += dir) {
-            if (array[idx] === item) return idx;
-        }
-
-        return -1;
-    };
-}
-
-//_.findIndex  特殊情况下的处理方案  NAN  
-//_.sortedIndex 针对排序的数组做二分查找  优化性能
-_.indexOf = createIndexFinder(1, _.findIndex, _.sortedIndex);
-_.lastIndexOf = createIndexFinder(-1, _.findLastIndex);
-</pre>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/27/网易微专业-Underscore-3-2-2-条件查询-背后索引查询器实现/" data-id="ckdbzsihs001tjrxqc5gn2277" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/12/02/网易微专业-Undersocre-3-4-1-Underscore-partial偏函数or-memoize缓存/" data-id="ckeeij30m0020joxq1qyo4zyb" class="article-share-link">Share</a>
       
       
     </footer>
@@ -692,7 +673,7 @@ _.lastIndexOf = createIndexFinder(-1, _.findLastIndex);
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/12/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="page-number" href="/page/12/">12</a><span class="page-number current">13</span><a class="page-number" href="/page/14/">14</a><a class="page-number" href="/page/15/">15</a><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" href="/page/14/">Next &raquo;</a>
+    <a class="extend prev" rel="prev" href="/page/12/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="page-number" href="/page/12/">12</a><span class="page-number current">13</span><a class="page-number" href="/page/14/">14</a><a class="page-number" href="/page/15/">15</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/14/">Next &raquo;</a>
   </nav>
 
 </section>
@@ -732,7 +713,7 @@ _.lastIndexOf = createIndexFinder(-1, _.findLastIndex);
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
     </div>
   </div>
 
@@ -745,23 +726,23 @@ _.lastIndexOf = createIndexFinder(-1, _.findLastIndex);
       <ul>
         
           <li>
+            <a href="/2020/08/10/拉勾-Virtual-DOM-的实现原理/">拉勾-Virtual DOM 的实现原理</a>
+          </li>
+        
+          <li>
+            <a href="/2020/08/05/拉勾-模拟Vue-js响应式原理/">拉勾-模拟Vue.js响应式原理</a>
+          </li>
+        
+          <li>
+            <a href="/2020/08/03/拉勾-Vue-Router实现原理/">拉勾-Vue-Router实现原理</a>
+          </li>
+        
+          <li>
+            <a href="/2020/08/02/拉勾-Vue-js基础回顾/">拉勾-Vue.js基础回顾</a>
+          </li>
+        
+          <li>
             <a href="/2020/07/29/拉勾-规范化标准/">拉勾-规范化标准</a>
-          </li>
-        
-          <li>
-            <a href="/2020/07/28/拉勾-其他打包工具/">拉勾-其他打包工具</a>
-          </li>
-        
-          <li>
-            <a href="/2020/07/17/拉勾-Webpack打包/">拉勾-Webpack打包</a>
-          </li>
-        
-          <li>
-            <a href="/2020/07/15/拉勾-模块化开发/">拉勾-模块化开发</a>
-          </li>
-        
-          <li>
-            <a href="/2020/07/08/拉勾-自动化构建/">拉勾-自动化构建</a>
           </li>
         
       </ul>

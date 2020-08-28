@@ -62,6 +62,390 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-网易微专业-MV-组件化开发React专题-React生态-2-3-1-路由-React-Router-原理" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/03/15/网易微专业-MV-组件化开发React专题-React生态-2-3-1-路由-React-Router-原理/" class="article-date">
+  <time datetime="2020-03-15T03:59:40.000Z" itemprop="datePublished">2020-03-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/03/15/网易微专业-MV-组件化开发React专题-React生态-2-3-1-路由-React-Router-原理/">网易微专业-MV-组件化开发React专题-React生态-2.3.1-路由(React-Router)原理</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.hashhistory</p>
+<p><pre><br>import React,{ Component } from ‘react’</pre></p>
+<p>class Router extends Component{<br>    render(){<br>        return (<br>            &lt; &gt;<br>            {this.props.children}<br>            &lt;/&gt;<br>        )<br>    }<br>}<br>class Route extends Component{<br>    render(){<br>        const {<br>            path,<br>            component<br>        } = this.props;<br>        let instance = null;<br>        let hash = window.location.hash.replace(‘#’,’’)<br>        if(path === hash){<br>            instance = component<br>        }<br>        return (<br>            &lt; &gt;<br>            {instance}<br>            &lt;/&gt;<br>        )<br>    }<br>}<br>const AA = ()=&gt;&lt; div&gt;aa&lt; /div&gt;<br>const BB = ()=&gt;&lt; div&gt;bb&lt; /div&gt;<br>function App(){<br>    return (<br>        &lt; div&gt;<br>            &lt; Router&gt;<br>                &lt; header&gt;<br>                    &lt; div&gt;header&lt; /div&gt;<br>                    &lt; Route path=”/aa” component={AA}/&gt;<br>                    &lt; Route path=”/bb” component={BB}/&gt;<br>                &lt; /header&gt;<br>            &lt; /Router&gt;<br>        &lt; /div&gt;<br>    )<br>}<br>export default App<br><br>开启服务之后我们在浏览器中看到，并没有像我们预想的在/aa页面中展示aa，在/bb页面中展示bb<br><img src="https://snakexu.github.io/images/wangyi/react/2.3.1_1.png"><br>这是为什么？因为我们&lt; Route path=”./aa” component={AA}/&gt;在这里 component={AA}传的是AA类本身，在调用的时候instance = component也是类本身，而不是实例；如果我们在调用的时候instance = <aa> 则是通过标签实例化了(常规实例化是通过new关键字，在虚拟DOM中是通过标签实例化的)，所以如果想页面按照我们预想的效果展示，我们需要做一些简单的修改</aa></p>
+<p><pre><br>if(path === hash){<br>    //React.createElement(component,{name:’a’,age:2},children)，即第二个可以传组件需要参数，第三个参数是子组件<br>    instance = React.createElement(component,null,null);<br>}<br></pre><br>能看出来我们对哪里进行了修改么？是class Route extends Component这个组件中的部分内容。<br>但是我们发现我们对页面路由进行修改的时候，并不是每次(即使是不存在的路由)都很好的反馈我们想要的结果，这是因为我们没有给hashhistory绑定事件。我们在页面添加一个事件</p>
+<p><pre><br>window.onhashchange = (e)=&gt;{<br>    console.log(e);<br>}<br></pre><br>控制台打印如下内容<br><img src="https://snakexu.github.io/images/wangyi/react/2.3.1_2.png"><br>从而我们知道，可以通过一个方式捕捉hash的变化，变化以后的hash是什么呢？我们可以通过loaction.hash来获取到。 每次浏览器内容发生变化，可以通过上下文(context)传递给子组件，子组件捕捉到hashhistory发生变化来控制自身的渲染与否</p>
+<p><pre><br>import React,{ Component } from ‘react’<br>import PropTypes from ‘prop-types’<br>class Router extends Component{<br>    render(){<br>        return (<br>            &lt; &gt;<br>            {this.props.children}<br>            &lt;/&gt;<br>        )<br>    }<br>}<br>class Route extends Component{<br>    constructor(props){<br>        super(props);<br>        this.state = {<br>            hash:window.location.hash<br>        }<br>    }<br>    static contextTypes = {<br>        hash: PropTypes.string<br>    }<br>    getHash(){<br>        let url = window.location.hash.replace(‘#’,’’)<br>        return url<br>    }<br>    getChildContext(){<br>        return {<br>            hash:this.getHash()<br>        }<br>    }<br>    componentDidMount(){<br>        window.onhashchange = ()=&gt;{<br>            this.setState({<br>                hash:this.getHash()<br>            })<br>        }<br>    }<br>    render(){<br>        const {<br>            path,<br>            component<br>        } = this.props;<br>        let instance = null;<br>        //let hash = window.location.hash.replace(‘#’,’’)<br>        const {<br>            hash<br>        } = this.context<br>        if(path === hash){<br>            //React.createElement(component,{name:’a’,age:2},children)，即第二个可以传组件需要参数，第三个参数是子组件<br>            instance = React.createElement(component,null,null);<br>        }<br>        return (<br>            &lt; &gt;<br>            {instance}<br>            &lt;/&gt;<br>        )<br>    }<br>}<br>const AA = ()=&gt;&lt; div&gt;aa&lt; /div&gt;<br>const BB = ()=&gt;&lt; div&gt;bb&lt; /div&gt;<br>function App(){<br>    return (<br>        &lt; div&gt;<br>            &lt; Router&gt;<br>                &lt; header&gt;<br>                    &lt; div&gt;header&lt; /div&gt;<br>                    &lt; Route path=”/aa” component={AA}/&gt;<br>                    &lt; Route path=”/bb” component={BB}/&gt;<br>                &lt; /header&gt;<br>            &lt; /Router&gt;<br>        &lt; /div&gt;<br>    )<br>}<br>export default App<br></pre><br>经过一番改造，页面内容在我们修改地址栏地址的时候发生了变化。但是如果地址栏后面加上类似于?a=1的参数，页面就不能按照我们预想的反馈了，老师在这里对我们的要求是，尽量自己去实现获取参数等功能<br>2.browserhistory</p>
+<p><pre><br>import React,{ Component } from ‘react’<br>import PropTypes from ‘prop-types’<br>class Router extends Component{<br>    constructor(props){<br>        super(props);<br>        this.state = {<br>            hash:this.getHash()<br>        }<br>        this.history = window.history<br>    }<br>    static childContextTypes = {<br>        hash: PropTypes.string,<br>    }<br>    getHash(){<br>        let url = window.location.pathname;<br>        return url<br>    }<br>    getChildContext(){<br>        return {<br>            hash:this.state.hash<br>        }<br>    }<br>    componentDidMount(){<br>        this.history.route = (name) =&gt;{<br>            this.setState({<br>                hash:<code>${name}</code><br>            })<br>            window.history.pushState(null,null,name);//只是改变页面状态，没有做任何请求<br>        }<br>    }<br>    render(){<br>        return (<br>            &lt; &gt;<br>            {this.props.children}<br>            &lt;/&gt;<br>        )<br>    }<br>}<br>class Route extends Component{<br>    static contextTypes = {<br>        hash: PropTypes.string<br>    }<br>    render(){<br>        const {<br>            path,<br>            component<br>        } = this.props;<br>        let instance = null;<br>        const {<br>            hash<br>        } =this.context<br>        if(path === hash){<br>            //React.createElement(component,{name:’a’,age:2},children)，即第二个可以传组件需要参数，第三个参数是子组件<br>            instance = React.createElement(component,null,null);<br>        }<br>        return (<br>            &lt; &gt;<br>            {instance}<br>            &lt;/&gt;<br>        )<br>    }<br>}</pre></p>
+<p>const AA = ()=&gt;&lt; div&gt;aa&lt; /div&gt;<br>const BB = ()=&gt;&lt; div&gt;bb&lt; /div&gt;</p>
+<p>function App(){<br>    return (<br>        &lt; div&gt;<br>            &lt; Router&gt;<br>                &lt; header&gt;<br>                    &lt; div&gt;header&lt; /div&gt;<br>                    &lt; Route path=”/aa” component={AA}/&gt;<br>                    &lt; Route path=”/bb” component={BB}/&gt;<br>                &lt; /header&gt;<br>            &lt; /Router&gt;<br>        &lt; /div&gt;<br>    )<br>}<br>export default App<br><br>这里我们基本了解了browserhistory的实现原理，在这里我们发现，即使在url输入参数?a=1页面也能正常显示，是因为location.pathname是获取的不带参数的<br>3.简单看一下reactrouter的API，这里看的是reactrouter4的版本 <a href="https://reacttraining.com/react-router/web/guides/quick-start" target="_blank" rel="noopener">https://reacttraining.com/react-router/web/guides/quick-start</a><br>4.服务端渲染<br>通过配合服务端代码了解如何区分前后端路由，了解为何browserhistory需要后端支持。<br>4-1.如何区分前后端路由<br>如果url中既包含前端路由又包含后端路由，我们通常看到node端路由会有app.use(express为例)等指定路由，那么app.use中指定的就是后端路由<br>4-2.为何browserhistory需要后端支持：如果在后端路由拦截中找不到确定的前端路由会造成页面404，这时候就需要后端配合指定页面前端路由，或者找不到页面的指定app.use(*)等。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/03/15/网易微专业-MV-组件化开发React专题-React生态-2-3-1-路由-React-Router-原理/" data-id="ckeeij303001ajoxq1w854v3d" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-webpack实战演练-3-2-4-代码分割-3-2-5-js代码大小控制" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/03/13/网易微专业-webpack实战演练-3-2-4-代码分割-3-2-5-js代码大小控制/" class="article-date">
+  <time datetime="2020-03-13T02:34:53.000Z" itemprop="datePublished">2020-03-13</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/03/13/网易微专业-webpack实战演练-3-2-4-代码分割-3-2-5-js代码大小控制/">网易微专业-webpack实战演练-3.2.4-代码分割-3.2.5-js代码大小控制</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.一切为了优化<br>要解决的问题：01.减少加载代码的大小；02.提取公共资源减少加载次数<br>2.代码分割<br>2-1.多页面应用<br>提取公共依赖：把几个页面之中都用到的依赖给打包为一个单独的文件<br>2-2.单页面应用<br>减少文件体积，拆分应用：把需要异步加载的内容改成异步加载<br>2-3.为了业务代码的纯净<br>有时不希望业务代码里混入第三方代码，或webpack配置代码：把第三方代码和webpack配置代码拆分为单独文件<br>当我们使用npm run build命令执行之后，发现会打包成三类文件：app.js——业务代码，vendor.js——第三方模块，manifest.js——webpack运行代码<br>2-4.所以一般这么打包<br>多页面应用：主业务代码+公共依赖+第三方包+webpack运行代码<br>单页面应用：主业务代码+异步模块+第三方包+webpack运行代码<br>3.如何进行代码分割<br><img src="https://snakexu.github.io/images/wangyi/webpack/3.2.4_1.png"><br>3-1.简单展示下webpack3的时候是如何处理的</p>
+<p><pre><br>new webpack.optimize.CommonsChunksPlugin({<br>    name:’vendor’,<br>    minChunks:’infinity’,<br>}),<br>new webpack.optimize.CommonsChunksPlugin({<br>    name:’manifest’,<br>    minChunks:’infinity’,<br>}),<br>new webpack.optimize.CommonsChunksPlugin({<br>    name:’app.js’,<br>    minChunks:2,<br>}),<br></pre><br>3-2.webpack4处理简介</p>
+<p><pre><br>var extractTextCss = require(‘extract-text-webpack-plugin’);<br>var htmlWebpackPlugin = require(‘html-webpack-plugin’);<br>const webpackSpriteSmith = require(‘webpack-spriteSmith’);<br>const webpack = require(‘webpack’);<br>const UglifyJs = require(‘uglifyjs-webpack-plugin’);<br>const { CleanWebpackPlugin } = require(‘clean-webpack-plugin’);<br>const path = require(‘path’);<br>module.exports={<br>    mode:’production’,<br>    entry:{<br>        app:’./src/app.js’,<br>        app2:’./src/app2.js’,//为了演示，我们做成了多页面入口<br>    },<br>    output:{<br>        path:__dirname+”/dist”,<br>        filename:”./[name].bundle.js”<br>    },<br>    module:{<br>        rules:[<br>            {<br>                test:/.css$/,<br>                use:extractTextCss.extract({<br>                    fallback:{<br>                           loader:’style-loader’,<br>                     },<br>                    use:[<br>                        {<br>                           loader:’css-loader’,<br>                        },<br>                    ]<br>                })<br>            },<br>            {<br>                test:/.(jpg|jpeg|gif|png)$/,<br>                use:{<br>                    loader:’file-loader’<br>                }<br>            }<br>        ]<br>    },<br>    plugin:[<br>        //如果是多页面入口应用，我们需要new多次htmlwebpackplugin，有几个入口就要new几个htmlwebpackplugin，但是不能重名<br>        new extractTextCss({<br>            filename:’[name].min.css’<br>        }),<br>        new htmlWebpackPlugin({<br>            filename:’index.html’,<br>            template:’./src/index.html’<br>        }),<br>        new htmlWebpackPlugin({<br>            filename:’index2.html’,<br>            template:’./src/index.html’<br>        })<br>    ]<br>}<br></pre><br>执行打包命令之后，我们可以看到<br><img src="https://snakexu.github.io/images/wangyi/webpack/3.2.4_2.png"><br>正常生成了我们想要的文件，但是我们发现在index2.html中我们引入了app和app2两个js，很明显我们不想要这样的结果<br><img src="https://snakexu.github.io/images/wangyi/webpack/3.2.4_3.png"></p>
+<p><pre><br>plugin:[<br>    new extractTextCss({<br>        filename:’[name].min.css’<br>    }),<br>    new htmlWebpackPlugin({<br>        filename:’index.html’,<br>        template:’./src/index.html’,<br>        chunks:[‘app’],//通过chunks指定html需要哪些内容<br>    }),<br>    new htmlWebpackPlugin({<br>        filename:’index2.html’,<br>        template:’./src/index.html’,<br>        chunks:[‘app2’]<br>    })<br>]<br></pre><br><img src="https://snakexu.github.io/images/wangyi/webpack/3.2.4_4.png"><br>现在我们看到，index2.html正确引入了需要的文件。<br>3-3.拆分公共模块<br>假设我们有以下内容(1)app.js</p>
+<p><pre><br>import ma from ‘./modulea.js’;<br>import mb from ‘./moduleb.js’;<br>import $ from ‘jquery’;<br>import _ from ‘loadsh’;<br>mb.a();<br></pre><br>(2)app2.js</p>
+<p><pre><br>import ma from ‘./modulea.js’;<br>import _ from ‘loadsh’;<br>console.log(23);<br></pre><br>这两个文件中，很明显modulea是公共模块，我们现在的目的是把modulea模块提取出来</p>
+<p><pre><br>module.exports={<br>    mode:’production’,<br>    entry:{<br>        app:’./src/app.js’,<br>        app2:’./src/app2.js’,<br>    },<br>    output:{<br>        path:__dirname+”/dist”,<br>        filename:”./[name].bundle.js”<br>    },<br>    optimization:{<br>        splitChunks:{<br>            //如何分割代码写在这里<br>            name:true,//拆分出来的包是怎么命名的，设置为true的意思是根据默认的方式去做，根据入口的名字<br>            chunks:’initial’,//initial-对所有的模块都进行公共提取，async-对异步模块进行公共提取，all-对所有入口模块进行公共提取<br>            minSize:5000,//对于大于多少的内容进行公共提取(如果很小的内容就进行公共提取，那么虽然可以对公共模块有了缓存，但是多了一次额外的http请求)，5000就是5kb<br>            automaticNameDelimiter:”.”,//打包生成文件名字的代码分割符<br>        }<br>    },<br>    ……<br>}<br></pre><br>打包之后能看到，文件命名分割符变成了我们规定的点分割符<br><img src="https://snakexu.github.io/images/wangyi/webpack/3.2.4_5.png"><br>如果我们想把包名改为具名命名，可以修改name选项</p>
+<p><pre><br>optimization:{<br>    splitChunks:{<br>        name:’common’,<br>        chunks:’initial’,<br>        minSize:5000,<br>        automaticNameDelimiter:”.”,<br>    }<br>},<br></pre><br><img src="https://snakexu.github.io/images/wangyi/webpack/3.2.4_6.png"></p>
+<p><pre><br>optimization:{<br>    splitChunks:{<br>        name:’common’,<br>        chunks:’initial’,<br>        minSize:5000,<br>        automaticNameDelimiter:”.”,<br>        cacheGroup:{<br>            jquery:{<br>                test:/jquery/,//指定匹配的正则<br>                name:’jquery’,//指定提取出来的文件也叫jquery<br>                /<em>priority:-20,//前面默认的优先级是-10，这里指定谁的优先级高，也就是如果和前面指定有冲突，那听谁的</em>/<br>            }<br>        },//进行指定分割，指定某个模块必须提取出来<br>    }<br>},<br></pre><br><img src="https://snakexu.github.io/images/wangyi/webpack/3.2.4_7.png"></p>
+<p><pre><br>optimization:{<br>    splitChunks:{<br>        name:’common’,<br>        chunks:’initial’,<br>        minSize:5000,<br>        automaticNameDelimiter:”.”,<br>        cacheGroup:{<br>            vendor:{//提取第三方模块<br>                test:/[\/]node_modules[\/]/,//node_modules目录下的都作为vendor来提取<br>                name:’vendor’,<br>                priority:-10,<br>            },<br>            jquery:{<br>                test:/jquery/,<br>                name:’jquery’,<br>            }<br>        },<br>    }<br>},<br></pre><br><img src="https://snakexu.github.io/images/wangyi/webpack/3.2.4_8.png"><br>下面我们就剩下运行代码没有提取了</p>
+<p><pre><br>optimization:{<br>    splitChunks:{<br>        //<br>    },<br>    runtimeChunk:{//拆分运行代码<br>        name:’runtim’,<br>    }<br>}<br></pre><br>3-4.单页面应用拆分(异步加载)<br>首先我们把刚才多页面应用改为单页面应用再做修改(纯粹是为了展示才这么改的，没有实际意义)</p>
+<p><pre><br>module.exports={<br>    mode:’production’,<br>    entry:{<br>        app:’./src/app.js’,<br>    },<br>    output:{<br>        path:__dirname+”/dist”,<br>        filename:”./[name].bundle.js”<br>    },<br>}<br></pre><br>然后我们修改app.js</p>
+<p><pre><br>import mb from ‘./moduleb.js’;<br>import $ from ‘jquery’;<br>import _ from ‘loadsh’;<br>import(‘./modulea.js’);//我们修改了modulea的引入<br>mb.a();<br></pre><br>执行webpack命令我们可以看到<br><img src="https://snakexu.github.io/images/wangyi/webpack/3.2.4_9.png"><br>生成的名字比较随机，我们怎么指定命名呢，用魔法注释</p>
+<p><pre><br>import(/<em>webpackChunkName:’modulea’</em>/“./modulea.js”);<br></pre><br><img src="https://snakexu.github.io/images/wangyi/webpack/3.2.4_10.png"></p>
+<p><pre><br>import(/<em>webpackChunkName:’modulea’</em>/“./modulea.js”).then(res=&gt;{<br>    //import返回一个promise，可以在then里进行一些想要的操作<br>    //res就是import ma中import过来的内容<br>    require(‘./modulea.js’)<br>})<br></pre><br>还有一种方式是</p>
+<p><pre><br>require.ensure([/<em>这里写要用到的依赖，就是回调里需要用到的模块，回调函数就会接收到这个模块</em>/],function(){<br>    //回调函数<br>})<br></pre><br><img src="https://snakexu.github.io/images/wangyi/webpack/3.2.4_11.png"><br>4.代码体积控制<br><img src="https://snakexu.github.io/images/wangyi/webpack/3.2.4_12.png"><br>或者webpack4中直接设置模式mode:’production’<br>4-1.关于tree-shaking(函数式编程更有利于tree-shaking)<br>moduleb.js</p>
+<p><pre><br>export const a=function(){<br>    console.log(‘i am a’)<br>}<br>export const b=function(){<br>    console.log(‘i am b’)<br>}<br></pre><br>app.js</p>
+<p><pre><br>import ma from ‘./modulea.js’;<br>import { a } from ‘./moduleb.js’;<br>import $ from ‘jquery’;<br>import _ from ‘loadsh’;<br>a();<br></pre><br>在moduleb.js里我们定义了两个方法，而在app.js中我们只使用了一个方法，那么tree-shaking会帮我们删除掉不用的方法，打包结果里不会包含mb.b，tree-shaking是基于export文档流，所以支持纯函数式(export const a = function(){})这样暴露出去和支持export default{a:function(){},b:function(){}}这样暴露出去。但是如果用面向对象的方式(比如挂载到class.prototype再export出去)这样的方式就不支持。webpack是支持AMD规范的，不支持CMD规范。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/03/13/网易微专业-webpack实战演练-3-2-4-代码分割-3-2-5-js代码大小控制/" data-id="ckeeij34p0053joxq0x17ntsh" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-webpack实战演练-3-2-3-图片等资源的处理" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/03/12/网易微专业-webpack实战演练-3-2-3-图片等资源的处理/" class="article-date">
+  <time datetime="2020-03-12T07:23:28.000Z" itemprop="datePublished">2020-03-12</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/03/12/网易微专业-webpack实战演练-3-2-3-图片等资源的处理/">网易微专业-webpack实战演练-3.2.3-图片等资源的处理</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.需要用到哪些loader<br>file-loader:webpack识别除js之外的资源(不用这个loader的时候也是识别js资源的)<br>url-loader:url-loader包含了file-loader<br>img-loader:对图片进行压缩处理等需要这个loader<br>1-1.file-loader<br>在没有安装这些loader的时候，webpack打包不能正确识别图片资源，示例代码初步了解<br>webpack.config.js(简单的示例文件，不包含webpack在项目中的完整配置)</p>
+<pre>
+module:{
+    rules:[
+        {
+            test:/\.css$/,
+            use:extractTextCss.extract({
+                fallback:{
+                       loader:'style-loader',
+                 },
+                use:[
+                    {
+                       loader:'css-loader',
+                    },
+                ]
+            })
+        },
+        {
+            test:/\.(jpg|jpeg|gif|png)$/,
+            use:{
+                loader:'file-loader'
+            }
+        }
+    ]
+}
+</pre>
+file-loader的配置项简单示例
+<pre>
+{
+    test:/\.(jpg|jpeg|gif|png)$/,
+    use:{
+        loader:'file-loader',
+        options:{
+            name:'[name].[hash:4].[ext]',//打包的文件名中包含4位hash值
+            outputPath:'assets/img',//打包该资源输出的文件夹
+        }
+    }
+}
+</pre>
+常见的坑:
+(1).路径问题：
+<pre>
+{
+    test:/\.(jpg|jpeg|gif|png)$/,
+    use:{
+        loader:'file-loader',
+        options:{
+            name:'[name].[hash:4].[ext]',
+            outputPath:'assets/img',//打包该资源输出的文件夹
+            publicPath:'aaa',//如果定义了该选项，那么引入文件的路径都会以它为路径
+        }
+    }
+}
+</pre>
+如果我们按照上面的设置了publicPath，那么打包出来的文件路径就变成了background:url(aaa/img.39e0.jpg)，一般会把outputPath和publicPath设置成一样的
+(2).命名问题：
+1-2.url-loader
+在file-loader的基础上增加了可以将资源转换为base64的功能，默认可以将小于30kb的资源转换为base64
+<pre>
+{
+    test:/\.(jpg|jpeg|gif|png)$/,
+    use:{
+        loader:'url-loader',
+        options:{
+            name:'[name].[hash:4].[ext]',
+            outputPath:'assets/img',
+            publicPath:'aaa',
+            //我们为什么不把所有东西都转换为base64？
+            //虽然我们将资源转换为base64减少了我们的请求，但是资源转换为base64的字符串和资源本身的大小是一样的，
+            //比如我们需要的图片是5kb，那么转换为base64之后这5kb会加载到css文件中，css文件变大造成该文件加载变慢
+            limit:5000,//控制将多大的资源转换为base64，一般设置为5kb
+        }
+    }
+}
+</pre>
+1-3.img-loader
+可以压缩图片。loader是从后往前执行的，img-loader只是处理图片，所以我们把img-loader放在url-loader下面。这里要明白img-loader本身不做任何事情，所以并不是写上img-loader就完事儿的，需要配置一系列插件
+<pre>
+{
+    test:/\.(jpg|jpeg|gif|png)$/,
+    use:[
+        {
+            loader:'url-loader',
+            options:{
+                name:'[name].[hash:4].[ext]',
+                outputPath:'assets/img',
+                publicPath:'aaa',
+                limit:5000,
+            }
+        },
+        //压缩图片的插件imagemin系列，对于不同的图片类型有不同的包
+        //处理png图片：imagemin-pngquant 处理jpeg图片：imagemin-mozjpeg 处理gif图片：imagemin-gifsicle
+        //imagemin系列包都是要通过npm下载安装的
+        {
+            loader:'img-loader',
+            options:{
+                plugins:[
+                    require('imagemin-pngquant')({
+                        speed:2,//控制压缩质量，值越大，对图片压缩程度越小，取值范围为1~11
+                    }),
+                    require('imagemin-mozjpeg')({
+                        quality:2,//控制压缩质量，值越大，对图片压缩程度越小，取值范围为1~100
+                    }),
+                    require('imagemin-gifsicle')({
+                        optimizationLevel:2,//取值范围为1,2,3，推荐设置为1，设置为3极有可能失真
+                    }),
+                ]
+            }
+        }
+    ]
+}
+</pre>
+图片优化总结
+<img src="https://snakexu.github.io/images/wangyi/webpack/3.2.3_1.png">
+1-4.html-loader
+如果我们直接在页面写入img标签的src属性的相对路径，可能引起很多问题(比如路径不识别等)，解决这个问题有两种方法，第一种是在html页面使用模版引擎
+<pre>
+< img src="${require('./assets/img/imgname.jpg')}"/> //这里是模版引擎语法
+</pre>
+第二种方法是用html-loader解决
+<pre>
+{
+    test:/\.html$/,
+    use:{
+        loader:'html-loader',
+        options:{
+            attr:["img:src"],//对什么标签下的什么属性进行解析
+        }
+    }
+}
+</pre>
+2.雪碧图
+<img src="https://snakexu.github.io/images/wangyi/webpack/3.2.3_2.png">
+处理雪碧图的插件问题在于会根据原图大小调节background-position，更适合于定制化的图片
+2-1.postcss-sprites
+<pre>
+{
+    test:/\.css$/,
+    use:extractTextCss.extract({
+        fallback:{
+               loader:'style-loader',
+         },
+        use:[
+            {
+               loader:'css-loader',
+            },
+            {
+                loader:'postcss-loader',
+                options:{
+                    plugin:[
+                        require('postcss-sprites')({
+                            spirtePath:'./dist/assets/sprite',//指定输出路径
+                        })
+                    ]
+                }
+            }
+        ]
+    })
+},
+</pre>
+<img src="https://snakexu.github.io/images/wangyi/webpack/3.2.3_3.png">
+上图是为了说明postcss-sprites的执行效果，自动生成css并且修改了background-size等
+2-2.webpack-spritesmith
+<pre>
+const webpackSpriteSmith = require('webpack-spritesmith')//只是为了说明需要引入，并不代表实际位置
+plugins:[
+    new extractTextCss({
+        filename:'[name].min.css'
+    }),
+    new htmlWebpackPlugin({
+        filename:'index.html',
+        template:'./src/index.html',
+        aa:123,
+    }),
+    new webpackSpriteSmith({
+        src:{
+            //说明我们要处理的文件的位置
+            cwd:path.join(__dirname,"src/assets/img"),//这里一定要是绝对路径
+            glob:"*.jpg",//我们要处理cwd指定文件夹下什么类型的文件，比如我们这里指定处理所有jpg文件，也可以具名处理
+        },
+        target:{
+            //这里定义输出
+            image:path.join(__dirname,'dist/sprites/sprit.png'),//这里也是需要绝对路径，定义图片输出
+            css:path.join(__dirname,'dist/sprites/sprit.css'),//这里定义css输出
+        },
+        apoOptions:{//这里定义引用地址
+            cssImageRef:'dist/sprites/sprit.png'
+        }
+    })
+]
+</pre>
+需要注意的是，生成的css文件需要自己确定如何用，css文件的图片路径是绝对路径 
+3.其他资源文件的处理
+如果我们现在需要处理mp4文件加载到video标签上
+<pre>
+{
+    test:/\.html$/,
+    use:{
+        loader:'html-loader',
+        options:{
+            attr:["img:src","video:src"],//请注意这里我们加上了"video:src"
+        }
+    }
+},
+{
+    test:/\.mp4$/,
+    use:{
+        loader:url-loader,
+    }
+}
+</pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/03/12/网易微专业-webpack实战演练-3-2-3-图片等资源的处理/" data-id="ckeeij31e002yjoxq5t1ua7l4" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-慕课网-node-js从入门到企业web开发中的应用-5-1-项目初始化" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/03/11/慕课网-node-js从入门到企业web开发中的应用-5-1-项目初始化/" class="article-date">
+  <time datetime="2020-03-11T10:50:28.000Z" itemprop="datePublished">2020-03-11</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/03/11/慕课网-node-js从入门到企业web开发中的应用-5-1-项目初始化/">慕课网-node.js从入门到企业web开发中的应用-5-1-项目初始化</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>静态资源服务器实战<br>期待效果:在任意目录下执行命令，就可以把当前命令变成静态资源服务器的根目录，通过url可以访问到里面的文件夹，访问到里面的文件。<br>在github下创建一个新项目anydoor<br>关于.gitignore:(1)匹配模式前/代表项目根目录(2)匹配模式最后加/代表是目录(3)匹配模式前加!代表取反(比如某个文件夹下除了一个文件都被忽略)(4)*代表任意个字符(5)?匹配任意一个字符(6)**匹配多级目录<br>另外还有.npmignore，基本规则与.gitignore相似，但是有些内容即使写入.npmignore也不会被忽略，比如license、readme等文件，具体可以看官网<br>editorConfig可以配置代码规则，比如是用四个空格还是用tab，可以帮助开发者定义/保持持续的代码风格在不同的编辑器/IDE之间。在团队合作的时候，不会因为项目规约的不同而频繁切换代码规则，即使同一个项目也可以配置不同的代码规约</p>
+<pre>
+
+</pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/03/11/慕课网-node-js从入门到企业web开发中的应用-5-1-项目初始化/" data-id="ckeeij2zr000ojoxqcg4vac6g" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-网易微专业-MV-组件化开发React专题-React进阶-2-2-6-常用组件库ant-d" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/03/04/网易微专业-MV-组件化开发React专题-React进阶-2-2-6-常用组件库ant-d/" class="article-date">
@@ -88,7 +472,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/03/04/网易微专业-MV-组件化开发React专题-React进阶-2-2-6-常用组件库ant-d/" data-id="ckdbzsihm001ljrxqi8ae0g2b" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/03/04/网易微专业-MV-组件化开发React专题-React进阶-2-2-6-常用组件库ant-d/" data-id="ckeeij30d001ojoxqdtpewpdb" class="article-share-link">Share</a>
       
       
     </footer>
@@ -125,7 +509,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/03/02/网易微专业-MV-组件化开发React专题-React进阶-2-2-5-数据管理Mobx/" data-id="ckdbzsihi001hjrxqy0fnqd6g" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/03/02/网易微专业-MV-组件化开发React专题-React进阶-2-2-5-数据管理Mobx/" data-id="ckeeij30c001njoxqtd0alwuq" class="article-share-link">Share</a>
       
       
     </footer>
@@ -162,7 +546,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/03/01/网易微专业-MV-组件化开发React专题-React进阶-2-2-4-数据管理Redux/" data-id="ckdbzsihh001gjrxqtliw3hdm" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/03/01/网易微专业-MV-组件化开发React专题-React进阶-2-2-4-数据管理Redux/" data-id="ckeeij30b001mjoxqpnwx061q" class="article-share-link">Share</a>
       
       
     </footer>
@@ -206,7 +590,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/02/29/网易微专业-MV-组件化开发React专题-VUE最佳实践-1-4-2-s数据层的高级封装之网易实践/" data-id="ckdbzsihn001njrxq96id4naz" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/02/29/网易微专业-MV-组件化开发React专题-VUE最佳实践-1-4-2-s数据层的高级封装之网易实践/" data-id="ckeeij30d001pjoxqpx2qciw0" class="article-share-link">Share</a>
       
       
     </footer>
@@ -473,7 +857,7 @@ export interface FriendItem {
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/02/27/网易微专业-MV-组件化开发React专题-React进阶-2-2-3-React与Typescript/" data-id="ckdbzsihn001mjrxqkckr1ak1" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/02/27/网易微专业-MV-组件化开发React专题-React进阶-2-2-3-React与Typescript/" data-id="ckeeij30b001ljoxq84t0l5p4" class="article-share-link">Share</a>
       
       
     </footer>
@@ -651,578 +1035,7 @@ export default App_10
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/02/27/网易微专业-MV-组件化开发React专题-React进阶-2-2-2-React-Hooks/" data-id="ckdbzsihl001kjrxqskixnny6" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-MV-组件化开发React专题-VUE最佳实践-1-4-1-项目全面深度优化及打包上线之网易实践" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/02/26/网易微专业-MV-组件化开发React专题-VUE最佳实践-1-4-1-项目全面深度优化及打包上线之网易实践/" class="article-date">
-  <time datetime="2020-02-26T06:09:01.000Z" itemprop="datePublished">2020-02-26</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/02/26/网易微专业-MV-组件化开发React专题-VUE最佳实践-1-4-1-项目全面深度优化及打包上线之网易实践/">网易微专业-MV*&amp;组件化开发React专题-VUE最佳实践-1.4.1-项目全面深度优化及打包上线之网易实践</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>总述——优化方向<br>·效率<br>-开发效率(组件、指令、工具函数的优化和积累)<br>-部署效率(打包优化)<br>-协作效率(协作方式的优化)<br>·质量<br>-性能监控<br>-自动化测试(单元测试、端到端测试等)<br>·性能体验<br>-首屏性能<br>-页面加载性能、图片性能<br>1.工程优化<br>1-1.应用eslint团队统一代码格式<br>1-2.工程优化-其他Loader的演示<br>(1)@vusion/md-vue-loader<br>(2)css-sprite-loader<br>(3)icon-font-loader<br>1-3.工程优化-vue-cli-plugin的实现<br>在项目目录下新建一个文件夹(假设我们当前的项目目录名为my-app)，取名vue-cli-plugin-demo，新建文件index.js</p>
-<p><pre><br>const CSSSpritePlugin = require(‘css-sprite-loader’).Plugin;<br>function chainCSSOneOfs(config, chainOneOf) {<br>    // ‘postcss’ 留给用户自定义吧<br>    [‘css’, ‘scss’, ‘sass’, ‘less’, ‘stylus’].forEach((rule) =&gt; {<br>        const ruleCSS = config.module.rule(rule);<br>        chainOneOf(ruleCSS.oneOf(‘vue-modules’), true);<br>        chainOneOf(ruleCSS.oneOf(‘vue’), false);<br>        chainOneOf(ruleCSS.oneOf(‘normal-modules’), true);<br>        chainOneOf(ruleCSS.oneOf(‘normal’), false);<br>    });<br>}<br>module.exports = function (api)  {<br>    api.chainWebpack(config =&gt; {<br>        config.plugin(‘css-sprite’).use(CSSSpritePlugin, [])<br>        chainCSSOneOfs(config, (oneOf) =&gt; {<br>            oneOf.use(‘css-sprite-loader’)<br>                .loader(‘css-sprite-loader’)<br>                .end();<br>        });<br>    })<br>}<br></pre><br>这个文件的可以取代vue.config.js，在vue-cli-plugin-demo文件夹下建一个package.json文件，和平时package.json文件内容一样，在我们新建的package.json的devDependencies加入一项vue-cli-plugin-demo:’^0.1.0’，其实可以用npm publish发布包(npm publish的具体用法可以用这个命令为关键字进行百度)，这里我们为了方便调试包，使用另外一种方法<br>然后我们在命令行进入当前my-app项目的node_modules文件夹，输入命令ln -s ../vue-cli-plugin-demo，在输入ls命令我们看到vue-cli-plugin-demo与其他目录名称颜色不同，这是一个软链。通过命令ls -al vue-cli-plugin-demo可以看到指向上一级目录，这个命令和npm unlink功能差不多但是用软链的效果快一些，返回项目根目录，npm run serve启动项目，这个时候项目应该是没有报错的<br>2.部署优化<br>很多同学会遇到一个问题就是随着项目变大，项目打包速度越来越慢<br>首先我们了解一下发包的过程:如果想发包，要有一个npm账号，在npmjs.com网站注册一个账号，然后在命令行输入npm login登陆，进入需要发包的目录(目录中需要有package.json文件)，在命令行输入npm publish<br>2-1.部署流程<br><img src="https://snakexu.github.io/images/wangyi/vue/1.4.1_1.png"><br><img src="https://snakexu.github.io/images/wangyi/vue/1.4.1_2.png"><br>通过课程我们了解到可以通过jenkins(<a href="https://jenkins.io/zh/)/docker写脚本完成打包部署等工作" target="_blank" rel="noopener">https://jenkins.io/zh/)/docker写脚本完成打包部署等工作</a></p>
-<p><pre><br>const fs = require(‘fs’);<br>const path = require(‘path’);<br>const shell = require(‘shelljs’);<br>const crypto = require(‘crypto’);<br>const md5 = function (str, len = 16) {<br>    const md5 = crypto.createHash(‘md5’);<br>    return md5.update(str).digest(‘hex’).substr(0, len);<br>};<br>const cachePath = path.join(<strong>dirname, ‘./node_modules/.cache/package-lock.log’);<br>if (!fs.existsSync(path.join(cachePath, ‘../..’))) {<br>    fs.mkdirSync(path.join(cachePath, ‘../..’), {<br>        recursive: true,<br>    });<br>}<br>const lockHash = md5(fs.readFileSync(path.join(</strong>dirname, ‘./package-lock.json’)).toString());<br>let cache = false;<br>if (fs.existsSync(cachePath)) {<br>    if (lockHash === fs.readFileSync(cachePath).toString()) {<br>        cache = true;<br>        console.log(‘Installed from cache.’);<br>    }<br>}<br>if (!cache) {<br>    /**</pre></p>
-<pre><code> * Install npm packages
- */
-console.time(&apos;npm install&apos;);
-console.log(&apos;Installing npm packages ...&apos;);
-const result = shell.exec(&apos;npm --no-audit --progress=false --registry=https://registry.npm.taobao.org install&apos;);
-if (result.code)
-    throw new Error(String(result.stderr));
-/**
- * Log Versions
- */
-const nodeVersion = shell.exec(&apos;node -v&apos;, { silent: true }).stdout.trim();
-console.log(&apos;node version:&apos;, nodeVersion);
-const npmVersion = shell.exec(&apos;npm -v&apos;, { silent: true }).stdout.trim();
-console.log(&apos;npm version:&apos;, npmVersion);
-console.timeEnd(&apos;npm install&apos;);
-fs.writeFileSync(cachePath, lockHash);
-</code></pre><p>}<br><br>上面代码我们可以起名为npm.js，放在项目的根目录下，比如我们的my-app项目的根目录下。每次安装项目都会按照package-lock.json重新安装项目依赖，导致资源浪费，有了npm.js，我们执行node npm命令，此后每次安装项目，如果package.json文件没有变化，不会重新安装。<br>2-2.webpack.dll优化<br>这里主要利用webpack两个相关的plugin，一个是DllPlugin，另一个是DllReferencePlugin。我们可以在项目中配webpack.dll.config.js文件，然后通过配置把不经常需要更换的第三方依赖/库等打包，然后在vue.config.js中通过DllReferencePlugin引入，另外还需要一个AddAssetHtmlPlugin把我们通过dll打包的文件加入到html页面<br>用这个优化会比用commonschunks或者splitchunks某种程度上更节省时间，因为用dll优化不会每次都打包指定内容，但是用commonschunk或者是splitchunk其实每次还是打包的，所以对于一些极少更新的依赖，比如babel-polyfill等还是用dll优化<br>另外可以看一些别的打包优化方式，比如提取公共库等<br>3.组件优化<br>3-1.虚拟列表<br>vue文件，这里只写了页面代码，项目可以自己创建一个</p>
-<p><pre><br>&lt; template&gt;<br>&lt; div :class=”$style.list” ref=”list” @scroll=”onScroll”&gt;<br>    &lt; div :class=”$style.scroll” :style=”{ paddingTop: paddingTop + ‘px’, paddingBottom: paddingBottom + ‘px’ }”&gt;<br>        &lt; div :class=”$style.item” v-for=”item in viewItems” :key=”item.id” :even=”!!(item.id%2)”&gt;<br>            &lt; div v-for=”cnt in item.content” :key=”cnt”&gt;{ { cnt } }&lt; /div&gt;<br>        &lt; /div&gt;<br>    &lt; /div&gt;<br>&lt; /div&gt;<br>&lt; /template&gt;<br>&lt; script&gt;<br>export default {<br>    props: {<br>        list: Array,<br>        viewCount: { type: Number, default: 100 },<br>    },<br>    data() {<br>        return {<br>            minHeight: 20,<br>            viewIndex: 0,<br>            paddingTop: 0,<br>            paddingBottom: 0,<br>        }<br>    },<br>    computed: {<br>        viewItems() {<br>            return this.list.slice(this.viewIndex, this.viewIndex + this.viewCount);<br>        },<br>    },<br>    methods: {<br>        onScroll(e) {<br>            const listEl = e.target;<br>            // 记录当前 DOM 节点的高度<br>            const children = Array.from(listEl.children[0].children);<br>            children.forEach((childVM, index) =&gt; {<br>                if (this.list[this.viewIndex + index])<br>                    this.list[this.viewIndex + index].height = childVM.offsetHeight;<br>            });<br>            /<em> eslint-disable </em>/<br>            const scrollTop = listEl.scrollTop;<br>            let accHeight = 0;<br>            let viewIndex = this.viewIndex;<br>            for (let i = 0; i &lt; this.list.length; i++) {<br>                const item = this.list[i];<br>                accHeight += item.height || this.minHeight;<br>                if (accHeight &gt; scrollTop) {<br>                    viewIndex = i;<br>                    break;<br>                }<br>            }<br>            if (viewIndex - this.viewIndex &gt;= 0 &amp;&amp; viewIndex - this.viewIndex &lt; this.viewCount / 2)<br>                return;<br>            let paddingTop = 0;<br>            let paddingBottom = 0;<br>            for (let i = 0; i &lt; this.list.length; i++) {<br>                const item = this.list[i];<br>                if (i &lt; viewIndex) {<br>                    paddingTop += item.height || this.minHeight;<br>                } else if (i &gt;= viewIndex + this.viewCount) {<br>                    paddingBottom += item.height || this.minHeight;<br>                }<br>            }<br>            this.viewIndex = viewIndex;<br>            this.paddingTop = paddingTop;<br>            this.paddingBottom = paddingBottom;<br>        },<br>    },<br>}<br>&lt; /script&gt;<br>&lt; style module&gt;<br>.list {<br>    overflow: auto;<br>    width: 100%;<br>    height: 100%;<br>}<br>.item[even] {<br>    background: #c3c9d3;<br>}<br>&lt; /style&gt;<br></pre><br>3-2.mixins<br>3-3.指令</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/02/26/网易微专业-MV-组件化开发React专题-VUE最佳实践-1-4-1-项目全面深度优化及打包上线之网易实践/" data-id="ckdbzsilx004rjrxq9rqtpzn0" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-MV-组件化开发React专题-React进阶-2-2-1-高阶组件" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/02/24/网易微专业-MV-组件化开发React专题-React进阶-2-2-1-高阶组件/" class="article-date">
-  <time datetime="2020-02-24T08:46:12.000Z" itemprop="datePublished">2020-02-24</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/02/24/网易微专业-MV-组件化开发React专题-React进阶-2-2-1-高阶组件/">网易微专业-MV*&amp;组件化开发React专题-React进阶-2.2.1-高阶组件</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.渲染属性</p>
-<pre>
-import React from 'react';
-import ReactDOM from 'react-dom';
-class Provider extends React.Component{
-  render(){
-    return (
-      < div>
-        provider
-      < /div>
-    )
-  }
-}
-class User extends React.Component{
-  render(){
-    return (
-      < div>
-        user
-      < /div>
-    )
-  }
-}
-class App_8 extends React.Component{
-  render(){
-    return (
-      < Provider render={ (data)=>< User data={data}/>}>< /Provider>
-    )
-  }
-}
-export default App_8;
-</pre>
-上面就是用代码描述渲染属性，解决有状态组件的可复用问题
-<pre>
-import React from 'react';
-import ReactDOM from 'react-dom';
-class Provider extends React.Component{
-  constructor(props){
-    super(props)
-    this.state = {
-      name : 'provider-user'
-    }
-  }
-  render(){
-    return this.props.render(this.state.name)
-  }
-}
-class User extends React.Component{
-  render(){
-    return (
-      < div>
-        {this.props.data}
-      < /div>
-    )
-  }
-}
-class App_8 extends React.Component{
-  render(){
-    return (
-      < Provider render={(data)=>< User data={data}/>}/>
-    )
-  }
-}
-export default App_8;
-</pre>
-最后页面显示结果:provider-user
-从上面代码，我们注意到，User组件的数据是Provider组件提供的，这个数据并不是App_8组件的数据。
-<pre>
-import React from 'react';
-import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
-class Provider extends React.Component{
-  //定义上下文数据
-  getChildContext(){
-    return this.props.store
-  }
-  static childContextTypes={
-    name:PropTypes.string,
-    age : PropTypes.number
-  }
-  constructor(props){
-    super(props)
-    this.state = {
-      name : 'provider-user'
-    }
-  }
-  render(){
-    console.log(this.props)
-    return this.props.children
-  }
-}
-class BaseUser extends React.Component{
-  static contextTypes = {
-    name:PropTypes.string
-  }
-  render(){
-    return (
-      < div>
-        {this.context.name}
-      < /div>
-    )
-  }
-}
-class BasePost extends React.Component{
-  static contextTypes = {
-    age:PropTypes.number
-  }
-  render(){
-    return (
-      < div>
-        {this.context.age}
-      < /div>
-    )
-  }
-}
-const connect = ()=>{
-  //
-}
-const User = connect(BaseUser)
-const Post = connect(BasePost)
-const store = {
-  name : 'ryan',
-  age : 10,
-}
-class App_8 extends React.Component{
-  render(){
-    return (
-      < Provider store={store}>
-        < div>
-          < BaseUser/>
-          < BasePost/>
-        < /div>
-      < /Provider>
-    )
-  }
-}
-export default App_8;
-</pre>
-观察上面代码，我们发现static contextTypes是具有重复性的，我们抽离这段代码，也就是修改connect函数
-<pre>
-// import React from 'react';
-// import ReactDOM from 'react-dom';
-// class Provider extends React.Component{
-//   constructor(props){
-//     super(props)
-//     this.state = {
-//       name : 'provider-user'
-//     }
-//   }
-//   render(){
-//     // return (
-//     //   < div>
-//     //     provider
-//     //   < /div>
-//     // )
-//     return this.props.render(this.state.name)
-//   }
-// }
-// class User extends React.Component{
-//   render(){
-//     return (
-//       < div>
-//         {this.props.data}
-//       < /div>
-//     )
-//   }
-// }
-// class App_8 extends React.Component{
-//   render(){
-//     return (
-//       <provider render="{(data)="><user data="{data}/">}>< /Provider>
-//     )
-//   }
-// }
-// export default App_8;
-import React from 'react';
-import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
-class Provider extends React.Component{
-  //定义上下文数据
-  getChildContext(){
-    return this.props.store
-  }
-  static childContextTypes={
-    name:PropTypes.string,
-    age : PropTypes.number
-  }
-  constructor(props){
-    super(props)
-    this.state = {
-      name : 'provider-user'
-    }
-  }
-  render(){
-    return this.props.children
-  }
-}
-class BaseUser extends React.Component{
-  render(){
-    return (
-      < div>
-        {this.props.name}
-      < /div>
-    )
-  }
-}
-class BasePost extends React.Component{
-  render(){
-    return (
-      < div>
-        {this.props.age}
-      < /div>
-    )
-  }
-}
-const connect = (Com) => (types) => {
-  class ConnectComponent extends React.Component{
-    static contextTypes = types
-    displayName = Com.displayName
-    render(){
-      return(
-        < Com name = {this.context.name}/>
-      );
-    }
-  }
-  return ConnectComponent
-}
-const User = connect(BaseUser)({
-  name:PropTypes.string
-})
-const Post = connect(BasePost)({
-  age:PropTypes.number
-})
-const store = {
-  name : 'ryan',
-  age : 10,
-}
-class App_8 extends React.Component{
-  render(){
-    return (
-      < Provider store={store}>
-        < div>
-          < User/>
-          < Post/>
-        < /div>
-      < /Provider>
-    )
-  }
-}
-export default App_8;
-</user></provider></pre>
-运行后发现只显示了ryan，因为我们在connect函数中只给Com传递了name，并没有传递age，所以我们需要对代码进行一些修改，下面只写了需要修改的部分
-<pre>
-const connect = (Com) => {
-  class ConnectComponent extends React.Component{
-    static contextTypes = Provider.childContextTypes
-    displayName = Com.displayName
-    render(){
-      return(
-        < Com {...this.context}/>
-      );
-    }
-  }
-  return ConnectComponent
-}
-const User = connect(BaseUser)
-const Post = connect(BasePost)
-</pre>
-其实这些都是属性代理的范围，我们接着看下一个例子
-<pre>
-import React,{Component} from "react";
-import PropTypes from 'prop-types'
-// 用于预先 将业务组件，进行数据的封装，便于我们 方便获取数据
-// 反向继承
-const connect = key => Com  => {
-    class connectComponent extends Component {
-        constructor(props){
-            super(props)
-            this.state = {
-                [key]: store[key]
-            }
-        }
-        render() {
-            return < Com {...this.state}/>
-        }
-        componentDidMount() {
-            let that = this
-            window.store = new Proxy(store, {
-                get: function (target, key, receiver) {
-                    return Reflect.get(target, key, receiver);
-                },
-                set: function (target, key, value, receiver) {
-                    that.setState({
-                        [key]:value
-                    })
-                    return Reflect.set(target, key, value, receiver);
-                }
-            })
-        }
-    }
-    return connectComponent
-}
-let store = {
-    name: 'ryan',
-    age: 10
-}
-@connect('age')
-class User extends Component{
-    render() {
-        return < div>{this.props.age}< /div>
-    }
-}
-class App_9 extends Component{
-    render() {
-        return < User/>
-    }
-}
-export default App_9
-</pre>
-上面代码在浏览器中执行
-<img src="https://snakexu.github.io/images/wangyi/react/2.2.1_1.png">
-我们注意到两个点，第一：如何传递/注入age的；第二：为什么通过修改window.test.age=11就可以导致页面上的数据进行修改。通过上面代码我们分析User = connect(User)(age),connect函数相当于一个闭包函数:(Com)=>{},(types)=>{},在这里，connect函数就是高阶组件的属性代理
-<pre>
-import React,{Component} from "react";
-import PropTypes from 'prop-types'
-// 用于预先 将业务组件，进行数据的封装，便于我们 方便获取数据
-// 反向继承 交互的封装，
-const loading = Com  => {
-    class LoadingComponent extends Com { //注意这里，是extends Com，而不是extends React.Component
-        showLoading(){
-            console.log('loading')
-        }
-        hideLoading(){
-            console.log('hide')
-        }
-    }
-    return LoadingComponent
-}
-@loading
-class User extends Component{
-    render() {
-        return < div>user< /div>
-    }
-    componentDidMount() {
-        this.showLoading()
-        //http
-        this.hideLoading()
-    }
-}
-class App extends Component{
-    render() {
-        return <user>
-    }
-}
-export default App
-</user></pre>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/02/24/网易微专业-MV-组件化开发React专题-React进阶-2-2-1-高阶组件/" data-id="ckdbzsihk001jjrxq7wcwh2cq" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-MV-组件化开发React专题-2-1-7-React基础-自定义组件-2" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/02/22/网易微专业-MV-组件化开发React专题-2-1-7-React基础-自定义组件-2/" class="article-date">
-  <time datetime="2020-02-22T02:07:21.000Z" itemprop="datePublished">2020-02-22</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/02/22/网易微专业-MV-组件化开发React专题-2-1-7-React基础-自定义组件-2/">网易微专业-MV*&amp;组件化开发React专题-2.1.7-React基础-自定义组件-2</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>2.受控组件/非受控组件<br>这两个都是针对于表单来说的，最明显的区别就是value和defaultValue的区别，如下图<br><img src="https://snakexu.github.io/images/wangyi/react/2.1.7_2_1.png"><br>还有就是受控组件，必须写value和onChange，这时候挡在输入框写内容的时候才会发生变化；非受控组件，只写defaultValue就可以了(受控组件如果不写onChange那么输入框呈现的值是不会发生变化的，非受控组件即使不写onChange输入框呈现的值会根据输入内容进行改变)。对于受控组件，数据和onChange函数是严格绑定在一起的，很严谨，出错的可能性比较小，但是需要我们将value和onChange同时写出来；非受控组件自由性更大，但是出错的可能性更高。综上，更建议用受控组件，非受控组件只作为一个了解项。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/02/22/网易微专业-MV-组件化开发React专题-2-1-7-React基础-自定义组件-2/" data-id="ckdbzsih90013jrxq5xg7thpb" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-MV-组件化开发React专题-2-1-7-React基础-自定义组件" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/02/21/网易微专业-MV-组件化开发React专题-2-1-7-React基础-自定义组件/" class="article-date">
-  <time datetime="2020-02-21T07:04:14.000Z" itemprop="datePublished">2020-02-21</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/02/21/网易微专业-MV-组件化开发React专题-2-1-7-React基础-自定义组件/">网易微专业-MV*&amp;组件化开发React专题-2.1.7-React基础-自定义组件</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.课程目标(参考ant-design)ant-design<br>实现button/input/select/table<br>2.首先实现基础的icon组件<br>icon.js</p>
-<pre>
-import React,{Component} from 'react'
-//React.PropTypes 提供很多验证器 (validator) 来验证传入数据的有效性。当向 props 传入无效数据时，JavaScript 控制台会抛出警告。
-//注意为了性能考虑，只在开发环境验证 propTypes。
-//https://blog.csdn.net/weixin_30776863/article/details/95419027 简介
-import PropTypes from 'prop-types'
-import '../../font-demo/iconfont.css'
-class Icon extends Component{
-  //生命属性类型
-  static propTypes = {
-    name:PropTypes.string
-  }
-  //生命默认属性
-  static defaultProps = {
-    name:'aaa'
-  }
-  /*上面两个static在写这种组件的时候一定要写，相当于给用户提供了一个说明*/
-  render(){
-    const {
-      name,
-      ...rest
-    } = this.props
-    return (
-      < span {...rest} className={`icon iconfont icon-${name}`}>< /span>
-    )
-  }
-}
-export default Icon
-</pre>
-App.js
-<pre>
-import React from 'react';
-import ReactDOM from 'react-dom';
-import Icon from './react-ui/Icon'
-class App_7 extends React.Component{
-  render(){
-    return (
-      < div>
-        app
-        < Icon
-        onClick = {()=>{
-          alert('hello')
-        }}
-         name={'jiadian-dianfanguo'} 
-         style={ {color:'red'} }>< /Icon>
-      < /div>
-    )
-  }
-}
-export default App_7;
-</pre>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/02/21/网易微专业-MV-组件化开发React专题-2-1-7-React基础-自定义组件/" data-id="ckdbzsiha0015jrxquoxkxjz9" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/02/27/网易微专业-MV-组件化开发React专题-React进阶-2-2-2-React-Hooks/" data-id="ckeeij30a001kjoxqexhd4ucl" class="article-share-link">Share</a>
       
       
     </footer>
@@ -1236,7 +1049,7 @@ export default App_7;
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/7/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" href="/page/9/">Next &raquo;</a>
+    <a class="extend prev" rel="prev" href="/page/7/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/9/">Next &raquo;</a>
   </nav>
 
 </section>
@@ -1276,7 +1089,7 @@ export default App_7;
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
     </div>
   </div>
 
@@ -1289,23 +1102,23 @@ export default App_7;
       <ul>
         
           <li>
+            <a href="/2020/08/10/拉勾-Virtual-DOM-的实现原理/">拉勾-Virtual DOM 的实现原理</a>
+          </li>
+        
+          <li>
+            <a href="/2020/08/05/拉勾-模拟Vue-js响应式原理/">拉勾-模拟Vue.js响应式原理</a>
+          </li>
+        
+          <li>
+            <a href="/2020/08/03/拉勾-Vue-Router实现原理/">拉勾-Vue-Router实现原理</a>
+          </li>
+        
+          <li>
+            <a href="/2020/08/02/拉勾-Vue-js基础回顾/">拉勾-Vue.js基础回顾</a>
+          </li>
+        
+          <li>
             <a href="/2020/07/29/拉勾-规范化标准/">拉勾-规范化标准</a>
-          </li>
-        
-          <li>
-            <a href="/2020/07/28/拉勾-其他打包工具/">拉勾-其他打包工具</a>
-          </li>
-        
-          <li>
-            <a href="/2020/07/17/拉勾-Webpack打包/">拉勾-Webpack打包</a>
-          </li>
-        
-          <li>
-            <a href="/2020/07/15/拉勾-模块化开发/">拉勾-模块化开发</a>
-          </li>
-        
-          <li>
-            <a href="/2020/07/08/拉勾-自动化构建/">拉勾-自动化构建</a>
           </li>
         
       </ul>

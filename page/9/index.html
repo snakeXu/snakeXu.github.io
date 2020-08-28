@@ -62,6 +62,577 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-网易微专业-MV-组件化开发React专题-VUE最佳实践-1-4-1-项目全面深度优化及打包上线之网易实践" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/02/26/网易微专业-MV-组件化开发React专题-VUE最佳实践-1-4-1-项目全面深度优化及打包上线之网易实践/" class="article-date">
+  <time datetime="2020-02-26T06:09:01.000Z" itemprop="datePublished">2020-02-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/02/26/网易微专业-MV-组件化开发React专题-VUE最佳实践-1-4-1-项目全面深度优化及打包上线之网易实践/">网易微专业-MV*&amp;组件化开发React专题-VUE最佳实践-1.4.1-项目全面深度优化及打包上线之网易实践</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>总述——优化方向<br>·效率<br>-开发效率(组件、指令、工具函数的优化和积累)<br>-部署效率(打包优化)<br>-协作效率(协作方式的优化)<br>·质量<br>-性能监控<br>-自动化测试(单元测试、端到端测试等)<br>·性能体验<br>-首屏性能<br>-页面加载性能、图片性能<br>1.工程优化<br>1-1.应用eslint团队统一代码格式<br>1-2.工程优化-其他Loader的演示<br>(1)@vusion/md-vue-loader<br>(2)css-sprite-loader<br>(3)icon-font-loader<br>1-3.工程优化-vue-cli-plugin的实现<br>在项目目录下新建一个文件夹(假设我们当前的项目目录名为my-app)，取名vue-cli-plugin-demo，新建文件index.js</p>
+<p><pre><br>const CSSSpritePlugin = require(‘css-sprite-loader’).Plugin;<br>function chainCSSOneOfs(config, chainOneOf) {<br>    // ‘postcss’ 留给用户自定义吧<br>    [‘css’, ‘scss’, ‘sass’, ‘less’, ‘stylus’].forEach((rule) =&gt; {<br>        const ruleCSS = config.module.rule(rule);<br>        chainOneOf(ruleCSS.oneOf(‘vue-modules’), true);<br>        chainOneOf(ruleCSS.oneOf(‘vue’), false);<br>        chainOneOf(ruleCSS.oneOf(‘normal-modules’), true);<br>        chainOneOf(ruleCSS.oneOf(‘normal’), false);<br>    });<br>}<br>module.exports = function (api)  {<br>    api.chainWebpack(config =&gt; {<br>        config.plugin(‘css-sprite’).use(CSSSpritePlugin, [])<br>        chainCSSOneOfs(config, (oneOf) =&gt; {<br>            oneOf.use(‘css-sprite-loader’)<br>                .loader(‘css-sprite-loader’)<br>                .end();<br>        });<br>    })<br>}<br></pre><br>这个文件的可以取代vue.config.js，在vue-cli-plugin-demo文件夹下建一个package.json文件，和平时package.json文件内容一样，在我们新建的package.json的devDependencies加入一项vue-cli-plugin-demo:’^0.1.0’，其实可以用npm publish发布包(npm publish的具体用法可以用这个命令为关键字进行百度)，这里我们为了方便调试包，使用另外一种方法<br>然后我们在命令行进入当前my-app项目的node_modules文件夹，输入命令ln -s ../vue-cli-plugin-demo，在输入ls命令我们看到vue-cli-plugin-demo与其他目录名称颜色不同，这是一个软链。通过命令ls -al vue-cli-plugin-demo可以看到指向上一级目录，这个命令和npm unlink功能差不多但是用软链的效果快一些，返回项目根目录，npm run serve启动项目，这个时候项目应该是没有报错的<br>2.部署优化<br>很多同学会遇到一个问题就是随着项目变大，项目打包速度越来越慢<br>首先我们了解一下发包的过程:如果想发包，要有一个npm账号，在npmjs.com网站注册一个账号，然后在命令行输入npm login登陆，进入需要发包的目录(目录中需要有package.json文件)，在命令行输入npm publish<br>2-1.部署流程<br><img src="https://snakexu.github.io/images/wangyi/vue/1.4.1_1.png"><br><img src="https://snakexu.github.io/images/wangyi/vue/1.4.1_2.png"><br>通过课程我们了解到可以通过jenkins(<a href="https://jenkins.io/zh/)/docker写脚本完成打包部署等工作" target="_blank" rel="noopener">https://jenkins.io/zh/)/docker写脚本完成打包部署等工作</a></p>
+<p><pre><br>const fs = require(‘fs’);<br>const path = require(‘path’);<br>const shell = require(‘shelljs’);<br>const crypto = require(‘crypto’);<br>const md5 = function (str, len = 16) {<br>    const md5 = crypto.createHash(‘md5’);<br>    return md5.update(str).digest(‘hex’).substr(0, len);<br>};<br>const cachePath = path.join(<strong>dirname, ‘./node_modules/.cache/package-lock.log’);<br>if (!fs.existsSync(path.join(cachePath, ‘../..’))) {<br>    fs.mkdirSync(path.join(cachePath, ‘../..’), {<br>        recursive: true,<br>    });<br>}<br>const lockHash = md5(fs.readFileSync(path.join(</strong>dirname, ‘./package-lock.json’)).toString());<br>let cache = false;<br>if (fs.existsSync(cachePath)) {<br>    if (lockHash === fs.readFileSync(cachePath).toString()) {<br>        cache = true;<br>        console.log(‘Installed from cache.’);<br>    }<br>}<br>if (!cache) {<br>    /**</pre></p>
+<pre><code> * Install npm packages
+ */
+console.time(&apos;npm install&apos;);
+console.log(&apos;Installing npm packages ...&apos;);
+const result = shell.exec(&apos;npm --no-audit --progress=false --registry=https://registry.npm.taobao.org install&apos;);
+if (result.code)
+    throw new Error(String(result.stderr));
+/**
+ * Log Versions
+ */
+const nodeVersion = shell.exec(&apos;node -v&apos;, { silent: true }).stdout.trim();
+console.log(&apos;node version:&apos;, nodeVersion);
+const npmVersion = shell.exec(&apos;npm -v&apos;, { silent: true }).stdout.trim();
+console.log(&apos;npm version:&apos;, npmVersion);
+console.timeEnd(&apos;npm install&apos;);
+fs.writeFileSync(cachePath, lockHash);
+</code></pre><p>}<br><br>上面代码我们可以起名为npm.js，放在项目的根目录下，比如我们的my-app项目的根目录下。每次安装项目都会按照package-lock.json重新安装项目依赖，导致资源浪费，有了npm.js，我们执行node npm命令，此后每次安装项目，如果package.json文件没有变化，不会重新安装。<br>2-2.webpack.dll优化<br>这里主要利用webpack两个相关的plugin，一个是DllPlugin，另一个是DllReferencePlugin。我们可以在项目中配webpack.dll.config.js文件，然后通过配置把不经常需要更换的第三方依赖/库等打包，然后在vue.config.js中通过DllReferencePlugin引入，另外还需要一个AddAssetHtmlPlugin把我们通过dll打包的文件加入到html页面<br>用这个优化会比用commonschunks或者splitchunks某种程度上更节省时间，因为用dll优化不会每次都打包指定内容，但是用commonschunk或者是splitchunk其实每次还是打包的，所以对于一些极少更新的依赖，比如babel-polyfill等还是用dll优化<br>另外可以看一些别的打包优化方式，比如提取公共库等<br>3.组件优化<br>3-1.虚拟列表<br>vue文件，这里只写了页面代码，项目可以自己创建一个</p>
+<p><pre><br>&lt; template&gt;<br>&lt; div :class=”$style.list” ref=”list” @scroll=”onScroll”&gt;<br>    &lt; div :class=”$style.scroll” :style=”{ paddingTop: paddingTop + ‘px’, paddingBottom: paddingBottom + ‘px’ }”&gt;<br>        &lt; div :class=”$style.item” v-for=”item in viewItems” :key=”item.id” :even=”!!(item.id%2)”&gt;<br>            &lt; div v-for=”cnt in item.content” :key=”cnt”&gt;{ { cnt } }&lt; /div&gt;<br>        &lt; /div&gt;<br>    &lt; /div&gt;<br>&lt; /div&gt;<br>&lt; /template&gt;<br>&lt; script&gt;<br>export default {<br>    props: {<br>        list: Array,<br>        viewCount: { type: Number, default: 100 },<br>    },<br>    data() {<br>        return {<br>            minHeight: 20,<br>            viewIndex: 0,<br>            paddingTop: 0,<br>            paddingBottom: 0,<br>        }<br>    },<br>    computed: {<br>        viewItems() {<br>            return this.list.slice(this.viewIndex, this.viewIndex + this.viewCount);<br>        },<br>    },<br>    methods: {<br>        onScroll(e) {<br>            const listEl = e.target;<br>            // 记录当前 DOM 节点的高度<br>            const children = Array.from(listEl.children[0].children);<br>            children.forEach((childVM, index) =&gt; {<br>                if (this.list[this.viewIndex + index])<br>                    this.list[this.viewIndex + index].height = childVM.offsetHeight;<br>            });<br>            /<em> eslint-disable </em>/<br>            const scrollTop = listEl.scrollTop;<br>            let accHeight = 0;<br>            let viewIndex = this.viewIndex;<br>            for (let i = 0; i &lt; this.list.length; i++) {<br>                const item = this.list[i];<br>                accHeight += item.height || this.minHeight;<br>                if (accHeight &gt; scrollTop) {<br>                    viewIndex = i;<br>                    break;<br>                }<br>            }<br>            if (viewIndex - this.viewIndex &gt;= 0 &amp;&amp; viewIndex - this.viewIndex &lt; this.viewCount / 2)<br>                return;<br>            let paddingTop = 0;<br>            let paddingBottom = 0;<br>            for (let i = 0; i &lt; this.list.length; i++) {<br>                const item = this.list[i];<br>                if (i &lt; viewIndex) {<br>                    paddingTop += item.height || this.minHeight;<br>                } else if (i &gt;= viewIndex + this.viewCount) {<br>                    paddingBottom += item.height || this.minHeight;<br>                }<br>            }<br>            this.viewIndex = viewIndex;<br>            this.paddingTop = paddingTop;<br>            this.paddingBottom = paddingBottom;<br>        },<br>    },<br>}<br>&lt; /script&gt;<br>&lt; style module&gt;<br>.list {<br>    overflow: auto;<br>    width: 100%;<br>    height: 100%;<br>}<br>.item[even] {<br>    background: #c3c9d3;<br>}<br>&lt; /style&gt;<br></pre><br>3-2.mixins<br>3-3.指令</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/02/26/网易微专业-MV-组件化开发React专题-VUE最佳实践-1-4-1-项目全面深度优化及打包上线之网易实践/" data-id="ckeeij34m004wjoxqxxjwdk6k" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-MV-组件化开发React专题-React进阶-2-2-1-高阶组件" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/02/24/网易微专业-MV-组件化开发React专题-React进阶-2-2-1-高阶组件/" class="article-date">
+  <time datetime="2020-02-24T08:46:12.000Z" itemprop="datePublished">2020-02-24</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/02/24/网易微专业-MV-组件化开发React专题-React进阶-2-2-1-高阶组件/">网易微专业-MV*&amp;组件化开发React专题-React进阶-2.2.1-高阶组件</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.渲染属性</p>
+<pre>
+import React from 'react';
+import ReactDOM from 'react-dom';
+class Provider extends React.Component{
+  render(){
+    return (
+      < div>
+        provider
+      < /div>
+    )
+  }
+}
+class User extends React.Component{
+  render(){
+    return (
+      < div>
+        user
+      < /div>
+    )
+  }
+}
+class App_8 extends React.Component{
+  render(){
+    return (
+      < Provider render={ (data)=>< User data={data}/>}>< /Provider>
+    )
+  }
+}
+export default App_8;
+</pre>
+上面就是用代码描述渲染属性，解决有状态组件的可复用问题
+<pre>
+import React from 'react';
+import ReactDOM from 'react-dom';
+class Provider extends React.Component{
+  constructor(props){
+    super(props)
+    this.state = {
+      name : 'provider-user'
+    }
+  }
+  render(){
+    return this.props.render(this.state.name)
+  }
+}
+class User extends React.Component{
+  render(){
+    return (
+      < div>
+        {this.props.data}
+      < /div>
+    )
+  }
+}
+class App_8 extends React.Component{
+  render(){
+    return (
+      < Provider render={(data)=>< User data={data}/>}/>
+    )
+  }
+}
+export default App_8;
+</pre>
+最后页面显示结果:provider-user
+从上面代码，我们注意到，User组件的数据是Provider组件提供的，这个数据并不是App_8组件的数据。
+<pre>
+import React from 'react';
+import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
+class Provider extends React.Component{
+  //定义上下文数据
+  getChildContext(){
+    return this.props.store
+  }
+  static childContextTypes={
+    name:PropTypes.string,
+    age : PropTypes.number
+  }
+  constructor(props){
+    super(props)
+    this.state = {
+      name : 'provider-user'
+    }
+  }
+  render(){
+    console.log(this.props)
+    return this.props.children
+  }
+}
+class BaseUser extends React.Component{
+  static contextTypes = {
+    name:PropTypes.string
+  }
+  render(){
+    return (
+      < div>
+        {this.context.name}
+      < /div>
+    )
+  }
+}
+class BasePost extends React.Component{
+  static contextTypes = {
+    age:PropTypes.number
+  }
+  render(){
+    return (
+      < div>
+        {this.context.age}
+      < /div>
+    )
+  }
+}
+const connect = ()=>{
+  //
+}
+const User = connect(BaseUser)
+const Post = connect(BasePost)
+const store = {
+  name : 'ryan',
+  age : 10,
+}
+class App_8 extends React.Component{
+  render(){
+    return (
+      < Provider store={store}>
+        < div>
+          < BaseUser/>
+          < BasePost/>
+        < /div>
+      < /Provider>
+    )
+  }
+}
+export default App_8;
+</pre>
+观察上面代码，我们发现static contextTypes是具有重复性的，我们抽离这段代码，也就是修改connect函数
+<pre>
+// import React from 'react';
+// import ReactDOM from 'react-dom';
+// class Provider extends React.Component{
+//   constructor(props){
+//     super(props)
+//     this.state = {
+//       name : 'provider-user'
+//     }
+//   }
+//   render(){
+//     // return (
+//     //   < div>
+//     //     provider
+//     //   < /div>
+//     // )
+//     return this.props.render(this.state.name)
+//   }
+// }
+// class User extends React.Component{
+//   render(){
+//     return (
+//       < div>
+//         {this.props.data}
+//       < /div>
+//     )
+//   }
+// }
+// class App_8 extends React.Component{
+//   render(){
+//     return (
+//       <provider render="{(data)="><user data="{data}/">}>< /Provider>
+//     )
+//   }
+// }
+// export default App_8;
+import React from 'react';
+import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
+class Provider extends React.Component{
+  //定义上下文数据
+  getChildContext(){
+    return this.props.store
+  }
+  static childContextTypes={
+    name:PropTypes.string,
+    age : PropTypes.number
+  }
+  constructor(props){
+    super(props)
+    this.state = {
+      name : 'provider-user'
+    }
+  }
+  render(){
+    return this.props.children
+  }
+}
+class BaseUser extends React.Component{
+  render(){
+    return (
+      < div>
+        {this.props.name}
+      < /div>
+    )
+  }
+}
+class BasePost extends React.Component{
+  render(){
+    return (
+      < div>
+        {this.props.age}
+      < /div>
+    )
+  }
+}
+const connect = (Com) => (types) => {
+  class ConnectComponent extends React.Component{
+    static contextTypes = types
+    displayName = Com.displayName
+    render(){
+      return(
+        < Com name = {this.context.name}/>
+      );
+    }
+  }
+  return ConnectComponent
+}
+const User = connect(BaseUser)({
+  name:PropTypes.string
+})
+const Post = connect(BasePost)({
+  age:PropTypes.number
+})
+const store = {
+  name : 'ryan',
+  age : 10,
+}
+class App_8 extends React.Component{
+  render(){
+    return (
+      < Provider store={store}>
+        < div>
+          < User/>
+          < Post/>
+        < /div>
+      < /Provider>
+    )
+  }
+}
+export default App_8;
+</user></provider></pre>
+运行后发现只显示了ryan，因为我们在connect函数中只给Com传递了name，并没有传递age，所以我们需要对代码进行一些修改，下面只写了需要修改的部分
+<pre>
+const connect = (Com) => {
+  class ConnectComponent extends React.Component{
+    static contextTypes = Provider.childContextTypes
+    displayName = Com.displayName
+    render(){
+      return(
+        < Com {...this.context}/>
+      );
+    }
+  }
+  return ConnectComponent
+}
+const User = connect(BaseUser)
+const Post = connect(BasePost)
+</pre>
+其实这些都是属性代理的范围，我们接着看下一个例子
+<pre>
+import React,{Component} from "react";
+import PropTypes from 'prop-types'
+// 用于预先 将业务组件，进行数据的封装，便于我们 方便获取数据
+// 反向继承
+const connect = key => Com  => {
+    class connectComponent extends Component {
+        constructor(props){
+            super(props)
+            this.state = {
+                [key]: store[key]
+            }
+        }
+        render() {
+            return < Com {...this.state}/>
+        }
+        componentDidMount() {
+            let that = this
+            window.store = new Proxy(store, {
+                get: function (target, key, receiver) {
+                    return Reflect.get(target, key, receiver);
+                },
+                set: function (target, key, value, receiver) {
+                    that.setState({
+                        [key]:value
+                    })
+                    return Reflect.set(target, key, value, receiver);
+                }
+            })
+        }
+    }
+    return connectComponent
+}
+let store = {
+    name: 'ryan',
+    age: 10
+}
+@connect('age')
+class User extends Component{
+    render() {
+        return < div>{this.props.age}< /div>
+    }
+}
+class App_9 extends Component{
+    render() {
+        return < User/>
+    }
+}
+export default App_9
+</pre>
+上面代码在浏览器中执行
+<img src="https://snakexu.github.io/images/wangyi/react/2.2.1_1.png">
+我们注意到两个点，第一：如何传递/注入age的；第二：为什么通过修改window.test.age=11就可以导致页面上的数据进行修改。通过上面代码我们分析User = connect(User)(age),connect函数相当于一个闭包函数:(Com)=>{},(types)=>{},在这里，connect函数就是高阶组件的属性代理
+<pre>
+import React,{Component} from "react";
+import PropTypes from 'prop-types'
+// 用于预先 将业务组件，进行数据的封装，便于我们 方便获取数据
+// 反向继承 交互的封装，
+const loading = Com  => {
+    class LoadingComponent extends Com { //注意这里，是extends Com，而不是extends React.Component
+        showLoading(){
+            console.log('loading')
+        }
+        hideLoading(){
+            console.log('hide')
+        }
+    }
+    return LoadingComponent
+}
+@loading
+class User extends Component{
+    render() {
+        return < div>user< /div>
+    }
+    componentDidMount() {
+        this.showLoading()
+        //http
+        this.hideLoading()
+    }
+}
+class App extends Component{
+    render() {
+        return <user>
+    }
+}
+export default App
+</user></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/02/24/网易微专业-MV-组件化开发React专题-React进阶-2-2-1-高阶组件/" data-id="ckeeij309001jjoxqxqjk75wk" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-MV-组件化开发React专题-2-1-7-React基础-自定义组件-2" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/02/22/网易微专业-MV-组件化开发React专题-2-1-7-React基础-自定义组件-2/" class="article-date">
+  <time datetime="2020-02-22T02:07:21.000Z" itemprop="datePublished">2020-02-22</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/02/22/网易微专业-MV-组件化开发React专题-2-1-7-React基础-自定义组件-2/">网易微专业-MV*&amp;组件化开发React专题-2.1.7-React基础-自定义组件-2</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>2.受控组件/非受控组件<br>这两个都是针对于表单来说的，最明显的区别就是value和defaultValue的区别，如下图<br><img src="https://snakexu.github.io/images/wangyi/react/2.1.7_2_1.png"><br>还有就是受控组件，必须写value和onChange，这时候挡在输入框写内容的时候才会发生变化；非受控组件，只写defaultValue就可以了(受控组件如果不写onChange那么输入框呈现的值是不会发生变化的，非受控组件即使不写onChange输入框呈现的值会根据输入内容进行改变)。对于受控组件，数据和onChange函数是严格绑定在一起的，很严谨，出错的可能性比较小，但是需要我们将value和onChange同时写出来；非受控组件自由性更大，但是出错的可能性更高。综上，更建议用受控组件，非受控组件只作为一个了解项。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/02/22/网易微专业-MV-组件化开发React专题-2-1-7-React基础-自定义组件-2/" data-id="ckeeij3020017joxqwnjkxah2" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-网易微专业-MV-组件化开发React专题-2-1-7-React基础-自定义组件" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/02/21/网易微专业-MV-组件化开发React专题-2-1-7-React基础-自定义组件/" class="article-date">
+  <time datetime="2020-02-21T07:04:14.000Z" itemprop="datePublished">2020-02-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/02/21/网易微专业-MV-组件化开发React专题-2-1-7-React基础-自定义组件/">网易微专业-MV*&amp;组件化开发React专题-2.1.7-React基础-自定义组件</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.课程目标(参考ant-design)ant-design<br>实现button/input/select/table<br>2.首先实现基础的icon组件<br>icon.js</p>
+<pre>
+import React,{Component} from 'react'
+//React.PropTypes 提供很多验证器 (validator) 来验证传入数据的有效性。当向 props 传入无效数据时，JavaScript 控制台会抛出警告。
+//注意为了性能考虑，只在开发环境验证 propTypes。
+//https://blog.csdn.net/weixin_30776863/article/details/95419027 简介
+import PropTypes from 'prop-types'
+import '../../font-demo/iconfont.css'
+class Icon extends Component{
+  //生命属性类型
+  static propTypes = {
+    name:PropTypes.string
+  }
+  //生命默认属性
+  static defaultProps = {
+    name:'aaa'
+  }
+  /*上面两个static在写这种组件的时候一定要写，相当于给用户提供了一个说明*/
+  render(){
+    const {
+      name,
+      ...rest
+    } = this.props
+    return (
+      < span {...rest} className={`icon iconfont icon-${name}`}>< /span>
+    )
+  }
+}
+export default Icon
+</pre>
+App.js
+<pre>
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Icon from './react-ui/Icon'
+class App_7 extends React.Component{
+  render(){
+    return (
+      < div>
+        app
+        < Icon
+        onClick = {()=>{
+          alert('hello')
+        }}
+         name={'jiadian-dianfanguo'} 
+         style={ {color:'red'} }>< /Icon>
+      < /div>
+    )
+  }
+}
+export default App_7;
+</pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/02/21/网易微专业-MV-组件化开发React专题-2-1-7-React基础-自定义组件/" data-id="ckeeij304001bjoxqn2ru3f8r" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-网易微专业-MV-组件化开发React专题-2-1-2-React基础-React与es6" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/02/19/网易微专业-MV-组件化开发React专题-2-1-2-React基础-React与es6/" class="article-date">
@@ -105,7 +676,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/02/19/网易微专业-MV-组件化开发React专题-2-1-2-React基础-React与es6/" data-id="ckdbzsilw004pjrxqsccblvyr" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/02/19/网易微专业-MV-组件化开发React专题-2-1-2-React基础-React与es6/" data-id="ckeeij34k004ujoxqqo1u7sq1" class="article-share-link">Share</a>
       
       
     </footer>
@@ -154,7 +725,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/02/16/张容铭-设计模式-第四篇-行为设计模式/" data-id="ckdbzsils004fjrxqxhtptart" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/02/16/张容铭-设计模式-第四篇-行为设计模式/" data-id="ckeeij34c004ejoxq593suah0" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
@@ -204,7 +775,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/02/16/网易微专业-MV-组件化开发React专题-2-1-2-React基础-ReactDOM与表单/" data-id="ckdbzsih5000yjrxq9v9ky74k" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/02/16/网易微专业-MV-组件化开发React专题-2-1-2-React基础-ReactDOM与表单/" data-id="ckeeij2zy0010joxqe9oiecst" class="article-share-link">Share</a>
       
       
     </footer>
@@ -427,7 +998,7 @@ export default App;
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/02/16/网易微专业-MV-组件化开发React专题-2-1-2-React基础-组件通信/" data-id="ckdbzsihb0018jrxqkr73gfr0" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/02/16/网易微专业-MV-组件化开发React专题-2-1-2-React基础-组件通信/" data-id="ckeeij2zz0012joxqs8yv8525" class="article-share-link">Share</a>
       
       
     </footer>
@@ -470,7 +1041,7 @@ export default App;
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/02/14/网易微专业-MV-组件化开发React专题-2-1-2-React基础-生命周期与数据操作/" data-id="ckdbzsih60010jrxq35391c45" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/02/14/网易微专业-MV-组件化开发React专题-2-1-2-React基础-生命周期与数据操作/" data-id="ckeeij3000013joxqxasizrdw" class="article-share-link">Share</a>
       
       
     </footer>
@@ -511,393 +1082,7 @@ export default App;
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/02/13/网易微专业-MV-组件化开发React专题-2-1-2-React基础-虚拟DOM和JSX/" data-id="ckdbzsih70011jrxqest7j4h2" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-react官网教程起步案例" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/02/11/react官网教程起步案例/" class="article-date">
-  <time datetime="2020-02-11T04:08:09.000Z" itemprop="datePublished">2020-02-11</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/02/11/react官网教程起步案例/">react官网教程起步案例</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>报的培训课最近要学习react，因为之前的技术栈主要是vue，所以看了一下react官网粗略先看一下。这个案例是react官网教程的起步案例，里面简单的讲到了react的一些东西。因为教程是一点点对项目进行修改的，所以注释掉的部分可能是一开始的代码，留下来只是方便对比历史修改。要运行这个案例，需要新建一个react项目，然后在src文件夹下放入下面两个文件，npm start启动项目。如果安装了react-devtools更方便查看并理解项目。<br>index.js</p>
-<pre>
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-// class Square extends React.Component {
-//   // constructor(props){
-//   //   super(props);
-//   //   this.state = {
-//   //     value:null
-//   //   };
-//   // }
-//   render() {
-//     return (
-//       < button 
-//       className="square" 
-//       onClick={()=>{this.props.onClick()}}
-//       >
-//         {this.props.value}
-//       < /button>
-//     );
-//   }
-// }
-function Square(props){
-  return (
-    < button className="square" onClick={props.onClick}>
-    {props.value}
-    < /button>
-  )
-}
-
-class Board extends React.Component {
-  renderSquare(i) {
-    return < Square 
-    value={this.props.squares[i]}
-    onClick = {()=>{this.props.onClick(i)}}
-    />;
-  }
-
-  render() {
-    // const winner = calculateWinner(this.state.squares);
-    // let status;
-    // if(winner){
-    //   status = 'Winner: ' + winner
-    // }else{
-    //   status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
-    // }
-
-    return (
-      < div>
-        < div className="board-row">
-          {this.renderSquare(0)}
-          {this.renderSquare(1)}
-          {this.renderSquare(2)}
-        < /div>
-        < div className="board-row">
-          {this.renderSquare(3)}
-          {this.renderSquare(4)}
-          {this.renderSquare(5)}
-        < /div>
-        < div className="board-row">
-          {this.renderSquare(6)}
-          {this.renderSquare(7)}
-          {this.renderSquare(8)}
-        < /div>
-      < /div>
-    );
-  }
-}
-
-class Game extends React.Component {
-  constructor(props){
-    super(props);
-    this.state = {
-      history:[{
-        squares:Array(9).fill(null)
-      }],
-      stepNumber:0,
-      xIsNext:true,
-    }
-  }
-  jumpTo(step) {
-    this.setState({
-      stepNumber: step,
-      xIsNext: (step % 2) === 0,
-    });
-  }
-  handleClick(i){
-    const history = this.state.history.slice(0, this.state.stepNumber + 1);
-    const current = history[history.length - 1];
-    const squares = current.squares.slice();
-    if (calculateWinner(squares) || squares[i]) {
-      return;
-    }
-    squares[i] = this.state.xIsNext ? 'X' : 'O';
-    // console.log(squares)
-    this.setState({
-      history: history.concat([{
-        squares: squares,
-      }]),
-      stepNumber: history.length,
-      xIsNext:!this.state.xIsNext,
-    })
-  }
-  render() {
-    const history = this.state.history;
-    const current = history[this.state.stepNumber];
-    const winner = calculateWinner(current.squares);
-
-    const moves = history.map((step,move)=>{
-      const desc = move ? 'Go to move #' + move : 'Go to game start';
-      return (
-        < li key = {move}>
-        < button onClick={() => this.jumpTo(move)}>{desc}< /button>
-        < /li>
-      )
-    })
-
-    let status;
-    if (winner) {
-      status = 'Winner: ' + winner;
-    } else {
-      status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
-    }
-    return (
-      < div className="game">
-        < div className="game-board">
-          < Board 
-          squares = {current.squares}
-          onClick = {(i)=>{this.handleClick(i)}}
-          />
-        < /div>
-        < div className="game-info">
-          < div>{status}< /div>
-          < ol>{moves}< /ol>
-        < /div>
-      < /div>
-    );
-  }
-}
-
-function calculateWinner(squares){
-  const lines = [
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8],
-    [0, 4, 8],
-    [2, 4, 6],
-  ];
-  for(let i=0;i < lines.length;i++){
-    const [a,b,c] = lines[i];
-    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return squares[a];
-    }
-  }
-  return null;
-}
-
-// ========================================
-
-ReactDOM.render(
-  < Game />,
-  document.getElementById('root')
-);
-</pre>
-index.css
-<pre>
-body {
-  font: 14px "Century Gothic", Futura, sans-serif;
-  margin: 20px;
-}
-
-ol, ul {
-  padding-left: 30px;
-}
-
-.board-row:after {
-  clear: both;
-  content: "";
-  display: table;
-}
-
-.status {
-  margin-bottom: 10px;
-}
-
-.square {
-  background: #fff;
-  border: 1px solid #999;
-  float: left;
-  font-size: 24px;
-  font-weight: bold;
-  line-height: 34px;
-  height: 34px;
-  margin-right: -1px;
-  margin-top: -1px;
-  padding: 0;
-  text-align: center;
-  width: 34px;
-}
-
-.square:focus {
-  outline: none;
-}
-
-.kbd-navigation .square:focus {
-  background: #ddd;
-}
-
-.game {
-  display: flex;
-  flex-direction: row;
-}
-
-.game-info {
-  margin-left: 20px;
-}
-</pre>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/02/11/react官网教程起步案例/" data-id="ckdbzsigx000ijrxqgu2vk8fg" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-MV-组件化开发React专题-2-1-1-React介绍与React代码规范" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/02/07/网易微专业-MV-组件化开发React专题-2-1-1-React介绍与React代码规范/" class="article-date">
-  <time datetime="2020-02-07T12:20:37.000Z" itemprop="datePublished">2020-02-07</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/02/07/网易微专业-MV-组件化开发React专题-2-1-1-React介绍与React代码规范/">网易微专业-MV*&amp;组件化开发React专题-2.1.1-React介绍与React代码规范</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.React初识<br>1-1.开发环境<br><img src="https://snakexu.github.io/images/wangyi/react/2.1.1_1.png"><br>1-2.react开发工具react devtools<br>原地址是 <a href="https://github.com/facebook/react-devtools" target="_blank" rel="noopener">https://github.com/facebook/react-devtools</a> ,但是现在看到页面已经说明项目被迁移了，具体细节见页面。按照课程内容，我选择了v3版本链接，下载zip文件后，解压缩，在命令行进入解压缩的文件夹。<br>(1)npm config set registry <a href="http://registry.npm.taobao.org/" target="_blank" rel="noopener">http://registry.npm.taobao.org/</a><br>(2)npm install<br>(3)进入文件夹，找到shells/chrome/build/unpacked文件夹<br>(4)打开chrome浏览器扩展，将步骤3的文件夹移到扩展页面<br>至此react-devtools安装完成，打开本地react项目的浏览器开发工具可以看到在console/network···后有了react，如图<br><img src="https://snakexu.github.io/images/wangyi/react/2.1.1_2.png"><br>1-3.示例代码</p>
-<p><pre><br>import React from ‘react’;<br>import ReactDOM from ‘react-dom’;<br>class HelloWorld extends Component{<br>    render(){<br>        return (<br>            <div classname="App"><br>                hello world<br>            </div><br>        )<br>    }<br>}<br>ReactDOM.render(<br>  <helloworld>,<br>  document.getElementById(‘root’)<br>);<br></helloworld></pre><br>1-4.浏览器上的react示例代码<br><img src="https://snakexu.github.io/images/wangyi/react/2.1.1_3.png"><br>上图里的代码中 type=”text/babel” 方便于书写es6的代码，两个script引入的包是react和react-dom，和1-3的代码中import功能是一样的<br>1-5.模块化示例代码<br><img src="https://snakexu.github.io/images/wangyi/react/2.1.1_4.png"><br>2.react生态<br>react生态在github上有一个项目<a href="https://github.com/enaqx/awesome-react" target="_blank" rel="noopener">https://github.com/enaqx/awesome-react</a><br><img src="https://snakexu.github.io/images/wangyi/react/2.1.1_5.png"><br>2-1.UI组件库<br><img src="https://snakexu.github.io/images/wangyi/react/2.1.1_6.png"><br>3.react代码规范<br>3-1.开发规范<br>3-1-1.standard.js<br><img src="https://snakexu.github.io/images/wangyi/react/2.1.1_7.png"><br>其中第三步是帮助我们在提交项目之前对项目进行一次格式化检测<br>另外老师讲了如何在webstorm中配置standard.js，如果使用别的编辑器，那么可自行查看如何配置，这里也不在对课程里如何在webstorm中配置进行赘述，如需要自行查询配置方法。<br>3-1-2.bem css规范<br><img src="https://snakexu.github.io/images/wangyi/react/2.1.1_8.png"><br>在bem中，b-block，e-element，m-行为,在上图例子中，双下划线__表示子元素，双中横线–表示某种状态</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/02/07/网易微专业-MV-组件化开发React专题-2-1-1-React介绍与React代码规范/" data-id="ckdbzsih5000xjrxq2vfibh3l" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-webpack实战演练-3-2-2-webpack原理解析" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/01/29/网易微专业-webpack实战演练-3-2-2-webpack原理解析/" class="article-date">
-  <time datetime="2020-01-29T02:52:50.000Z" itemprop="datePublished">2020-01-29</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/01/29/网易微专业-webpack实战演练-3-2-2-webpack原理解析/">网易微专业-webpack实战演练-3.2.2-webpack原理解析</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1-1.webpack是利用什么来打包的<br>01.webpack依赖于node的环境与文件操作系统<br>02.webpack的打包过程，其实就是利用node去读取文件，然后进行一些字符串处理后，再利用node去写入文件<br>1-2.webpack的打包流程<br>01.读取文件配置-02.注册内部插件与配置插件-03.loader编译-04.组织模块-05.生成最终文件导出<br>2.loader原理解析<br>2-1.loader是如何生效的<br>loader其实是一个方法:接受一个字符串，方法内部处理完后再返回字符串</p>
-<p><pre><br>module.exports = function(source){<br>    return source<br>}<br></pre><br>下面我们学习如何写一个loader编译文件,先建一个文件，文件名test.wy，文件内容为</p>
-<p><pre><br>    c(1)<br></pre><br>我们要写一个loader编译这个文件。在根文件下建立新文件夹wy-loader。首先在app.js中引入test.wy这个文件，然后打开配置文件webpack.config.js</p>
-<p><pre><br>{<br>    test:/.wy$/,<br>    use:’./wy-loader’//相对路径是本地<br>}<br></pre><br>在wy-loader文件夹中建新文件index.js</p>
-<p><pre><br>module.exports = function(resource){<br>    return resource.replace(‘c’,”console.log”)<br>}<br></pre><br>或者index.js的内容可以为</p>
-<p><pre><br>module.exports = function(resource){<br>    this.callback(err,resource.replace(‘c’,”console.log”),sourcemap)<br>    //具体如何写一个loader(有同步loader和异步loader)去详细看webpack的官网<br>}<br></pre><br>3.结果文件分析<br>3-1.打包代码组成</p>
-<p><pre><br>(function(modules){<br>    function <strong>webpack_require</strong>(module){};<br>    return<br>        <strong>webpack.require(
-            </strong>webpack_require__.s = “./app.js”<br>        )<br>})({<br>    “./app.js”:(function(){}),<br>    “mode1.js”:(function(){}),<br>    “mode2.js”:(function(){}),<br>})<br></pre><br>4.dev-server原理分析<br>dev-server利用express和一个中间件webpack-dev-middleware来开启服务，然后开启的server会执行打包出来的代码<br>热更新原理<br><img src="https://snakexu.github.io/images/wangyi/webpack/3.2.2_1.png"></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/01/29/网易微专业-webpack实战演练-3-2-2-webpack原理解析/" data-id="ckdbzsiij002tjrxqr90d1wrx" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-网易微专业-webpack实战演练-3-2-1-webpack-dev-server的使用" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/01/20/网易微专业-webpack实战演练-3-2-1-webpack-dev-server的使用/" class="article-date">
-  <time datetime="2020-01-20T08:25:26.000Z" itemprop="datePublished">2020-01-20</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/01/20/网易微专业-webpack实战演练-3-2-1-webpack-dev-server的使用/">网易微专业-webpack实战演练-3.2.1-webpack-dev-server的使用</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.webpack-dev-server<br>1-1.什么是webpack-dev-server:项目都要打包上线，所以最好能模拟线上环境进行开发调试。webpack-dev-server就是一个让我们可以模拟线上环境进行项目调试的工具。<br>1-2.webpack-dev-server提供的常用额外功能<br>01.路径重定向<br>02.浏览器中显示编译错误<br>03.接口代理<br>04.热更新<br>1-3.webpack-dev-server使用步骤<br>01.安装webpack-dev-server<br>02.配置devServer字段<br>03.利用命令行开启服务<br>1-4.devServer常用配置<br>inline:服务的开启模式<br>lazy:懒编译<br>port:代理接口<br>overlay:错误遮罩(就是黑色浮层上显示错误)<br>historyApiFallback:路径重定向<br>proxy:代理请求<br>hot:热更新<br>1-5.实战代码<br>package.json在”scripts”中添加dev命令，命令中–open的作用是运行开发模式的时候，自动帮我们打开浏览器</p>
-<p><pre><br>“scripts”:{<br>    “test”:”echo \”Error: no test specified\” &amp;&amp; exit 1”,<br>    “dev”:”webpack-dev-server –open”<br>}<br></pre><br>webpack.config.js中添加devServer，与plugins等平级</p>
-<p><pre><br>devServer:{<br>    port:9001,<br>    inline:false  //默认为true<br>}<br></pre><br>inline设置为false会有什么不一样呢<br><img src="https://snakexu.github.io/images/wangyi/webpack/3.2.1_1.png"><br>我们可以在页面顶部看到一个状态条，显示页面的状态。<br>如果我们在webpack.config.js中没有设置historyApiFallback,那当我们在浏览器中输入不存在的路由会显示如下页面<br><img src="https://snakexu.github.io/images/wangyi/webpack/3.2.1_2.png"><br>当我们设置了</p>
-<p><pre><br>devServer:{<br>    port:9001,<br>    historyApiFallback:true<br>}<br></pre><br>当我们在浏览器中输入不存在的路由不会跳转到找不到路径的页面，而是会显示当前页面，或者也可以按照一定正则规则来设置historyApiFallback，比如我们配置的规则是路由如果是/a，那我们跳转到a.html，如果是/b,就跳转到b.html</p>
-<p><pre><br>devServer:{<br>    port:9001,<br>    historyApiFallback:{<br>        rewrites:[<br>            {<br>                from:/^\/([ -~]+)/,<br>                to:function(context){<br>                    return ‘./‘+context.match[1]+’.html’<br>                }<br>            }<br>        ]<br>    }<br>}<br></pre><br>2.代理接口<br>2-1.如何开启代理接口</p>
-<p><pre><br>devServer:{<br>    proxy:{<br>        ‘/‘:{<br>            target:’128.23.321.1’,<br>            changeOrigin:true,<br>            pathRewrite:{<br>                ‘^/comments’:’/api/comments’<br>            },<br>            headers:{</pre></p>
-<pre><code>        }
-    }
-}
-</code></pre><p>}<br><br>3.热更新</p>
-<p><pre><br>devServer{<br>    hot:true,<br>    hotOnly:true,//只用热更新<br>}<br></pre><br>extract-text-webpack-plugin与热更新不兼容，把plugins中new extractTextCss({filename:’app.bundle.css’,disable:true})<br>4.source-map<br>什么是source-map:为方便调试，我们需要知道打包后的代码对应源文件的位置。如果代码有一处错误，无source-map只能追踪到错误发生在打包后文件的哪个位置，但是打包后的文件不方便阅读。有了source-map就可以查看错误发生在原模块的哪个地方。<br>配置方法：只需在devServer同级配置devtool即可，devtool的值会有多个选项，下面会有讲解</p>
-<p><pre><br>devtool:’eval-source-map’<br></pre><br>4-1.source-map的模式<br>4-1-1.开发模式<br>eval<br>eval-source-map<br>cheap-eval-source-map<br>cheap-module-source-map<br>4-1-2.生产模式<br>source-map<br>hidden-source-map<br>nosource-source-map<br>4-2.source-map小结<br><img src="https://snakexu.github.io/images/wangyi/webpack/3.2.1_3.png"></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/01/20/网易微专业-webpack实战演练-3-2-1-webpack-dev-server的使用/" data-id="ckdbzsiih002rjrxqy7eqgrfd" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/02/13/网易微专业-MV-组件化开发React专题-2-1-2-React基础-虚拟DOM和JSX/" data-id="ckeeij3010015joxqy3ptbtay" class="article-share-link">Share</a>
       
       
     </footer>
@@ -911,7 +1096,7 @@ ol, ul {
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/8/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><a class="page-number" href="/page/11/">11</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" href="/page/10/">Next &raquo;</a>
+    <a class="extend prev" rel="prev" href="/page/8/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><a class="page-number" href="/page/11/">11</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/10/">Next &raquo;</a>
   </nav>
 
 </section>
@@ -951,7 +1136,7 @@ ol, ul {
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
     </div>
   </div>
 
@@ -964,23 +1149,23 @@ ol, ul {
       <ul>
         
           <li>
+            <a href="/2020/08/10/拉勾-Virtual-DOM-的实现原理/">拉勾-Virtual DOM 的实现原理</a>
+          </li>
+        
+          <li>
+            <a href="/2020/08/05/拉勾-模拟Vue-js响应式原理/">拉勾-模拟Vue.js响应式原理</a>
+          </li>
+        
+          <li>
+            <a href="/2020/08/03/拉勾-Vue-Router实现原理/">拉勾-Vue-Router实现原理</a>
+          </li>
+        
+          <li>
+            <a href="/2020/08/02/拉勾-Vue-js基础回顾/">拉勾-Vue.js基础回顾</a>
+          </li>
+        
+          <li>
             <a href="/2020/07/29/拉勾-规范化标准/">拉勾-规范化标准</a>
-          </li>
-        
-          <li>
-            <a href="/2020/07/28/拉勾-其他打包工具/">拉勾-其他打包工具</a>
-          </li>
-        
-          <li>
-            <a href="/2020/07/17/拉勾-Webpack打包/">拉勾-Webpack打包</a>
-          </li>
-        
-          <li>
-            <a href="/2020/07/15/拉勾-模块化开发/">拉勾-模块化开发</a>
-          </li>
-        
-          <li>
-            <a href="/2020/07/08/拉勾-自动化构建/">拉勾-自动化构建</a>
           </li>
         
       </ul>

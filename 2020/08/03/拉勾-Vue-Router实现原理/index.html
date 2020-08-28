@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>拉勾-Vue-Router实现原理 | 喵小喵的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1.课程介绍略2.Vue Router基础回顾-使用步骤这里简单介绍了vue-router的基本使用。vue.use(参数)，当参数是对象的时候，用install去处理，当参数是函数的时候调用函数创建组件。$route是路由规则，存储了当前的路由数据，也就是路由规则，包括路径和参数等。$router是vuerouter的实例，也就是路由对象，包含各种路由方法和导航守卫、路由模式等。3.动态路由这里">
+<meta name="keywords" content="拉勾">
+<meta property="og:type" content="article">
+<meta property="og:title" content="拉勾-Vue-Router实现原理">
+<meta property="og:url" content="http://yoursite.com/2020/08/03/拉勾-Vue-Router实现原理/index.html">
+<meta property="og:site_name" content="喵小喵的窝">
+<meta property="og:description" content="1.课程介绍略2.Vue Router基础回顾-使用步骤这里简单介绍了vue-router的基本使用。vue.use(参数)，当参数是对象的时候，用install去处理，当参数是函数的时候调用函数创建组件。$route是路由规则，存储了当前的路由数据，也就是路由规则，包括路径和参数等。$router是vuerouter的实例，也就是路由对象，包含各种路由方法和导航守卫、路由模式等。3.动态路由这里">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_3/3_2/3_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_3/3_2/3_2.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_3/3_2/4_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_3/3_2/6_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_3/3_2/6_2.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_3/3_2/10_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_3/3_2/10_2.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_3/3_2/10_3.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_3/3_2/11_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_3/3_2/11_2.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_3/3_2/15_2.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_3/3_2/15_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_3/3_2/16_1.png">
+<meta property="og:image" content="https://snakexu.github.io/images/lagou/part_3/3_2/16_2.png">
+<meta property="og:updated_time" content="2020-08-05T15:06:20.174Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="拉勾-Vue-Router实现原理">
+<meta name="twitter:description" content="1.课程介绍略2.Vue Router基础回顾-使用步骤这里简单介绍了vue-router的基本使用。vue.use(参数)，当参数是对象的时候，用install去处理，当参数是函数的时候调用函数创建组件。$route是路由规则，存储了当前的路由数据，也就是路由规则，包括路径和参数等。$router是vuerouter的实例，也就是路由对象，包含各种路由方法和导航守卫、路由模式等。3.动态路由这里">
+<meta name="twitter:image" content="https://snakexu.github.io/images/lagou/part_3/3_2/3_1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="喵小喵的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">喵小喵的窝</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-拉勾-Vue-Router实现原理" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/08/03/拉勾-Vue-Router实现原理/" class="article-date">
+  <time datetime="2020-08-03T00:34:20.000Z" itemprop="datePublished">2020-08-03</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      拉勾-Vue-Router实现原理
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.课程介绍<br>略<br>2.Vue Router基础回顾-使用步骤<br>这里简单介绍了vue-router的基本使用。vue.use(参数)，当参数是对象的时候，用install去处理，当参数是函数的时候调用函数创建组件。$route是路由规则，存储了当前的路由数据，也就是路由规则，包括路径和参数等。$router是vuerouter的实例，也就是路由对象，包含各种路由方法和导航守卫、路由模式等。<br>3.动态路由<br>这里介绍了另外一种传递路由参数的办法，利用路由的props传值<br><img src="https://snakexu.github.io/images/lagou/part_3/3_2/3_1.png"><br><img src="https://snakexu.github.io/images/lagou/part_3/3_2/3_2.png"><br>4.嵌套路由<br><img src="https://snakexu.github.io/images/lagou/part_3/3_2/4_1.png"><br>5.编程式导航<br>主要讲了push、replace、go，其中replace方法不会记录本次历史，会把我们当前的历史改编成replace的参数页面<br>6.Hash模式和History模式的区别<br><img src="https://snakexu.github.io/images/lagou/part_3/3_2/6_1.png"><br><img src="https://snakexu.github.io/images/lagou/part_3/3_2/6_2.png"><br>7.History 模式<br>10.Vue Router实现原理<br>前置知识<br><img src="https://snakexu.github.io/images/lagou/part_3/3_2/10_1.png"><br>Hash模式<br><img src="https://snakexu.github.io/images/lagou/part_3/3_2/10_2.png"><br>History模式<br><img src="https://snakexu.github.io/images/lagou/part_3/3_2/10_3.png"><br>11.Vue Router模拟实现-分析<br>回顾核心代码<br><img src="https://snakexu.github.io/images/lagou/part_3/3_2/11_1.png"><br>Vue.use(函数/对象)，如果传入函数，Vue.use内部会调用这个函数；如果传入对象，Vue.use内部会调用这个对象的install方法<br>new VueRouter，创建一个VueRouter的实例，所以VueRouter是一个构造函数或者是一个类，并且这个类有一个静态的install方法<br>最后创建一个vue实例，并且传入我们刚才创建好router的对象<br>Vue Router的类图<br><img src="https://snakexu.github.io/images/lagou/part_3/3_2/11_2.png"><br>其中前三个是属性后面是方法<br>+options:记录构造函数中传入的对象，在传入对象的时候传入了路由规则，options就记录了传入的这个对象<br>+data:对象，有一个属性current用来记录当前路由地址。这里是因为我们需要一个响应式的对象，因为路由地址发生变化的时候，组件要自动更新，可以调用vue.observable使其变成响应式对象<br>+routeMap:对象，记录路由地址和组件的对应关系，将来会把规则解析到RouteMap中<br>下面的方法中，带加号的是对外公开的方法，下划线是静态的方法<br>+Constructor(Options):VueRouter 构造函数，初始化属性<br>_install(Vue):void 静态方法，用来实现vue的插件机制<br>+init():void 用来调用下面的initEvent、createRouteMap、initComponents方法<br>+initEvent():void 用来注册popState事件，用来监听历史的变化<br>+createRouteMap():void 用来初始化routemap属性，把构造函数中的路由规则转换成键值对的形式存储到routemap中，键就是路由地址，值就是对应组件<br>+initComponents(Vue):void 用来创建router-link、router-view这两个组件<br>12.Vue Router-install<br>13.Vue Router-构造函数<br>14.Vue Router-createRouteMap<br>15.Vue Router-router-link<br>上面几节课的内容合并到这里，主要就是代码</p>
+<p><pre><br>// vuerouter/index.js<br>let _Vue = null<br>export default class VueRouter {<br>  static install (Vue) {<br>    // 1.判断当前插件是否已经被安装<br>    if (VueRouter.install.installed) {<br>      return<br>    }<br>    VueRouter.install.installed = true<br>    // 2.把Vue构造函数记录到全局变量(在vue实例中需要使用)<br>    _Vue = Vue<br>    // 3.把创建Vue实例时候传入的router对象注入到Vue实例上<br>    // 混入<br>    _Vue.mixin({ // 拿到Vue实力的时候才写入<br>      beforeCreate () {<br>        if (this.$options.router) { // 判断在不是组件是路由的情况下才用<br>          _Vue.prototype.$router = this.$options.router<br>          this.$options.router.init()<br>        }<br>      }<br>    })<br>  }</pre></p>
+<p>  constructor (options) {<br>    this.options = options<br>    this.routeMap = {}<br>    this.data = _Vue.observable({<br>      current: ‘/‘<br>    })<br>  }</p>
+<p>  init () {<br>    this.createRouteMap()<br>    this.initComponents(_Vue)<br>  }</p>
+<p>  createRouteMap () {<br>    // 遍历所有路由规则，把路由规则解析成键值对的形式，存储到routeMap中<br>    this.options.routes.forEach(route =&gt; {<br>      this.routeMap[route.path] = route.component<br>    })<br>  }</p>
+<p>  initComponents (Vue) { // 这里传入Vue是为了减少对外部的依赖<br>    Vue.component(‘router-link’, {<br>      props: {<br>        to: String<br>      },<br>      //这里就是实现把router-link标签中的内容放到a标签中<br>      template: ‘&lt; a :href=”to” &gt;&lt; slot &gt;&lt; /slot &gt;&lt; /a &gt;’<br>    })<br>  }<br>}<br><br>完成上面代码后，我们把router/index.js中引入的import VueRouter from ‘vue-router’替换成我们刚才写的import VueRouter from ‘../vuerouter’。npm run serve后发现报错，其中一个错误是(另外一个错误是因为我们没有实现router-view，这个后续再解决)<br><img src="https://snakexu.github.io/images/lagou/part_3/3_2/15_2.png"><br>原因是vue-cli默认采用的运行时代码<br><img src="https://snakexu.github.io/images/lagou/part_3/3_2/15_1.png"><br>16.Vue Router-完整版的Vue<br>vue-cli官方文档，切换到配置参考<br><img src="https://snakexu.github.io/images/lagou/part_3/3_2/16_1.png"><br><img src="https://snakexu.github.io/images/lagou/part_3/3_2/16_2.png"><br>到这里，我们知道如何配置完整版的Vue了，也就解决了之前报错的一个内容<br>17.Vue Router-render<br>上节课我们学会使用完整版vue解决手写vuerouter报错的一个问题，这节课用运行时版本解决问题。<br>删除上节课增加的配置文件vue.config.js。既然完整版主要是编译模版template，那么我们这里就不用template去写我们的代码，转而用更接近vue底层的render函数</p>
+<p><pre><br>initComponents (Vue) {<br>    Vue.component(‘router-link’, {<br>      props: {<br>        to: String<br>      },<br>      render (h) {<br>          return h(‘a’,{<br>              attrs: {<br>                  href: this.to<br>              }<br>          },[this.$slots.default])<br>      }<br>    })<br>}<br></pre><br>18.Vue Router-rouer-view</p>
+<p><pre><br>initComponents (Vue) { // 这里传入Vue是为了减少对外部的依赖<br>    Vue.component(‘router-link’, {<br>      props: {<br>        to: String<br>      },<br>      render (h) {<br>        return h(‘a’, {<br>          attrs: {<br>            href: this.to<br>          }<br>        }, [this.$slots.default])<br>      }<br>    })<br>    const self = this<br>    Vue.component(‘router-view’, {<br>      render (h) {<br>        const component = self.routeMap[self.data.current]<br>        return h(component)<br>      }<br>    })<br>  }<br></pre><br>到这里，基本的路由需求完成的差不多了，但是此时运行项目，会发现点击网页页面链接，页面会闪。想一下，其实页面闪的时候是在向服务器发送请求，请求页面，但是单页应用中我们并不想向服务器发送请求，我们需要给超链接一个点击事件，取消后续内容的执行，不让地址跳转，并且把地址栏中的地址改为超链接的href中的地址，又不让浏览器去请求服务器，于是想到了pushState这个方法，这个方法可以改变路径，又不会发送请求，还会记录到历史记录中，但是页面相应组件还是要我们自己加载。我们代码中的current记录了当前路径，data又是响应式的数据</p>
+<p><pre><br>Vue.component(‘router-link’, {<br>  props: {<br>    to: String<br>  },<br>  render (h) {<br>    return h(‘a’, {<br>      attrs: {<br>        href: this.to<br>      },<br>      on: {<br>        click: this.clickHandler<br>      }<br>    }, [this.$slots.default])<br>  },<br>  methods: {<br>    clickHandler (e) {<br>      history.pushState({}, ‘’, this.to)<br>      this.$router.data.current = this.to<br>      e.preventDefault()<br>    }<br>  }<br>})<br></pre><br>19.Vue Router-initEvent<br>虽然上面我们实现了基本功能，但是点击浏览器后退按钮，我们发现页面没有刷新，还是停留在当前页面，所以需要initEvent事件，做这个功能</p>
+<p><pre><br>init () {<br>    this.createRouteMap()<br>    this.initComponents(_Vue)<br>    this.initEvent()<br>}<br>initEvent () {<br>    window.addEventListener(‘popstate’, () =&gt; {<br>        this.data.current = window.location.pathname<br>    })<br>}<br></pre><br>这样我们就实现浏览器前进后退的刷新了</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/08/03/拉勾-Vue-Router实现原理/" data-id="ckeeij34e004ijoxqjk2ejojh" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/拉勾/">拉勾</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/08/05/拉勾-模拟Vue-js响应式原理/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          拉勾-模拟Vue.js响应式原理
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/08/02/拉勾-Vue-js基础回顾/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">拉勾-Vue.js基础回顾</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/拉勾/">拉勾</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ECMAScript新特性/">ECMAScript新特性</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript异步编程/">JavaScript异步编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TypeScript语言/">TypeScript语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-babel/">react babel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/函数式编程/">函数式编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/函数式编程范式/">函数式编程范式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端路由/">前端路由</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工程化/">工程化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/微信小程序/">微信小程序</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/手写Promise源码/">手写Promise源码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/拉勾/">拉勾</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/拉勾，自动化构建/">拉勾，自动化构建</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/正则/">正则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业/">网易微专业</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-Flutter/">网易微专业 Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网易微专业-node/">网易微专业 node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/ECMAScript新特性/" style="font-size: 10px;">ECMAScript新特性</a> <a href="/tags/JavaScript异步编程/" style="font-size: 10px;">JavaScript异步编程</a> <a href="/tags/TypeScript语言/" style="font-size: 10px;">TypeScript语言</a> <a href="/tags/react-babel/" style="font-size: 10px;">react babel</a> <a href="/tags/函数式编程/" style="font-size: 10px;">函数式编程</a> <a href="/tags/函数式编程范式/" style="font-size: 10px;">函数式编程范式</a> <a href="/tags/前端路由/" style="font-size: 10px;">前端路由</a> <a href="/tags/工程化/" style="font-size: 10px;">工程化</a> <a href="/tags/微信小程序/" style="font-size: 10px;">微信小程序</a> <a href="/tags/手写Promise源码/" style="font-size: 10px;">手写Promise源码</a> <a href="/tags/拉勾/" style="font-size: 20px;">拉勾</a> <a href="/tags/拉勾，自动化构建/" style="font-size: 10px;">拉勾，自动化构建</a> <a href="/tags/数据结构/" style="font-size: 12.5px;">数据结构</a> <a href="/tags/正则/" style="font-size: 10px;">正则</a> <a href="/tags/算法/" style="font-size: 17.5px;">算法</a> <a href="/tags/网易微专业/" style="font-size: 10px;">网易微专业</a> <a href="/tags/网易微专业-Flutter/" style="font-size: 10px;">网易微专业 Flutter</a> <a href="/tags/网易微专业-node/" style="font-size: 10px;">网易微专业 node</a> <a href="/tags/设计模式/" style="font-size: 15px;">设计模式</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/08/10/拉勾-Virtual-DOM-的实现原理/">拉勾-Virtual DOM 的实现原理</a>
+          </li>
+        
+          <li>
+            <a href="/2020/08/05/拉勾-模拟Vue-js响应式原理/">拉勾-模拟Vue.js响应式原理</a>
+          </li>
+        
+          <li>
+            <a href="/2020/08/03/拉勾-Vue-Router实现原理/">拉勾-Vue-Router实现原理</a>
+          </li>
+        
+          <li>
+            <a href="/2020/08/02/拉勾-Vue-js基础回顾/">拉勾-Vue.js基础回顾</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/29/拉勾-规范化标准/">拉勾-规范化标准</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 snakeXu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
